@@ -14,8 +14,8 @@ class AppConfig {
       }
       return 'http://127.0.0.1:8080';
     }
-    return 'https://api.invessty.com';
+    return 'https://api.investy.com';
   }
 
-  static const String appName = 'Invessty';
+  static const String appName = 'Investy';
 }

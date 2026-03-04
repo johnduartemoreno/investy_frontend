@@ -24,11 +24,11 @@ void main() async {
   await Hive.initFlutter();
   // TODO: Register Hive Adapters here
 
-  runApp(const ProviderScope(child: InvesstyApp()));
+  runApp(const ProviderScope(child: InvestyApp()));
 }
 
-class InvesstyApp extends ConsumerWidget {
-  const InvesstyApp({super.key});
+class InvestyApp extends ConsumerWidget {
+  const InvestyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +38,7 @@ class InvesstyApp extends ConsumerWidget {
     ref.watch(userProfileSyncProvider);
 
     return MaterialApp.router(
-      title: 'Invessty',
+      title: 'Investy',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

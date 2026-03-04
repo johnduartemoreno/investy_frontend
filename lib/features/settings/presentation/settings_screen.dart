@@ -108,8 +108,7 @@ class SettingsScreen extends ConsumerWidget {
       padding: EdgeInsets.zero,
       child: Column(
         children: [
-          _buildListTile(
-              context, Icons.info_outline, 'About Invessty', 'v1.0.0',
+          _buildListTile(context, Icons.info_outline, 'About Investy', 'v1.0.0',
               onTap: () {}),
           const Divider(height: 1),
           _buildListTile(context, Icons.help_outline, 'Help & Support', '',

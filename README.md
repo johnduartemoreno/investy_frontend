@@ -1,4 +1,4 @@
-# Invessty - Flutter Mobile App
+# Investy - Flutter Mobile App
 
 **Mobile-only (Android/iOS). Web and macOS are out of scope.**
 

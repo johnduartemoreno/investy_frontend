@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:invessty/features/auth/domain/entities/user.dart';
-import 'package:invessty/features/auth/domain/repositories/auth_repository.dart';
-import 'package:invessty/features/auth/domain/usecases/login_usecase.dart';
+import 'package:investy/features/auth/domain/entities/user.dart';
+import 'package:investy/features/auth/domain/repositories/auth_repository.dart';
+import 'package:investy/features/auth/domain/usecases/login_usecase.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
