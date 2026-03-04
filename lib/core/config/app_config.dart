@@ -1,5 +1,21 @@
+import 'package:flutter/foundation.dart';
+
 class AppConfig {
-  static const String apiBaseUrl =
-      'https://api.invessty.com/v1'; // Replace with actual API
+  /// Base URL for the Go REST backend.
+  ///
+  /// Debug builds point to the local mock server:
+  ///   - Android emulator: 10.0.2.2 routes to the host machine's loopback.
+  ///   - iOS simulator / macOS: 127.0.0.1 is the host loopback directly.
+  /// Release builds point to the production API.
+  static String get apiBaseUrl {
+    if (kDebugMode) {
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        return 'http://10.0.2.2:8080';
+      }
+      return 'http://127.0.0.1:8080';
+    }
+    return 'https://api.invessty.com';
+  }
+
   static const String appName = 'Invessty';
 }

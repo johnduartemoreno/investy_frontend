@@ -1,0 +1,25 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'dashboard_response_model.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+DashboardResponseModel _$DashboardResponseModelFromJson(
+        Map<String, dynamic> json) =>
+    DashboardResponseModel(
+      totalBalance: (json['totalBalance'] as num).toInt(),
+      currency: json['currency'] as String,
+      recentActivity: (json['recentActivity'] as List<dynamic>)
+          .map((e) => ActivityItemModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$DashboardResponseModelToJson(
+        DashboardResponseModel instance) =>
+    <String, dynamic>{
+      'totalBalance': instance.totalBalance,
+      'currency': instance.currency,
+      'recentActivity': instance.recentActivity.map((e) => e.toJson()).toList(),
+    };
