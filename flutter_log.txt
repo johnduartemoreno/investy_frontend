@@ -1,0 +1,20 @@
+Launching lib/main.dart on iPhone 16e in debug mode...
+Running Xcode build...                                          
+Xcode build done.                                           14.0s
+flutter: 🔥 [FIREBASE SMOKE] Starting smoke test...
+flutter: 🔥 [FIREBASE SMOKE] Current User: null
+Target native_assets required define SdkRoot but it was not provided
+Syncing files to device iPhone 16e...                               19ms
+
+Flutter run key commands.
+r Hot reload. 🔥🔥🔥
+R Hot restart.
+h List all available interactive commands.
+d Detach (terminate "flutter run" but leave application running).
+c Clear the screen
+q Quit (terminate the application on the device).
+
+A Dart VM Service on iPhone 16e is available at: http://127.0.0.1:64038/huA3ZzCMqYc=/
+The Flutter DevTools debugger and profiler on iPhone 16e is available at: http://127.0.0.1:64038/huA3ZzCMqYc=/devtools/?uri=ws://127.0.0.1:64038/huA3ZzCMqYc=/ws
+flutter: 🔥 [FIREBASE SMOKE] Auth State Change: User is currently signed out!
+Lost connection to device.

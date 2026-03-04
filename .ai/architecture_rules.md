@@ -1,0 +1,12 @@
+# CORE ARCHITECTURE RULES
+- **State Management:** Riverpod exclusively. No `setState` for business logic.
+- **UI Layer (Controllers):** Controllers only pass user intent (`double`). ZERO math or business logic allowed here.
+- **Data Layer (Repositories):** The Single Source of Truth. All math, rounding, and validation happens here.
+- **Database (Firestore):**
+  - Use `_firestore.runTransaction` for ALL write operations that depend on current state (Read-Before-Write).
+  - Use `.toJson()` for all writes. NO raw maps.
+  - Dates: `FieldValue.serverTimestamp()` exclusively. No manual dates.
+- **Financial Math (The Engine):**
+  - **Fiat (Cash):** Stored as `int` (Cents). Multiplier: `x 100`.
+  - **Assets (Crypto/Stocks):** Stored as `int` (High Precision). Multiplier: `x 10^8`.
+  - **Boundary:** UI/Entities use `double`. Repositories handle the `double <-> int` conversion internally.

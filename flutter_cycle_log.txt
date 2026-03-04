@@ -1,0 +1,33 @@
+Launching lib/main.dart on iPhone 16e in debug mode...
+Running Xcode build...                                          
+Xcode build done.                                            4.8s
+flutter: 🔥 [FIREBASE SMOKE] Starting smoke test...
+flutter: 🔥 [FIREBASE SMOKE] Current User: null
+flutter: 🔥 [FIREBASE SMOKE] Auth State Change: User is currently signed out!
+Target native_assets required define SdkRoot but it was not provided
+Syncing files to device iPhone 16e...                               24ms
+
+Flutter run key commands.
+r Hot reload. 🔥🔥🔥
+R Hot restart.
+h List all available interactive commands.
+d Detach (terminate "flutter run" but leave application running).
+c Clear the screen
+q Quit (terminate the application on the device).
+
+A Dart VM Service on iPhone 16e is available at: http://127.0.0.1:64168/lgMGtVfU96M=/
+The Flutter DevTools debugger and profiler on iPhone 16e is available at: http://127.0.0.1:64168/lgMGtVfU96M=/devtools/?uri=ws://127.0.0.1:64168/lgMGtVfU96M=/ws
+flutter: 🔥 [FIREBASE SMOKE] Triggering Anonymous SignIn...
+[ERROR:flutter/runtime/dart_vm_initializer.cc(40)] Unhandled Exception: [firebase_auth/admin-restricted-operation] This operation is restricted to administrators only.
+#0      FirebaseAuthHostApi.signInAnonymously (package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart:1073:7)
+<asynchronous suspension>
+#1      MethodChannelFirebaseAuth.signInAnonymously (package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart:288:22)
+<asynchronous suspension>
+#2      FirebaseAuth.signInAnonymously (package:firebase_auth/src/firebase_auth.dart:454:35)
+<asynchronous suspension>
+#3      FirebaseSmokeTest.run.<anonymous closure> (package:invessty/core/debug/firebase_smoke.dart:24:7)
+<asynchronous suspension>
+flutter: 🔥 [FIREBASE SMOKE] Triggering SignOut...
+flutter: 🔥 [AuthRemoteDataSource] Signing out from Firebase...
+flutter: 🔥 [AuthRemoteDataSource] Signed out successfully.
+Lost connection to device.

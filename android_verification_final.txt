@@ -1,0 +1,266 @@
+Launching lib/main.dart on sdk gphone64 arm64 in debug mode...
+Running Gradle task 'assembleDebug'...                              4.4s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...          406ms
+D/FlutterJNI(17922): Beginning load of flutter...
+D/FlutterJNI(17922): flutter (null) was loaded normally!
+I/flutter (17922): [IMPORTANT:flutter/shell/platform/android/android_context_gl_impeller.cc(104)] Using the Impeller rendering backend (OpenGLES).
+I/flutter (17922): 🔥 [FIREBASE SMOKE] Starting smoke test...
+I/flutter (17922): 🔥 [FIREBASE SMOKE] Current User: null
+I/flutter (17922): 🔥 [FIREBASE SMOKE] Auth State Change: User is currently signed out!
+I/flutter (17922): 🔥 [UserProfileSync] initialized
+Syncing files to device sdk gphone64 arm64...                       61ms
+
+Flutter run key commands.
+r Hot reload. 🔥🔥🔥
+R Hot restart.
+h List all available interactive commands.
+d Detach (terminate "flutter run" but leave application running).
+c Clear the screen
+q Quit (terminate the application on the device).
+
+A Dart VM Service on sdk gphone64 arm64 is available at: http://127.0.0.1:51508/z_lW6_k3DVU=/
+I/flutter (17922): 🔥 [UserProfileSync] Auth state changed: User signed out.
+I/Choreographer(17922): Skipped 35 frames!  The application may be doing too much work on its main thread.
+I/flutter (17922): 🔥 [FIREBASE SMOKE] === STEP 1: Creating user android_verify_1770083217344@invessty.com ===
+I/FirebaseAuth(17922): Creating user with android_verify_1770083217344@invessty.com with empty reCAPTCHA token
+W/System  (17922): Ignoring header X-Firebase-Locale because its value was null.
+D/TrafficStats(17922): tagSocket(126) with statsTag=0xffffffff, statsUid=-1
+W/System  (17922): Ignoring header X-Firebase-Locale because its value was null.
+D/FirebaseAuth(17922): Notifying id token listeners about user ( Aok7a1pzFyXzcD3qm4WRtH4Hr7P2 ).
+D/FirebaseAuth(17922): Notifying auth state listeners about user ( Aok7a1pzFyXzcD3qm4WRtH4Hr7P2 ).
+I/flutter (17922): 🔥 [FIREBASE SMOKE] Auth State Change: User signed in: Aok7a1pzFyXzcD3qm4WRtH4Hr7P2
+I/flutter (17922): 🔥 [UserProfileSync] auth user detected: Aok7a1pzFyXzcD3qm4WRtH4Hr7P2
+I/flutter (17922): 🔥 [UserProfileRemoteDataSource] Upserting users/Aok7a1pzFyXzcD3qm4WRtH4Hr7P2
+W/DynamiteModule(17922): Local module descriptor class for com.google.android.gms.providerinstaller.dynamite not found.
+D/EGL_emulation(17922): app_time_stats: avg=1625.25ms min=4.96ms max=3245.54ms count=2
+I/DynamiteModule(17922): Considering local module com.google.android.gms.providerinstaller.dynamite:0 and remote module com.google.android.gms.providerinstaller.dynamite:0
+W/ProviderInstaller(17922): Failed to load providerinstaller module: No acceptable module com.google.android.gms.providerinstaller.dynamite found. Local version is 0 and remote version is 0.
+D/nativeloader(17922): Configuring clns-7 for other apk /system/framework/org.apache.http.legacy.jar. target_sdk_version=33, uses_libraries=ALL, library_path=/product/priv-app/PrebuiltGmsCore/lib/arm64:/product/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.google.android.gms
+D/nativeloader(17922): Configuring clns-8 for other apk /system/framework/com.android.media.remotedisplay.jar. target_sdk_version=33, uses_libraries=ALL, library_path=/product/priv-app/PrebuiltGmsCore/lib/arm64:/product/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.google.android.gms
+D/nativeloader(17922): Configuring clns-9 for other apk /system/framework/com.android.location.provider.jar. target_sdk_version=33, uses_libraries=ALL, library_path=/product/priv-app/PrebuiltGmsCore/lib/arm64:/product/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.google.android.gms
+D/ApplicationLoaders(17922): Returning zygote-cached class loader: /system_ext/framework/androidx.window.extensions.jar
+D/ApplicationLoaders(17922): Returning zygote-cached class loader: /system_ext/framework/androidx.window.sidecar.jar
+D/nativeloader(17922): InitLlndkLibrariesProduct: libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libRS.so:libandroid_net.so:libbinder_ndk.so:libc.so:libcgrouprc.so:libclang_rt.asan-aarch64-android.so:libclang_rt.hwasan-aarch64-android.so:libcom.android.tethering.connectivity_native.so:libdl.so:libft2.so:liblog.so:libm.so:libmediandk.so:libnativewindow.so:libneuralnetworks.so:libselinux.so:libsync.so:libvndksupport.so:libvulkan.so
+D/nativeloader(17922): Configuring product-clns-10 for unbundled product apk /product/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk. target_sdk_version=33, uses_libraries=, library_path=/product/priv-app/PrebuiltGmsCore/lib/arm64:/product/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!/lib/arm64-v8a:/product/lib64:/system/product/lib64, permitted_path=/data:/mnt/expand:/data/user/0/com.google.android.gms:/product/lib64:/system/product/lib64
+D/nativeloader(17922): InitVndkspLibrariesProduct: android.hardware.common-V2-ndk.so:android.hardware.common.fmq-V1-ndk.so:android.hardware.graphics.allocator-V2-ndk.so:android.hardware.graphics.common-V4-ndk.so:android.hardware.graphics.common@1.0.so:android.hardware.graphics.common@1.1.so:android.hardware.graphics.common@1.2.so:android.hardware.graphics.composer3-V1-ndk.so:android.hardware.graphics.mapper@2.0.so:android.hardware.graphics.mapper@2.1.so:android.hardware.graphics.mapper@3.0.so:android.hardware.graphics.mapper@4.0.so:android.hardware.renderscript@1.0.so:android.hidl.memory.token@1.0.so:android.hidl.memory@1.0-impl.so:android.hidl.memory@1.0.so:android.hidl.safe_union@1.0.so:libRSCpuRef.so:libRSDriver.so:libRS_internal.so:libbase.so:libbcinfo.so:libblas.so:libc++.so:libcompiler_rt.so:libcutils.so:libdmabufheap.so:libgralloctypes.so:libhardware.so:libhidlbase.so:libhidlmemory.so:libion.so:libjsoncpp.so:liblzma.so:libprocessgroup.so:libunwindstack.so:libutils.so:libutilscallstack.so:libz.so
+V/NativeCrypto(17922): Registering com/google/android/gms/org/conscrypt/NativeCrypto's 295 native methods...
+W/estyapp.investy(17922): Accessing hidden method Ljava/security/spec/ECParameterSpec;->getCurveName()Ljava/lang/String; (unsupported, reflection, allowed)
+I/ProviderInstaller(17922): Installed default security provider GmsCore_OpenSSL
+D/TrafficStats(17922): tagSocket(148) with statsTag=0xffffffff, statsUid=-1
+W/estyapp.investy(17922): Accessing hidden field Ljava/net/Socket;->impl:Ljava/net/SocketImpl; (unsupported, reflection, allowed)
+W/estyapp.investy(17922): Accessing hidden method Ljava/security/spec/ECParameterSpec;->setCurveName(Ljava/lang/String;)V (unsupported, reflection, allowed)
+D/ProfileInstaller(17922): Installing profile for com.investyapp.investy
+I/flutter (17922): 🔥 [UserProfileRemoteDataSource] Upsert completed users/Aok7a1pzFyXzcD3qm4WRtH4Hr7P2
+I/flutter (17922): 🔥 [UserProfileSync] Upsert succeeded for Aok7a1pzFyXzcD3qm4WRtH4Hr7P2
+D/EGL_emulation(17922): app_time_stats: avg=2545.47ms min=2545.47ms max=2545.47ms count=1
+I/flutter (17922): 🔥 [FIREBASE SMOKE] === STEP 2: Signing out ===
+D/FirebaseAuth(17922): Notifying id token listeners about a sign-out event.
+D/FirebaseAuth(17922): Notifying auth state listeners about a sign-out event.
+I/flutter (17922): 🔥 [FIREBASE SMOKE] Auth State Change: User is currently signed out!
+I/flutter (17922): 🔥 [UserProfileSync] Auth state changed: User signed out.
+D/EGL_emulation(17922): app_time_stats: avg=2474.17ms min=2474.17ms max=2474.17ms count=1
+I/flutter (17922): 🔥 [FIREBASE SMOKE] === STEP 3: Signing in again (testing updated_at) ===
+I/FirebaseAuth(17922): Logging in as android_verify_1770083217344@invessty.com with empty reCAPTCHA token
+W/System  (17922): Ignoring header X-Firebase-Locale because its value was null.
+D/TrafficStats(17922): tagSocket(146) with statsTag=0xffffffff, statsUid=-1
+W/System  (17922): Ignoring header X-Firebase-Locale because its value was null.
+D/FirebaseAuth(17922): Notifying id token listeners about user ( Aok7a1pzFyXzcD3qm4WRtH4Hr7P2 ).
+D/FirebaseAuth(17922): Notifying auth state listeners about user ( Aok7a1pzFyXzcD3qm4WRtH4Hr7P2 ).
+I/flutter (17922): 🔥 [FIREBASE SMOKE] Auth State Change: User signed in: Aok7a1pzFyXzcD3qm4WRtH4Hr7P2
+I/flutter (17922): 🔥 [UserProfileSync] auth user detected: Aok7a1pzFyXzcD3qm4WRtH4Hr7P2
+I/flutter (17922): 🔥 [UserProfileRemoteDataSource] Upserting users/Aok7a1pzFyXzcD3qm4WRtH4Hr7P2
+D/EGL_emulation(17922): app_time_stats: avg=3372.53ms min=3372.53ms max=3372.53ms count=1
+I/flutter (17922): 🔥 [UserProfileRemoteDataSource] Upsert completed users/Aok7a1pzFyXzcD3qm4WRtH4Hr7P2
+I/flutter (17922): 🔥 [UserProfileSync] Upsert succeeded for Aok7a1pzFyXzcD3qm4WRtH4Hr7P2
+D/EGL_emulation(17922): app_time_stats: avg=1860.66ms min=1860.66ms max=1860.66ms count=1
+I/flutter (17922): 🔥 [FIREBASE SMOKE] ✅ E2E VERIFICATION COMPLETE ✅
+D/EGL_emulation(17922): app_time_stats: avg=260439.70ms min=260439.70ms max=260439.70ms count=1
+D/EGL_emulation(17922): app_time_stats: avg=18.32ms min=0.92ms max=525.62ms count=32
+I/flutter (17922): 🔥 [AuthRemoteDataSource] Signing out from Firebase...
+D/FirebaseAuth(17922): Notifying id token listeners about a sign-out event.
+D/FirebaseAuth(17922): Notifying auth state listeners about a sign-out event.
+I/flutter (17922): 🔥 [AuthRemoteDataSource] Signed out successfully.
+W/WindowOnBackDispatcher(17922): OnBackInvokedCallback is not enabled for the application.
+W/WindowOnBackDispatcher(17922): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+I/flutter (17922): 🔥 [FIREBASE SMOKE] Auth State Change: User is currently signed out!
+I/flutter (17922): 🔥 [UserProfileSync] Auth state changed: User signed out.
+D/EGL_emulation(17922): app_time_stats: avg=67.76ms min=0.74ms max=1238.66ms count=24
+I/ImeTracker(17922): com.investyapp.investy:bf71030: onRequestShow at ORIGIN_CLIENT_SHOW_SOFT_INPUT reason SHOW_SOFT_INPUT
+D/InputMethodManager(17922): showSoftInput() view=io.flutter.embedding.android.FlutterView{35213d4 VFE...... .F....ID 0,0-1080,2337 #1 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+D/InsetsController(17922): show(ime(), fromIme=true)
+I/ImeTracker(17922): com.investyapp.investy:bf71030: onShown
+D/EGL_emulation(17922): app_time_stats: avg=53.28ms min=6.19ms max=550.17ms count=29
+D/EGL_emulation(17922): app_time_stats: avg=484.84ms min=450.69ms max=505.08ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=500.09ms min=500.04ms max=500.14ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=500.63ms min=495.08ms max=504.36ms count=3
+I/ImeTracker(17922): com.investyapp.investy:f1ed1c06: onRequestShow at ORIGIN_CLIENT_SHOW_SOFT_INPUT reason SHOW_SOFT_INPUT
+D/InputMethodManager(17922): showSoftInput() view=io.flutter.embedding.android.FlutterView{35213d4 VFE...... .F...... 0,0-1080,2337 #1 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+D/InsetsController(17922): show(ime(), fromIme=true)
+I/ImeTracker(17922): com.investyapp.investy:f1ed1c06: onCancelled at PHASE_CLIENT_APPLY_ANIMATION
+D/EGL_emulation(17922): app_time_stats: avg=500.09ms min=492.64ms max=507.55ms count=2
+I/ImeTracker(17922): com.investyapp.investy:e82ad109: onRequestShow at ORIGIN_CLIENT_SHOW_SOFT_INPUT reason SHOW_SOFT_INPUT
+D/InputMethodManager(17922): showSoftInput() view=io.flutter.embedding.android.FlutterView{35213d4 VFE...... .F...... 0,0-1080,2337 #1 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+D/InsetsController(17922): show(ime(), fromIme=true)
+I/ImeTracker(17922): com.investyapp.investy:e82ad109: onCancelled at PHASE_CLIENT_APPLY_ANIMATION
+D/EGL_emulation(17922): app_time_stats: avg=499.54ms min=498.08ms max=501.53ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=500.65ms min=499.99ms max=501.30ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=499.15ms min=498.82ms max=499.46ms count=3
+E/FrameTracker(17922): force finish cuj, time out: J<IME_INSETS_ANIMATION::0@1@com.investyapp.investy>
+D/EGL_emulation(17922): app_time_stats: avg=476.47ms min=437.38ms max=502.57ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=417.08ms min=255.22ms max=498.71ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=501.45ms min=501.12ms max=501.78ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=500.40ms min=498.90ms max=501.90ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=477.36ms min=445.19ms max=499.05ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=400.21ms min=186.71ms max=514.27ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=447.29ms min=421.85ms max=491.32ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=392.84ms min=191.02ms max=497.26ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=474.01ms min=443.63ms max=490.84ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=347.76ms min=89.12ms max=500.08ms count=4
+D/EGL_emulation(17922): app_time_stats: avg=481.77ms min=453.90ms max=498.55ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=492.11ms min=488.49ms max=494.65ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=381.09ms min=155.75ms max=496.66ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=442.13ms min=336.49ms max=513.71ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=497.48ms min=490.39ms max=503.39ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=497.16ms min=496.09ms max=497.74ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=502.56ms min=502.20ms max=502.93ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=340.89ms min=10.66ms max=519.75ms count=4
+D/EGL_emulation(17922): app_time_stats: avg=389.97ms min=148.57ms max=515.11ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=424.32ms min=281.85ms max=514.51ms count=3
+D/TrafficStats(17922): tagSocket(150) with statsTag=0xffffffff, statsUid=-1
+D/TrafficStats(17922): tagSocket(148) with statsTag=0xffffffff, statsUid=-1
+D/EGL_emulation(17922): app_time_stats: avg=469.27ms min=422.22ms max=494.45ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=378.28ms min=219.19ms max=496.82ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=450.80ms min=320.97ms max=517.84ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=464.98ms min=400.73ms max=509.33ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=378.38ms min=134.49ms max=514.29ms count=3
+I/ImeTracker(17922): com.investyapp.investy:ba322125: onRequestShow at ORIGIN_CLIENT_SHOW_SOFT_INPUT reason SHOW_SOFT_INPUT
+D/InputMethodManager(17922): showSoftInput() view=io.flutter.embedding.android.FlutterView{35213d4 VFE...... .F...... 0,0-1080,2337 #1 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+D/InsetsController(17922): show(ime(), fromIme=true)
+I/ImeTracker(17922): com.investyapp.investy:ba322125: onCancelled at PHASE_CLIENT_APPLY_ANIMATION
+D/EGL_emulation(17922): app_time_stats: avg=96.13ms min=12.46ms max=517.49ms count=13
+D/EGL_emulation(17922): app_time_stats: avg=500.62ms min=495.04ms max=506.20ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=337.95ms min=24.49ms max=496.34ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=344.49ms min=39.95ms max=497.09ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=441.32ms min=385.05ms max=499.92ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=398.39ms min=210.34ms max=494.97ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=391.08ms min=185.34ms max=500.79ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=499.64ms min=488.15ms max=508.84ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=353.80ms min=73.37ms max=495.43ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=375.08ms min=144.44ms max=494.33ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=369.01ms min=121.47ms max=499.27ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=17.14ms min=10.71ms max=50.08ms count=59
+W/WindowOnBackDispatcher(17922): OnBackInvokedCallback is not enabled for the application.
+W/WindowOnBackDispatcher(17922): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+I/ImeTracker(17922): com.investyapp.investy:7fcacfb6: onRequestHide at ORIGIN_CLIENT_HIDE_SOFT_INPUT reason HIDE_SOFT_INPUT
+D/EGL_emulation(17922): app_time_stats: avg=15159.25ms min=12.09ms max=276801.62ms count=22
+W/WindowOnBackDispatcher(17922): sendCancelIfRunning: isInProgress=falsecallback=ImeCallback=ImeOnBackInvokedCallback@145220194 Callback=android.window.IOnBackInvokedCallback$Stub$Proxy@a012a22
+I/ImeTracker(17922): com.investyapp.investy:351ba938: onRequestHide at ORIGIN_CLIENT_HIDE_SOFT_INPUT reason HIDE_SOFT_INPUT_BY_INSETS_API
+I/ImeTracker(17922): com.investyapp.investy:7fcacfb6: onHidden
+D/EGL_emulation(17922): app_time_stats: avg=166.04ms min=1.04ms max=5163.75ms count=33
+D/EGL_emulation(17922): app_time_stats: avg=101.79ms min=6.62ms max=3075.41ms count=36
+I/flutter (17922): 🔥 [AuthRemoteDataSource] Signing out from Firebase...
+D/FirebaseAuth(17922): Notifying id token listeners about a sign-out event.
+D/FirebaseAuth(17922): Notifying auth state listeners about a sign-out event.
+I/flutter (17922): 🔥 [AuthRemoteDataSource] Signed out successfully.
+I/flutter (17922): 🔥 [FIREBASE SMOKE] Auth State Change: User is currently signed out!
+I/flutter (17922): 🔥 [UserProfileSync] Auth state changed: User signed out.
+W/WindowOnBackDispatcher(17922): OnBackInvokedCallback is not enabled for the application.
+W/WindowOnBackDispatcher(17922): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+E/FrameTracker(17922): force finish cuj, time out: J<IME_INSETS_ANIMATION::1@1@com.investyapp.investy>
+I/ImeTracker(17922): com.investyapp.investy:76f8779e: onRequestShow at ORIGIN_CLIENT_SHOW_SOFT_INPUT reason SHOW_SOFT_INPUT
+D/InputMethodManager(17922): showSoftInput() view=io.flutter.embedding.android.FlutterView{35213d4 VFE...... .F...... 0,0-1080,2337 #1 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+D/EGL_emulation(17922): app_time_stats: avg=58.35ms min=0.94ms max=1752.77ms count=35
+D/InsetsController(17922): show(ime(), fromIme=true)
+D/EGL_emulation(17922): app_time_stats: avg=574.86ms min=0.57ms max=11436.82ms count=20
+I/ImeTracker(17922): com.investyapp.investy:76f8779e: onShown
+D/EGL_emulation(17922): app_time_stats: avg=38.46ms min=0.64ms max=502.09ms count=30
+D/EGL_emulation(17922): app_time_stats: avg=501.31ms min=498.93ms max=503.69ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=500.63ms min=499.99ms max=501.26ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=416.12ms min=229.15ms max=517.68ms count=3
+I/ImeTracker(17922): com.investyapp.investy:29c543fb: onRequestShow at ORIGIN_CLIENT_SHOW_SOFT_INPUT reason SHOW_SOFT_INPUT
+D/InputMethodManager(17922): showSoftInput() view=io.flutter.embedding.android.FlutterView{35213d4 VFE...... .F...... 0,0-1080,2337 #1 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+W/RemoteInputConnectionImpl(17922): getSurroundingText on inactive InputConnection
+W/RemoteInputConnectionImpl(17922): getTextBeforeCursor on inactive InputConnection
+W/RemoteInputConnectionImpl(17922): getSurroundingText on inactive InputConnection
+D/InsetsController(17922): show(ime(), fromIme=true)
+I/ImeTracker(17922): com.investyapp.investy:29c543fb: onCancelled at PHASE_CLIENT_APPLY_ANIMATION
+D/EGL_emulation(17922): app_time_stats: avg=78.24ms min=9.32ms max=481.20ms count=14
+D/EGL_emulation(17922): app_time_stats: avg=501.96ms min=500.57ms max=503.35ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=500.66ms min=499.80ms max=501.52ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=349.56ms min=38.67ms max=516.23ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=24.11ms min=12.30ms max=299.69ms count=42
+W/WindowOnBackDispatcher(17922): OnBackInvokedCallback is not enabled for the application.
+W/WindowOnBackDispatcher(17922): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+I/ImeTracker(17922): com.investyapp.investy:980e8847: onRequestHide at ORIGIN_CLIENT_HIDE_SOFT_INPUT reason HIDE_SOFT_INPUT
+D/EGL_emulation(17922): app_time_stats: avg=514.18ms min=14.04ms max=9968.74ms count=20
+W/WindowOnBackDispatcher(17922): sendCancelIfRunning: isInProgress=falsecallback=ImeCallback=ImeOnBackInvokedCallback@145220194 Callback=android.window.IOnBackInvokedCallback$Stub$Proxy@851db7a
+E/FrameTracker(17922): force finish cuj, time out: J<IME_INSETS_ANIMATION::0@1@com.investyapp.investy>
+I/ImeTracker(17922): com.investyapp.investy:d0deb207: onRequestHide at ORIGIN_CLIENT_HIDE_SOFT_INPUT reason HIDE_SOFT_INPUT_BY_INSETS_API
+I/ImeTracker(17922): com.investyapp.investy:980e8847: onHidden
+E/FrameTracker(17922): force finish cuj, time out: J<IME_INSETS_ANIMATION::1@1@com.investyapp.investy>
+D/TrafficStats(17922): tagSocket(153) with statsTag=0xffffffff, statsUid=-1
+D/TrafficStats(17922): tagSocket(125) with statsTag=0xffffffff, statsUid=-1
+D/TrafficStats(17922): tagSocket(125) with statsTag=0xffffffff, statsUid=-1
+D/EGL_emulation(17922): app_time_stats: avg=8643.47ms min=1.01ms max=457531.75ms count=53
+D/EGL_emulation(17922): app_time_stats: avg=166.05ms min=2.53ms max=4365.21ms count=29
+I/flutter (17922): 🔥 [AuthRemoteDataSource] Signing out from Firebase...
+D/FirebaseAuth(17922): Notifying id token listeners about a sign-out event.
+D/FirebaseAuth(17922): Notifying auth state listeners about a sign-out event.
+I/flutter (17922): 🔥 [AuthRemoteDataSource] Signed out successfully.
+I/flutter (17922): 🔥 [FIREBASE SMOKE] Auth State Change: User is currently signed out!
+I/flutter (17922): 🔥 [UserProfileSync] Auth state changed: User signed out.
+W/WindowOnBackDispatcher(17922): OnBackInvokedCallback is not enabled for the application.
+W/WindowOnBackDispatcher(17922): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+D/TrafficStats(17922): tagSocket(168) with statsTag=0xffffffff, statsUid=-1
+D/TrafficStats(17922): tagSocket(125) with statsTag=0xffffffff, statsUid=-1
+D/TrafficStats(17922): tagSocket(125) with statsTag=0xffffffff, statsUid=-1
+D/TrafficStats(17922): tagSocket(168) with statsTag=0xffffffff, statsUid=-1
+Lost connection to device.
+_time_stats: avg=58.35ms min=0.94ms max=1752.77ms count=35
+D/InsetsController(17922): show(ime(), fromIme=true)
+D/EGL_emulation(17922): app_time_stats: avg=574.86ms min=0.57ms max=11436.82ms count=20
+I/ImeTracker(17922): com.investyapp.investy:76f8779e: onShown
+D/EGL_emulation(17922): app_time_stats: avg=38.46ms min=0.64ms max=502.09ms count=30
+D/EGL_emulation(17922): app_time_stats: avg=501.31ms min=498.93ms max=503.69ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=500.63ms min=499.99ms max=501.26ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=416.12ms min=229.15ms max=517.68ms count=3
+I/ImeTracker(17922): com.investyapp.investy:29c543fb: onRequestShow at ORIGIN_CLIENT_SHOW_SOFT_INPUT reason SHOW_SOFT_INPUT
+D/InputMethodManager(17922): showSoftInput() view=io.flutter.embedding.android.FlutterView{35213d4 VFE...... .F...... 0,0-1080,2337 #1 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+W/RemoteInputConnectionImpl(17922): getSurroundingText on inactive InputConnection
+W/RemoteInputConnectionImpl(17922): getTextBeforeCursor on inactive InputConnection
+W/RemoteInputConnectionImpl(17922): getSurroundingText on inactive InputConnection
+D/InsetsController(17922): show(ime(), fromIme=true)
+I/ImeTracker(17922): com.investyapp.investy:29c543fb: onCancelled at PHASE_CLIENT_APPLY_ANIMATION
+D/EGL_emulation(17922): app_time_stats: avg=78.24ms min=9.32ms max=481.20ms count=14
+D/EGL_emulation(17922): app_time_stats: avg=501.96ms min=500.57ms max=503.35ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=500.66ms min=499.80ms max=501.52ms count=2
+D/EGL_emulation(17922): app_time_stats: avg=349.56ms min=38.67ms max=516.23ms count=3
+D/EGL_emulation(17922): app_time_stats: avg=24.11ms min=12.30ms max=299.69ms count=42
+W/WindowOnBackDispatcher(17922): OnBackInvokedCallback is not enabled for the application.
+W/WindowOnBackDispatcher(17922): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+I/ImeTracker(17922): com.investyapp.investy:980e8847: onRequestHide at ORIGIN_CLIENT_HIDE_SOFT_INPUT reason HIDE_SOFT_INPUT
+D/EGL_emulation(17922): app_time_stats: avg=514.18ms min=14.04ms max=9968.74ms count=20
+W/WindowOnBackDispatcher(17922): sendCancelIfRunning: isInProgress=falsecallback=ImeCallback=ImeOnBackInvokedCallback@145220194 Callback=android.window.IOnBackInvokedCallback$Stub$Proxy@851db7a
+E/FrameTracker(17922): force finish cuj, time out: J<IME_INSETS_ANIMATION::0@1@com.investyapp.investy>
+I/ImeTracker(17922): com.investyapp.investy:d0deb207: onRequestHide at ORIGIN_CLIENT_HIDE_SOFT_INPUT reason HIDE_SOFT_INPUT_BY_INSETS_API
+I/ImeTracker(17922): com.investyapp.investy:980e8847: onHidden
+E/FrameTracker(17922): force finish cuj, time out: J<IME_INSETS_ANIMATION::1@1@com.investyapp.investy>
+D/TrafficStats(17922): tagSocket(153) with statsTag=0xffffffff, statsUid=-1
+D/TrafficStats(17922): tagSocket(125) with statsTag=0xffffffff, statsUid=-1
+D/TrafficStats(17922): tagSocket(125) with statsTag=0xffffffff, statsUid=-1
+D/EGL_emulation(17922): app_time_stats: avg=8643.47ms min=1.01ms max=457531.75ms count=53
+D/EGL_emulation(17922): app_time_stats: avg=166.05ms min=2.53ms max=4365.21ms count=29
+I/flutter (17922): 🔥 [AuthRemoteDataSource] Signing out from Firebase...
+D/FirebaseAuth(17922): Notifying id token listeners about a sign-out event.
+D/FirebaseAuth(17922): Notifying auth state listeners about a sign-out event.
+I/flutter (17922): 🔥 [AuthRemoteDataSource] Signed out successfully.
+I/flutter (17922): 🔥 [FIREBASE SMOKE] Auth State Change: User is currently signed out!
+I/flutter (17922): 🔥 [UserProfileSync] Auth state changed: User signed out.
+W/WindowOnBackDispatcher(17922): OnBackInvokedCallback is not enabled for the application.
+W/WindowOnBackDispatcher(17922): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+D/TrafficStats(17922): tagSocket(168) with statsTag=0xffffffff, statsUid=-1
+D/TrafficStats(17922): tagSocket(125) with statsTag=0xffffffff, statsUid=-1
+D/TrafficStats(17922): tagSocket(125) with statsTag=0xffffffff, statsUid=-1
+D/TrafficStats(17922): tagSocket(168) with statsTag=0xffffffff, statsUid=-1
+Lost connection to device.

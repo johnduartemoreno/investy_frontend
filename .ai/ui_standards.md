@@ -1,0 +1,11 @@
+# UI / UX STANDARDS (iOS Apple HIG Focus)
+- **Visual Identity:** iOS Native feel, premium, clean. Not a generic payment app.
+- **Typography:** SF Pro. Bold for headers, Medium for body. High contrast readability.
+- **Components:**
+  - Flat cards with soft, diffuse shadows.
+  - Glassmorphism (`BackdropFilter`) for nav bars and floating elements.
+  - Gradients for primary action buttons.
+- **Micro-interactions:**
+  - Use Haptic Feedback for all successful transactions (deposits, buys).
+  - Smooth page transitions and state changes.
+- **Data Display:** The UI ONLY interacts with human-readable `double` values (e.g., $10.50). Never expose raw cents to the UI layer.

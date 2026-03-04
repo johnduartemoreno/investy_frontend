@@ -1,0 +1,59 @@
+name: invessty
+description: A complete Flutter project with Clean Architecture.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  
+  # Firebase
+  firebase_core: ^3.9.0
+  firebase_auth: ^5.3.4
+  cloud_firestore: ^5.4.4
+  
+  # State Management
+  flutter_riverpod: ^2.4.9
+  riverpod_annotation: ^2.6.1  # Latest compatible with riverpod_generator 2.4.x
+  
+  # Navigation
+  go_router: ^12.1.1
+  
+  # Network
+  dio: ^5.4.0
+  
+  # Persistence
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  shared_preferences: ^2.2.2
+  
+  # Utils
+  fpdart: ^1.1.0
+  intl: ^0.20.0
+  rxdart: ^0.28.0
+  json_annotation: ^4.9.0
+  freezed_annotation: ^2.4.1
+  equatable: ^2.0.5
+  uuid: ^4.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  
+  build_runner: ^2.4.8
+  riverpod_generator: ^2.4.0
+  freezed: ^2.4.6
+  json_serializable: ^6.7.1
+  hive_generator: ^2.0.1
+  mocktail: ^1.0.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
