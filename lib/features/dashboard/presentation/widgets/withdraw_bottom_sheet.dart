@@ -77,7 +77,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final availableCashAsync = ref.watch(availableCashProvider);
+    final availableCashAsync = ref.watch(restAvailableCashProvider);
     final currencyFmt = NumberFormat.simpleCurrency();
 
     // Default to 0 if loading/error, but UI handles loading state
