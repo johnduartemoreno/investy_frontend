@@ -1,10 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../data/repositories/dashboard_repository_impl.dart';
+import '../../data/datasources/dashboard_remote_data_source.dart';
+import '../../data/models/transaction_request_model.dart';
 import '../screens/dashboard_screen.dart';
 
 class WithdrawBottomSheet extends ConsumerStatefulWidget {
@@ -43,12 +45,15 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
     setState(() => _isLoading = true);
 
     try {
-      await ref.read(dashboardRepositoryProvider).addContribution(
-            amount: _amount,
-            type: 'withdrawal',
-            date: DateTime.now(),
-            description: 'Transfer to Bank',
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) throw Exception('User not authenticated');
+
+      await ref.read(dashboardRemoteDataSourceProvider).createTransaction(
+            userId,
+            TransactionRequestModel.fromDomain(_amount, 'WITHDRAWAL'),
           );
+
+      ref.invalidate(restDashboardProvider);
 
       if (mounted) {
         context.pop(); // Close modal

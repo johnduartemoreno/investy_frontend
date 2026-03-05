@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,7 +6,9 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/utils/currency_formatter.dart';
-import '../../../dashboard/data/repositories/dashboard_repository_impl.dart';
+import '../../../dashboard/data/datasources/dashboard_remote_data_source.dart';
+import '../../../dashboard/data/models/transaction_request_model.dart';
+import '../../../dashboard/presentation/screens/dashboard_screen.dart';
 
 // ==========================================
 // Thousands-Separator Input Formatter
@@ -123,12 +126,15 @@ class TopUpNotifier extends StateNotifier<TopUpState> {
     state = state.copyWith(status: TopUpStatus.loading);
 
     try {
-      final repository = _ref.read(dashboardRepositoryProvider);
-      await repository.addContribution(
-        amount: state.amount!,
-        type: 'deposit',
-        date: DateTime.now(),
-      );
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) throw Exception('User not authenticated');
+
+      await _ref.read(dashboardRemoteDataSourceProvider).createTransaction(
+            userId,
+            TransactionRequestModel.fromDomain(state.amount!, 'DEPOSIT'),
+          );
+
+      _ref.invalidate(restDashboardProvider);
       state = state.copyWith(status: TopUpStatus.success);
       return true;
     } catch (e) {

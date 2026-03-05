@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../data/repositories/dashboard_repository_impl.dart';
+import '../../data/datasources/dashboard_remote_data_source.dart';
+import '../../data/models/transaction_request_model.dart';
+import '../screens/dashboard_screen.dart';
 
 part 'sell_asset_controller.g.dart';
 
@@ -17,9 +20,16 @@ class SellAssetController extends _$SellAssetController {
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await ref
-          .read(dashboardRepositoryProvider)
-          .sellAsset(symbol, currentPrice, quantity);
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) throw Exception('User not authenticated');
+      final total = currentPrice * quantity;
+      await ref.read(dashboardRemoteDataSourceProvider).createTransaction(
+            userId,
+            TransactionRequestModel.fromDomain(total, 'SELL'),
+          );
     });
+    if (state is AsyncData) {
+      ref.invalidate(restDashboardProvider);
+    }
   }
 }
