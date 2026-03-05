@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +6,8 @@ import 'package:intl/intl.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../data/datasources/dashboard_remote_data_source.dart';
+import '../../data/models/dashboard_response_model.dart';
 import '../../data/repositories/dashboard_repository_impl.dart';
 import '../widgets/withdraw_bottom_sheet.dart';
 import '../../domain/entities/contribution.dart';
@@ -118,7 +121,41 @@ final recentActivityStreamProvider =
 });
 
 // ==========================================
-// 2. CONTRIBUTION UI HELPERS
+// 2. REST PROVIDERS (Go Backend)
+// ==========================================
+
+/// Fetches the full dashboard payload from the Go REST backend.
+/// Emits AsyncLoading → AsyncData<DashboardResponseModel> → AsyncError.
+final restDashboardProvider =
+    FutureProvider.autoDispose<DashboardResponseModel>((ref) async {
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  if (userId == null) throw Exception('User not authenticated');
+  return ref.watch(dashboardRemoteDataSourceProvider).getDashboard(userId);
+});
+
+/// Derived: Available Cash from the REST backend.
+/// Maps DashboardResponseModel.totalBalance (int cents) → double dollars.
+final restAvailableCashProvider =
+    Provider.autoDispose<AsyncValue<double>>((ref) {
+  return ref
+      .watch(restDashboardProvider)
+      .whenData((dash) => dash.toDomainWallet().availableCash);
+});
+
+/// Derived: Recent Activity feed from the REST backend.
+/// Maps each ActivityItemModel → ActivityItemContribution wrapping a Contribution,
+/// compatible with the existing ActivityItem sealed class used in the UI.
+final restRecentActivityProvider =
+    Provider.autoDispose<AsyncValue<List<ActivityItem>>>((ref) {
+  return ref.watch(restDashboardProvider).whenData(
+        (dash) => dash.recentActivity
+            .map((m) => ActivityItemContribution(m.toDomain()))
+            .toList(),
+      );
+});
+
+// ==========================================
+// 3. CONTRIBUTION UI HELPERS
 // ==========================================
 
 /// Returns the appropriate icon for a contribution type.
@@ -187,11 +224,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // Watch real stream providers
+    // Firestore providers (not yet in REST contract)
     final userProfileAsync = ref.watch(userProfileStreamProvider);
     final netWorthAsync = ref.watch(netWorthProvider);
-    final availableCashAsync = ref.watch(availableCashProvider);
-    final recentActivityAsync = ref.watch(recentActivityStreamProvider);
+    // REST providers — Go backend
+    final availableCashAsync = ref.watch(restAvailableCashProvider);
+    final recentActivityAsync = ref.watch(restRecentActivityProvider);
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
