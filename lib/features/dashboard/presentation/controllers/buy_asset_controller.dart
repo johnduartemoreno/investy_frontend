@@ -27,7 +27,7 @@ class BuyAssetController extends _$BuyAssetController {
       final total = price * quantity;
       await ref.read(dashboardRemoteDataSourceProvider).createTransaction(
             userId,
-            TransactionRequestModel.fromDomain(total, 'BUY'),
+            TransactionRequestModel.fromDomain(total, 'BUY', symbol: symbol),
           );
     });
     if (state is AsyncData) {
