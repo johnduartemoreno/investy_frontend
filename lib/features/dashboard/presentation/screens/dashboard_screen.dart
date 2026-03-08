@@ -169,7 +169,7 @@ final restRecentActivityProvider =
 
 /// Returns the appropriate icon for a contribution type.
 IconData _getContributionIcon(String type) {
-  switch (type) {
+  switch (type.toLowerCase()) {
     case 'deposit':
       return Icons.arrow_downward;
     case 'withdrawal':
@@ -181,7 +181,7 @@ IconData _getContributionIcon(String type) {
 
 /// Returns the appropriate color for a contribution type.
 Color _getContributionColor(String type) {
-  switch (type) {
+  switch (type.toLowerCase()) {
     case 'deposit':
       return Colors.green;
     case 'withdrawal':
@@ -545,7 +545,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildTransactionActivityItem(
       ThemeData theme, Transaction transaction) {
-    final isBuy = transaction.type == 'buy';
+    final isBuy = transaction.type.toLowerCase() == 'buy';
     final icon = isBuy ? Icons.trending_up : Icons.trending_down;
     final color = isBuy ? Colors.green : Colors.red;
     final title =
