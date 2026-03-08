@@ -7,7 +7,7 @@ part of 'buy_asset_controller.dart';
 // **************************************************************************
 
 String _$buyAssetControllerHash() =>
-    r'71a8974ec85bf48d18b49acf92a2d9cd69564726';
+    r'31aefcda8acf47cad4dfdb367912a5ce81be6906';
 
 /// See also [BuyAssetController].
 @ProviderFor(BuyAssetController)

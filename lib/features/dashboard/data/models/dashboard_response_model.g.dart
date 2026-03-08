@@ -10,6 +10,7 @@ DashboardResponseModel _$DashboardResponseModelFromJson(
         Map<String, dynamic> json) =>
     DashboardResponseModel(
       totalBalance: (json['totalBalance'] as num).toInt(),
+      investedValue: (json['investedValue'] as num).toInt(),
       currency: json['currency'] as String,
       recentActivity: (json['recentActivity'] as List<dynamic>)
           .map((e) => ActivityItemModel.fromJson(e as Map<String, dynamic>))
@@ -20,6 +21,7 @@ Map<String, dynamic> _$DashboardResponseModelToJson(
         DashboardResponseModel instance) =>
     <String, dynamic>{
       'totalBalance': instance.totalBalance,
+      'investedValue': instance.investedValue,
       'currency': instance.currency,
       'recentActivity': instance.recentActivity.map((e) => e.toJson()).toList(),
     };

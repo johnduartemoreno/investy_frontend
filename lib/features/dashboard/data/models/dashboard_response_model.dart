@@ -13,6 +13,10 @@ class DashboardResponseModel {
   /// Total wallet balance in integer cents. $1.00 = 100. Never a double.
   final int totalBalance;
 
+  /// Total market value of all holdings in integer cents. $1.00 = 100.
+  /// Calculated server-side: SUM(QuantityUnits * CurrentPriceCents / 10^8).
+  final int investedValue;
+
   /// ISO 4217 currency code (e.g. "USD").
   final String currency;
 
@@ -21,6 +25,7 @@ class DashboardResponseModel {
 
   const DashboardResponseModel({
     required this.totalBalance,
+    required this.investedValue,
     required this.currency,
     required this.recentActivity,
   });

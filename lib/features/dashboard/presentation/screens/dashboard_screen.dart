@@ -142,6 +142,15 @@ final restAvailableCashProvider =
       .whenData((dash) => dash.toDomainWallet().availableCash);
 });
 
+/// Derived: Invested portfolio value from the REST backend.
+/// Maps DashboardResponseModel.investedValue (int cents) → double dollars.
+final restInvestedValueProvider =
+    Provider.autoDispose<AsyncValue<double>>((ref) {
+  return ref
+      .watch(restDashboardProvider)
+      .whenData((dash) => dash.investedValue / 100.0);
+});
+
 /// Derived: Recent Activity feed from the REST backend.
 /// Maps each ActivityItemModel → ActivityItemContribution wrapping a Contribution,
 /// compatible with the existing ActivityItem sealed class used in the UI.
@@ -226,7 +235,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     // Firestore providers (not yet in REST contract)
     final userProfileAsync = ref.watch(userProfileStreamProvider);
-    final netWorthAsync = ref.watch(netWorthProvider);
+    final netWorthAsync = ref.watch(restInvestedValueProvider);
     // REST providers — Go backend
     final availableCashAsync = ref.watch(restAvailableCashProvider);
     final recentActivityAsync = ref.watch(restRecentActivityProvider);

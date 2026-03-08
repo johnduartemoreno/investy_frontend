@@ -8,9 +8,10 @@ import 'package:investy/features/dashboard/domain/entities/holding.dart';
 import 'package:investy/features/dashboard/domain/entities/user_profile.dart';
 import 'package:investy/features/dashboard/presentation/screens/dashboard_screen.dart';
 
-/// Minimal mock DashboardResponseModel: totalBalance = 250000 cents = $2,500.00
+/// Minimal mock DashboardResponseModel: totalBalance = 250000 cents = $2,500.00, investedValue = 100000 cents = $1,000.00
 const _mockResponse = DashboardResponseModel(
   totalBalance: 250000,
+  investedValue: 100000,
   currency: 'USD',
   recentActivity: [
     ActivityItemModel(
