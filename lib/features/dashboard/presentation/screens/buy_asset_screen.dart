@@ -2,8 +2,51 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import '../controllers/buy_asset_controller.dart';
 import '../../domain/entities/asset.dart';
+
+// ==========================================
+// Thousands-Separator Input Formatter
+// ==========================================
+
+/// Mirrors ThousandsSeparatorInputFormatter from top_up_screen.dart.
+class ThousandsSeparatorInputFormatter extends TextInputFormatter {
+  static final _numberFormat = NumberFormat('#,##0.##', 'en_US');
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+    final raw = newValue.text.replaceAll(',', '');
+    if (!RegExp(r'^\d*\.?\d{0,2}$').hasMatch(raw)) return oldValue;
+
+    if (raw.contains('.')) {
+      final parts = raw.split('.');
+      final formattedInt = parts[0].isEmpty
+          ? ''
+          : _numberFormat.format(int.parse(parts[0]));
+      final formatted = '$formattedInt.${parts[1]}';
+      return TextEditingValue(
+        text: formatted,
+        selection: TextSelection.collapsed(offset: formatted.length),
+      );
+    }
+
+    final number = int.tryParse(raw);
+    if (number == null) return oldValue;
+    final formatted = _numberFormat.format(number);
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+
+  static double? parseFormatted(String text) =>
+      double.tryParse(text.replaceAll(',', ''));
+}
 
 class BuyAssetScreen extends ConsumerStatefulWidget {
   const BuyAssetScreen({super.key});
@@ -114,7 +157,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
       }
 
       final quantity = double.parse(_quantityController.text.trim());
-      final price = double.parse(_priceController.text.trim());
+      final price = ThousandsSeparatorInputFormatter.parseFormatted(_priceController.text.trim()) ?? 0;
 
       ref.read(buyAssetControllerProvider.notifier).buyAsset(
             symbol: _selectedAsset!.symbol,
@@ -262,15 +305,14 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   inputFormatters: [
-                    FilteringTextInputFormatter.allow(
-                        RegExp(r'^\d*\.?\d{0,2}')),
+                    ThousandsSeparatorInputFormatter(),
                   ],
                   enabled: _selectedAsset != null,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter price';
                     }
-                    final price = double.tryParse(value);
+                    final price = ThousandsSeparatorInputFormatter.parseFormatted(value);
                     if (price == null || price <= 0) {
                       return 'Must be a positive number';
                     }

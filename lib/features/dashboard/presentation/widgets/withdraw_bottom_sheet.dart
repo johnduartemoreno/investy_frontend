@@ -9,6 +9,48 @@ import '../../data/datasources/dashboard_remote_data_source.dart';
 import '../../data/models/transaction_request_model.dart';
 import '../screens/dashboard_screen.dart';
 
+// ==========================================
+// Thousands-Separator Input Formatter
+// ==========================================
+
+/// Mirrors ThousandsSeparatorInputFormatter from top_up_screen.dart.
+class ThousandsSeparatorInputFormatter extends TextInputFormatter {
+  static final _numberFormat = NumberFormat('#,##0.##', 'en_US');
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+    final raw = newValue.text.replaceAll(',', '');
+    if (!RegExp(r'^\d*\.?\d{0,2}$').hasMatch(raw)) return oldValue;
+
+    if (raw.contains('.')) {
+      final parts = raw.split('.');
+      final formattedInt = parts[0].isEmpty
+          ? ''
+          : _numberFormat.format(int.parse(parts[0]));
+      final formatted = '$formattedInt.${parts[1]}';
+      return TextEditingValue(
+        text: formatted,
+        selection: TextSelection.collapsed(offset: formatted.length),
+      );
+    }
+
+    final number = int.tryParse(raw);
+    if (number == null) return oldValue;
+    final formatted = _numberFormat.format(number);
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+
+  static double? parseFormatted(String text) =>
+      double.tryParse(text.replaceAll(',', ''));
+}
+
 class WithdrawBottomSheet extends ConsumerStatefulWidget {
   const WithdrawBottomSheet({super.key});
 
@@ -32,7 +74,8 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
   void _updateAmount(double value) {
     setState(() {
       _amount = value;
-      _amountController.text = value.toStringAsFixed(2);
+      final formatter = NumberFormat('#,##0.##', 'en_US');
+      _amountController.text = formatter.format(value);
     });
   }
 
@@ -160,20 +203,20 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
                 hintText: '0',
                 border: InputBorder.none,
                 hintStyle: theme.textTheme.displayMedium?.copyWith(
-                  color: colorScheme.outline.withOpacity(0.5),
+                  color: colorScheme.outline.withValues(alpha: 0.5),
                 ),
               ),
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                ThousandsSeparatorInputFormatter(),
               ],
               onChanged: (value) {
                 setState(() {
-                  _amount = double.tryParse(value) ?? 0.0;
+                  _amount = ThousandsSeparatorInputFormatter.parseFormatted(value) ?? 0.0;
                 });
               },
               validator: (value) {
                 if (value == null || value.isEmpty) return 'Enter an amount';
-                final val = double.tryParse(value);
+                final val = ThousandsSeparatorInputFormatter.parseFormatted(value);
                 if (val == null || val <= 0) return 'Amount must be positive';
                 if (val > maxAvailable) return 'Insufficient funds';
                 return null;
