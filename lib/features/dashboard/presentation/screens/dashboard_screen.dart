@@ -142,6 +142,11 @@ final restAvailableCashProvider =
       .whenData((dash) => dash.toDomainWallet().availableCash);
 });
 
+/// Derived: Authenticated user's display name from the REST backend (Postgres).
+final restUserNameProvider = Provider.autoDispose<AsyncValue<String>>((ref) {
+  return ref.watch(restDashboardProvider).whenData((dash) => dash.userName);
+});
+
 /// Derived: Invested portfolio value from the REST backend.
 /// Maps DashboardResponseModel.investedValue (int cents) → double dollars.
 final restInvestedValueProvider =
@@ -233,10 +238,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // Firestore providers (not yet in REST contract)
-    final userProfileAsync = ref.watch(userProfileStreamProvider);
-    final netWorthAsync = ref.watch(restInvestedValueProvider);
     // REST providers — Go backend
+    final userNameAsync = ref.watch(restUserNameProvider);
+    final netWorthAsync = ref.watch(restInvestedValueProvider);
     final availableCashAsync = ref.watch(restAvailableCashProvider);
     final recentActivityAsync = ref.watch(restRecentActivityProvider);
 
@@ -249,7 +253,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // --- HEADER ---
-              _buildHeader(theme, userProfileAsync),
+              _buildHeader(theme, userNameAsync),
               const SizedBox(height: 24),
 
               // --- PORTFOLIO SUMMARY (Side-by-Side Cards) ---
@@ -275,9 +279,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   // --- Internal Widgets ---
 
   Widget _buildHeader(
-      ThemeData theme, AsyncValue<UserProfile> userProfileAsync) {
-    final displayName = userProfileAsync.when(
-      data: (profile) => profile.displayName,
+      ThemeData theme, AsyncValue<String> userNameAsync) {
+    final displayName = userNameAsync.when(
+      data: (name) => name,
       loading: () => 'Loading...',
       error: (_, __) => 'Investor',
     );

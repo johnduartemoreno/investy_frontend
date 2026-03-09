@@ -10,6 +10,7 @@ import 'package:investy/features/dashboard/presentation/screens/dashboard_screen
 
 /// Minimal mock DashboardResponseModel: totalBalance = 250000 cents = $2,500.00, investedValue = 100000 cents = $1,000.00
 const _mockResponse = DashboardResponseModel(
+  userName: 'Alex',
   totalBalance: 250000,
   investedValue: 100000,
   currency: 'USD',

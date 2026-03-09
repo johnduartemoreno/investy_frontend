@@ -10,6 +10,9 @@ part 'dashboard_response_model.g.dart';
 /// All monetary values are integer cents: $1.00 = 100.
 @JsonSerializable(explicitToJson: true)
 class DashboardResponseModel {
+  /// Display name of the authenticated user, sourced from PostgreSQL.
+  final String userName;
+
   /// Total wallet balance in integer cents. $1.00 = 100. Never a double.
   final int totalBalance;
 
@@ -24,6 +27,7 @@ class DashboardResponseModel {
   final List<ActivityItemModel> recentActivity;
 
   const DashboardResponseModel({
+    required this.userName,
     required this.totalBalance,
     required this.investedValue,
     required this.currency,

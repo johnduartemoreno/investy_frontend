@@ -9,6 +9,7 @@ part of 'dashboard_response_model.dart';
 DashboardResponseModel _$DashboardResponseModelFromJson(
         Map<String, dynamic> json) =>
     DashboardResponseModel(
+      userName: json['userName'] as String,
       totalBalance: (json['totalBalance'] as num).toInt(),
       investedValue: (json['investedValue'] as num).toInt(),
       currency: json['currency'] as String,
@@ -20,6 +21,7 @@ DashboardResponseModel _$DashboardResponseModelFromJson(
 Map<String, dynamic> _$DashboardResponseModelToJson(
         DashboardResponseModel instance) =>
     <String, dynamic>{
+      'userName': instance.userName,
       'totalBalance': instance.totalBalance,
       'investedValue': instance.investedValue,
       'currency': instance.currency,
