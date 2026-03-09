@@ -1,0 +1,20 @@
+
+## Migration Plan
+1. **Implement JSON Schema in Go Backend:**
+   - Create a new model in the Go backend that matches the JSON schema.
+   - Implement validation for the model to ensure the required fields are present and valid.
+
+2. **Refactor Goal Data in Flutter:**
+   - Replace the hardcoded goals with a list of goals fetched from the Go backend.
+   - Update the `GoalsRepository` to fetch goals from the Go backend.
+   - Update the `GoalsNotifier` to use the new goals data.
+
+3. **Update UI to Display Goals:**
+   - Update the `GoalsScreen` to display the fetched goals using the new data structure.
+   - Ensure the progress bar percentage is calculated and displayed correctly.
+
+4. **Update Logic for Adding Goals:**
+   - Update the logic for adding new goals to send the new goal data to the Go backend.
+   - Ensure the new goal is added to the list of goals and displayed in the UI.
+
+By following this plan, you can migrate the hardcoded 'Financial Goals' to a dynamic list fetched from the Go backend, ensuring a Single Source of Truth and simplifying the codebase.
