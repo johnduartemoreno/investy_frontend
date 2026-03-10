@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/network/dio_client.dart';
 import '../models/dashboard_response_model.dart';
+import '../models/goal_response_model.dart';
 import '../models/transaction_request_model.dart';
 
 part 'dashboard_remote_data_source.g.dart';
@@ -18,6 +19,9 @@ abstract class DashboardRemoteDataSource {
     String userId,
     TransactionRequestModel request,
   );
+
+  /// Fetches all financial goals for [userId] from the Go REST backend.
+  Future<List<GoalResponseModel>> getGoals(String userId);
 }
 
 class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
@@ -42,6 +46,15 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
       '/api/v1/users/$userId/transactions',
       data: request.toJson(),
     );
+  }
+
+  @override
+  Future<List<GoalResponseModel>> getGoals(String userId) async {
+    final response = await _dio.get('/api/v1/users/$userId/goals');
+    final list = response.data as List<dynamic>;
+    return list
+        .map((item) => GoalResponseModel.fromJson(item as Map<String, dynamic>))
+        .toList();
   }
 }
 
