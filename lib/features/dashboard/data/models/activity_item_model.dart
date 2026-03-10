@@ -9,14 +9,19 @@ part 'activity_item_model.g.dart';
 /// All monetary values are integer cents: $1.00 = 100.
 @JsonSerializable()
 class ActivityItemModel {
+  @JsonKey(defaultValue: '')
   final String id;
 
   /// Amount in integer cents. $1.00 = 100. Never a double.
+  @JsonKey(defaultValue: 0)
   final int amount;
 
   /// Transaction type as returned by the API: "BUY", "SELL", "DEPOSIT", "WITHDRAWAL".
+  @JsonKey(defaultValue: 'UNKNOWN')
   final String type;
 
+  /// RFC 3339 timestamp string. Defaults to empty string when absent.
+  @JsonKey(defaultValue: '')
   final String timestamp;
 
   const ActivityItemModel({
@@ -39,7 +44,7 @@ class ActivityItemModel {
       id: id,
       amount: amount / 100.0, // cents → dollars: $1.00 = 100
       type: type.toLowerCase(),
-      createdAt: DateTime.parse(timestamp),
+      createdAt: timestamp.isEmpty ? DateTime.now().toUtc() : DateTime.parse(timestamp),
     );
   }
 }

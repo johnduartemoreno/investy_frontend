@@ -11,16 +11,21 @@ part 'dashboard_response_model.g.dart';
 @JsonSerializable(explicitToJson: true)
 class DashboardResponseModel {
   /// Display name of the authenticated user, sourced from PostgreSQL.
+  /// Defaults to 'Investor' when the backend omits or nullifies the field.
+  @JsonKey(defaultValue: 'Investor')
   final String userName;
 
   /// Total wallet balance in integer cents. $1.00 = 100. Never a double.
+  @JsonKey(defaultValue: 0)
   final int totalBalance;
 
   /// Total market value of all holdings in integer cents. $1.00 = 100.
   /// Calculated server-side: SUM(QuantityUnits * CurrentPriceCents / 10^8).
+  @JsonKey(defaultValue: 0)
   final int investedValue;
 
   /// ISO 4217 currency code (e.g. "USD").
+  @JsonKey(defaultValue: 'USD')
   final String currency;
 
   /// Most recent transactions, newest-first.

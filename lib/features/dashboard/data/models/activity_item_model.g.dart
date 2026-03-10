@@ -8,10 +8,10 @@ part of 'activity_item_model.dart';
 
 ActivityItemModel _$ActivityItemModelFromJson(Map<String, dynamic> json) =>
     ActivityItemModel(
-      id: json['id'] as String,
-      amount: (json['amount'] as num).toInt(),
-      type: json['type'] as String,
-      timestamp: json['timestamp'] as String,
+      id: json['id'] as String? ?? '',
+      amount: (json['amount'] as num?)?.toInt() ?? 0,
+      type: json['type'] as String? ?? 'UNKNOWN',
+      timestamp: json['timestamp'] as String? ?? '',
     );
 
 Map<String, dynamic> _$ActivityItemModelToJson(ActivityItemModel instance) =>

@@ -9,10 +9,10 @@ part of 'dashboard_response_model.dart';
 DashboardResponseModel _$DashboardResponseModelFromJson(
         Map<String, dynamic> json) =>
     DashboardResponseModel(
-      userName: json['userName'] as String,
-      totalBalance: (json['totalBalance'] as num).toInt(),
-      investedValue: (json['investedValue'] as num).toInt(),
-      currency: json['currency'] as String,
+      userName: json['userName'] as String? ?? 'Investor',
+      totalBalance: (json['totalBalance'] as num?)?.toInt() ?? 0,
+      investedValue: (json['investedValue'] as num?)?.toInt() ?? 0,
+      currency: json['currency'] as String? ?? 'USD',
       recentActivity: (json['recentActivity'] as List<dynamic>)
           .map((e) => ActivityItemModel.fromJson(e as Map<String, dynamic>))
           .toList(),
