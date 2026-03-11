@@ -1,0 +1,154 @@
+
+# 2026-03-08 18:44:15.178480
++/ask Analyze all providers in 'lib/features/dashboard' and identify which ones are still using 'StreamProvider' to Firestore versus 'FutureProvider' to our Go Backend. List any logic that is duplicated between the two."
+
+# 2026-03-08 18:47:33.234402
++/add lib/features/dashboard/presentation/screens/dashboard_screen.dart lib/features/dashboard/data/repositories/dashboard_repository_impl.dart lib/features/dashboard/data/datasources/dashboard_remote_data_source.dart
+
+# 2026-03-08 18:47:48.027264
++have added the core files for the Dashboard. Analyze them and identify every provider or logic that still points to Firebase/Firestore instead of our Go Backend. List them clearly so we can plan the migration to a Single Source of Truth in Postgres.
+
+# 2026-03-08 18:50:15.142582
++Write a full technical report of your analysis in a new file named docs/migration_audit.md. Include the list of providers using Firestore, duplicated logic, and the inconsistencies found. Format it as a checklist so we can track our progress.
+
+# 2026-03-08 18:52:34.723905
++y
+
+# 2026-03-08 22:00:39.726695
++/add lib/features/dashboard/presentation/screens/goals_screen.dart
++
++Analyze the current hardcoded 'Financial Goals' in this widget. 
++1. Extract every field required to represent these goals (e.g., title, current amount, target amount, deadline, percentage).
++2. Generate a JSON schema that represents this data structure so we can implement it in the Go Backend.
++3. Identify the logic used to calculate the progress bar percentage.
++Write a full technical report of your analysis in a new file named  docs/goals_migration_spec.md
+
+# 2026-03-08 22:01:37.346655
++n
+
+# 2026-03-08 22:03:02.000002
++/add lib/features/goals/presentation/goals_screen.dart
++
++Analyze the current hardcoded 'Financial Goals' in this widget. 
++1. Extract every field required to represent these goals (e.g., title, current amount, target amount, deadline, percentage).
++2. Generate a JSON schema that represents this data structure so we can implement it in the Go Backend.
++3. Identify the logic used to calculate the progress bar percentage.
++Write a full technical report of your analysis in a new file named  docs/goals_migration_spec.md
+
+# 2026-03-08 22:03:28.928628
++n
+
+# 2026-03-08 22:05:04.869272
++/add lib/features/goals/presentation/goals_screen.dart
++
++Analyze the current hardcoded 'Financial Goals' in this widget. 
++1. Extract every field required to represent these goals (e.g., title, current amount, target amount, deadline, percentage).
++2. Generate a JSON schema that represents this data structure so we can implement it in the Go Backend.
++3. Identify the logic used to calculate the progress bar percentage.
++Write a full technical report of your analysis in a new file named docs/goals_migration_spec.md
+
+# 2026-03-08 22:07:19.267521
++/add lib/features/goals/presentation/goals_screen.dart
+
+# 2026-03-08 22:07:34.810477
++Analyze the current hardcoded 'Financial Goals' in this widget. 
++1. Extract every field required to represent these goals (e.g., title, current amount, target amount, deadline, percentage).
++2. Generate a JSON schema that represents this data structure so we can implement it in the Go Backend.
++3. Identify the logic used to calculate the progress bar percentage.
++Write a full technical report of your analysis in a new file named docs/goals_migration_spec.md
+
+# 2026-03-08 22:09:33.844109
++Y
+
+# 2026-03-08 22:09:52.982864
++y
+
+# 2026-03-09 20:28:18.440682
++/add lib/features/dashboard/data/models/dashboard_response_model.dart lib/features/dashboard/data/models/activity_item_model.dart
++
++I am getting this error in the UI: "type 'Null' is not a subtype of type 'String' in type cast" when parsing the Dashboard response. 
++
++1. Analyze the JSON serialization in these models.
++2. The Go backend might be omitting fields like 'userName' (if running an older build) or 'category' in activities. 
++3. Update the models to make all String fields safe. E.g., change 'final String userName;' to 'final String? userName;' (or provide a default value like "@JsonKey(defaultValue: 'Unknown')").
++4. Run build_runner to regenerate the .g.dart files.
++5. Create a 'docs/goals_error_audit.md' explaining what was causing the Null cast error.
+
+# 2026-03-09 20:28:44.908067
++/add lib/features/dashboard/data/models/dashboard_response_model.dart lib/features/dashboard/data/models/activity_item_model.dart
+
+# 2026-03-09 20:28:59.576110
++I am getting this error in the UI: "type 'Null' is not a subtype of type 'String' in type cast" when parsing the Dashboard response. 
++
++1. Analyze the JSON serialization in these models.
++2. The Go backend might be omitting fields like 'userName' (if running an older build) or 'category' in activities. 
++3. Update the models to make all String fields safe. E.g., change 'final String userName;' to 'final String? userName;' (or provide a default value like "@JsonKey(defaultValue: 'Unknown')").
++4. Run build_runner to regenerate the .g.dart files.
+
+# 2026-03-09 20:36:29.065124
++y
+
+# 2026-03-10 20:27:13.365009
++n
+
+# 2026-03-10 20:27:20.695342
++/add lib/features/dashboard/presentation/screens/goals_screen.dart
+
+# 2026-03-10 20:28:27.431000
++n
+
+# 2026-03-10 20:28:38.788134
++/add lib/features/goals/presentation/goals_screen.dart
+
+# 2026-03-10 20:29:05.664090
++UDIT TASK: Identify dead code and obsolete mocks.
++
++CONTEXT:
++We recently migrated the Financial Goals feature to use a live REST endpoint via 'restGoalsProvider' in 'goals_screen.dart'. The old mock implementations are now dead code.
++
++INSTRUCTIONS (READ-ONLY MODE):
++1. Scan the 'lib/features/' directory (specifically around goals or dashboard) to find the old mock files. Look for things like 'GoalsRepositoryImpl', 'goalsNotifierProvider', or any hardcoded lists of goals.
++2. Verify that these files/classes are truly orphaned and no longer imported or used by any active screen.
++3. DO NOT delete any files yourself. You are in READ-ONLY auditing mode.
++4. Create a file named 'docs/mock_cleanup_plan.md' at the root of the frontend repo.
++5. In that file, list the exact relative paths of the files that should be completely deleted, and any specific lines of code (like unused imports) that need to be removed from surviving files.
+
+# 2026-03-10 20:33:23.354407
++exit
+
+# 2026-03-10 20:35:58.975884
++/add /Users/aduarte/investy/investy_frontend/lib/features/goals/presentation/goals_screen.dart
+
+# 2026-03-10 20:36:04.336679
++/add lib/features/dashboard/presentation/screens/goals_screen.dart
++
++AUDIT TASK: Identify dead code and obsolete mocks.
++
++CONTEXT:
++We recently migrated the Financial Goals feature to use a live REST endpoint via 'restGoalsProvider' in 'goals_screen.dart'. The old mock implementations are now dead code.
++
++INSTRUCTIONS (READ-ONLY MODE):
++1. Scan the 'lib/features/' directory (specifically around goals or dashboard) to find the old mock files. Look for things like 'GoalsRepositoryImpl', 'goalsNotifierProvider', or any hardcoded lists of goals.
++2. Verify that these files/classes are truly orphaned and no longer imported or used by any active screen.
++3. DO NOT delete any files yourself. You are in READ-ONLY auditing mode.
++4. Create a file named 'docs/mock_cleanup_plan.md' at the root of the frontend repo.
++5. In that file, list the exact relative paths of the files that should be completely deleted, and any specific lines of code (like unused imports) that need to be removed from surviving files.
+
+# 2026-03-10 20:36:30.638690
++AUDIT TASK: Identify dead code and obsolete mocks.
++
++CONTEXT:
++We recently migrated the Financial Goals feature to use a live REST endpoint via 'restGoalsProvider' in 'goals_screen.dart'. The old mock implementations are now dead code.
++
++INSTRUCTIONS (READ-ONLY MODE):
++1. Scan the 'lib/features/' directory (specifically around goals or dashboard) to find the old mock files. Look for things like 'GoalsRepositoryImpl', 'goalsNotifierProvider', or any hardcoded lists of goals.
++2. Verify that these files/classes are truly orphaned and no longer imported or used by any active screen.
++3. DO NOT delete any files yourself. You are in READ-ONLY auditing mode.
++4. Create a file named 'docs/mock_cleanup_plan.md' at the root of the frontend repo.
++5. In that file, list the exact relative paths of the files that should be completely deleted, and any specific lines of code (like unused imports) that need to be removed from surviving files.
+
+# 2026-03-10 20:37:38.825032
++d
+
+# 2026-03-10 20:37:51.065576
++Y
