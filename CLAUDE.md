@@ -59,7 +59,17 @@ TextFormField(
 ### Bottom Sheets
 - `showModalBottomSheet(isScrollControlled: true)` — allows keyboard to push content up
 - `RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24)))`
-- Padding: `EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 24)`
+- Padding: `EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 32)`
+- Content MUST be wrapped in `SingleChildScrollView` — keyboard pushes content up correctly
+- Column inside sheet MUST use `crossAxisAlignment: CrossAxisAlignment.stretch` — ensures buttons are full-width
+
+### Form Fields
+- Always use `hintText` — NEVER `labelText`. Floating labels overlap inputs and look unprofessional.
+- `CustomTextField` already uses this pattern — follow it for any inline `TextFormField` too
+
+### Displaying Money in UI
+- Always `CurrencyFormatter.format(doubleValue)` — never `.toStringAsFixed(0)` or string interpolation with `\$`
+- Example: `CurrencyFormatter.format(goal.targetAmount)` → `$12,000,000.00`
 
 ---
 
