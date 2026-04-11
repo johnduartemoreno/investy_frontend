@@ -8,9 +8,6 @@ import '../../../../features/dashboard/data/datasources/dashboard_remote_data_so
 import '../../../../features/dashboard/data/models/create_goal_request_model.dart';
 import '../providers/rest_goals_provider.dart';
 
-/// Bottom sheet for creating a new financial goal.
-/// Follows the app UX standard: Material 3, filled inputs, PrimaryButton,
-/// ThousandsSeparatorInputFormatter for amount fields.
 class CreateGoalSheet extends ConsumerStatefulWidget {
   const CreateGoalSheet({super.key});
 
@@ -73,15 +70,13 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) return;
 
-    final targetAmountCents = (_amount * 100).round();
-
     setState(() => _isLoading = true);
     try {
       await ref.read(dashboardRemoteDataSourceProvider).createGoal(
             userId,
             CreateGoalRequestModel(
               name: _nameController.text.trim(),
-              targetAmountCents: targetAmountCents,
+              targetAmountCents: (_amount * 100).round(),
               category: _selectedCategory,
               deadline: _toApiDate(_selectedDeadline!),
             ),
@@ -104,18 +99,19 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Padding(
+    return SingleChildScrollView(
+      // Ensures the sheet scrolls when keyboard appears
       padding: EdgeInsets.only(
         left: 24,
         right: 24,
         top: 24,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 32,
       ),
       child: Form(
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Header
             Row(
@@ -123,7 +119,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
               children: [
                 Text(
                   'New Goal',
-                  style: theme.textTheme.titleLarge
+                  style: theme.textTheme.headlineSmall
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 IconButton(
@@ -132,33 +128,37 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
 
-            // Goal name — uses app-standard filled input
+            // Goal name — hintText keeps label inside the field cleanly
             TextFormField(
               controller: _nameController,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
-                labelText: 'Goal name',
+                hintText: 'Goal name',
                 prefixIcon: const Icon(Icons.flag_outlined),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 16),
               ),
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Enter a goal name' : null,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
 
-            // Target amount — large centered input with $ prefix and thousands separator
+            // Target amount label
             Text(
               'Target Amount',
-              style: theme.textTheme.labelMedium
-                  ?.copyWith(color: colorScheme.outline),
+              style: theme.textTheme.labelLarge
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 8),
+
+            // Large centered $ input with thousands separator
             TextFormField(
               controller: _amountController,
               keyboardType:
@@ -176,7 +176,12 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                 hintStyle: theme.textTheme.headlineMedium?.copyWith(
                   color: colorScheme.outline.withValues(alpha: 0.4),
                 ),
-                border: InputBorder.none,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 16),
               ),
               inputFormatters: [ThousandsSeparatorInputFormatter()],
               onChanged: (value) {
@@ -194,17 +199,14 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                 return null;
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
 
-            // Deadline picker — filled container matching app style
+            // Deadline picker
             GestureDetector(
               onTap: _pickDeadline,
               child: Container(
-                width: double.infinity,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
-                ),
+                    horizontal: 16, vertical: 16),
                 decoration: BoxDecoration(
                   color: colorScheme.surfaceContainerLow,
                   borderRadius: BorderRadius.circular(12),
@@ -213,7 +215,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                   children: [
                     Icon(Icons.calendar_today,
                         size: 18, color: colorScheme.onSurfaceVariant),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 12),
                     Text(
                       _selectedDeadline != null
                           ? _displayDate(_selectedDeadline!)
@@ -228,15 +230,17 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
-            // Category selector
+            // Category label
             Text(
               'Category',
-              style: theme.textTheme.labelMedium
-                  ?.copyWith(color: colorScheme.outline),
+              style: theme.textTheme.labelLarge
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
+
+            // Category chips
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -246,7 +250,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                   onTap: () => setState(() => _selectedCategory = c.$1),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 8),
+                        horizontal: 14, vertical: 9),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? colorScheme.primaryContainer
@@ -283,9 +287,9 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                 );
               }).toList(),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 28),
 
-            // Confirm — uses app-standard PrimaryButton
+            // Full-width confirm button (crossAxisAlignment.stretch handles width)
             PrimaryButton(
               text: 'Create Goal',
               isLoading: _isLoading,

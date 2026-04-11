@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/responsive_center.dart';
+import '../../../../core/utils/currency_formatter.dart';
 import '../../dashboard/data/models/goal_response_model.dart';
 import 'providers/rest_goals_provider.dart';
 import 'widgets/create_goal_sheet.dart';
@@ -137,8 +138,8 @@ class _GoalCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('\$${goal.currentAmount.toStringAsFixed(0)} saved'),
-              Text('Target: \$${goal.targetAmount.toStringAsFixed(0)}'),
+              Text('${CurrencyFormatter.format(goal.currentAmount)} saved'),
+              Text('Target: ${CurrencyFormatter.format(goal.targetAmount)}'),
             ],
           ),
           const SizedBox(height: AppDimens.spacingS),
