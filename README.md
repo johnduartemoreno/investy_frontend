@@ -51,6 +51,23 @@ lib/
 - **Functional Programming**: `fpdart`
 - **Code Gen**: `freezed`, `json_serializable`
 
+## REST Backend Integration
+
+The app connects to `investy_backend` (Go). Base URL is auto-selected:
+- Android emulator: `http://10.0.2.2:8080`
+- iOS simulator / debug: `http://127.0.0.1:8080`
+
+All requests include `Authorization: Bearer <Firebase ID Token>` via Dio interceptor.
+
+| Feature | Provider | Backend endpoint |
+|---------|----------|-----------------|
+| Dashboard | `restDashboardProvider` | `GET /api/v1/users/{id}/dashboard` |
+| Transactions | write via controllers | `POST /api/v1/users/{id}/transactions` |
+| Goals (read) | `restGoalsProvider` | `GET /api/v1/users/{id}/goals` |
+| Goals (create) | `CreateGoalSheet` | `POST /api/v1/users/{id}/goals` |
+
+Monetary values: `int` cents on the wire, converted to `double` dollars in `toDomain()`.
+
 ## Testing
 
 Run unit and widget tests:
