@@ -4,6 +4,7 @@
 
 **Framework:** Flutter with Material 3 (`useMaterial3: true`).
 **Feel:** Material 3 with iOS-like polish — centered titles, filled inputs, adaptive indicators, smooth rounded corners.
+**Font:** `Inter` via `google_fonts` package — applied globally through `GoogleFonts.interTextTheme()` in `app_theme.dart`. Never set fonts per-widget.
 
 ### Color Palette
 - **Seed color:** `Color(0xFF6750A4)` (purple) — do NOT hardcode colors. Always use `Theme.of(context).colorScheme.*`.
