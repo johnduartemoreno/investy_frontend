@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/network/dio_client.dart';
+import '../models/create_goal_request_model.dart';
 import '../models/dashboard_response_model.dart';
 import '../models/goal_response_model.dart';
 import '../models/transaction_request_model.dart';
@@ -22,6 +23,12 @@ abstract class DashboardRemoteDataSource {
 
   /// Fetches all financial goals for [userId] from the Go REST backend.
   Future<List<GoalResponseModel>> getGoals(String userId);
+
+  /// Creates a new financial goal for [userId]. Throws on non-2xx response.
+  Future<GoalResponseModel> createGoal(
+    String userId,
+    CreateGoalRequestModel request,
+  );
 }
 
 class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
@@ -55,6 +62,18 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
     return list
         .map((item) => GoalResponseModel.fromJson(item as Map<String, dynamic>))
         .toList();
+  }
+
+  @override
+  Future<GoalResponseModel> createGoal(
+    String userId,
+    CreateGoalRequestModel request,
+  ) async {
+    final response = await _dio.post(
+      '/api/v1/users/$userId/goals',
+      data: request.toJson(),
+    );
+    return GoalResponseModel.fromJson(response.data as Map<String, dynamic>);
   }
 }
 

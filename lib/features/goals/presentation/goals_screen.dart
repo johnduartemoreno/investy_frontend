@@ -5,6 +5,7 @@ import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/responsive_center.dart';
 import '../../dashboard/data/models/goal_response_model.dart';
 import 'providers/rest_goals_provider.dart';
+import 'widgets/create_goal_sheet.dart';
 
 class GoalsScreen extends ConsumerWidget {
   const GoalsScreen({super.key});
@@ -36,7 +37,14 @@ class GoalsScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // TODO: Implement Add Goal Dialog
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            ),
+            builder: (_) => const CreateGoalSheet(),
+          );
         },
         label: const Text('Add Goal'),
         icon: const Icon(Icons.add),
