@@ -4,75 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../dashboard/data/datasources/dashboard_remote_data_source.dart';
 import '../../../dashboard/data/models/transaction_request_model.dart';
 import '../../../dashboard/presentation/screens/dashboard_screen.dart';
-
-// ==========================================
-// Thousands-Separator Input Formatter
-// ==========================================
-
-/// A [TextInputFormatter] that adds thousands separators in real-time.
-///
-/// As the user types "258855" the field displays "258,855".
-/// Supports up to 2 decimal places. The raw numeric value can be
-/// extracted via [parseFormatted].
-class ThousandsSeparatorInputFormatter extends TextInputFormatter {
-  static final _numberFormat = NumberFormat('#,##0.##', 'en_US');
-
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    // Allow empty field
-    if (newValue.text.isEmpty) return newValue;
-
-    final raw = newValue.text.replaceAll(',', '');
-
-    // Validate: only digits and at most one dot with up to 2 decimal places
-    if (!RegExp(r'^\d*\.?\d{0,2}$').hasMatch(raw)) {
-      return oldValue;
-    }
-
-    // If the user is typing after a decimal point, preserve trailing zeros/dot
-    if (raw.contains('.')) {
-      final parts = raw.split('.');
-      final integerPart = parts[0];
-      final decimalPart = parts[1];
-
-      // Format only the integer portion
-      final formattedInt = integerPart.isEmpty
-          ? ''
-          : _numberFormat.format(int.parse(integerPart));
-      final formatted = '$formattedInt.$decimalPart';
-
-      return TextEditingValue(
-        text: formatted,
-        selection: TextSelection.collapsed(offset: formatted.length),
-      );
-    }
-
-    // Integer-only: format with commas
-    final number = int.tryParse(raw);
-    if (number == null) return oldValue;
-
-    final formatted = _numberFormat.format(number);
-    return TextEditingValue(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
-    );
-  }
-
-  /// Strips commas from a formatted string and parses to [double].
-  /// Returns `null` if the string is not a valid number.
-  static double? parseFormatted(String text) {
-    final raw = text.replaceAll(',', '');
-    return double.tryParse(raw);
-  }
-}
 
 // ==========================================
 // Form State Provider

@@ -1,14 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/presentation/widgets/primary_button.dart';
+import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../features/dashboard/data/datasources/dashboard_remote_data_source.dart';
 import '../../../../features/dashboard/data/models/create_goal_request_model.dart';
 import '../providers/rest_goals_provider.dart';
 
 /// Bottom sheet for creating a new financial goal.
-/// Mirrors the visual style of WithdrawBottomSheet / TopUpScreen.
+/// Follows the app UX standard: Material 3, filled inputs, PrimaryButton,
+/// ThousandsSeparatorInputFormatter for amount fields.
 class CreateGoalSheet extends ConsumerStatefulWidget {
   const CreateGoalSheet({super.key});
 
@@ -24,6 +26,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
   String _selectedCategory = 'car';
   DateTime? _selectedDeadline;
   bool _isLoading = false;
+  double _amount = 0.0;
 
   static const _categories = [
     ('car', 'Car', Icons.directions_car),
@@ -49,16 +52,14 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
       firstDate: DateTime.now().add(const Duration(days: 1)),
       lastDate: DateTime(2100),
     );
-    if (picked != null) {
-      setState(() => _selectedDeadline = picked);
-    }
+    if (picked != null) setState(() => _selectedDeadline = picked);
   }
 
-  String _formatDeadline(DateTime date) =>
+  String _toApiDate(DateTime date) =>
       '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
 
-  String _displayDeadline(DateTime date) =>
-      '${date.day}/${date.month}/${date.year}';
+  String _displayDate(DateTime date) =>
+      '${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}/${date.year}';
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
@@ -72,9 +73,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) return;
 
-    final rawAmount = _amountController.text.replaceAll(',', '');
-    final amountDouble = double.tryParse(rawAmount) ?? 0.0;
-    final targetAmountCents = (amountDouble * 100).round();
+    final targetAmountCents = (_amount * 100).round();
 
     setState(() => _isLoading = true);
     try {
@@ -84,7 +83,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
               name: _nameController.text.trim(),
               targetAmountCents: targetAmountCents,
               category: _selectedCategory,
-              deadline: _formatDeadline(_selectedDeadline!),
+              deadline: _toApiDate(_selectedDeadline!),
             ),
           );
       ref.invalidate(restGoalsProvider);
@@ -103,7 +102,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final primary = theme.colorScheme.primary;
+    final colorScheme = theme.colorScheme;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -135,52 +134,69 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
             ),
             const SizedBox(height: 20),
 
-            // Goal name
+            // Goal name — uses app-standard filled input
             TextFormField(
               controller: _nameController,
+              textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
-                hintText: 'Goal name',
-                filled: true,
-                fillColor: Colors.grey[200],
+                labelText: 'Goal name',
+                prefixIcon: const Icon(Icons.flag_outlined),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
+                filled: true,
               ),
-              textCapitalization: TextCapitalization.sentences,
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Enter a goal name' : null,
             ),
             const SizedBox(height: 12),
 
-            // Target amount
+            // Target amount — large centered input with $ prefix and thousands separator
+            Text(
+              'Target Amount',
+              style: theme.textTheme.labelMedium
+                  ?.copyWith(color: colorScheme.outline),
+            ),
+            const SizedBox(height: 8),
             TextFormField(
               controller: _amountController,
-              decoration: InputDecoration(
-                hintText: 'Target amount (\$)',
-                filled: true,
-                fillColor: Colors.grey[200],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[\d,.]')),
-              ],
+              style: theme.textTheme.headlineMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                prefixText: '\$ ',
+                prefixStyle: theme.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
+                hintText: '0',
+                hintStyle: theme.textTheme.headlineMedium?.copyWith(
+                  color: colorScheme.outline.withValues(alpha: 0.4),
+                ),
+                border: InputBorder.none,
+              ),
+              inputFormatters: [ThousandsSeparatorInputFormatter()],
+              onChanged: (value) {
+                final parsed =
+                    ThousandsSeparatorInputFormatter.parseFormatted(value);
+                setState(() => _amount = parsed ?? 0.0);
+              },
               validator: (v) {
                 if (v == null || v.isEmpty) return 'Enter a target amount';
-                final raw = v.replaceAll(',', '');
-                final amount = double.tryParse(raw) ?? 0;
-                if (amount <= 0) return 'Amount must be greater than zero';
+                final parsed =
+                    ThousandsSeparatorInputFormatter.parseFormatted(v);
+                if (parsed == null || parsed <= 0) {
+                  return 'Amount must be greater than zero';
+                }
                 return null;
               },
             ),
             const SizedBox(height: 12),
 
-            // Deadline picker
+            // Deadline picker — filled container matching app style
             GestureDetector(
               onTap: _pickDeadline,
               child: Container(
@@ -190,22 +206,22 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                   vertical: 16,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: colorScheme.surfaceContainerLow,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.calendar_today, size: 18, color: Colors.grey[600]),
+                    Icon(Icons.calendar_today,
+                        size: 18, color: colorScheme.onSurfaceVariant),
                     const SizedBox(width: 10),
                     Text(
                       _selectedDeadline != null
-                          ? _displayDeadline(_selectedDeadline!)
+                          ? _displayDate(_selectedDeadline!)
                           : 'Select deadline',
-                      style: TextStyle(
+                      style: theme.textTheme.bodyLarge?.copyWith(
                         color: _selectedDeadline != null
-                            ? Colors.black87
-                            : Colors.grey[500],
-                        fontSize: 16,
+                            ? colorScheme.onSurface
+                            : colorScheme.outline,
                       ),
                     ),
                   ],
@@ -215,9 +231,11 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
             const SizedBox(height: 16),
 
             // Category selector
-            Text('Category',
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: Colors.grey[600])),
+            Text(
+              'Category',
+              style: theme.textTheme.labelMedium
+                  ?.copyWith(color: colorScheme.outline),
+            ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -231,11 +249,12 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                         horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? primary.withValues(alpha: 0.12)
-                          : Colors.grey[200],
+                          ? colorScheme.primaryContainer
+                          : colorScheme.surfaceContainerLow,
                       borderRadius: BorderRadius.circular(20),
                       border: isSelected
-                          ? Border.all(color: primary, width: 1.5)
+                          ? Border.all(
+                              color: colorScheme.primary, width: 1.5)
                           : null,
                     ),
                     child: Row(
@@ -243,12 +262,16 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                       children: [
                         Icon(c.$3,
                             size: 16,
-                            color: isSelected ? primary : Colors.grey[600]),
+                            color: isSelected
+                                ? colorScheme.primary
+                                : colorScheme.onSurfaceVariant),
                         const SizedBox(width: 6),
                         Text(
                           c.$2,
-                          style: TextStyle(
-                            color: isSelected ? primary : Colors.grey[700],
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: isSelected
+                                ? colorScheme.primary
+                                : colorScheme.onSurfaceVariant,
                             fontWeight: isSelected
                                 ? FontWeight.bold
                                 : FontWeight.normal,
@@ -262,32 +285,11 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
             ),
             const SizedBox(height: 24),
 
-            // Confirm button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _submit,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32),
-                  ),
-                ),
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                            strokeWidth: 2, color: Colors.white),
-                      )
-                    : const Text(
-                        'Create Goal',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-              ),
+            // Confirm — uses app-standard PrimaryButton
+            PrimaryButton(
+              text: 'Create Goal',
+              isLoading: _isLoading,
+              onPressed: _amount > 0 ? _submit : null,
             ),
           ],
         ),

@@ -1,55 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../data/datasources/dashboard_remote_data_source.dart';
 import '../../data/models/transaction_request_model.dart';
 import '../screens/dashboard_screen.dart';
-
-// ==========================================
-// Thousands-Separator Input Formatter
-// ==========================================
-
-/// Mirrors ThousandsSeparatorInputFormatter from top_up_screen.dart.
-class ThousandsSeparatorInputFormatter extends TextInputFormatter {
-  static final _numberFormat = NumberFormat('#,##0.##', 'en_US');
-
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    if (newValue.text.isEmpty) return newValue;
-    final raw = newValue.text.replaceAll(',', '');
-    if (!RegExp(r'^\d*\.?\d{0,2}$').hasMatch(raw)) return oldValue;
-
-    if (raw.contains('.')) {
-      final parts = raw.split('.');
-      final formattedInt = parts[0].isEmpty
-          ? ''
-          : _numberFormat.format(int.parse(parts[0]));
-      final formatted = '$formattedInt.${parts[1]}';
-      return TextEditingValue(
-        text: formatted,
-        selection: TextSelection.collapsed(offset: formatted.length),
-      );
-    }
-
-    final number = int.tryParse(raw);
-    if (number == null) return oldValue;
-    final formatted = _numberFormat.format(number);
-    return TextEditingValue(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
-    );
-  }
-
-  static double? parseFormatted(String text) =>
-      double.tryParse(text.replaceAll(',', ''));
-}
 
 class WithdrawBottomSheet extends ConsumerStatefulWidget {
   const WithdrawBottomSheet({super.key});
