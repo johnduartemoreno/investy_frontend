@@ -7,6 +7,7 @@ import '../models/create_goal_request_model.dart';
 import '../models/dashboard_response_model.dart';
 import '../models/goal_response_model.dart';
 import '../models/transaction_request_model.dart';
+import '../../../../features/portfolio/data/models/portfolio_response_model.dart';
 
 part 'dashboard_remote_data_source.g.dart';
 
@@ -29,6 +30,9 @@ abstract class DashboardRemoteDataSource {
     String userId,
     CreateGoalRequestModel request,
   );
+
+  /// Fetches portfolio holdings for [userId] from the Go REST backend.
+  Future<PortfolioResponseModel> getPortfolio(String userId);
 }
 
 class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
@@ -74,6 +78,14 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
       data: request.toJson(),
     );
     return GoalResponseModel.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<PortfolioResponseModel> getPortfolio(String userId) async {
+    final response = await _dio.get('/api/v1/users/$userId/portfolio');
+    return PortfolioResponseModel.fromJson(
+      response.data as Map<String, dynamic>,
+    );
   }
 }
 
