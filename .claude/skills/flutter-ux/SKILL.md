@@ -135,6 +135,57 @@ showModalBottomSheet(
 - After write success: `ref.invalidate(restXxxProvider)` to refresh
 - Never call `ref.watch` inside callbacks — use `ref.read`
 
+## Form validation pattern
+
+Validate **all fields simultaneously** — never short-circuit before checking every condition:
+
+```dart
+Future<void> _submit() async {
+  final formValid = _formKey.currentState!.validate(); // validates all TextFormFields
+  final dateValid = _selectedDate != null;
+  if (!dateValid) setState(() => _dateError = true);   // show inline error on non-form field
+  if (!formValid || !dateValid) return;                // exit only after all errors are shown
+  // proceed with submission
+}
+```
+
+- Non-`TextFormField` fields (chips, date pickers, toggles): use a `bool _xError` flag + inline red text
+- Button `onPressed`: **always enabled** — disable only during `_isLoading`. Never hide the button based on partial state; let submit show what's missing.
+
+```dart
+// Inline error widget for non-form fields
+if (_dateError)
+  Padding(
+    padding: const EdgeInsets.only(left: 4, top: 6),
+    child: Text('Select a target date',
+        style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.error)),
+  ),
+```
+
+## Time-horizon chips pattern
+
+For goals / planning screens where the user picks a duration (not an exact date):
+
+```dart
+// Preset chips: 6M / 1Y / 2Y / 3Y / 5Y + Custom
+static const _presets = [
+  (label: '6M', months: 6), (label: '1Y', months: 12),
+  (label: '2Y', months: 24), (label: '3Y', months: 36), (label: '5Y', months: 60),
+];
+
+AnimatedContainer(
+  duration: const Duration(milliseconds: 150),
+  decoration: BoxDecoration(
+    color: isActive ? colorScheme.primaryContainer : colorScheme.surfaceContainerLow,
+    borderRadius: BorderRadius.circular(20),
+    border: isActive ? Border.all(color: colorScheme.primary, width: 1.5) : null,
+  ),
+)
+```
+- Custom button opens `showDatePicker` as escape hatch
+- Show resolved date below chips with a `Icons.check_circle_outline` in `colorScheme.primary`
+- Prefer this over `showDatePicker` for any investment/planning horizon
+
 ## iOS polish checklist
 
 Before finishing any screen:
@@ -146,3 +197,5 @@ Before finishing any screen:
 - [ ] Bottom sheet has `isScrollControlled: true` + `SingleChildScrollView`
 - [ ] Buttons are `PrimaryButton` or `FilledButton` — never `ElevatedButton`
 - [ ] Text inputs use `hintText` — never `labelText`
+- [ ] Form submit validates ALL fields simultaneously before returning
+- [ ] Button is enabled unless `_isLoading` — never disabled based on partial state

@@ -95,9 +95,27 @@ TextFormField(
 - If backend returns `null` for a required field, STOP and report — do not silently default
 - See root `CLAUDE.md` §Data Governance for full rule
 
+## 🌐 Network & Auth
+- `dio_client.dart` interceptor wraps `getIdToken()` in a **5-second timeout + try-catch**. If Firebase Auth is unreachable, the request proceeds without a token and surfaces as `AsyncError` (401) — never hangs as an infinite spinner.
+- `TransactionRequestModel` has two factories:
+  - `forCash(double amount, String type)` → DEPOSIT / WITHDRAWAL (sends `amount` in cents)
+  - `forTrade({type, symbol, quantity, pricePerUnit})` → BUY / SELL (sends `quantity` as string + `priceCents`; backend handles ×10⁸ conversion)
+
+## 🧪 Form Validation Pattern
+- **Always validate all fields simultaneously** before returning from `_submit()`:
+  ```dart
+  final formValid = _formKey.currentState!.validate();
+  final extraValid = someCondition;
+  if (!extraValid) setState(() => _showError = true);
+  if (!formValid || !extraValid) return;
+  ```
+- Non-`TextFormField` fields (chips, date pickers) use a `bool _xError` flag + inline `Text(style: colorScheme.error)` — same visual as validator errors.
+- Button `onPressed`: always enabled (disable only during `_isLoading`). Let form validation surface errors — never hide the button.
+
 ## 📁 Key Files
 - Theme: `lib/core/theme/app_theme.dart`
 - Dimensions: `lib/core/theme/app_dimens.dart`
 - Router: `lib/core/router/app_router.dart`
-- Dio client: `lib/core/network/dio_client.dart` (Firebase JWT interceptor)
+- Dio client: `lib/core/network/dio_client.dart` (Firebase JWT interceptor — 5s timeout)
 - API base URL: `lib/core/config/app_config.dart` (platform-aware: Android/iOS/prod)
+- Transaction model: `lib/features/dashboard/data/models/transaction_request_model.dart` (`forCash` / `forTrade`)
