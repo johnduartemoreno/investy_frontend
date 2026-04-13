@@ -21,16 +21,19 @@ class PortfolioScreen extends ConsumerWidget {
       ),
       body: portfolioAsync.when(
         data: (portfolio) {
-          if (portfolio.holdings.isEmpty) {
+          final active = portfolio.holdings
+              .where((h) => h.quantityUnits > 0)
+              .toList();
+          if (active.isEmpty) {
             return _buildEmptyState(context);
           }
           return ListView.separated(
             padding: const EdgeInsets.all(AppDimens.spacingL),
-            itemCount: portfolio.holdings.length,
+            itemCount: active.length,
             separatorBuilder: (_, __) =>
                 const SizedBox(height: AppDimens.spacingM),
             itemBuilder: (context, index) {
-              return _HoldingCard(holding: portfolio.holdings[index]);
+              return _HoldingCard(holding: active[index]);
             },
           );
         },
@@ -205,8 +208,8 @@ class _HoldingCard extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final color = _assetColor(context);
-    final isPositive = holding.unrealizedGainLoss >= 0;
-    final returnColor = isPositive ? Colors.green.shade600 : cs.error;
+    final isPositive = holding.returnPct >= 0;
+    final returnColor = isPositive ? cs.tertiary : cs.error;
 
     return CustomCard(
       child: Padding(

@@ -22,8 +22,26 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
 
   String _selectedCategory = 'car';
   DateTime? _selectedDeadline;
+  int? _activePreset; // index into _presets; null when Custom date is set
   bool _isLoading = false;
   double _amount = 0.0;
+
+  static const _presets = [
+    (label: '6M',  months: 6),
+    (label: '1Y',  months: 12),
+    (label: '2Y',  months: 24),
+    (label: '3Y',  months: 36),
+    (label: '5Y',  months: 60),
+  ];
+
+  void _selectPreset(int index) {
+    final months = _presets[index].months;
+    final now = DateTime.now();
+    setState(() {
+      _activePreset = index;
+      _selectedDeadline = DateTime(now.year, now.month + months, now.day);
+    });
+  }
 
   static const _categories = [
     ('car', 'Car', Icons.directions_car),
@@ -42,14 +60,21 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
     super.dispose();
   }
 
-  Future<void> _pickDeadline() async {
+  Future<void> _pickCustomDeadline() async {
+    final initial = _selectedDeadline ??
+        DateTime.now().add(const Duration(days: 365));
     final picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now().add(const Duration(days: 365)),
+      initialDate: initial,
       firstDate: DateTime.now().add(const Duration(days: 1)),
       lastDate: DateTime(2100),
     );
-    if (picked != null) setState(() => _selectedDeadline = picked);
+    if (picked != null) {
+      setState(() {
+        _selectedDeadline = picked;
+        _activePreset = null; // custom date — no preset active
+      });
+    }
   }
 
   String _toApiDate(DateTime date) =>
@@ -201,35 +226,116 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
             ),
             const SizedBox(height: 20),
 
-            // Deadline picker
-            GestureDetector(
-              onTap: _pickDeadline,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 16),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerLow,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.calendar_today,
-                        size: 18, color: colorScheme.onSurfaceVariant),
-                    const SizedBox(width: 12),
-                    Text(
-                      _selectedDeadline != null
-                          ? _displayDate(_selectedDeadline!)
-                          : 'Select deadline',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: _selectedDeadline != null
-                            ? colorScheme.onSurface
-                            : colorScheme.outline,
+            // Deadline — preset time horizons + Custom escape hatch
+            Text(
+              'Target Date',
+              style: theme.textTheme.labelLarge
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                // Preset chips
+                ...List.generate(_presets.length, (i) {
+                  final isActive = _activePreset == i;
+                  return Padding(
+                    padding: EdgeInsets.only(right: i < _presets.length ? 6 : 0),
+                    child: GestureDetector(
+                      onTap: () => _selectPreset(i),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 9),
+                        decoration: BoxDecoration(
+                          color: isActive
+                              ? colorScheme.primaryContainer
+                              : colorScheme.surfaceContainerLow,
+                          borderRadius: BorderRadius.circular(20),
+                          border: isActive
+                              ? Border.all(
+                                  color: colorScheme.primary, width: 1.5)
+                              : null,
+                        ),
+                        child: Text(
+                          _presets[i].label,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: isActive
+                                ? colorScheme.primary
+                                : colorScheme.onSurfaceVariant,
+                            fontWeight: isActive
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                        ),
                       ),
                     ),
-                  ],
+                  );
+                }),
+                // Custom button
+                GestureDetector(
+                  onTap: _pickCustomDeadline,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 150),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 9),
+                    decoration: BoxDecoration(
+                      color: (_activePreset == null && _selectedDeadline != null)
+                          ? colorScheme.primaryContainer
+                          : colorScheme.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(20),
+                      border: (_activePreset == null && _selectedDeadline != null)
+                          ? Border.all(
+                              color: colorScheme.primary, width: 1.5)
+                          : null,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.calendar_today,
+                          size: 14,
+                          color: (_activePreset == null && _selectedDeadline != null)
+                              ? colorScheme.primary
+                              : colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Custom',
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: (_activePreset == null &&
+                                    _selectedDeadline != null)
+                                ? colorScheme.primary
+                                : colorScheme.onSurfaceVariant,
+                            fontWeight: (_activePreset == null &&
+                                    _selectedDeadline != null)
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
+            // Show resolved date when a selection is made
+            if (_selectedDeadline != null) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.check_circle_outline,
+                      size: 14, color: colorScheme.primary),
+                  const SizedBox(width: 6),
+                  Text(
+                    _displayDate(_selectedDeadline!),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ],
             const SizedBox(height: 20),
 
             // Category label
