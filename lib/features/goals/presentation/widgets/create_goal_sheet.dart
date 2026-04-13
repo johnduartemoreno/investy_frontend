@@ -399,7 +399,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
             PrimaryButton(
               text: 'Create Goal',
               isLoading: _isLoading,
-              onPressed: (_amount > 0 && _selectedDeadline != null) ? _submit : null,
+              onPressed: _isLoading ? null : _submit,
             ),
           ],
         ),
