@@ -27,10 +27,17 @@ Dio dio(Ref ref) {
   dio.interceptors.add(
     InterceptorsWrapper(
       onRequest: (options, handler) async {
-        final user = FirebaseAuth.instance.currentUser;
-        if (user != null) {
-          final token = await user.getIdToken();
-          options.headers['Authorization'] = 'Bearer $token';
+        try {
+          final user = FirebaseAuth.instance.currentUser;
+          if (user != null) {
+            final token = await user
+                .getIdToken()
+                .timeout(const Duration(seconds: 5));
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+        } catch (_) {
+          // Token fetch failed or timed out — proceed without auth.
+          // The backend will return 401 which surfaces as AsyncError in the UI.
         }
         return handler.next(options);
       },
