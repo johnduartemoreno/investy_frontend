@@ -87,11 +87,10 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
       '${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}/${date.year}';
 
   Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
-    if (_selectedDeadline == null) {
-      setState(() => _deadlineError = true);
-      return;
-    }
+    final formValid = _formKey.currentState!.validate();
+    final deadlineValid = _selectedDeadline != null;
+    if (!deadlineValid) setState(() => _deadlineError = true);
+    if (!formValid || !deadlineValid) return;
 
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) return;
