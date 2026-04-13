@@ -1,55 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
+import '../../../../core/presentation/widgets/primary_button.dart';
+import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/utils/currency_formatter.dart';
-import '../../domain/entities/holding.dart';
+import '../../../../core/utils/thousands_separator_input_formatter.dart';
+import '../../../../features/portfolio/data/models/portfolio_response_model.dart';
+import '../../../../features/portfolio/presentation/providers/rest_portfolio_provider.dart';
 import '../controllers/sell_asset_controller.dart';
-import '../screens/dashboard_screen.dart'; // for holdingsStreamProvider
-
-// ==========================================
-// Thousands-Separator Input Formatter
-// ==========================================
-
-/// Mirrors ThousandsSeparatorInputFormatter from top_up_screen.dart.
-class ThousandsSeparatorInputFormatter extends TextInputFormatter {
-  static final _numberFormat = NumberFormat('#,##0.##', 'en_US');
-
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    if (newValue.text.isEmpty) return newValue;
-    final raw = newValue.text.replaceAll(',', '');
-    if (!RegExp(r'^\d*\.?\d{0,2}$').hasMatch(raw)) return oldValue;
-
-    if (raw.contains('.')) {
-      final parts = raw.split('.');
-      final formattedInt = parts[0].isEmpty
-          ? ''
-          : _numberFormat.format(int.parse(parts[0]));
-      final formatted = '$formattedInt.${parts[1]}';
-      return TextEditingValue(
-        text: formatted,
-        selection: TextSelection.collapsed(offset: formatted.length),
-      );
-    }
-
-    final number = int.tryParse(raw);
-    if (number == null) return oldValue;
-    final formatted = _numberFormat.format(number);
-    return TextEditingValue(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
-    );
-  }
-
-  static double? parseFormatted(String text) =>
-      double.tryParse(text.replaceAll(',', ''));
-}
 
 // ═══════════════════════════════════════════════════════════════════
 // SELL ASSET SCREEN — Full-screen vertical list of owned holdings
@@ -62,13 +21,14 @@ class SellAssetScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
-    final holdingsAsync = ref.watch(holdingsStreamProvider);
+    final portfolioAsync = ref.watch(restPortfolioProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Sell Asset')),
       body: SafeArea(
-        child: holdingsAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
+        child: portfolioAsync.when(
+          loading: () =>
+              const Center(child: CircularProgressIndicator.adaptive()),
           error: (error, _) => Center(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
@@ -79,23 +39,16 @@ class SellAssetScreen extends ConsumerWidget {
               ),
             ),
           ),
-          data: (holdings) {
-            if (holdings.isEmpty) {
+          data: (portfolio) {
+            if (portfolio.holdings.isEmpty) {
               return _buildEmptyState(context, theme, colors);
             }
-            return _buildHoldingsList(
-              context,
-              theme,
-              colors,
-              holdings,
-            );
+            return _buildHoldingsList(context, portfolio.holdings);
           },
         ),
       ),
     );
   }
-
-  // ─── Empty State ───────────────────────────────────────────────
 
   Widget _buildEmptyState(
     BuildContext context,
@@ -142,13 +95,9 @@ class SellAssetScreen extends ConsumerWidget {
     );
   }
 
-  // ─── Full-Screen Vertical List ─────────────────────────────────
-
   Widget _buildHoldingsList(
     BuildContext context,
-    ThemeData theme,
-    ColorScheme colors,
-    List<Holding> holdings,
+    List<PortfolioHoldingModel> holdings,
   ) {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -164,9 +113,7 @@ class SellAssetScreen extends ConsumerWidget {
     );
   }
 
-  // ─── Bottom Sheet Trigger ──────────────────────────────────────
-
-  void _showSellSheet(BuildContext context, Holding holding) {
+  void _showSellSheet(BuildContext context, PortfolioHoldingModel holding) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -180,17 +127,14 @@ class SellAssetScreen extends ConsumerWidget {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// HOLDING LIST TILE — Vertical row for each owned asset
+// HOLDING LIST TILE
 // ═══════════════════════════════════════════════════════════════════
 
 class _HoldingListTile extends StatelessWidget {
-  final Holding holding;
+  final PortfolioHoldingModel holding;
   final VoidCallback onTap;
 
-  const _HoldingListTile({
-    required this.holding,
-    required this.onTap,
-  });
+  const _HoldingListTile({required this.holding, required this.onTap});
 
   IconData _assetIcon(String assetClass) {
     switch (assetClass.toLowerCase()) {
@@ -221,7 +165,6 @@ class _HoldingListTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Row(
             children: [
-              // Leading icon
               CircleAvatar(
                 backgroundColor: colors.primaryContainer,
                 child: Icon(
@@ -231,35 +174,42 @@ class _HoldingListTile extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 14),
-
-              // Ticker + subtitle
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       holding.symbol.toUpperCase(),
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: theme.textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${holding.quantity} shares · Avg \$${holding.avgCost.toStringAsFixed(2)}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colors.onSurfaceVariant,
-                      ),
+                      '${holding.quantity} shares · Avg ${CurrencyFormatter.format(holding.avgCost)}',
+                      style: theme.textTheme.bodySmall
+                          ?.copyWith(color: colors.onSurfaceVariant),
                     ),
                   ],
                 ),
               ),
-
-              // Trailing — total position value
-              Text(
-                CurrencyFormatter.format(holding.costBasis),
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    CurrencyFormatter.format(holding.marketValue),
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '${holding.returnPct >= 0 ? '+' : ''}${holding.returnPct.toStringAsFixed(1)}%',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: holding.returnPct >= 0
+                          ? colors.tertiary
+                          : colors.error,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -270,11 +220,11 @@ class _HoldingListTile extends StatelessWidget {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// SELL BOTTOM SHEET — Scoped form for selling the selected asset
+// SELL BOTTOM SHEET
 // ═══════════════════════════════════════════════════════════════════
 
 class _SellBottomSheet extends ConsumerStatefulWidget {
-  final Holding holding;
+  final PortfolioHoldingModel holding;
 
   const _SellBottomSheet({required this.holding});
 
@@ -287,67 +237,80 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
   final _quantityController = TextEditingController();
   final _priceController = TextEditingController();
   int? _activeChipIndex;
+  double _quantity = 0.0;
+  double _pricePerUnit = 0.0;
 
-  Holding get _holding => widget.holding;
+  PortfolioHoldingModel get _holding => widget.holding;
 
   @override
   void initState() {
     super.initState();
-    _quantityController.addListener(_onInputChanged);
-    _priceController.addListener(_onInputChanged);
+    // Pre-fill with current market price
+    _pricePerUnit = _holding.currentPrice;
+    _priceController.text = _holding.currentPrice.toStringAsFixed(2);
+    _priceController.addListener(_onPriceChanged);
   }
 
   @override
   void dispose() {
-    _quantityController.removeListener(_onInputChanged);
-    _priceController.removeListener(_onInputChanged);
+    _priceController.removeListener(_onPriceChanged);
     _quantityController.dispose();
     _priceController.dispose();
     super.dispose();
   }
 
-  void _onInputChanged() => setState(() {});
-
-  double get _estimatedValue {
-    final qty = double.tryParse(_quantityController.text) ?? 0;
-    final price = ThousandsSeparatorInputFormatter.parseFormatted(_priceController.text) ?? 0;
-    return qty * price;
+  void _onPriceChanged() {
+    final parsed =
+        ThousandsSeparatorInputFormatter.parseFormatted(_priceController.text);
+    setState(() => _pricePerUnit = parsed ?? 0.0);
   }
+
+  double get _estimatedValue => _quantity * _pricePerUnit;
 
   void _onChipTapped(int index) {
     final percentages = [0.25, 0.50, 1.0];
     final qty = _holding.quantity * percentages[index];
     final rounded = double.parse(qty.toStringAsFixed(6));
+    final text = rounded == rounded.roundToDouble()
+        ? rounded.toInt().toString()
+        : rounded.toString();
 
     setState(() {
       _activeChipIndex = index;
-      _quantityController.text = rounded == rounded.roundToDouble()
-          ? rounded.toInt().toString()
-          : rounded.toString();
+      _quantity = rounded;
+      _quantityController.text = text;
     });
   }
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
 
-    final quantity = double.parse(_quantityController.text.trim());
-    final price = ThousandsSeparatorInputFormatter.parseFormatted(_priceController.text.trim()) ?? 0;
-
     ref.read(sellAssetControllerProvider.notifier).sellAsset(
           symbol: _holding.symbol,
-          currentPrice: price,
-          quantity: quantity,
+          quantity: _quantity,
+          pricePerUnit: _pricePerUnit,
         );
+  }
+
+  IconData _assetIcon(String assetClass) {
+    switch (assetClass.toLowerCase()) {
+      case 'crypto':
+        return Icons.currency_bitcoin;
+      case 'etf':
+        return Icons.pie_chart_outline;
+      case 'bond':
+        return Icons.account_balance;
+      default:
+        return Icons.show_chart;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
-    final currencyFmt = CurrencyFormatter.instance;
 
-    // Listen for submission state changes
-    ref.listen(sellAssetControllerProvider, (previous, next) {
+    ref.listen(sellAssetControllerProvider, (_, next) {
       if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -356,35 +319,26 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
           ),
         );
       } else if (next is AsyncData && !next.isLoading) {
-        // Success — pop the bottom sheet
         Navigator.of(context).pop();
-
-        // Show success snackbar & navigate back to dashboard
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Sale completed successfully!'),
-            backgroundColor: Colors.green.shade700,
+            backgroundColor: colors.tertiary,
           ),
         );
-
-        // Pop the sell screen back to dashboard
-        if (context.canPop()) {
-          context.pop();
-        } else {
-          context.go('/home');
-        }
+        if (context.canPop()) context.pop();
+        else context.go('/home');
       }
     });
 
-    final controllerState = ref.watch(sellAssetControllerProvider);
-    final isSubmitting = controllerState.isLoading;
+    final isSubmitting = ref.watch(sellAssetControllerProvider).isLoading;
 
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+        padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
         child: Form(
           key: _formKey,
           child: Column(
@@ -421,49 +375,58 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                     children: [
                       Text(
                         _holding.symbol.toUpperCase(),
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: theme.textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
                         '${_holding.quantity} shares owned',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: colors.onSurfaceVariant,
-                        ),
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: colors.onSurfaceVariant),
                       ),
                     ],
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppDimens.spacingL),
 
               // ── Quantity Input ──
               TextFormField(
                 controller: _quantityController,
-                decoration: const InputDecoration(
-                  labelText: 'Quantity to Sell',
-                  border: OutlineInputBorder(),
-                ),
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-                ],
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter quantity';
-                  }
-                  final qty = double.tryParse(value);
-                  if (qty == null || qty <= 0) {
-                    return 'Must be a positive number';
-                  }
+                style: theme.textTheme.headlineMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  hintText: '0',
+                  hintStyle: theme.textTheme.headlineMedium?.copyWith(
+                      color: colors.outline.withValues(alpha: 0.4)),
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 16),
+                ),
+                inputFormatters: [ThousandsSeparatorInputFormatter()],
+                onChanged: (v) {
+                  final parsed =
+                      ThousandsSeparatorInputFormatter.parseFormatted(v);
+                  setState(() => _quantity = parsed ?? 0.0);
+                },
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'Enter quantity';
+                  final qty =
+                      ThousandsSeparatorInputFormatter.parseFormatted(v);
+                  if (qty == null || qty <= 0) return 'Must be greater than zero';
                   if (qty > _holding.quantity) {
                     return 'You only own ${_holding.quantity} shares';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppDimens.spacingS),
 
               // ── Quick-Action Chips ──
               Row(
@@ -482,12 +445,15 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: isActive ? colors.onPrimary : colors.primary,
+                            color: isActive
+                                ? colors.onPrimary
+                                : colors.primary,
                           ),
                         ),
                         backgroundColor: isActive
                             ? colors.primary
-                            : colors.primaryContainer.withValues(alpha: 0.4),
+                            : colors.primaryContainer
+                                .withValues(alpha: 0.4),
                         side: BorderSide.none,
                         onPressed: () => _onChipTapped(index),
                       ),
@@ -495,107 +461,85 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                   );
                 }),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppDimens.spacingL),
 
               // ── Sell Price Input ──
               TextFormField(
                 controller: _priceController,
-                decoration: const InputDecoration(
-                  labelText: 'Sell Price per Share',
-                  prefixText: '\$ ',
-                  border: OutlineInputBorder(),
-                  helperText: 'Enter the execution price for this sale',
-                ),
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [
-                  ThousandsSeparatorInputFormatter(),
-                ],
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter the sell price';
+                style: theme.textTheme.headlineMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  hintText: '0.00',
+                  hintStyle: theme.textTheme.headlineMedium?.copyWith(
+                      color: colors.outline.withValues(alpha: 0.4)),
+                  prefixText: '\$ ',
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 16),
+                  helperText: 'Price per share (pre-filled from market)',
+                ),
+                inputFormatters: [ThousandsSeparatorInputFormatter()],
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) {
+                    return 'Enter sell price';
                   }
-                  final price = ThousandsSeparatorInputFormatter.parseFormatted(value);
+                  final price =
+                      ThousandsSeparatorInputFormatter.parseFormatted(v);
                   if (price == null || price <= 0) {
-                    return 'Must be a positive number';
+                    return 'Must be greater than zero';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppDimens.spacingL),
 
               // ── Estimated Value ──
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: colors.surfaceContainerHigh,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Estimated Value',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: colors.onSurfaceVariant,
+              if (_quantity > 0 && _pricePerUnit > 0) ...[
+                Container(
+                  padding: const EdgeInsets.all(AppDimens.spacingL),
+                  decoration: BoxDecoration(
+                    color: colors.surfaceContainerLow,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Estimated Value',
+                        style: theme.textTheme.bodyLarge
+                            ?.copyWith(color: colors.onSurfaceVariant),
                       ),
-                    ),
-                    Text(
-                      currencyFmt.format(_estimatedValue),
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: _estimatedValue > 0
-                            ? Colors.green.shade700
-                            : colors.onSurface,
+                      Text(
+                        CurrencyFormatter.format(_estimatedValue),
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
+                const SizedBox(height: AppDimens.spacingL),
+              ],
 
               // ── Confirm Sale Button ──
-              ElevatedButton(
-                onPressed: isSubmitting ? null : _submit,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: colors.error,
-                  foregroundColor: colors.onError,
-                ),
-                child: isSubmitting
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                    : const Text(
-                        'Confirm Sale',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+              PrimaryButton(
+                text: 'Confirm Sale',
+                isLoading: isSubmitting,
+                onPressed: (_quantity > 0 && _pricePerUnit > 0)
+                    ? _submit
+                    : null,
               ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  IconData _assetIcon(String assetClass) {
-    switch (assetClass.toLowerCase()) {
-      case 'crypto':
-        return Icons.currency_bitcoin;
-      case 'etf':
-        return Icons.pie_chart_outline;
-      case 'bond':
-        return Icons.account_balance;
-      default:
-        return Icons.show_chart;
-    }
   }
 }

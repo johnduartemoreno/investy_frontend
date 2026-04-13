@@ -1,38 +1,53 @@
 /// REST DTO for POST /api/v1/users/{userId}/transactions.
 ///
-/// [amount] is in integer cents — $1.00 = 100. Never a float.
-/// [type] matches the OpenAPI enum: BUY | SELL | DEPOSIT | WITHDRAWAL.
-/// [symbol] is required for BUY/SELL; omitted for DEPOSIT/WITHDRAWAL.
+/// DEPOSIT/WITHDRAWAL: send [amount] in integer cents ($1.00 = 100).
+/// BUY/SELL: send [quantity] as decimal string + [priceCents] per unit.
+///   The backend converts quantity → quantity_units (×10^8) internally.
+///   The frontend never handles the ×10^8 scale.
 class TransactionRequestModel {
-  final int amount; // integer cents: $1.00 = 100
-  final String type; // BUY | SELL | DEPOSIT | WITHDRAWAL
-  final String? symbol; // required for BUY/SELL
+  final int? amount;      // DEPOSIT/WITHDRAWAL: total cents
+  final String type;      // BUY | SELL | DEPOSIT | WITHDRAWAL
+  final String? symbol;   // required for BUY/SELL
+  final String? quantity; // BUY/SELL: decimal string e.g. "2.5"
+  final int? priceCents;  // BUY/SELL: price per unit in integer cents
 
   const TransactionRequestModel({
-    required this.amount,
+    this.amount,
     required this.type,
     this.symbol,
+    this.quantity,
+    this.priceCents,
   });
 
-  /// Converts a UI [double] dollar amount to integer cents.
-  ///
-  /// [amount] is in dollars (e.g. 500.00 → 50000 cents).
-  /// Uses `.round()` to eliminate floating-point drift (e.g. 9.99 * 100 = 998.9999...).
-  factory TransactionRequestModel.fromDomain(
-    double amount,
-    String type, {
-    String? symbol,
+  /// For DEPOSIT / WITHDRAWAL — sends total amount in cents.
+  factory TransactionRequestModel.forCash(double amountDollars, String type) {
+    return TransactionRequestModel(
+      amount: (amountDollars * 100).round(),
+      type: type.toUpperCase(),
+    );
+  }
+
+  /// For BUY / SELL — sends quantity (string) + priceCents separately.
+  /// The backend handles the internal ×10^8 conversion.
+  factory TransactionRequestModel.forTrade({
+    required String type,
+    required String symbol,
+    required double quantity,
+    required double pricePerUnit,
   }) {
     return TransactionRequestModel(
-      amount: (amount * 100).round(),
       type: type.toUpperCase(),
       symbol: symbol,
+      quantity: quantity.toString(),
+      priceCents: (pricePerUnit * 100).round(),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'amount': amount,
         'type': type,
+        if (amount != null) 'amount': amount,
         if (symbol != null) 'symbol': symbol,
+        if (quantity != null) 'quantity': quantity,
+        if (priceCents != null) 'priceCents': priceCents,
       };
 }

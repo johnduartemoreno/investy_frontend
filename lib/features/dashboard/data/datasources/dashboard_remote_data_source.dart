@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/network/dio_client.dart';
+import '../models/asset_search_result_model.dart';
 import '../models/create_goal_request_model.dart';
 import '../models/dashboard_response_model.dart';
 import '../models/goal_response_model.dart';
@@ -33,6 +34,9 @@ abstract class DashboardRemoteDataSource {
 
   /// Fetches portfolio holdings for [userId] from the Go REST backend.
   Future<PortfolioResponseModel> getPortfolio(String userId);
+
+  /// Searches assets by symbol or name prefix. Returns up to 10 results.
+  Future<List<AssetSearchResultModel>> searchAssets(String query);
 }
 
 class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
@@ -86,6 +90,15 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
     return PortfolioResponseModel.fromJson(
       response.data as Map<String, dynamic>,
     );
+  }
+
+  @override
+  Future<List<AssetSearchResultModel>> searchAssets(String query) async {
+    final response = await _dio.get('/api/v1/assets', queryParameters: {'q': query});
+    final list = response.data as List<dynamic>;
+    return list
+        .map((e) => AssetSearchResultModel.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 }
 

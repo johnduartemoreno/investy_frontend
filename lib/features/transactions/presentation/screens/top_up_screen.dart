@@ -67,7 +67,7 @@ class TopUpNotifier extends StateNotifier<TopUpState> {
 
       await _ref.read(dashboardRemoteDataSourceProvider).createTransaction(
             userId,
-            TransactionRequestModel.fromDomain(state.amount!, 'DEPOSIT'),
+            TransactionRequestModel.forCash(state.amount!, 'DEPOSIT'),
           );
 
       _ref.invalidate(restDashboardProvider);

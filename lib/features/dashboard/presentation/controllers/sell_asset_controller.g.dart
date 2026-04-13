@@ -7,7 +7,7 @@ part of 'sell_asset_controller.dart';
 // **************************************************************************
 
 String _$sellAssetControllerHash() =>
-    r'ebd8a1a9ef867ab4e999856e754840e94a678f6c';
+    r'e5619c62418806d6eea05a1cf705cf173940f088';
 
 /// See also [SellAssetController].
 @ProviderFor(SellAssetController)

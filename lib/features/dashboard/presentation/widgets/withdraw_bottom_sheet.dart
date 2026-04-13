@@ -51,7 +51,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
 
       await ref.read(dashboardRemoteDataSourceProvider).createTransaction(
             userId,
-            TransactionRequestModel.fromDomain(_amount, 'WITHDRAWAL'),
+            TransactionRequestModel.forCash(_amount, 'WITHDRAWAL'),
           );
 
       ref.invalidate(restDashboardProvider);
