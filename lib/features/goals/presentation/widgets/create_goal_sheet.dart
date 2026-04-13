@@ -24,6 +24,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
   DateTime? _selectedDeadline;
   int? _activePreset; // index into _presets; null when Custom date is set
   bool _isLoading = false;
+  bool _deadlineError = false;
   double _amount = 0.0;
 
   static const _presets = [
@@ -40,6 +41,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
     setState(() {
       _activePreset = index;
       _selectedDeadline = DateTime(now.year, now.month + months, now.day);
+      _deadlineError = false;
     });
   }
 
@@ -72,7 +74,8 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
     if (picked != null) {
       setState(() {
         _selectedDeadline = picked;
-        _activePreset = null; // custom date — no preset active
+        _activePreset = null;
+        _deadlineError = false;
       });
     }
   }
@@ -86,9 +89,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedDeadline == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a deadline')),
-      );
+      setState(() => _deadlineError = true);
       return;
     }
 
@@ -318,6 +319,19 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                 ),
               ],
             ),
+            // Inline error — shown when submit was attempted without a date
+            if (_deadlineError) ...[
+              const SizedBox(height: 6),
+              Padding(
+                padding: const EdgeInsets.only(left: 4),
+                child: Text(
+                  'Select a target date',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.error,
+                  ),
+                ),
+              ),
+            ],
             // Show resolved date when a selection is made
             if (_selectedDeadline != null) ...[
               const SizedBox(height: 8),
