@@ -4,8 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:investy/features/dashboard/data/models/activity_item_model.dart';
 import 'package:investy/features/dashboard/data/models/dashboard_response_model.dart';
-import 'package:investy/features/dashboard/domain/entities/holding.dart';
-import 'package:investy/features/dashboard/domain/entities/user_profile.dart';
 import 'package:investy/features/dashboard/presentation/screens/dashboard_screen.dart';
 
 /// Minimal mock DashboardResponseModel: totalBalance = 250000 cents = $2,500.00, investedValue = 100000 cents = $1,000.00
@@ -38,13 +36,6 @@ void main() {
           // Override the REST dashboard provider directly.
           // Bypasses Firebase Auth check and HTTP — proves the precision pipeline.
           restDashboardProvider.overrideWith((ref) async => _mockResponse),
-
-          // Override Firestore stream providers (not covered by the REST contract).
-          // AsyncLoading header is acceptable; only Cash to Invest is asserted.
-          userProfileStreamProvider
-              .overrideWith((ref) => Stream<UserProfile>.empty()),
-          holdingsStreamProvider
-              .overrideWith((ref) => Stream.value(<Holding>[])),
         ],
         child: const MaterialApp(home: DashboardScreen()),
       );

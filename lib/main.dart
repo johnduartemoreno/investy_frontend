@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'core/debug/firebase_smoke.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
-import 'features/auth/presentation/providers/user_profile_sync_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,9 +32,6 @@ class InvestyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
-
-    // Activate UserProfileSync to listen for auth changes
-    ref.watch(userProfileSyncProvider);
 
     return MaterialApp.router(
       title: 'Investy',

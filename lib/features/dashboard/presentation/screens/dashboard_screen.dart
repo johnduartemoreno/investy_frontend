@@ -4,17 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/utils/currency_formatter.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../data/datasources/dashboard_remote_data_source.dart';
 import '../../data/models/dashboard_response_model.dart';
-import '../../data/repositories/dashboard_repository_impl.dart';
 import '../widgets/withdraw_bottom_sheet.dart';
 import '../../domain/entities/contribution.dart';
-import '../../domain/entities/holding.dart';
 import '../../domain/entities/transaction.dart';
-import '../../domain/entities/user_profile.dart';
-import '../../domain/entities/wallet.dart';
 
 // ==========================================
 // UNIFIED ACTIVITY ITEM (Sealed Class)
@@ -43,85 +38,7 @@ class ActivityItemContribution extends ActivityItem {
 }
 
 // ==========================================
-// 1. STREAM PROVIDERS (Real Firestore Data)
-// ==========================================
-
-/// Provider: User Profile Stream
-final userProfileStreamProvider =
-    StreamProvider.autoDispose<UserProfile>((ref) {
-  final repository = ref.watch(dashboardRepositoryProvider);
-  return repository.watchUserProfile();
-});
-
-/// Provider: Holdings Stream
-final holdingsStreamProvider = StreamProvider.autoDispose<List<Holding>>((ref) {
-  final repository = ref.watch(dashboardRepositoryProvider);
-  return repository.watchHoldings();
-});
-
-/// Provider: Calculated Net Worth (sum of holdings * avgCost)
-final netWorthProvider = Provider.autoDispose<AsyncValue<double>>((ref) {
-  final holdingsAsync = ref.watch(holdingsStreamProvider);
-  return holdingsAsync.whenData((holdings) {
-    return holdings.fold<double>(
-      0.0,
-      (sum, holding) => sum + (holding.quantity * holding.avgCost),
-    );
-  });
-});
-
-/// Provider: Contributions Stream
-final contributionsStreamProvider =
-    StreamProvider.autoDispose<List<Contribution>>((ref) {
-  final repository = ref.watch(dashboardRepositoryProvider);
-  return repository.watchContributions();
-});
-
-/// Provider: Wallet Stream (reads from users/{uid}/wallet/main)
-final walletStreamProvider = StreamProvider.autoDispose<Wallet>((ref) {
-  final repository = ref.watch(dashboardRepositoryProvider);
-  return repository.watchWallet();
-});
-
-/// Provider: Available Cash (Buying Power) — reads from Wallet entity.
-final availableCashProvider = Provider.autoDispose<AsyncValue<double>>((ref) {
-  final walletAsync = ref.watch(walletStreamProvider);
-  return walletAsync.whenData((wallet) => wallet.availableCash);
-});
-
-/// Provider: Unified Activity Feed (Transactions + Contributions)
-///
-/// Merges transactions and contributions into a single list of [ActivityItem].
-/// Contributions that are linked to a transaction (transactionId != null)
-/// are filtered out to avoid duplicates in the feed.
-final recentActivityStreamProvider =
-    StreamProvider.autoDispose<List<ActivityItem>>((ref) {
-  final repository = ref.watch(dashboardRepositoryProvider);
-
-  return Rx.combineLatest2<List<Transaction>, List<Contribution>,
-      List<ActivityItem>>(
-    repository.watchTransactions(),
-    repository.watchContributions(),
-    (transactions, contributions) {
-      // Filter out contributions that are linked to a transaction
-      final standaloneContributions =
-          contributions.where((c) => c.transactionId == null).toList();
-
-      // Wrap both lists into ActivityItem
-      final items = <ActivityItem>[
-        ...transactions.map(ActivityItemTransaction.new),
-        ...standaloneContributions.map(ActivityItemContribution.new),
-      ];
-
-      // Sort by date descending
-      items.sort((a, b) => b.date.compareTo(a.date));
-      return items;
-    },
-  );
-});
-
-// ==========================================
-// 2. REST PROVIDERS (Go Backend)
+// REST PROVIDERS (Go Backend)
 // ==========================================
 
 /// Fetches the full dashboard payload from the Go REST backend.
