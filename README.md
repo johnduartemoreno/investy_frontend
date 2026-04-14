@@ -44,6 +44,7 @@ lib/
 
 ## Key Libraries
 
+- **Auth**: `firebase_core`, `firebase_auth` — JWT identity only, no Firestore
 - **State Management**: `flutter_riverpod`, `riverpod_annotation`
 - **Navigation**: `go_router`
 - **Networking**: `dio`
@@ -51,18 +52,26 @@ lib/
 - **Functional Programming**: `fpdart`
 - **Code Gen**: `freezed`, `json_serializable`
 
+## Firebase — Auth only
+
+Firebase is used **exclusively for authentication** (JWT identity token). Cloud Firestore is not used. All business data lives in PostgreSQL via the Go REST backend.
+
+- `FirebaseAuth.instance.currentUser` — identity, display name, email
+- Every REST request carries `Authorization: Bearer <Firebase ID Token>` (5s timeout + try-catch in Dio interceptor)
+- Backend resolves Firebase UID → PostgreSQL `user.id` via `UpsertFromFirebase` on every request
+
 ## REST Backend Integration
 
 The app connects to `investy_backend` (Go). Base URL is auto-selected:
 - Android emulator: `http://10.0.2.2:8080`
 - iOS simulator / debug: `http://127.0.0.1:8080`
 
-All requests include `Authorization: Bearer <Firebase ID Token>` via Dio interceptor.
-
 | Feature | Provider | Backend endpoint |
 |---------|----------|-----------------|
 | Dashboard | `restDashboardProvider` | `GET /api/v1/users/{id}/dashboard` |
 | Transactions | write via controllers | `POST /api/v1/users/{id}/transactions` |
+| Portfolio | `restPortfolioProvider` | `GET /api/v1/users/{id}/portfolio` |
+| Asset search | `assetSearchProvider` | `GET /api/v1/assets?q={query}` |
 | Goals (read) | `restGoalsProvider` | `GET /api/v1/users/{id}/goals` |
 | Goals (create) | `CreateGoalSheet` | `POST /api/v1/users/{id}/goals` |
 
