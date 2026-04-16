@@ -16,6 +16,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   bool _emailSent = false;
+  String _sentToEmail = '';
 
   @override
   void dispose() {
@@ -33,10 +34,14 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
     setState(() => _isLoading = true);
     try {
+      final email = _emailController.text.trim();
       await ref
           .read(authNotifierProvider.notifier)
-          .forgotPassword(_emailController.text.trim());
-      if (mounted) setState(() => _emailSent = true);
+          .forgotPassword(email);
+      if (mounted) setState(() {
+        _sentToEmail = email;
+        _emailSent = true;
+      });
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -90,7 +95,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 const SizedBox(height: 8),
                 Text(
                   _emailSent
-                      ? 'We sent a reset link to your email.\nCheck your inbox and follow the instructions.'
+                      ? 'We sent a reset link to\n$_sentToEmail\n\nCheck your inbox and follow the instructions.'
                       : 'Enter your email and we\'ll send you a link to reset your password.',
                   style: textTheme.bodyLarge?.copyWith(
                     color: colorScheme.onSurfaceVariant,
