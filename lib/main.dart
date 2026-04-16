@@ -4,8 +4,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'core/debug/firebase_smoke.dart';
 import 'core/router/app_router.dart';
+import 'core/services/notification_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_mode_provider.dart';
+import 'features/auth/presentation/providers/auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +36,14 @@ class InvestyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
     final themeMode = ref.watch(themeModeNotifierProvider);
+
+    // Initialise FCM once the user is authenticated and email-verified.
+    ref.listen(authNotifierProvider, (_, next) {
+      final user = next.valueOrNull;
+      if (user != null) {
+        ref.read(notificationServiceProvider).init();
+      }
+    });
 
     return MaterialApp.router(
       title: 'Investy',

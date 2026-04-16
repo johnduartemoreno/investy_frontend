@@ -15,6 +15,7 @@ import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/settings/presentation/appearance_screen.dart';
 import '../../features/settings/presentation/about_screen.dart';
 import '../../features/settings/presentation/help_screen.dart';
+import '../../features/settings/presentation/notifications_screen.dart';
 import '../../features/transactions/presentation/screens/top_up_screen.dart';
 import '../../features/dashboard/presentation/screens/buy_asset_screen.dart';
 import '../../features/dashboard/presentation/screens/sell_asset_screen.dart';
@@ -167,6 +168,10 @@ GoRouter goRouter(Ref ref) {
                   GoRoute(
                     path: 'help',
                     builder: (context, state) => const HelpScreen(),
+                  ),
+                  GoRoute(
+                    path: 'notifications',
+                    builder: (context, state) => const NotificationsScreen(),
                   ),
                 ],
               ),
