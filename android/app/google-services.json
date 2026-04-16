@@ -12,7 +12,28 @@
           "package_name": "com.investyapp.investy"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "51143813112-0o4dj0g0ikpa4n225do9859fpa18l505.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.investyapp.investy",
+            "certificate_hash": "6e3a82e042d2f76ab532a43ddb1c152f79a17c75"
+          }
+        },
+        {
+          "client_id": "51143813112-1b00kbs4s9g7957d9rgq1mm3lao4e7c8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.investyapp.investy",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "51143813112-gamcgfear7dbeccnn5mosqdnltk3uhmo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAKlWHhqbue-HhSWJWvzJre1OWUNXuqvFM"
@@ -20,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51143813112-gamcgfear7dbeccnn5mosqdnltk3uhmo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "51143813112-cmg9gtr727jos5esagh7ls68sqbv6a4t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.investyapp.investy"
+              }
+            }
+          ]
         }
       }
     }

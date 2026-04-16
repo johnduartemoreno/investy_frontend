@@ -305,15 +305,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     ),
                                     const SizedBox(width: 8),
                                     TextButton(
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Forgot password feature coming soon'),
-                                          ),
-                                        );
-                                      },
+                                      onPressed: () =>
+                                          context.push('/forgot-password'),
                                       style: TextButton.styleFrom(
                                         padding: EdgeInsets.zero,
                                         minimumSize: Size.zero,
@@ -387,81 +380,34 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ),
                                 const SizedBox(height: 24),
 
-                                // Social Login Buttons
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: OutlinedButton.icon(
-                                        onPressed: () {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'Google sign-in coming soon'),
-                                            ),
-                                          );
-                                        },
-                                        style: OutlinedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 14),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          side: BorderSide(
-                                            color: colorScheme.outline,
-                                          ),
-                                        ),
-                                        icon: Icon(
-                                          Icons.g_mobiledata,
-                                          size: 28,
-                                          color: colorScheme.onSurfaceVariant,
-                                        ),
-                                        label: Text(
-                                          'Google',
-                                          style: textTheme.labelLarge?.copyWith(
-                                            color: colorScheme.onSurface,
-                                          ),
-                                        ),
-                                      ),
+                                // Google Sign-In Button (full width)
+                                OutlinedButton.icon(
+                                  onPressed: _isLoading
+                                      ? null
+                                      : () => ref
+                                          .read(authNotifierProvider.notifier)
+                                          .signInWithGoogle(),
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 14),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: OutlinedButton.icon(
-                                        onPressed: () {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'Apple sign-in coming soon'),
-                                            ),
-                                          );
-                                        },
-                                        style: OutlinedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 14),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          side: BorderSide(
-                                            color: colorScheme.outline,
-                                          ),
-                                        ),
-                                        icon: Icon(
-                                          Icons.apple,
-                                          size: 24,
-                                          color: colorScheme.onSurfaceVariant,
-                                        ),
-                                        label: Text(
-                                          'Apple',
-                                          style: textTheme.labelLarge?.copyWith(
-                                            color: colorScheme.onSurface,
-                                          ),
-                                        ),
-                                      ),
+                                    side: BorderSide(
+                                      color: colorScheme.outline,
                                     ),
-                                  ],
+                                  ),
+                                  icon: Icon(
+                                    Icons.g_mobiledata,
+                                    size: 28,
+                                    color: colorScheme.onSurfaceVariant,
+                                  ),
+                                  label: Text(
+                                    'Continue with Google',
+                                    style: textTheme.labelLarge?.copyWith(
+                                      color: colorScheme.onSurface,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),

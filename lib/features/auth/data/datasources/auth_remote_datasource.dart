@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/network/dio_client.dart';
 import '../models/user_model.dart';
@@ -14,6 +15,8 @@ abstract class AuthRemoteDataSource {
   Future<void> sendVerificationEmail();
   Future<void> reloadUser();
   Future<void> logout();
+  Future<void> forgotPassword(String email);
+  Future<UserModel> signInWithGoogle();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -171,7 +174,86 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> logout() async {
     debugPrint('🔥 [AuthRemoteDataSource] Signing out from Firebase...');
     await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
     debugPrint('🔥 [AuthRemoteDataSource] Signed out successfully.');
+  }
+
+  @override
+  Future<void> forgotPassword(String email) async {
+    try {
+      debugPrint(
+          '🔥 [AuthRemoteDataSource] Sending password reset email to $email...');
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      debugPrint('🔥 [AuthRemoteDataSource] Password reset email sent.');
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          // Don't reveal if email exists — security best practice
+          debugPrint(
+              '🔥 [AuthRemoteDataSource] User not found, but returning success silently.');
+          return;
+        case 'invalid-email':
+          throw Exception('Invalid email format');
+        case 'network-request-failed':
+          throw Exception('Network error. Please check your connection');
+        default:
+          throw Exception(e.message ?? 'Failed to send reset email');
+      }
+    } catch (e) {
+      throw Exception('An unexpected error occurred. Please try again');
+    }
+  }
+
+  @override
+  Future<UserModel> signInWithGoogle() async {
+    try {
+      debugPrint('🔥 [AuthRemoteDataSource] Starting Google Sign-In...');
+
+      final googleSignIn = GoogleSignIn();
+      final googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        // User cancelled the sign-in dialog
+        throw Exception('Google sign-in cancelled');
+      }
+
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      final firebaseUser = userCredential.user;
+
+      if (firebaseUser == null) {
+        throw Exception('Google sign-in succeeded but user is null');
+      }
+
+      debugPrint(
+          '🔥 [AuthRemoteDataSource] Google Sign-In successful: ${firebaseUser.uid}');
+
+      return UserModel(
+        id: firebaseUser.uid,
+        email: firebaseUser.email ?? '',
+        name: firebaseUser.displayName ?? firebaseUser.email?.split('@')[0] ?? '',
+      );
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'account-exists-with-different-credential':
+          throw Exception(
+              'An account already exists with this email using a different sign-in method');
+        case 'network-request-failed':
+          throw Exception('Network error. Please check your connection');
+        default:
+          throw Exception(e.message ?? 'Google sign-in failed');
+      }
+    } catch (e) {
+      if (e.toString().contains('cancelled')) rethrow;
+      debugPrint('🔥 [AuthRemoteDataSource] Google Sign-In error: $e');
+      throw Exception('Google sign-in failed. Please try again');
+    }
   }
 }
 

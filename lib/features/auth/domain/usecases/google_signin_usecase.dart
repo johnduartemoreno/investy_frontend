@@ -1,0 +1,16 @@
+import 'package:fpdart/fpdart.dart';
+import '../../../../core/errors/failures.dart';
+import '../../../../core/usecases/usecase.dart';
+import '../entities/user.dart';
+import '../repositories/auth_repository.dart';
+
+class GoogleSignInUseCase implements UseCase<User, NoParams> {
+  final AuthRepository repository;
+
+  GoogleSignInUseCase(this.repository);
+
+  @override
+  Future<Either<Failure, User>> call(NoParams params) {
+    return repository.signInWithGoogle();
+  }
+}

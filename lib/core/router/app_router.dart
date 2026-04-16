@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../features/auth/presentation/forgot_password_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/signup_screen.dart';
 import '../../features/auth/presentation/verify_email_screen.dart';
@@ -43,7 +44,8 @@ GoRouter goRouter(Ref ref) {
       final currentUser = FirebaseAuth.instance.currentUser;
       final isAuthenticated = currentUser != null;
       final isAuthRoute = state.matchedLocation == '/login' ||
-          state.matchedLocation == '/signup';
+          state.matchedLocation == '/signup' ||
+          state.matchedLocation == '/forgot-password';
       final isVerifyEmailRoute = state.matchedLocation == '/verify-email';
 
       debugPrint(
@@ -85,6 +87,10 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: '/signup',
         builder: (context, state) => const SignUpScreen(),
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        builder: (context, state) => const ForgotPasswordScreen(),
       ),
       GoRoute(
         path: '/verify-email',

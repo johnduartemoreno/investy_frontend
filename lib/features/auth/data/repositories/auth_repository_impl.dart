@@ -70,6 +70,26 @@ class AuthRepositoryImpl implements AuthRepository {
     // TODO: implement check local storage
     return const Left(CacheFailure('No user found'));
   }
+
+  @override
+  Future<Either<Failure, void>> forgotPassword(String email) async {
+    try {
+      await remoteDataSource.forgotPassword(email);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> signInWithGoogle() async {
+    try {
+      final user = await remoteDataSource.signInWithGoogle();
+      return Right(user);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }
 
 @riverpod
