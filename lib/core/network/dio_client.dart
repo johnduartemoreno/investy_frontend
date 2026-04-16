@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../config/app_config.dart';
+import '../providers/session_provider.dart';
 
 part 'dio_client.g.dart';
 
@@ -49,6 +50,7 @@ Dio dio(Ref ref) {
         if (error.requestOptions.extra['_retried'] == true) {
           // Second 401 — session is revoked. Sign out; router redirects to login.
           await FirebaseAuth.instance.signOut();
+          ref.read(sessionTerminatedProvider.notifier).terminate();
           return handler.next(error);
         }
 

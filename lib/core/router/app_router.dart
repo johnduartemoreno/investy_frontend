@@ -12,6 +12,9 @@ import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/goals/presentation/goals_screen.dart';
 import '../../features/portfolio/presentation/portfolio_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/settings/presentation/appearance_screen.dart';
+import '../../features/settings/presentation/about_screen.dart';
+import '../../features/settings/presentation/help_screen.dart';
 import '../../features/transactions/presentation/screens/top_up_screen.dart';
 import '../../features/dashboard/presentation/screens/buy_asset_screen.dart';
 import '../../features/dashboard/presentation/screens/sell_asset_screen.dart';
@@ -152,6 +155,20 @@ GoRouter goRouter(Ref ref) {
               GoRoute(
                 path: '/settings',
                 builder: (context, state) => const SettingsScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'appearance',
+                    builder: (context, state) => const AppearanceScreen(),
+                  ),
+                  GoRoute(
+                    path: 'about',
+                    builder: (context, state) => const AboutScreen(),
+                  ),
+                  GoRoute(
+                    path: 'help',
+                    builder: (context, state) => const HelpScreen(),
+                  ),
+                ],
               ),
             ],
           ),
