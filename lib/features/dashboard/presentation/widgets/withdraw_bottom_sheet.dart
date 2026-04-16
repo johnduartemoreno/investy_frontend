@@ -57,12 +57,12 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
       ref.invalidate(restDashboardProvider);
 
       if (mounted) {
-        context.pop(); // Close modal
+        context.pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
                 'Successfully withdrew ${NumberFormat.simpleCurrency().format(_amount)}'),
-            backgroundColor: Colors.green,
+            backgroundColor: Theme.of(context).colorScheme.primary,
           ),
         );
       }
@@ -72,7 +72,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
       }
@@ -248,7 +248,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
                   ],
                 ),
                 const Spacer(),
-                const Icon(Icons.chevron_right, color: Colors.grey),
+                Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
               ],
             ),
           ),
@@ -256,9 +256,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
 
           // Action Button
           FilledButton(
-            onPressed: (_amount > 0 && _amount <= maxAvailable && !_isLoading)
-                ? () => _handleWithdraw(maxAvailable)
-                : null,
+            onPressed: _isLoading ? null : () => _handleWithdraw(maxAvailable),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(

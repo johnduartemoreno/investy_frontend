@@ -97,7 +97,7 @@ class SettingsScreen extends ConsumerWidget {
           const Divider(height: 1),
           _buildListTile(
               context, Icons.palette_outlined, 'Appearance', 'System',
-              onTap: () {}),
+              onTap: () => context.push('/settings/appearance')),
         ],
       ),
     );
@@ -109,10 +109,10 @@ class SettingsScreen extends ConsumerWidget {
       child: Column(
         children: [
           _buildListTile(context, Icons.info_outline, 'About Investy', 'v1.0.0',
-              onTap: () {}),
+              onTap: () => context.push('/settings/about')),
           const Divider(height: 1),
           _buildListTile(context, Icons.help_outline, 'Help & Support', '',
-              onTap: () {}),
+              onTap: () => context.push('/settings/help')),
         ],
       ),
     );
@@ -128,9 +128,13 @@ class SettingsScreen extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(trailing,
-              style: const TextStyle(color: Colors.grey, fontSize: 13)),
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontSize: 13)),
           const SizedBox(width: 4),
-          const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
+          Icon(Icons.chevron_right,
+              size: 20,
+              color: Theme.of(context).colorScheme.onSurfaceVariant),
         ],
       ),
       onTap: onTap,

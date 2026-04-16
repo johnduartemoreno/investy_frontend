@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'providers/auth_provider.dart';
 import '../../../core/services/email_storage_service.dart';
+import '../../../core/providers/session_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -92,6 +93,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // Detect keyboard state
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final isKeyboardOpen = keyboardHeight > 0;
+
+    ref.listen(sessionTerminatedProvider, (previous, next) {
+      if (next && mounted) {
+        ref.read(sessionTerminatedProvider.notifier).reset();
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+                'Your session was terminated. Please sign in again.'),
+            backgroundColor: colorScheme.error,
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
+    });
 
     ref.listen(authNotifierProvider, (previous, next) {
       if (mounted) {

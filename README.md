@@ -59,6 +59,9 @@ Firebase is used **exclusively for authentication** (JWT identity token). Cloud 
 - `FirebaseAuth.instance.currentUser` — identity, display name, email
 - Every REST request carries `Authorization: Bearer <Firebase ID Token>` (5s timeout + try-catch in Dio interceptor)
 - Backend resolves Firebase UID → PostgreSQL `user.id` via `UpsertFromFirebase` on every request
+- **Google Sign-In**: `google_sign_in` package — unified login+signup flow (`signInWithCredential` creates account if new, logs in if existing)
+- **Forgot Password**: `sendPasswordResetEmail` — user-not-found errors silently swallowed (prevents email enumeration)
+- **Session termination**: second 401 → `signOut()` + `sessionTerminatedProvider` → snackbar on login screen
 
 ## REST Backend Integration
 
@@ -76,6 +79,15 @@ The app connects to `investy_backend` (Go). Base URL is auto-selected:
 | Goals (create) | `CreateGoalSheet` | `POST /api/v1/users/{id}/goals` |
 
 Monetary values: `int` cents on the wire, converted to `double` dollars in `toDomain()`.
+
+## Settings
+
+| Screen | Route | Description |
+|--------|-------|-------------|
+| Settings | `/settings` | Profile, preferences, logout |
+| Appearance | `/settings/appearance` | System / Light / Dark theme toggle (`themeModeNotifierProvider`) |
+| About | `/settings/about` | App version, Privacy Policy, Terms, Contact |
+| Help | `/settings/help` | FAQ (5 items, expandable) + support email |
 
 ## Testing
 
