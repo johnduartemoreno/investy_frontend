@@ -9,6 +9,8 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/theme_mode_provider.dart';
 import 'features/auth/presentation/providers/auth_provider.dart';
 
+final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -45,9 +47,32 @@ class InvestyApp extends ConsumerWidget {
       }
     });
 
+    // Show foreground FCM messages as a SnackBar.
+    ref.listen(foregroundPushProvider, (_, push) {
+      if (push == null) return;
+      scaffoldMessengerKey.currentState
+        ?..clearSnackBars()
+        ..showSnackBar(
+          SnackBar(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(push.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                if (push.body.isNotEmpty) Text(push.body),
+              ],
+            ),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+    });
+
     return MaterialApp.router(
       title: 'Investy',
       debugShowCheckedModeBanner: false,
+      scaffoldMessengerKey: scaffoldMessengerKey,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,

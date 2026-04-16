@@ -9,6 +9,10 @@ import '../config/app_config.dart';
 
 part 'notification_service.g.dart';
 
+/// Holds the last foreground FCM message for display as a SnackBar.
+final foregroundPushProvider =
+    StateProvider<({String title, String body})?>((_) => null);
+
 /// Background message handler — must be a top-level function.
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -19,7 +23,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 /// and registers it with the backend. Also sets up foreground message handling.
 class NotificationService {
   final Dio _dio;
-  NotificationService(this._dio);
+  final Ref _ref;
+  NotificationService(this._dio, this._ref);
 
   Future<void> init() async {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -44,12 +49,15 @@ class NotificationService {
     // Refresh token when FCM rotates it.
     FirebaseMessaging.instance.onTokenRefresh.listen(_sendTokenToBackend);
 
-    // Foreground messages — show a simple SnackBar via overlay.
-    // Background/terminated messages are handled by the OS automatically.
+    // Foreground messages — surface as in-app SnackBar via foregroundPushProvider.
     FirebaseMessaging.onMessage.listen((message) {
       debugPrint('[FCM] foreground message: ${message.notification?.title}');
-      // Foreground display is handled by the in-app SnackBar shown via the
-      // NotificationOverlay widget mounted in main.dart.
+      final title = message.notification?.title ?? '';
+      final body = message.notification?.body ?? '';
+      if (title.isNotEmpty) {
+        _ref.read(foregroundPushProvider.notifier).state =
+            (title: title, body: body);
+      }
     });
   }
 
@@ -100,5 +108,5 @@ class NotificationService {
 @riverpod
 NotificationService notificationService(Ref ref) {
   final dio = Dio(BaseOptions(baseUrl: AppConfig.apiBaseUrl));
-  return NotificationService(dio);
+  return NotificationService(dio, ref);
 }

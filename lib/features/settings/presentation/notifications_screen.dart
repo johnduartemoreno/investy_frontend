@@ -38,10 +38,23 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     final svc = ref.read(notificationServiceProvider);
     if (value) {
       await svc.init();
+      // Re-read OS status in case user denied permission in system dialog.
+      final settings =
+          await FirebaseMessaging.instance.getNotificationSettings();
+      final granted =
+          settings.authorizationStatus == AuthorizationStatus.authorized;
+      setState(() {
+        _enabled = granted;
+        _loading = false;
+      });
     } else {
       await svc.deleteToken();
+      // Token deleted — treat as disabled regardless of OS permission level.
+      setState(() {
+        _enabled = false;
+        _loading = false;
+      });
     }
-    await _loadStatus();
   }
 
   @override
