@@ -11,7 +11,8 @@ class SignUpUseCase implements UseCase<User, SignUpParams> {
 
   @override
   Future<Either<Failure, User>> call(SignUpParams params) {
-    return repository.signUp(params.name, params.email, params.password);
+    return repository.signUp(
+        params.name, params.email, params.password, params.displayCurrency);
   }
 }
 
@@ -19,7 +20,12 @@ class SignUpParams {
   final String name;
   final String email;
   final String password;
+  final String displayCurrency;
 
-  SignUpParams(
-      {required this.name, required this.email, required this.password});
+  SignUpParams({
+    required this.name,
+    required this.email,
+    required this.password,
+    required this.displayCurrency,
+  });
 }

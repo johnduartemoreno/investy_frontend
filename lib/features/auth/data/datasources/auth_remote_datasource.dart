@@ -11,7 +11,8 @@ part 'auth_remote_datasource.g.dart';
 
 abstract class AuthRemoteDataSource {
   Future<UserModel> login(String email, String password);
-  Future<UserModel> signUp(String name, String email, String password);
+  Future<UserModel> signUp(
+      String name, String email, String password, String displayCurrency);
   Future<void> sendVerificationEmail();
   Future<void> reloadUser();
   Future<void> logout();
@@ -77,7 +78,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<UserModel> signUp(String name, String email, String password) async {
+  Future<UserModel> signUp(
+      String name, String email, String password, String displayCurrency) async {
     try {
       debugPrint('🔥 [AuthRemoteDataSource] Creating account for $email...');
 
@@ -92,15 +94,25 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw Exception('Sign up succeeded but user is null');
       }
 
-      // Update display name
       await firebaseUser.updateDisplayName(name);
 
       debugPrint(
           '🔥 [AuthRemoteDataSource] Account created: ${firebaseUser.uid}');
+
+      // Register user in backend with chosen display currency (ADR-02 — immutable after registration).
+      // Non-fatal: if this fails, UpsertFromFirebase on first dashboard load creates the user with USD default.
+      try {
+        await dio.post(
+          '/api/v1/users/${firebaseUser.uid}/onboard',
+          data: {'displayCurrency': displayCurrency},
+        );
+        debugPrint('🔥 [AuthRemoteDataSource] Backend user registered with currency $displayCurrency');
+      } catch (e) {
+        debugPrint('🔥 [AuthRemoteDataSource] onboard call failed (non-fatal): $e');
+      }
+
       debugPrint(
           '🔥 [AuthRemoteDataSource] Sending verification email to $email...');
-
-      // Send verification email
       await firebaseUser.sendEmailVerification();
       debugPrint('🔥 [AuthRemoteDataSource] Verification email sent to $email');
 

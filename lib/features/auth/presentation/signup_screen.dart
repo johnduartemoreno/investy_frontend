@@ -10,6 +10,23 @@ class SignUpScreen extends ConsumerStatefulWidget {
   ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
+// Supported display currencies — must match backend CHECK constraint.
+const _kCurrencies = [
+  ('USD', 'US Dollar'),
+  ('EUR', 'Euro'),
+  ('GBP', 'British Pound'),
+  ('COP', 'Colombian Peso'),
+  ('BRL', 'Brazilian Real'),
+  ('MXN', 'Mexican Peso'),
+  ('CAD', 'Canadian Dollar'),
+  ('ARS', 'Argentine Peso'),
+  ('CLP', 'Chilean Peso'),
+  ('PEN', 'Peruvian Sol'),
+  ('CHF', 'Swiss Franc'),
+  ('JPY', 'Japanese Yen'),
+  ('AUD', 'Australian Dollar'),
+];
+
 class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -19,6 +36,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   bool _obscurePassword = true;
   bool _isLoading = false;
   String? _lastShownError;
+  String _displayCurrency = 'USD';
 
   @override
   void dispose() {
@@ -26,6 +44,65 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  String _currencyLabel(String code) =>
+      _kCurrencies.firstWhere((c) => c.$1 == code, orElse: () => (code, code)).$2;
+
+  Future<void> _pickCurrency(BuildContext context) async {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setModalState) => Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 32,
+            top: 16,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: colorScheme.outlineVariant,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Text('Display Currency',
+                      style: textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w600)),
+                ),
+                const SizedBox(height: 8),
+                ..._kCurrencies.map((c) => ListTile(
+                      title: Text('${c.$1} — ${c.$2}'),
+                      trailing: _displayCurrency == c.$1
+                          ? Icon(Icons.check,
+                              color: colorScheme.primary)
+                          : null,
+                      onTap: () {
+                        setState(() => _displayCurrency = c.$1);
+                        Navigator.pop(ctx);
+                      },
+                    )),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   bool _isValidEmail(String email) {
@@ -44,6 +121,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 _nameController.text.trim(),
                 _emailController.text.trim(),
                 _passwordController.text,
+                _displayCurrency,
               );
         }
       });
@@ -273,6 +351,25 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                     }
                                     return null;
                                   },
+                                ),
+                                const SizedBox(height: 16),
+
+                                // Display currency selector
+                                InkWell(
+                                  onTap: () => _pickCurrency(context),
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: InputDecorator(
+                                    decoration: const InputDecoration(
+                                      hintText: 'Display Currency',
+                                      prefixIcon:
+                                          Icon(Icons.currency_exchange),
+                                      suffixIcon:
+                                          Icon(Icons.arrow_drop_down),
+                                    ),
+                                    child: Text(
+                                      '$_displayCurrency — ${_currencyLabel(_displayCurrency)}',
+                                    ),
+                                  ),
                                 ),
                                 const SizedBox(height: 24),
 

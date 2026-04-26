@@ -49,14 +49,19 @@ class AuthNotifier extends _$AuthNotifier {
     );
   }
 
-  Future<void> signUp(String name, String email, String password) async {
+  Future<void> signUp(
+      String name, String email, String password, String displayCurrency) async {
     state = const AsyncValue.loading();
 
     final repository = ref.read(authRepositoryProvider);
     final useCase = SignUpUseCase(repository);
 
-    final result = await useCase(
-        SignUpParams(name: name, email: email, password: password));
+    final result = await useCase(SignUpParams(
+      name: name,
+      email: email,
+      password: password,
+      displayCurrency: displayCurrency,
+    ));
 
     result.fold(
       (failure) =>
