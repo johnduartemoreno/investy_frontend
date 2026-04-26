@@ -73,6 +73,11 @@ final restInvestedValueProvider =
       .whenData((dash) => dash.investedValue / 100.0);
 });
 
+/// Derived: ISO 4217 display currency from the REST backend (e.g. "EUR", "USD").
+final restCurrencyProvider = Provider.autoDispose<AsyncValue<String>>((ref) {
+  return ref.watch(restDashboardProvider).whenData((dash) => dash.currency);
+});
+
 /// Derived: Recent Activity feed from the REST backend.
 /// Maps each ActivityItemModel → ActivityItemContribution wrapping a Contribution,
 /// compatible with the existing ActivityItem sealed class used in the UI.
@@ -160,6 +165,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final netWorthAsync = ref.watch(restInvestedValueProvider);
     final availableCashAsync = ref.watch(restAvailableCashProvider);
     final recentActivityAsync = ref.watch(restRecentActivityProvider);
+    final currencyAsync = ref.watch(restCurrencyProvider);
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -174,7 +180,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               const SizedBox(height: 24),
 
               // --- PORTFOLIO SUMMARY (Side-by-Side Cards) ---
-              _buildPortfolioSummary(theme, netWorthAsync, availableCashAsync),
+              _buildPortfolioSummary(theme, netWorthAsync, availableCashAsync,
+                  currencyAsync.valueOrNull ?? 'USD'),
               const SizedBox(height: 32),
 
               // --- QUICK ACTIONS ---
@@ -233,7 +240,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Widget _buildPortfolioSummary(ThemeData theme,
-      AsyncValue<double> netWorthAsync, AsyncValue<double> availableCashAsync) {
+      AsyncValue<double> netWorthAsync, AsyncValue<double> availableCashAsync,
+      String currency) {
     final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
 
@@ -261,7 +269,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   const SizedBox(height: 8),
                   netWorthAsync.when(
                     data: (value) => Text(
-                      CurrencyFormatter.format(value),
+                      CurrencyFormatter.formatWithCurrency(value, currency),
                       style: textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: colors.onSurface,
@@ -310,7 +318,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   const SizedBox(height: 8),
                   availableCashAsync.when(
                     data: (value) => Text(
-                      CurrencyFormatter.format(value),
+                      CurrencyFormatter.formatWithCurrency(value, currency),
                       style: textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: colors.onSurface,
