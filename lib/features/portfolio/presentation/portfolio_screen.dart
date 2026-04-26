@@ -7,6 +7,8 @@ import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../data/models/portfolio_response_model.dart';
 import 'providers/rest_portfolio_provider.dart';
+import '../../dashboard/presentation/screens/dashboard_screen.dart'
+    show displayCurrencyProvider, fxRateProvider;
 
 class PortfolioScreen extends ConsumerWidget {
   const PortfolioScreen({super.key});
@@ -14,6 +16,8 @@ class PortfolioScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final portfolioAsync = ref.watch(restPortfolioProvider);
+    final currency = ref.watch(displayCurrencyProvider);
+    final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -33,7 +37,11 @@ class PortfolioScreen extends ConsumerWidget {
             separatorBuilder: (_, __) =>
                 const SizedBox(height: AppDimens.spacingM),
             itemBuilder: (context, index) {
-              return _HoldingCard(holding: active[index]);
+              return _HoldingCard(
+                holding: active[index],
+                currency: currency,
+                fxRate: fxRate,
+              );
             },
           );
         },
@@ -178,7 +186,14 @@ class PortfolioScreen extends ConsumerWidget {
 
 class _HoldingCard extends StatelessWidget {
   final PortfolioHoldingModel holding;
-  const _HoldingCard({required this.holding});
+  final String currency;
+  final double fxRate;
+
+  const _HoldingCard({
+    required this.holding,
+    required this.currency,
+    required this.fxRate,
+  });
 
   Color _assetColor(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
@@ -246,7 +261,8 @@ class _HoldingCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      CurrencyFormatter.format(holding.marketValue),
+                      CurrencyFormatter.formatWithCurrency(
+                          holding.marketValue * fxRate, currency),
                       style: theme.textTheme.titleMedium
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
@@ -266,11 +282,13 @@ class _HoldingCard extends StatelessWidget {
               children: [
                 _Stat(
                   label: 'Price',
-                  value: CurrencyFormatter.format(holding.currentPrice),
+                  value: CurrencyFormatter.formatWithCurrency(
+                      holding.currentPrice * fxRate, currency),
                 ),
                 _Stat(
                   label: 'Avg Cost',
-                  value: CurrencyFormatter.format(holding.avgCost),
+                  value: CurrencyFormatter.formatWithCurrency(
+                      holding.avgCost * fxRate, currency),
                 ),
                 _Stat(
                   label: 'Return',

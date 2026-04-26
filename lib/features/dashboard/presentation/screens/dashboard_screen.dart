@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import '../../../../core/network/dio_client.dart';
 import '../../../../core/utils/currency_formatter.dart';
 
 import '../../data/datasources/dashboard_remote_data_source.dart';
@@ -76,6 +77,28 @@ final restInvestedValueProvider =
 /// Derived: ISO 4217 display currency from the REST backend (e.g. "EUR", "USD").
 final restCurrencyProvider = Provider.autoDispose<AsyncValue<String>>((ref) {
   return ref.watch(restDashboardProvider).whenData((dash) => dash.currency);
+});
+
+/// Resolved currency string — "USD" until dashboard loads.
+final displayCurrencyProvider = Provider.autoDispose<String>((ref) {
+  return ref.watch(restCurrencyProvider).valueOrNull ?? 'USD';
+});
+
+/// FX rate from USD → user's display currency, cached by Riverpod.
+/// Falls back to 1.0 on any error — never throws.
+final fxRateProvider = FutureProvider.autoDispose<double>((ref) async {
+  final currency = ref.watch(displayCurrencyProvider);
+  if (currency == 'USD') return 1.0;
+  final dio = ref.watch(dioProvider);
+  try {
+    final resp = await dio.get<Map<String, dynamic>>(
+      '/api/v1/fx/rates',
+      queryParameters: {'base': 'USD', 'target': currency},
+    );
+    return (resp.data!['rate'] as num).toDouble();
+  } catch (_) {
+    return 1.0;
+  }
 });
 
 /// Derived: Recent Activity feed from the REST backend.
@@ -166,6 +189,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final availableCashAsync = ref.watch(restAvailableCashProvider);
     final recentActivityAsync = ref.watch(restRecentActivityProvider);
     final currencyAsync = ref.watch(restCurrencyProvider);
+    final currency = ref.watch(displayCurrencyProvider);
+    final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -189,7 +214,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               const SizedBox(height: 32),
 
               // --- RECENT ACTIVITY ---
-              _buildRecentActivitySection(theme, recentActivityAsync),
+              _buildRecentActivitySection(
+                  theme, recentActivityAsync, currency, fxRate),
 
               // Bottom Scroll Padding
               const SizedBox(height: 80),
@@ -410,8 +436,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildRecentActivitySection(
-      ThemeData theme, AsyncValue<List<ActivityItem>> recentActivityAsync) {
+  Widget _buildRecentActivitySection(ThemeData theme,
+      AsyncValue<List<ActivityItem>> recentActivityAsync,
+      String currency, double fxRate) {
     return Column(
       children: [
         Row(
@@ -442,7 +469,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 )
               : Column(
                   children: items
-                      .map((item) => _buildActivityItem(theme, item))
+                      .map((item) =>
+                          _buildActivityItem(theme, item, currency, fxRate))
                       .toList(),
                 ),
           loading: () => const Padding(
@@ -463,17 +491,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildActivityItem(ThemeData theme, ActivityItem item) {
+  Widget _buildActivityItem(
+      ThemeData theme, ActivityItem item, String currency, double fxRate) {
     return switch (item) {
       ActivityItemTransaction(:final transaction) =>
-        _buildTransactionActivityItem(theme, transaction),
+        _buildTransactionActivityItem(theme, transaction, currency, fxRate),
       ActivityItemContribution(:final contribution) =>
-        _buildContributionActivityItem(theme, contribution),
+        _buildContributionActivityItem(theme, contribution, currency, fxRate),
     };
   }
 
   Widget _buildTransactionActivityItem(
-      ThemeData theme, Transaction transaction) {
+      ThemeData theme, Transaction transaction, String currency, double fxRate) {
     final isBuy = transaction.type.toLowerCase() == 'buy';
     final icon = isBuy ? Icons.trending_up : Icons.trending_down;
     final color = isBuy ? Colors.green : Colors.red;
@@ -503,7 +532,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),
         trailing: Text(
-          '${isBuy ? '-' : '+'} ${CurrencyFormatter.format(transaction.totalBeforeFees)}',
+          '${isBuy ? '-' : '+'} ${CurrencyFormatter.formatWithCurrency(transaction.totalBeforeFees * fxRate, currency)}',
           style: theme.textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: isBuy ? theme.colorScheme.error : Colors.green.shade700,
@@ -515,7 +544,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Widget _buildContributionActivityItem(
-      ThemeData theme, Contribution contribution) {
+      ThemeData theme, Contribution contribution, String currency, double fxRate) {
     final isWithdrawal = contribution.type == 'withdrawal';
     final icon = _getContributionIcon(contribution.type);
     final color = _getContributionColor(contribution.type);
@@ -544,7 +573,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),
         trailing: Text(
-          '${isWithdrawal ? '-' : '+'} ${CurrencyFormatter.format(contribution.amount)}',
+          '${isWithdrawal ? '-' : '+'} ${CurrencyFormatter.formatWithCurrency(contribution.amount * fxRate, currency)}',
           style: theme.textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color:

@@ -5,6 +5,8 @@ import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/responsive_center.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../dashboard/data/models/goal_response_model.dart';
+import '../../dashboard/presentation/screens/dashboard_screen.dart'
+    show displayCurrencyProvider, fxRateProvider;
 import 'providers/rest_goals_provider.dart';
 import 'widgets/create_goal_sheet.dart';
 
@@ -14,6 +16,8 @@ class GoalsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goalsAsync = ref.watch(restGoalsProvider);
+    final currency = ref.watch(displayCurrencyProvider);
+    final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -28,7 +32,7 @@ class GoalsScreen extends ConsumerWidget {
                 const SizedBox(height: AppDimens.spacingM),
             itemBuilder: (context, index) {
               final goal = goals[index];
-              return _GoalCard(goal: goal);
+              return _GoalCard(goal: goal, currency: currency, fxRate: fxRate);
             },
           ),
         ),
@@ -56,8 +60,14 @@ class GoalsScreen extends ConsumerWidget {
 
 class _GoalCard extends StatelessWidget {
   final GoalResponseModel goal;
+  final String currency;
+  final double fxRate;
 
-  const _GoalCard({required this.goal});
+  const _GoalCard({
+    required this.goal,
+    required this.currency,
+    required this.fxRate,
+  });
 
   IconData _categoryIcon(String category) {
     switch (category.toLowerCase()) {
@@ -138,8 +148,8 @@ class _GoalCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('${CurrencyFormatter.format(goal.currentAmount)} saved'),
-              Text('Target: ${CurrencyFormatter.format(goal.targetAmount)}'),
+              Text('${CurrencyFormatter.formatWithCurrency(goal.currentAmount * fxRate, currency)} saved'),
+              Text('Target: ${CurrencyFormatter.formatWithCurrency(goal.targetAmount * fxRate, currency)}'),
             ],
           ),
           const SizedBox(height: AppDimens.spacingS),
