@@ -91,6 +91,26 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> deleteAccountEmail(String currentPassword) async {
+    try {
+      await remoteDataSource.deleteAccountEmail(currentPassword);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteAccountGoogle() async {
+    try {
+      await remoteDataSource.deleteAccountGoogle();
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }
 
 @riverpod

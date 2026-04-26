@@ -127,6 +127,24 @@ class AuthNotifier extends _$AuthNotifier {
     );
   }
 
+  Future<void> deleteAccountEmail(String currentPassword) async {
+    final repository = ref.read(authRepositoryProvider);
+    final result = await repository.deleteAccountEmail(currentPassword);
+    result.fold(
+      (failure) => throw Exception(failure.message),
+      (_) => state = const AsyncValue.data(null),
+    );
+  }
+
+  Future<void> deleteAccountGoogle() async {
+    final repository = ref.read(authRepositoryProvider);
+    final result = await repository.deleteAccountGoogle();
+    result.fold(
+      (failure) => throw Exception(failure.message),
+      (_) => state = const AsyncValue.data(null),
+    );
+  }
+
   Future<void> resendVerificationEmail() async {
     debugPrint('🔥 [AuthNotifier] Resending verification email...');
 

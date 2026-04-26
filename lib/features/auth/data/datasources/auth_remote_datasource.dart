@@ -18,6 +18,8 @@ abstract class AuthRemoteDataSource {
   Future<void> logout();
   Future<void> forgotPassword(String email);
   Future<UserModel> signInWithGoogle();
+  Future<void> deleteAccountEmail(String currentPassword);
+  Future<void> deleteAccountGoogle();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -265,6 +267,65 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (e.toString().contains('cancelled')) rethrow;
       debugPrint('🔥 [AuthRemoteDataSource] Google Sign-In error: $e');
       throw Exception('Google sign-in failed. Please try again');
+    }
+  }
+
+  @override
+  Future<void> deleteAccountEmail(String currentPassword) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) throw Exception('No user logged in');
+    try {
+      final cred = EmailAuthProvider.credential(
+        email: user.email!,
+        password: currentPassword,
+      );
+      await user.reauthenticateWithCredential(cred);
+      await _deleteBackendUser(user.uid);
+      await user.delete();
+      await FirebaseAuth.instance.signOut();
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'wrong-password':
+        case 'invalid-credential':
+          throw Exception('Password is incorrect.');
+        case 'requires-recent-login':
+          throw Exception('Please sign out and sign back in first.');
+        default:
+          throw Exception(e.message ?? 'Account deletion failed.');
+      }
+    }
+  }
+
+  @override
+  Future<void> deleteAccountGoogle() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) throw Exception('No user logged in');
+    try {
+      final googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) throw Exception('Google sign-in cancelled');
+      final googleAuth = await googleUser.authentication;
+      final cred = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      await user.reauthenticateWithCredential(cred);
+      await _deleteBackendUser(user.uid);
+      await user.delete();
+      await FirebaseAuth.instance.signOut();
+      await GoogleSignIn().signOut();
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message ?? 'Account deletion failed.');
+    } catch (e) {
+      if (e.toString().contains('cancelled')) rethrow;
+      throw Exception('Account deletion failed. Please try again.');
+    }
+  }
+
+  Future<void> _deleteBackendUser(String uid) async {
+    try {
+      await dio.delete('/api/v1/users/$uid');
+    } catch (e) {
+      debugPrint('🔥 [AuthRemoteDataSource] Backend delete failed (continuing): $e');
     }
   }
 }

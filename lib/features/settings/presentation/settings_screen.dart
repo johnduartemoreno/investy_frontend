@@ -93,7 +93,7 @@ class SettingsScreen extends ConsumerWidget {
               onTap: () => context.push('/settings/notifications')),
           const Divider(height: 1),
           _buildListTile(context, Icons.security, 'Privacy & Security', '',
-              onTap: () {}),
+              onTap: () => context.push('/settings/security')),
           const Divider(height: 1),
           _buildListTile(
               context, Icons.palette_outlined, 'Appearance', 'System',
