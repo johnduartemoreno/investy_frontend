@@ -41,6 +41,7 @@ dependencies:
   equatable: ^2.0.5
   uuid: ^4.2.2
   google_fonts: ^8.0.2
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

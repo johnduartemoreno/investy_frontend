@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/responsive_center.dart';
 import '../../auth/presentation/providers/auth_provider.dart';
-import 'package:go_router/go_router.dart';
+import 'providers/avatar_upload_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -37,19 +41,49 @@ class SettingsScreen extends ConsumerWidget {
   Widget _buildProfileSection(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authNotifierProvider);
     final user = authState.value;
+    final avatarUrl = ref.watch(avatarUrlProvider);
+    final uploadState = ref.watch(avatarUploadProvider);
 
     return CustomCard(
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            child: Text(
-              user?.name.isNotEmpty == true ? user!.name[0].toUpperCase() : 'U',
-              style: TextStyle(
-                  fontSize: 24,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  fontWeight: FontWeight.bold),
+          GestureDetector(
+            onTap: () => _pickAndUploadAvatar(context, ref),
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
+                      ? NetworkImage(avatarUrl)
+                      : null,
+                  child: uploadState.status == AvatarUploadStatus.loading
+                      ? const CircularProgressIndicator.adaptive()
+                      : (avatarUrl == null || avatarUrl.isEmpty)
+                          ? Text(
+                              user?.name.isNotEmpty == true
+                                  ? user!.name[0].toUpperCase()
+                                  : 'U',
+                              style: TextStyle(
+                                  fontSize: 24,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          : null,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: const EdgeInsets.all(2),
+                  child: Icon(Icons.camera_alt,
+                      size: 12,
+                      color: Theme.of(context).colorScheme.onPrimary),
+                ),
+              ],
             ),
           ),
           const SizedBox(width: AppDimens.spacingL),
@@ -71,12 +105,34 @@ class SettingsScreen extends ConsumerWidget {
                       color: Theme.of(context).colorScheme.onSurfaceVariant),
                   overflow: TextOverflow.ellipsis,
                 ),
+                if (uploadState.status == AvatarUploadStatus.error)
+                  Text(
+                    uploadState.errorMessage ?? 'Upload failed',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                        fontSize: 12),
+                  ),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _pickAndUploadAvatar(
+      BuildContext context, WidgetRef ref) async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 512,
+      maxHeight: 512,
+      imageQuality: 85,
+    );
+    if (picked == null) return;
+    await ref
+        .read(avatarUploadProvider.notifier)
+        .upload(File(picked.path));
   }
 
   Widget _buildSettingsSection(BuildContext context) {
