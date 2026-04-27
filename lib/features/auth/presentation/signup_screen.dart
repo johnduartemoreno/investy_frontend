@@ -31,9 +31,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
   bool _isLoading = false;
   String? _lastShownError;
   String _displayCurrency = 'USD';
@@ -43,6 +45,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -340,14 +343,46 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                     ),
                                   ),
                                   obscureText: _obscurePassword,
-                                  textInputAction: TextInputAction.done,
-                                  onFieldSubmitted: (_) => _signUp(),
+                                  textInputAction: TextInputAction.next,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Password is required';
                                     }
                                     if (value.length < 6) {
                                       return 'Minimum 6 characters';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 16),
+
+                                // Confirm Password
+                                TextFormField(
+                                  controller: _confirmPasswordController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Confirm Password',
+                                    prefixIcon:
+                                        const Icon(Icons.lock_outlined),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _obscureConfirmPassword
+                                            ? Icons.visibility_outlined
+                                            : Icons.visibility_off_outlined,
+                                      ),
+                                      onPressed: () => setState(() =>
+                                          _obscureConfirmPassword =
+                                              !_obscureConfirmPassword),
+                                    ),
+                                  ),
+                                  obscureText: _obscureConfirmPassword,
+                                  textInputAction: TextInputAction.done,
+                                  onFieldSubmitted: (_) => _signUp(),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please confirm your password';
+                                    }
+                                    if (value != _passwordController.text) {
+                                      return 'Passwords do not match';
                                     }
                                     return null;
                                   },

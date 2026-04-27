@@ -205,7 +205,9 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
       });
     } catch (e) {
       setState(() {
-        _error = 'An unexpected error occurred. Please try again.';
+        _error = e.toString().replaceAll('Exception: ', '').trim().isNotEmpty
+            ? e.toString().replaceAll('Exception: ', '').trim()
+            : 'An unexpected error occurred. Please try again.';
         _loading = false;
       });
     }
@@ -313,16 +315,36 @@ class _DeleteAccountSheet extends StatefulWidget {
 
 class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
   final _passwordCtrl = TextEditingController();
+  final _emailConfirmCtrl = TextEditingController();
   bool _loading = false;
   String? _error;
+
+  String get _currentEmail =>
+      firebase_auth.FirebaseAuth.instance.currentUser?.email ?? '';
 
   @override
   void dispose() {
     _passwordCtrl.dispose();
+    _emailConfirmCtrl.dispose();
     super.dispose();
   }
 
+  String _cleanError(Object e) =>
+      e.toString().replaceAll('Exception: ', '').trim();
+
   Future<void> _delete() async {
+    if (widget.isGoogle) {
+      if (_emailConfirmCtrl.text.trim() != _currentEmail) {
+        setState(() => _error = 'Email does not match. Please try again.');
+        return;
+      }
+    } else {
+      if (_passwordCtrl.text.isEmpty) {
+        setState(() => _error = 'Please enter your password.');
+        return;
+      }
+    }
+
     setState(() {
       _loading = true;
       _error = null;
@@ -332,13 +354,6 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
       if (widget.isGoogle) {
         await notifier.deleteAccountGoogle();
       } else {
-        if (_passwordCtrl.text.isEmpty) {
-          setState(() {
-            _error = 'Please enter your password.';
-            _loading = false;
-          });
-          return;
-        }
         await notifier.deleteAccountEmail(_passwordCtrl.text);
       }
       if (mounted) {
@@ -347,7 +362,7 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
       }
     } catch (e) {
       setState(() {
-        _error = e.toString().replaceFirst('Exception: ', '');
+        _error = _cleanError(e);
         _loading = false;
       });
     }
@@ -371,18 +386,37 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('Confirm Deletion',
-                style:
-                    theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                style: theme.textTheme.titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: AppDimens.spacingM),
-            Text(
-              widget.isGoogle
-                  ? 'Re-authenticate with Google to confirm account deletion.'
-                  : 'Enter your password to confirm account deletion.',
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: cs.onSurfaceVariant),
-            ),
+            if (widget.isGoogle) ...[
+              Text(
+                'Type your account email to confirm deletion.',
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(color: cs.onSurfaceVariant),
+              ),
+              const SizedBox(height: AppDimens.spacingS),
+              Text(
+                _currentEmail,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: cs.primary,
+                ),
+              ),
+            ] else
+              Text(
+                'Enter your password to confirm account deletion.',
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(color: cs.onSurfaceVariant),
+              ),
             const SizedBox(height: AppDimens.spacingXL),
-            if (!widget.isGoogle)
+            if (widget.isGoogle)
+              CustomTextField(
+                controller: _emailConfirmCtrl,
+                label: 'Your email address',
+                keyboardType: TextInputType.emailAddress,
+              )
+            else
               CustomTextField(
                 controller: _passwordCtrl,
                 label: 'Your password',
