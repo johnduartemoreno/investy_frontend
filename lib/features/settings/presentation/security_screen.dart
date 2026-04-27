@@ -174,6 +174,9 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
   final _confirmCtrl = TextEditingController();
   bool _loading = false;
   String? _error;
+  bool _obscureCurrent = true;
+  bool _obscureNew = true;
+  bool _obscureConfirm = true;
 
   @override
   void dispose() {
@@ -248,18 +251,20 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
                   style: theme.textTheme.titleLarge
                       ?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: AppDimens.spacingXL),
-              CustomTextField(
+              _PasswordField(
                 controller: _currentCtrl,
                 label: 'Current password',
-                obscureText: true,
+                obscure: _obscureCurrent,
+                onToggle: () => setState(() => _obscureCurrent = !_obscureCurrent),
                 validator: (v) =>
                     (v == null || v.isEmpty) ? 'Required' : null,
               ),
               const SizedBox(height: AppDimens.spacingM),
-              CustomTextField(
+              _PasswordField(
                 controller: _newCtrl,
                 label: 'New password',
-                obscureText: true,
+                obscure: _obscureNew,
+                onToggle: () => setState(() => _obscureNew = !_obscureNew),
                 validator: (v) {
                   if (v == null || v.isEmpty) return 'Required';
                   if (v.length < 6) return 'At least 6 characters';
@@ -267,10 +272,11 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
                 },
               ),
               const SizedBox(height: AppDimens.spacingM),
-              CustomTextField(
+              _PasswordField(
                 controller: _confirmCtrl,
                 label: 'Confirm new password',
-                obscureText: true,
+                obscure: _obscureConfirm,
+                onToggle: () => setState(() => _obscureConfirm = !_obscureConfirm),
                 validator: (v) {
                   if (v == null || v.isEmpty) return 'Required';
                   if (v != _newCtrl.text) return 'Passwords do not match';
@@ -318,6 +324,7 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
   final _emailConfirmCtrl = TextEditingController();
   bool _loading = false;
   String? _error;
+  bool _obscurePassword = true;
 
   String get _currentEmail =>
       firebase_auth.FirebaseAuth.instance.currentUser?.email ?? '';
@@ -417,10 +424,12 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
                 keyboardType: TextInputType.emailAddress,
               )
             else
-              CustomTextField(
+              _PasswordField(
                 controller: _passwordCtrl,
                 label: 'Your password',
-                obscureText: true,
+                obscure: _obscurePassword,
+                onToggle: () =>
+                    setState(() => _obscurePassword = !_obscurePassword),
               ),
             if (_error != null) ...[
               const SizedBox(height: AppDimens.spacingM),
@@ -449,6 +458,64 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Reusable password field with show/hide toggle
+// ---------------------------------------------------------------------------
+
+class _PasswordField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final bool obscure;
+  final VoidCallback onToggle;
+  final String? Function(String?)? validator;
+
+  const _PasswordField({
+    required this.controller,
+    required this.label,
+    required this.obscure,
+    required this.onToggle,
+    this.validator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscure,
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: label,
+        suffixIcon: IconButton(
+          icon: Icon(obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+          onPressed: onToggle,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radius),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radius),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radius),
+          borderSide: const BorderSide(width: 2, color: Colors.blue),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radius),
+          borderSide: BorderSide.none,
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radius),
+          borderSide: const BorderSide(width: 2, color: Colors.blue),
+        ),
+        filled: true,
+        contentPadding: const EdgeInsets.all(AppDimens.spacingL),
       ),
     );
   }
