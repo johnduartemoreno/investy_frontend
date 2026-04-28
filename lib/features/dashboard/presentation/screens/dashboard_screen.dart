@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../l10n/app_localizations.dart';
 
 import '../../data/datasources/dashboard_remote_data_source.dart';
 import '../../data/models/dashboard_response_model.dart';
@@ -117,7 +118,6 @@ final restRecentActivityProvider =
 // 3. CONTRIBUTION UI HELPERS
 // ==========================================
 
-/// Returns the appropriate icon for a contribution type.
 IconData _getContributionIcon(String type) {
   switch (type.toLowerCase()) {
     case 'deposit':
@@ -129,7 +129,6 @@ IconData _getContributionIcon(String type) {
   }
 }
 
-/// Returns the appropriate color for a contribution type.
 Color _getContributionColor(String type) {
   switch (type.toLowerCase()) {
     case 'deposit':
@@ -138,28 +137,6 @@ Color _getContributionColor(String type) {
       return Colors.red;
     default:
       return Colors.grey;
-  }
-}
-
-/// Returns a capitalized title for the contribution type.
-String _getContributionTitle(String type) {
-  if (type.isEmpty) return 'Unknown';
-  return type[0].toUpperCase() + type.substring(1);
-}
-
-/// Formats date for display.
-String _formatContributionDate(DateTime date) {
-  final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day);
-  final yesterday = today.subtract(const Duration(days: 1));
-  final dateOnly = DateTime(date.year, date.month, date.day);
-
-  if (dateOnly == today) {
-    return 'Today, ${DateFormat.jm().format(date)}';
-  } else if (dateOnly == yesterday) {
-    return 'Yesterday, ${DateFormat.jm().format(date)}';
-  } else {
-    return DateFormat.yMMMd().format(date);
   }
 }
 
@@ -175,13 +152,37 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-  // Local UI State (Ephemeral)
-  // Privacy toggle removed as per new design spec (always visible)
+  String _getContributionTitle(AppLocalizations l10n, String type) {
+    switch (type.toLowerCase()) {
+      case 'deposit':
+        return l10n.activityDeposit;
+      case 'withdrawal':
+        return l10n.activityWithdrawal;
+      default:
+        return type.isEmpty ? l10n.activityUnknown : (type[0].toUpperCase() + type.substring(1));
+    }
+  }
+
+  String _formatContributionDate(AppLocalizations l10n, DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final dateOnly = DateTime(date.year, date.month, date.day);
+
+    if (dateOnly == today) {
+      return '${l10n.commonToday}, ${DateFormat.jm().format(date)}';
+    } else if (dateOnly == yesterday) {
+      return '${l10n.commonYesterday}, ${DateFormat.jm().format(date)}';
+    } else {
+      return DateFormat.yMMMd().format(date);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
 
     // REST providers — Go backend
     final userNameAsync = ref.watch(restUserNameProvider);
@@ -201,21 +202,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // --- HEADER ---
-              _buildHeader(theme, userNameAsync),
+              _buildHeader(theme, l10n, userNameAsync),
               const SizedBox(height: 24),
 
               // --- PORTFOLIO SUMMARY (Side-by-Side Cards) ---
-              _buildPortfolioSummary(theme, netWorthAsync, availableCashAsync,
+              _buildPortfolioSummary(theme, l10n, netWorthAsync, availableCashAsync,
                   currencyAsync.valueOrNull ?? 'USD'),
               const SizedBox(height: 32),
 
               // --- QUICK ACTIONS ---
-              _buildQuickActions(theme),
+              _buildQuickActions(theme, l10n),
               const SizedBox(height: 32),
 
               // --- RECENT ACTIVITY ---
               _buildRecentActivitySection(
-                  theme, recentActivityAsync, currency, fxRate),
+                  theme, l10n, recentActivityAsync, currency, fxRate),
 
               // Bottom Scroll Padding
               const SizedBox(height: 80),
@@ -229,11 +230,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   // --- Internal Widgets ---
 
   Widget _buildHeader(
-      ThemeData theme, AsyncValue<String> userNameAsync) {
+      ThemeData theme, AppLocalizations l10n, AsyncValue<String> userNameAsync) {
     final displayName = userNameAsync.when(
       data: (name) => name,
-      loading: () => 'Loading...',
-      error: (_, __) => 'Investor',
+      loading: () => l10n.commonLoading,
+      error: (_, __) => '',
     );
 
     return Row(
@@ -243,7 +244,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Welcome back,',
+              l10n.dashboardWelcomeBack,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -265,7 +266,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildPortfolioSummary(ThemeData theme,
+  Widget _buildPortfolioSummary(ThemeData theme, AppLocalizations l10n,
       AsyncValue<double> netWorthAsync, AsyncValue<double> availableCashAsync,
       String currency) {
     final colors = theme.colorScheme;
@@ -286,7 +287,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Invested Portfolio',
+                    l10n.dashboardInvestedPortfolio,
                     style: textTheme.labelMedium?.copyWith(
                       color: colors.onSurfaceVariant,
                       fontWeight: FontWeight.w500,
@@ -335,7 +336,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Cash to Invest',
+                    l10n.dashboardCashToInvest,
                     style: textTheme.labelMedium?.copyWith(
                       color: colors.onSurfaceVariant,
                       fontWeight: FontWeight.w500,
@@ -374,26 +375,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildQuickActions(ThemeData theme) {
+  Widget _buildQuickActions(ThemeData theme, AppLocalizations l10n) {
     final actions = [
       (
         icon: Icons.trending_up,
-        label: 'Buy',
+        label: l10n.dashboardBuy,
         onTap: () => context.go('/home/buy-asset'),
       ),
       (
         icon: Icons.trending_down,
-        label: 'Sell',
+        label: l10n.dashboardSell,
         onTap: () => context.go('/home/sell-asset'),
       ),
       (
         icon: Icons.add_card,
-        label: 'Top-up',
+        label: l10n.dashboardTopUp,
         onTap: () => context.go('/home/top-up'),
       ),
       (
         icon: Icons.file_download_outlined,
-        label: 'Withdraw',
+        label: l10n.dashboardWithdraw,
         onTap: () {
           showModalBottomSheet(
             context: context,
@@ -436,7 +437,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildRecentActivitySection(ThemeData theme,
+  Widget _buildRecentActivitySection(ThemeData theme, AppLocalizations l10n,
       AsyncValue<List<ActivityItem>> recentActivityAsync,
       String currency, double fxRate) {
     return Column(
@@ -445,13 +446,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Recent Activity',
+              l10n.dashboardRecentActivity,
               style: theme.textTheme.titleLarge
                   ?.copyWith(fontWeight: FontWeight.bold),
             ),
             TextButton(
               onPressed: () {},
-              child: const Text('See All'),
+              child: Text(l10n.dashboardSeeAll),
             ),
           ],
         ),
@@ -461,7 +462,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 24.0),
                   child: Text(
-                    'No recent activity',
+                    l10n.dashboardNoActivity,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -470,7 +471,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               : Column(
                   children: items
                       .map((item) =>
-                          _buildActivityItem(theme, item, currency, fxRate))
+                          _buildActivityItem(theme, l10n, item, currency, fxRate))
                       .toList(),
                 ),
           loading: () => const Padding(
@@ -480,7 +481,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           error: (error, _) => Padding(
             padding: const EdgeInsets.symmetric(vertical: 24.0),
             child: Text(
-              'Error loading activity: $error',
+              l10n.commonError,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.error,
               ),
@@ -492,23 +493,24 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Widget _buildActivityItem(
-      ThemeData theme, ActivityItem item, String currency, double fxRate) {
+      ThemeData theme, AppLocalizations l10n, ActivityItem item, String currency, double fxRate) {
     return switch (item) {
       ActivityItemTransaction(:final transaction) =>
-        _buildTransactionActivityItem(theme, transaction, currency, fxRate),
+        _buildTransactionActivityItem(theme, l10n, transaction, currency, fxRate),
       ActivityItemContribution(:final contribution) =>
-        _buildContributionActivityItem(theme, contribution, currency, fxRate),
+        _buildContributionActivityItem(theme, l10n, contribution, currency, fxRate),
     };
   }
 
   Widget _buildTransactionActivityItem(
-      ThemeData theme, Transaction transaction, String currency, double fxRate) {
+      ThemeData theme, AppLocalizations l10n, Transaction transaction, String currency, double fxRate) {
     final isBuy = transaction.type.toLowerCase() == 'buy';
     final icon = isBuy ? Icons.trending_up : Icons.trending_down;
     final color = isBuy ? Colors.green : Colors.red;
-    final title =
-        isBuy ? 'Bought ${transaction.symbol}' : 'Sold ${transaction.symbol}';
-    final dateStr = _formatContributionDate(transaction.createdAt);
+    final title = isBuy
+        ? l10n.activityBought(transaction.symbol)
+        : l10n.activitySold(transaction.symbol);
+    final dateStr = _formatContributionDate(l10n, transaction.createdAt);
 
     return Card(
       elevation: 0,
@@ -544,12 +546,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Widget _buildContributionActivityItem(
-      ThemeData theme, Contribution contribution, String currency, double fxRate) {
+      ThemeData theme, AppLocalizations l10n, Contribution contribution, String currency, double fxRate) {
     final isWithdrawal = contribution.type == 'withdrawal';
     final icon = _getContributionIcon(contribution.type);
     final color = _getContributionColor(contribution.type);
-    final title = _getContributionTitle(contribution.type);
-    final dateStr = _formatContributionDate(contribution.createdAt);
+    final title = _getContributionTitle(l10n, contribution.type);
+    final dateStr = _formatContributionDate(l10n, contribution.createdAt);
 
     return Card(
       elevation: 0,

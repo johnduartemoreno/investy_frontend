@@ -93,10 +93,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'You will be notified when:\n'
-                  '• A deposit or withdrawal is processed\n'
-                  '• A buy or sell order is confirmed\n'
-                  '• A financial goal deadline is approaching (30 days)',
+                  AppLocalizations.of(context).notificationsDescription,
                   style: textTheme.bodySmall
                       ?.copyWith(color: colorScheme.onSurfaceVariant),
                 ),

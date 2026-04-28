@@ -149,13 +149,13 @@ class _GoalCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('${CurrencyFormatter.formatWithCurrency(goal.currentAmount * fxRate, currency)} saved'),
-              Text('Target: ${CurrencyFormatter.formatWithCurrency(goal.targetAmount * fxRate, currency)}'),
+              Text('${AppLocalizations.of(context).goalSaved}: ${CurrencyFormatter.formatWithCurrency(goal.currentAmount * fxRate, currency)}'),
+              Text('${AppLocalizations.of(context).goalTarget}: ${CurrencyFormatter.formatWithCurrency(goal.targetAmount * fxRate, currency)}'),
             ],
           ),
           const SizedBox(height: AppDimens.spacingS),
           Text(
-            'Deadline: ${_formatDate(goal.deadlineDate)}',
+            '${AppLocalizations.of(context).goalDeadline}: ${_formatDate(goal.deadlineDate)}',
             style: theme.textTheme.bodySmall
                 ?.copyWith(color: Colors.grey),
           ),

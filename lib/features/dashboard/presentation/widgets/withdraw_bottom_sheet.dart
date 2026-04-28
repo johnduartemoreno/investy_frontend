@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import '../../../../l10n/app_localizations.dart';
 
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../data/datasources/dashboard_remote_data_source.dart';
@@ -60,8 +61,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
         context.pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-                'Successfully withdrew ${NumberFormat.simpleCurrency().format(_amount)}'),
+            content: Text(AppLocalizations.of(context).withdrawSuccess),
             backgroundColor: Theme.of(context).colorScheme.primary,
           ),
         );
@@ -111,7 +111,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Withdraw Cash',
+                AppLocalizations.of(context).withdrawCash,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -126,7 +126,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
 
           // Available Balance
           Text(
-            'Available to Withdraw',
+            AppLocalizations.of(context).withdrawAvailableTo,
             style: theme.textTheme.labelMedium?.copyWith(
               color: colorScheme.outline,
             ),
@@ -173,10 +173,11 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
                 });
               },
               validator: (value) {
-                if (value == null || value.isEmpty) return 'Enter an amount';
+                final l10n = AppLocalizations.of(context);
+                if (value == null || value.isEmpty) return l10n.withdrawEnterAmount;
                 final val = ThousandsSeparatorInputFormatter.parseFormatted(value);
-                if (val == null || val <= 0) return 'Amount must be positive';
-                if (val > maxAvailable) return 'Insufficient funds';
+                if (val == null || val <= 0) return l10n.withdrawAmountPositive;
+                if (val > maxAvailable) return l10n.withdrawInsufficientFunds;
                 return null;
               },
             ),
@@ -272,7 +273,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
                       color: colorScheme.onPrimary,
                     ),
                   )
-                : const Text('Confirm Withdrawal'),
+                : Text(AppLocalizations.of(context).withdrawConfirmButton),
           ),
         ],
       ),

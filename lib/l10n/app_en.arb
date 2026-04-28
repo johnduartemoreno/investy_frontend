@@ -64,6 +64,8 @@
   },
   "emailVerificationResend": "Resend email",
   "emailVerificationLogout": "Use a different account",
+  "emailVerificationNotVerified": "Please verify your email first",
+  "emailVerificationSent": "Verification email sent! Check your inbox",
 
   "dashboardGreeting": "Hello, {name}",
   "@dashboardGreeting": {
@@ -71,15 +73,36 @@
       "name": { "type": "String" }
     }
   },
+  "dashboardWelcomeBack": "Welcome back,",
   "dashboardTotalBalance": "Total Balance",
+  "dashboardInvestedPortfolio": "Invested Portfolio",
+  "dashboardCashToInvest": "Cash to Invest",
   "dashboardInvestedValue": "Invested",
   "dashboardRecentActivity": "Recent Activity",
+  "dashboardSeeAll": "See All",
   "dashboardNoActivity": "No recent activity",
   "dashboardBuy": "Buy",
   "dashboardSell": "Sell",
   "dashboardTopUp": "Top Up",
   "dashboardWithdraw": "Withdraw",
   "dashboardAvailableCash": "Available Cash",
+  "commonToday": "Today",
+  "commonYesterday": "Yesterday",
+  "activityBought": "Bought {symbol}",
+  "@activityBought": {
+    "placeholders": {
+      "symbol": { "type": "String" }
+    }
+  },
+  "activitySold": "Sold {symbol}",
+  "@activitySold": {
+    "placeholders": {
+      "symbol": { "type": "String" }
+    }
+  },
+  "activityDeposit": "Deposit",
+  "activityWithdrawal": "Withdrawal",
+  "activityUnknown": "Unknown",
 
   "portfolioTitle": "Portfolio",
   "portfolioNoHoldings": "No holdings yet.\nBuy your first asset to get started.",
@@ -154,6 +177,11 @@
   "topUpSuccess": "Funds added successfully",
 
   "withdrawTitle": "Withdraw",
+  "withdrawCash": "Withdraw Cash",
+  "withdrawAvailableTo": "Available to Withdraw",
+  "withdrawConfirmButton": "Confirm Withdrawal",
+  "withdrawEnterAmount": "Enter an amount",
+  "withdrawAmountPositive": "Amount must be positive",
   "withdrawAmountHint": "Amount",
   "withdrawButton": "Withdraw",
   "withdrawSuccess": "Withdrawal successful",
@@ -204,6 +232,7 @@
   "notificationsGoalReminders": "Goal Reminders",
   "notificationsGoalRemindersSubtitle": "Weekly progress reminders for your goals",
   "notificationsEnable": "Enable notifications",
+  "notificationsDescription": "You will be notified when:\n• A deposit or withdrawal is processed\n• A buy or sell order is confirmed\n• A financial goal deadline is approaching (30 days)",
 
   "appearanceTitle": "Appearance",
   "appearanceTheme": "Theme",

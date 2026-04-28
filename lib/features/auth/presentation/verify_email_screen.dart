@@ -31,8 +31,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
         context.go('/home');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please verify your email first'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).emailVerificationNotVerified),
             backgroundColor: Colors.orange,
           ),
         );
@@ -48,8 +48,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     if (mounted) {
       setState(() => _isResending = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Verification email sent! Check your inbox'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).emailVerificationSent),
           backgroundColor: Colors.green,
         ),
       );
