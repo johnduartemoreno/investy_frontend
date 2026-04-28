@@ -1,0 +1,229 @@
+{
+  "@@locale": "en",
+
+  "appName": "Investy",
+
+  "navHome": "Home",
+  "navGoals": "Goals",
+  "navPortfolio": "Portfolio",
+  "navSettings": "Settings",
+
+  "commonSave": "Save",
+  "commonCancel": "Cancel",
+  "commonDelete": "Delete",
+  "commonConfirm": "Confirm",
+  "commonRetry": "Retry",
+  "commonLoading": "Loading...",
+  "commonEmail": "Email",
+  "commonPassword": "Password",
+  "commonName": "Name",
+  "commonError": "Something went wrong. Please try again.",
+  "commonLogOut": "Log Out",
+
+  "errorRequiredField": "This field is required",
+  "errorInvalidEmail": "Enter a valid email address",
+  "errorPasswordTooShort": "Password must be at least 6 characters",
+  "errorPasswordMismatch": "Passwords do not match",
+  "errorNetwork": "Network error. Check your connection.",
+
+  "loginTitle": "Welcome Back!",
+  "loginSubtitle": "Securely access your investments.",
+  "loginRememberEmail": "Remember email",
+  "loginOrContinueWith": "Or continue with",
+  "loginEmailHint": "Email",
+  "loginPasswordHint": "Password",
+  "loginButton": "Sign In",
+  "loginForgotPassword": "Forgot password?",
+  "loginNoAccount": "Don't have an account?",
+  "loginSignUp": "Sign up",
+  "loginWithGoogle": "Continue with Google",
+
+  "signupTitle": "Create account",
+  "signupSubtitle": "Start investing today",
+  "signupNameHint": "Full name",
+  "signupEmailHint": "Email",
+  "signupPasswordHint": "Password",
+  "signupConfirmPasswordHint": "Confirm password",
+  "signupCurrencyLabel": "Display currency",
+  "signupButton": "Create account",
+  "signupHaveAccount": "Already have an account?",
+  "signupLogIn": "Log in",
+
+  "forgotPasswordTitle": "Reset password",
+  "forgotPasswordSubtitle": "Enter your email and we'll send you a reset link",
+  "forgotPasswordEmailHint": "Email",
+  "forgotPasswordButton": "Send reset link",
+  "forgotPasswordSuccess": "Reset link sent. Check your inbox.",
+
+  "emailVerificationTitle": "Verify your email",
+  "emailVerificationSubtitle": "We sent a verification link to {email}. Check your inbox.",
+  "@emailVerificationSubtitle": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "emailVerificationResend": "Resend email",
+  "emailVerificationLogout": "Use a different account",
+
+  "dashboardGreeting": "Hello, {name}",
+  "@dashboardGreeting": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "dashboardTotalBalance": "Total Balance",
+  "dashboardInvestedValue": "Invested",
+  "dashboardRecentActivity": "Recent Activity",
+  "dashboardNoActivity": "No recent activity",
+  "dashboardBuy": "Buy",
+  "dashboardSell": "Sell",
+  "dashboardTopUp": "Top Up",
+  "dashboardWithdraw": "Withdraw",
+  "dashboardAvailableCash": "Available Cash",
+
+  "portfolioTitle": "Portfolio",
+  "portfolioNoHoldings": "No holdings yet.\nBuy your first asset to get started.",
+  "portfolioTotalInvested": "Total Invested",
+  "portfolioReturn": "Return",
+  "portfolioQuantity": "Qty",
+  "portfolioAvgCost": "Avg cost",
+  "portfolioCurrentPrice": "Current price",
+
+  "goalsTitle": "Goals",
+  "goalsNoGoals": "No goals yet.\nCreate one to start saving.",
+  "goalsAddButton": "Add Goal",
+  "goalProgress": "{percent}% funded",
+  "@goalProgress": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "goalTarget": "Target",
+  "goalSaved": "Saved",
+  "goalDeadline": "Deadline",
+  "goalCategory": "Category",
+
+  "goalFormTitle": "New Goal",
+  "goalFormNameHint": "Goal name",
+  "goalFormTargetHint": "Target amount",
+  "goalFormDeadlineLabel": "Deadline",
+  "goalFormCategoryLabel": "Category",
+  "goalFormSaveButton": "Save Goal",
+  "goalFormSelectDate": "Select date",
+
+  "categoryCar": "Car",
+  "categoryHome": "Home",
+  "categoryVacation": "Vacation",
+  "categoryTravel": "Travel",
+  "categoryEducation": "Education",
+  "categoryEmergency": "Emergency",
+  "categoryHealth": "Health",
+  "categoryOther": "Other",
+
+  "buyTitle": "Buy {symbol}",
+  "@buyTitle": {
+    "placeholders": {
+      "symbol": { "type": "String" }
+    }
+  },
+  "buyQuantityLabel": "Quantity",
+  "buyPriceLabel": "Price per unit",
+  "buyTotalLabel": "Total",
+  "buyButton": "Buy",
+  "buySuccess": "Purchase successful",
+
+  "sellTitle": "Sell {symbol}",
+  "@sellTitle": {
+    "placeholders": {
+      "symbol": { "type": "String" }
+    }
+  },
+  "sellQuantityLabel": "Quantity",
+  "sellButton": "Sell",
+  "sellSuccess": "Sale successful",
+  "sellMaxQuantity": "Max: {quantity}",
+  "@sellMaxQuantity": {
+    "placeholders": {
+      "quantity": { "type": "String" }
+    }
+  },
+
+  "topUpTitle": "Top Up",
+  "topUpAmountHint": "Amount",
+  "topUpButton": "Add funds",
+  "topUpSuccess": "Funds added successfully",
+
+  "withdrawTitle": "Withdraw",
+  "withdrawAmountHint": "Amount",
+  "withdrawButton": "Withdraw",
+  "withdrawSuccess": "Withdrawal successful",
+  "withdrawInsufficientFunds": "Insufficient funds",
+
+  "assetSearchHint": "Search assets (e.g. AAPL, BTC)",
+  "assetSearchEmpty": "No assets found",
+
+  "settingsTitle": "Settings",
+  "settingsCurrency": "Currency",
+  "settingsNotifications": "Notifications",
+  "settingsPrivacySecurity": "Privacy & Security",
+  "settingsAppearance": "Appearance",
+  "settingsAbout": "About Investy",
+  "settingsHelp": "Help & Support",
+
+  "securityTitle": "Privacy & Security",
+  "securityAccountSection": "Account Security",
+  "securityDangerSection": "Danger Zone",
+  "securityChangePassword": "Change Password",
+  "securityChangePasswordSubtitle": "Update your login password",
+  "securityManagedByGoogle": "Managed by Google",
+  "securityDeleteAccount": "Delete Account",
+  "securityDeleteAccountSubtitle": "Permanently remove your account and all data",
+
+  "changePasswordTitle": "Change Password",
+  "changePasswordCurrent": "Current password",
+  "changePasswordNew": "New password",
+  "changePasswordConfirm": "Confirm new password",
+  "changePasswordButton": "Update password",
+  "changePasswordSuccess": "Password updated successfully",
+
+  "deleteAccountTitle": "Delete Account",
+  "deleteAccountWarning": "This action is permanent and cannot be undone. All your data will be deleted.",
+  "deleteAccountConfirmPassword": "Enter your password to confirm",
+  "deleteAccountConfirmEmail": "Type your email to confirm",
+  "deleteAccountYourEmail": "Your email: {email}",
+  "@deleteAccountYourEmail": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "deleteAccountButton": "Delete my account",
+
+  "notificationsTitle": "Notifications",
+  "notificationsPush": "Push Notifications",
+  "notificationsPushSubtitle": "Receive alerts for goals and transactions",
+  "notificationsGoalReminders": "Goal Reminders",
+  "notificationsGoalRemindersSubtitle": "Weekly progress reminders for your goals",
+  "notificationsEnable": "Enable notifications",
+
+  "appearanceTitle": "Appearance",
+  "appearanceTheme": "Theme",
+  "appearanceThemeSystem": "System",
+  "appearanceThemeLight": "Light",
+  "appearanceThemeDark": "Dark",
+  "appearanceLanguage": "Language",
+
+  "languageEn": "English",
+  "languageEs": "Spanish",
+  "languagePt": "Portuguese (BR)",
+
+  "aboutTitle": "About Investy",
+  "aboutVersion": "Version",
+  "aboutDescription": "Investy helps you plan and track your investments toward your goals.",
+  "aboutTerms": "Terms of Service",
+  "aboutPrivacy": "Privacy Policy",
+
+  "helpTitle": "Help & Support",
+  "helpFaq": "Frequently Asked Questions",
+  "helpContact": "Contact Support",
+  "helpDocumentation": "Documentation"
+}

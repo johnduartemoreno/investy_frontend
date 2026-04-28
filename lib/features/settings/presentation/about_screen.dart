@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import '../../../l10n/app_localizations.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('About Investy')),
+      appBar: AppBar(title: Text(l10n.aboutTitle)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -27,17 +29,16 @@ class AboutScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Text('Investy',
+            Text(l10n.appName,
                 style: textTheme.headlineMedium
                     ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
-            Text('Version 1.0.0',
+            Text('${l10n.aboutVersion} 1.0.0',
                 style: textTheme.bodyMedium
                     ?.copyWith(color: colorScheme.onSurfaceVariant)),
             const SizedBox(height: 32),
             Text(
-              'Investy helps you track your investments, set financial goals, '
-              'and grow your portfolio — all in one place.',
+              l10n.aboutDescription,
               style: textTheme.bodyLarge
                   ?.copyWith(color: colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
@@ -45,19 +46,19 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(height: 40),
             _AboutTile(
               icon: Icons.shield_outlined,
-              label: 'Privacy Policy',
+              label: l10n.aboutPrivacy,
               onTap: () {},
             ),
             const Divider(height: 1),
             _AboutTile(
               icon: Icons.description_outlined,
-              label: 'Terms of Service',
+              label: l10n.aboutTerms,
               onTap: () {},
             ),
             const Divider(height: 1),
             _AboutTile(
               icon: Icons.email_outlined,
-              label: 'Contact us — support@investy.app',
+              label: 'support@investy.app',
               onTap: () {},
             ),
           ],

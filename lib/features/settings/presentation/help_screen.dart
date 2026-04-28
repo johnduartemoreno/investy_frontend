@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../l10n/app_localizations.dart';
 
 class HelpScreen extends StatelessWidget {
   const HelpScreen({super.key});
@@ -37,11 +38,11 @@ class HelpScreen extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Help & Support')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).helpTitle)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text('Frequently Asked Questions',
+          Text(AppLocalizations.of(context).helpFaq,
               style: textTheme.titleMedium
                   ?.copyWith(fontWeight: FontWeight.w600)),
           const SizedBox(height: 12),
@@ -69,7 +70,7 @@ class HelpScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          Text('Still need help?',
+          Text(AppLocalizations.of(context).helpContact,
               style:
                   textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),

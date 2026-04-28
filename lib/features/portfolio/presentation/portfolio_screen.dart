@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../data/models/portfolio_response_model.dart';
 import 'providers/rest_portfolio_provider.dart';
 import '../../dashboard/presentation/screens/dashboard_screen.dart'
@@ -21,7 +22,7 @@ class PortfolioScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Portfolio'),
+        title: Text(AppLocalizations.of(context).portfolioTitle),
       ),
       body: portfolioAsync.when(
         data: (portfolio) {
@@ -53,6 +54,7 @@ class PortfolioScreen extends ConsumerWidget {
 
   Widget _buildEmptyState(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -63,14 +65,14 @@ class PortfolioScreen extends ConsumerWidget {
                 size: 64, color: theme.colorScheme.primary),
             const SizedBox(height: 24),
             Text(
-              'Your portfolio is empty',
+              l10n.portfolioNoHoldings,
               style: theme.textTheme.headlineSmall
                   ?.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
-              'Start investing today to see your holdings appear here.',
+              l10n.portfolioNoHoldings,
               style: theme.textTheme.bodyMedium
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
@@ -79,7 +81,7 @@ class PortfolioScreen extends ConsumerWidget {
             FilledButton.icon(
               onPressed: () => context.go('/home'),
               icon: const Icon(Icons.search),
-              label: const Text('Explore Assets'),
+              label: Text(AppLocalizations.of(context).dashboardBuy),
             ),
           ],
         ),
@@ -150,6 +152,7 @@ class PortfolioScreen extends ConsumerWidget {
 
   Widget _buildErrorState(BuildContext context, WidgetRef ref, Object error) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -159,7 +162,7 @@ class PortfolioScreen extends ConsumerWidget {
             Icon(Icons.cloud_off_rounded,
                 size: 48, color: theme.colorScheme.error),
             const SizedBox(height: 16),
-            Text('Unable to load portfolio',
+            Text(l10n.commonError,
                 style: theme.textTheme.titleMedium
                     ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
@@ -175,7 +178,7 @@ class PortfolioScreen extends ConsumerWidget {
             FilledButton.tonalIcon(
               onPressed: () => ref.refresh(restPortfolioProvider),
               icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+              label: Text(l10n.commonRetry),
             ),
           ],
         ),
@@ -281,17 +284,17 @@ class _HoldingCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _Stat(
-                  label: 'Price',
+                  label: AppLocalizations.of(context).portfolioCurrentPrice,
                   value: CurrencyFormatter.formatWithCurrency(
                       holding.currentPrice * fxRate, currency),
                 ),
                 _Stat(
-                  label: 'Avg Cost',
+                  label: AppLocalizations.of(context).portfolioAvgCost,
                   value: CurrencyFormatter.formatWithCurrency(
                       holding.avgCost * fxRate, currency),
                 ),
                 _Stat(
-                  label: 'Return',
+                  label: AppLocalizations.of(context).portfolioReturn,
                   value:
                       '${isPositive ? '+' : ''}${holding.returnPct.toStringAsFixed(2)}%',
                   valueColor: returnColor,

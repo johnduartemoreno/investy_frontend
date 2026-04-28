@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'core/debug/firebase_smoke.dart';
+import 'core/providers/locale_provider.dart';
 import 'core/router/app_router.dart';
 import 'core/services/notification_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_mode_provider.dart';
 import 'features/auth/presentation/providers/auth_provider.dart';
+import 'l10n/app_localizations.dart';
 
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
@@ -26,7 +29,6 @@ void main() async {
 
   // Initialize Hive
   await Hive.initFlutter();
-  // TODO: Register Hive Adapters here
 
   runApp(const ProviderScope(child: InvestyApp()));
 }
@@ -38,6 +40,14 @@ class InvestyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
     final themeMode = ref.watch(themeModeNotifierProvider);
+    final locale = ref.watch(localeNotifierProvider);
+
+    // Init locale from SharedPreferences on first build.
+    ref.listen(authNotifierProvider, (prev, next) {
+      if (prev == null && next.hasValue) {
+        ref.read(localeNotifierProvider.notifier).init();
+      }
+    });
 
     // Initialise FCM once the user is authenticated and email-verified.
     ref.listen(authNotifierProvider, (_, next) {
@@ -77,6 +87,14 @@ class InvestyApp extends ConsumerWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
       routerConfig: goRouter,
+      locale: locale,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
     );
   }
 }

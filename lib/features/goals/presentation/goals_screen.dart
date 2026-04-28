@@ -4,6 +4,7 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/responsive_center.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../dashboard/data/models/goal_response_model.dart';
 import '../../dashboard/presentation/screens/dashboard_screen.dart'
     show displayCurrencyProvider, fxRateProvider;
@@ -21,7 +22,7 @@ class GoalsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Financial Goals'),
+        title: Text(AppLocalizations.of(context).goalsTitle),
       ),
       body: goalsAsync.when(
         data: (goals) => ResponsiveCenter(
@@ -38,7 +39,7 @@ class GoalsScreen extends ConsumerWidget {
         ),
         loading: () =>
             const Center(child: CircularProgressIndicator.adaptive()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+        error: (err, stack) => Center(child: Text(AppLocalizations.of(context).commonError)),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -51,7 +52,7 @@ class GoalsScreen extends ConsumerWidget {
             builder: (_) => const CreateGoalSheet(),
           );
         },
-        label: const Text('Add Goal'),
+        label: Text(AppLocalizations.of(context).goalsAddButton),
         icon: const Icon(Icons.add),
       ),
     );
