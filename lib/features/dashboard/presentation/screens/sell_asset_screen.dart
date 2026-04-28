@@ -8,6 +8,7 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../features/portfolio/data/models/portfolio_response_model.dart';
 import '../../../../features/portfolio/presentation/providers/rest_portfolio_provider.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../controllers/sell_asset_controller.dart';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -24,7 +25,7 @@ class SellAssetScreen extends ConsumerWidget {
     final portfolioAsync = ref.watch(restPortfolioProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Sell Asset')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).sellAssetTitle)),
       body: SafeArea(
         child: portfolioAsync.when(
           loading: () =>
@@ -68,7 +69,7 @@ class SellAssetScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              "You don't own any assets yet",
+              AppLocalizations.of(context).sellNoAssets,
               style: theme.textTheme.titleMedium?.copyWith(
                 color: colors.onSurfaceVariant,
                 fontWeight: FontWeight.w600,
@@ -77,7 +78,7 @@ class SellAssetScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Buy your first asset to start building your portfolio.',
+              AppLocalizations.of(context).sellNoAssetsSubtitle,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colors.onSurfaceVariant.withValues(alpha: 0.7),
               ),
@@ -87,7 +88,7 @@ class SellAssetScreen extends ConsumerWidget {
             FilledButton.icon(
               onPressed: () => context.go('/home/buy-asset'),
               icon: const Icon(Icons.trending_up),
-              label: const Text('Buy Your First Asset'),
+              label: Text(AppLocalizations.of(context).sellBuyFirstAsset),
             ),
           ],
         ),
@@ -185,7 +186,7 @@ class _HoldingListTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${holding.quantity} shares · Avg ${CurrencyFormatter.format(holding.avgCost)}',
+                      '${holding.quantity} ${AppLocalizations.of(context).portfolioShares} · Avg ${CurrencyFormatter.format(holding.avgCost)}',
                       style: theme.textTheme.bodySmall
                           ?.copyWith(color: colors.onSurfaceVariant),
                     ),
@@ -314,7 +315,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
       if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: ${next.error}'),
+            content: Text(AppLocalizations.of(context).commonError),
             backgroundColor: colors.error,
           ),
         );
@@ -322,7 +323,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Sale completed successfully!'),
+            content: Text(AppLocalizations.of(context).sellSuccess),
             backgroundColor: colors.tertiary,
           ),
         );

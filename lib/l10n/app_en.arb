@@ -147,6 +147,13 @@
   "categoryHealth": "Health",
   "categoryOther": "Other",
 
+  "buyAssetTitle": "Buy Asset",
+  "buySelectAsset": "Select an asset",
+  "buyPerShare": "per share",
+  "buyEnterQuantity": "Enter quantity",
+  "buyQuantityPositive": "Must be greater than 0",
+  "buyConfirmButton": "Confirm Purchase",
+  "buyEstimatedTotal": "Estimated Total",
   "buyTitle": "Buy {symbol}",
   "@buyTitle": {
     "placeholders": {
@@ -159,6 +166,10 @@
   "buyButton": "Buy",
   "buySuccess": "Purchase successful",
 
+  "sellAssetTitle": "Sell Asset",
+  "sellNoAssets": "You don't have any assets yet",
+  "sellNoAssetsSubtitle": "Buy your first asset to start building your portfolio.",
+  "sellBuyFirstAsset": "Buy Your First Asset",
   "sellTitle": "Sell {symbol}",
   "@sellTitle": {
     "placeholders": {
@@ -176,6 +187,10 @@
   },
 
   "topUpTitle": "Top Up",
+  "topUpEnterAmount": "Enter Amount",
+  "topUpAmountRequired": "Please enter an amount",
+  "topUpAmountInvalid": "Please enter a valid amount",
+  "topUpConfirmButton": "Confirm Deposit",
   "topUpAmountHint": "Amount",
   "topUpButton": "Add funds",
   "topUpSuccess": "Funds added successfully",
@@ -217,11 +232,19 @@
   "changePasswordConfirm": "Confirm new password",
   "changePasswordButton": "Update password",
   "changePasswordSuccess": "Password updated successfully",
+  "changePasswordErrorWrongPassword": "Current password is incorrect.",
+  "changePasswordErrorRecentLogin": "Please sign out and sign back in before changing your password.",
+  "changePasswordErrorFailed": "Failed to change password. Please try again.",
 
   "deleteAccountTitle": "Delete Account",
   "deleteAccountWarning": "This action is permanent and cannot be undone. All your data will be deleted.",
+  "deleteAccountConfirmTitle": "Confirm Deletion",
   "deleteAccountConfirmPassword": "Enter your password to confirm",
   "deleteAccountConfirmEmail": "Type your email to confirm",
+  "deleteAccountConfirmEmailText": "Type your account email to confirm deletion.",
+  "deleteAccountConfirmPasswordText": "Enter your password to confirm account deletion.",
+  "deleteAccountEmailMismatch": "Email does not match. Please try again.",
+  "deleteAccountEnterPassword": "Please enter your password.",
   "deleteAccountYourEmail": "Your email: {email}",
   "@deleteAccountYourEmail": {
     "placeholders": {
