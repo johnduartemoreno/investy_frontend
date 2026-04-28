@@ -4,6 +4,7 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/responsive_center.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../dashboard/data/models/goal_response_model.dart';
 import '../../dashboard/presentation/screens/dashboard_screen.dart'
     show displayCurrencyProvider, fxRateProvider;
@@ -21,7 +22,7 @@ class GoalsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Financial Goals'),
+        title: Text(AppLocalizations.of(context).goalsTitle),
       ),
       body: goalsAsync.when(
         data: (goals) => ResponsiveCenter(
@@ -38,7 +39,7 @@ class GoalsScreen extends ConsumerWidget {
         ),
         loading: () =>
             const Center(child: CircularProgressIndicator.adaptive()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+        error: (err, stack) => Center(child: Text(AppLocalizations.of(context).commonError)),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -51,7 +52,7 @@ class GoalsScreen extends ConsumerWidget {
             builder: (_) => const CreateGoalSheet(),
           );
         },
-        label: const Text('Add Goal'),
+        label: Text(AppLocalizations.of(context).goalsAddButton),
         icon: const Icon(Icons.add),
       ),
     );
@@ -148,13 +149,13 @@ class _GoalCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('${CurrencyFormatter.formatWithCurrency(goal.currentAmount * fxRate, currency)} saved'),
-              Text('Target: ${CurrencyFormatter.formatWithCurrency(goal.targetAmount * fxRate, currency)}'),
+              Text('${AppLocalizations.of(context).goalSaved}: ${CurrencyFormatter.formatWithCurrency(goal.currentAmount * fxRate, currency)}'),
+              Text('${AppLocalizations.of(context).goalTarget}: ${CurrencyFormatter.formatWithCurrency(goal.targetAmount * fxRate, currency)}'),
             ],
           ),
           const SizedBox(height: AppDimens.spacingS),
           Text(
-            'Deadline: ${_formatDate(goal.deadlineDate)}',
+            '${AppLocalizations.of(context).goalDeadline}: ${_formatDate(goal.deadlineDate)}',
             style: theme.textTheme.bodySmall
                 ?.copyWith(color: Colors.grey),
           ),

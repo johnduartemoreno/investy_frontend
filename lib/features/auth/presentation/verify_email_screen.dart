@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'providers/auth_provider.dart';
+import '../../../l10n/app_localizations.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
   const VerifyEmailScreen({super.key});
@@ -30,8 +31,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
         context.go('/home');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please verify your email first'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).emailVerificationNotVerified),
             backgroundColor: Colors.orange,
           ),
         );
@@ -47,8 +48,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     if (mounted) {
       setState(() => _isResending = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Verification email sent! Check your inbox'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).emailVerificationSent),
           backgroundColor: Colors.green,
         ),
       );
@@ -64,12 +65,13 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final user = FirebaseAuth.instance.currentUser;
-    final email = user?.email ?? 'your email';
+    final email = user?.email ?? '';
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Verify Email'),
+        title: Text(l10n.emailVerificationTitle),
         automaticallyImplyLeading: false,
       ),
       body: Center(
@@ -88,7 +90,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                 ),
                 const SizedBox(height: 32),
                 Text(
-                  'Verify Your Email',
+                  l10n.emailVerificationTitle,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -96,7 +98,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'We\'ve sent a verification email to:',
+                  l10n.emailVerificationSubtitle(email),
                   style: Theme.of(context).textTheme.bodyLarge,
                   textAlign: TextAlign.center,
                 ),
@@ -110,8 +112,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-                const Text(
-                  'Please check your inbox and click the verification link to continue.',
+                Text(
+                  l10n.emailVerificationSubtitle(email),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 48),
@@ -127,7 +129,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                           ),
                         )
                       : const Icon(Icons.refresh),
-                  label: Text(_isRefreshing ? 'Checking...' : 'I\'ve Verified'),
+                  label: Text(_isRefreshing ? l10n.commonLoading : l10n.commonConfirm),
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.all(16),
                   ),
@@ -144,7 +146,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                           ),
                         )
                       : const Icon(Icons.email_outlined),
-                  label: Text(_isResending ? 'Sending...' : 'Resend Email'),
+                  label: Text(_isResending ? l10n.commonLoading : l10n.emailVerificationResend),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.all(16),
                   ),
@@ -152,7 +154,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                 const SizedBox(height: 24),
                 TextButton(
                   onPressed: _logout,
-                  child: const Text('Logout'),
+                  child: Text(l10n.emailVerificationLogout),
                 ),
               ],
             ),

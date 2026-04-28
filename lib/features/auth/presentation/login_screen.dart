@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'providers/auth_provider.dart';
 import '../../../core/services/email_storage_service.dart';
 import '../../../core/providers/session_provider.dart';
+import '../../../l10n/app_localizations.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -86,6 +87,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -224,7 +226,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               children: [
                                 // Welcome Text
                                 Text(
-                                  'Welcome Back!',
+                                  l10n.loginTitle,
                                   style: textTheme.headlineMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: colorScheme.onSurface,
@@ -233,7 +235,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Securely access your investments.',
+                                  l10n.loginSubtitle,
                                   style: textTheme.bodyLarge?.copyWith(
                                     color: colorScheme.onSurfaceVariant,
                                   ),
@@ -244,18 +246,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 // Email Field
                                 TextFormField(
                                   controller: _emailController,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Email',
-                                    prefixIcon: Icon(Icons.email_outlined),
+                                  decoration: InputDecoration(
+                                    labelText: l10n.loginEmailHint,
+                                    prefixIcon: const Icon(Icons.email_outlined),
                                   ),
                                   keyboardType: TextInputType.emailAddress,
                                   textInputAction: TextInputAction.next,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Email is required';
+                                      return l10n.errorRequiredField;
                                     }
                                     if (!_isValidEmail(value.trim())) {
-                                      return 'Please enter a valid email';
+                                      return l10n.errorInvalidEmail;
                                     }
                                     return null;
                                   },
@@ -266,7 +268,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 TextFormField(
                                   controller: _passwordController,
                                   decoration: InputDecoration(
-                                    labelText: 'Password',
+                                    labelText: l10n.loginPasswordHint,
                                     prefixIcon: const Icon(Icons.lock_outlined),
                                     suffixIcon: IconButton(
                                       icon: Icon(
@@ -289,7 +291,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   onFieldSubmitted: (_) => _login(),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Password is required';
+                                      return l10n.errorRequiredField;
                                     }
                                     return null;
                                   },
@@ -313,7 +315,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     const SizedBox(width: 8),
                                     Flexible(
                                       child: Text(
-                                        'Remember email',
+                                        l10n.loginRememberEmail,
                                         style: textTheme.bodySmall?.copyWith(
                                           color: colorScheme.onSurfaceVariant,
                                         ),
@@ -330,7 +332,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                             MaterialTapTargetSize.shrinkWrap,
                                       ),
                                       child: Text(
-                                        'Forgot password?',
+                                        l10n.loginForgotPassword,
                                         style: textTheme.bodySmall,
                                       ),
                                     ),
@@ -358,7 +360,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                             ),
                                           )
                                         : Text(
-                                            'Sign In',
+                                            l10n.loginButton,
                                             style:
                                                 textTheme.titleMedium?.copyWith(
                                               fontWeight: FontWeight.w600,
@@ -381,7 +383,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 16),
                                       child: Text(
-                                        'Or continue with',
+                                        l10n.loginOrContinueWith,
                                         style: textTheme.bodySmall?.copyWith(
                                           color: colorScheme.onSurfaceVariant,
                                         ),
@@ -419,7 +421,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     color: colorScheme.onSurfaceVariant,
                                   ),
                                   label: Text(
-                                    'Continue with Google',
+                                    l10n.loginWithGoogle,
                                     style: textTheme.labelLarge?.copyWith(
                                       color: colorScheme.onSurface,
                                     ),
@@ -440,13 +442,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       onPressed: () => context.push('/signup'),
                       child: RichText(
                         text: TextSpan(
-                          text: "Don't have an account? ",
+                          text: "${l10n.loginNoAccount} ",
                           style: textTheme.bodyMedium?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
                           children: [
                             TextSpan(
-                              text: 'Sign Up',
+                              text: l10n.loginSignUp,
                               style: textTheme.bodyMedium?.copyWith(
                                 color: colorScheme.primary,
                                 fontWeight: FontWeight.w600,

@@ -6,6 +6,7 @@ import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../data/models/asset_search_result_model.dart';
 import '../controllers/buy_asset_controller.dart';
 
@@ -97,10 +98,12 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
+    final l10n = AppLocalizations.of(context);
+
     ref.listen(buyAssetControllerProvider, (_, next) {
       if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${next.error}')),
+          SnackBar(content: Text(l10n.commonError)),
         );
       } else if (next is AsyncData && !next.isLoading) {
         if (context.canPop()) context.pop();
@@ -113,7 +116,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
         _searchController.text.isNotEmpty && _selectedAsset == null;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Buy Asset')),
+      appBar: AppBar(title: Text(l10n.buyAssetTitle)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(AppDimens.spacingL),
@@ -127,7 +130,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                   controller: _searchController,
                   textCapitalization: TextCapitalization.characters,
                   decoration: InputDecoration(
-                    hintText: 'Search asset (e.g. AAPL)',
+                    hintText: l10n.assetSearchHint,
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
@@ -149,7 +152,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                     ),
                   ),
                   validator: (_) =>
-                      _selectedAsset == null ? 'Select an asset' : null,
+                      _selectedAsset == null ? l10n.buySelectAsset : null,
                 ),
 
                 // Search results
@@ -170,7 +173,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                         : _searchResults.isEmpty
                             ? Padding(
                                 padding: const EdgeInsets.all(16),
-                                child: Text('No assets found',
+                                child: Text(l10n.assetSearchEmpty,
                                     style: theme.textTheme.bodyMedium?.copyWith(
                                         color: cs.onSurfaceVariant)),
                               )
@@ -230,7 +233,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                               style: theme.textTheme.titleMedium
                                   ?.copyWith(fontWeight: FontWeight.bold),
                             ),
-                            Text('per share',
+                            Text(l10n.buyPerShare,
                                 style: theme.textTheme.bodySmall
                                     ?.copyWith(color: cs.onSurfaceVariant)),
                           ],
@@ -243,7 +246,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                 const SizedBox(height: AppDimens.spacingL),
 
                 // Quantity input
-                Text('Quantity',
+                Text(l10n.buyQuantityLabel,
                     style: theme.textTheme.labelLarge
                         ?.copyWith(color: cs.onSurfaceVariant)),
                 const SizedBox(height: AppDimens.spacingS),
@@ -274,10 +277,10 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                     setState(() => _quantity = parsed ?? 0.0);
                   },
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Enter quantity';
+                    if (v == null || v.isEmpty) return l10n.buyEnterQuantity;
                     final qty =
                         ThousandsSeparatorInputFormatter.parseFormatted(v);
-                    if (qty == null || qty <= 0) return 'Must be greater than zero';
+                    if (qty == null || qty <= 0) return l10n.buyQuantityPositive;
                     return null;
                   },
                 ),
@@ -294,7 +297,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Estimated Total',
+                        Text(l10n.buyEstimatedTotal,
                             style: theme.textTheme.bodyLarge
                                 ?.copyWith(color: cs.onSurfaceVariant)),
                         Text(
@@ -310,7 +313,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                 const SizedBox(height: AppDimens.spacingXL),
 
                 PrimaryButton(
-                  text: 'Confirm Purchase',
+                  text: l10n.buyConfirmButton,
                   isLoading: isSubmitting,
                   onPressed: (_selectedAsset != null && _quantity > 0)
                       ? _submit

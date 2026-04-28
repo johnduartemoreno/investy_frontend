@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/services/notification_service.dart';
+import '../../../l10n/app_localizations.dart';
 
 class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
@@ -63,7 +64,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Notifications')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).notificationsTitle)),
       body: _loading
           ? const Center(child: CircularProgressIndicator.adaptive())
           : ListView(
@@ -78,11 +79,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   child: SwitchListTile(
                     value: _enabled,
                     onChanged: _toggle,
-                    title: Text('Push notifications',
+                    title: Text(AppLocalizations.of(context).notificationsPush,
                         style: textTheme.bodyLarge
                             ?.copyWith(fontWeight: FontWeight.w500)),
                     subtitle: Text(
-                      'Receive alerts for transactions and goal deadlines.',
+                      AppLocalizations.of(context).notificationsPushSubtitle,
                       style: textTheme.bodySmall
                           ?.copyWith(color: colorScheme.onSurfaceVariant),
                     ),
@@ -92,10 +93,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'You will be notified when:\n'
-                  '• A deposit or withdrawal is processed\n'
-                  '• A buy or sell order is confirmed\n'
-                  '• A financial goal deadline is approaching (30 days)',
+                  AppLocalizations.of(context).notificationsDescription,
                   style: textTheme.bodySmall
                       ?.copyWith(color: colorScheme.onSurfaceVariant),
                 ),

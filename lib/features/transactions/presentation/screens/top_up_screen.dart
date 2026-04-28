@@ -9,6 +9,7 @@ import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../dashboard/data/datasources/dashboard_remote_data_source.dart';
 import '../../../dashboard/data/models/transaction_request_model.dart';
 import '../../../dashboard/presentation/screens/dashboard_screen.dart';
+import '../../../../l10n/app_localizations.dart';
 
 // ==========================================
 // Form State Provider
@@ -160,7 +161,7 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Top Up'),
+        title: Text(AppLocalizations.of(context).topUpTitle),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -175,7 +176,7 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
 
                 // ── Section Label ──
                 Text(
-                  'Enter Amount',
+                  AppLocalizations.of(context).topUpEnterAmount,
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: colorScheme.outline,
                   ),
@@ -214,13 +215,14 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
                     ref.read(topUpProvider.notifier).setAmount(parsed);
                   },
                   validator: (value) {
+                    final l10n = AppLocalizations.of(context);
                     if (value == null || value.isEmpty) {
-                      return 'Please enter an amount';
+                      return l10n.topUpAmountRequired;
                     }
                     final parsed =
                         ThousandsSeparatorInputFormatter.parseFormatted(value);
                     if (parsed == null || parsed <= 0) {
-                      return 'Please enter a valid amount';
+                      return l10n.topUpAmountInvalid;
                     }
                     return null;
                   },
@@ -320,9 +322,9 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
                             color: colorScheme.onPrimary,
                           ),
                         )
-                      : const Text(
-                          'Confirm Deposit',
-                          style: TextStyle(
+                      : Text(
+                          AppLocalizations.of(context).topUpConfirmButton,
+                          style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                         ),
                 ),

@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/responsive_center.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../auth/presentation/providers/auth_provider.dart';
 import 'providers/avatar_upload_provider.dart';
 
@@ -15,22 +16,23 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(l10n.settingsTitle),
       ),
       body: SingleChildScrollView(
         child: ResponsiveCenter(
           padding: const EdgeInsets.all(AppDimens.spacingL),
           child: Column(
             children: [
-              _buildProfileSection(context, ref),
+              _buildProfileSection(context, ref, l10n),
               const SizedBox(height: AppDimens.spacingXL),
-              _buildSettingsSection(context),
+              _buildSettingsSection(context, l10n),
               const SizedBox(height: AppDimens.spacingXL),
-              _buildAboutSection(context),
+              _buildAboutSection(context, l10n),
               const SizedBox(height: AppDimens.spacingXL),
-              _buildLogoutButton(context, ref),
+              _buildLogoutButton(context, ref, l10n),
             ],
           ),
         ),
@@ -38,7 +40,7 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildProfileSection(BuildContext context, WidgetRef ref) {
+  Widget _buildProfileSection(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     final authState = ref.watch(authNotifierProvider);
     final user = authState.value;
     final avatarUrl = ref.watch(avatarUrlProvider);
@@ -107,7 +109,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 if (uploadState.status == AvatarUploadStatus.error)
                   Text(
-                    uploadState.errorMessage ?? 'Upload failed',
+                    uploadState.errorMessage ?? l10n.commonError,
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.error,
                         fontSize: 12),
@@ -135,40 +137,31 @@ class SettingsScreen extends ConsumerWidget {
         .upload(File(picked.path));
   }
 
-  Widget _buildSettingsSection(BuildContext context) {
+  Widget _buildSettingsSection(BuildContext context, AppLocalizations l10n) {
     return CustomCard(
       padding: EdgeInsets.zero,
       child: Column(
         children: [
-          _buildListTile(
-              context, Icons.currency_exchange, 'Currency', 'USD (\$)',
-              onTap: () {}),
+          _buildListTile(context, Icons.currency_exchange, l10n.settingsCurrency, 'USD (\$)', onTap: () {}),
           const Divider(height: 1),
-          _buildListTile(
-              context, Icons.notifications_outlined, 'Notifications', '',
-              onTap: () => context.push('/settings/notifications')),
+          _buildListTile(context, Icons.notifications_outlined, l10n.settingsNotifications, '', onTap: () => context.push('/settings/notifications')),
           const Divider(height: 1),
-          _buildListTile(context, Icons.security, 'Privacy & Security', '',
-              onTap: () => context.push('/settings/security')),
+          _buildListTile(context, Icons.security, l10n.settingsPrivacySecurity, '', onTap: () => context.push('/settings/security')),
           const Divider(height: 1),
-          _buildListTile(
-              context, Icons.palette_outlined, 'Appearance', 'System',
-              onTap: () => context.push('/settings/appearance')),
+          _buildListTile(context, Icons.palette_outlined, l10n.settingsAppearance, '', onTap: () => context.push('/settings/appearance')),
         ],
       ),
     );
   }
 
-  Widget _buildAboutSection(BuildContext context) {
+  Widget _buildAboutSection(BuildContext context, AppLocalizations l10n) {
     return CustomCard(
       padding: EdgeInsets.zero,
       child: Column(
         children: [
-          _buildListTile(context, Icons.info_outline, 'About Investy', 'v1.0.0',
-              onTap: () => context.push('/settings/about')),
+          _buildListTile(context, Icons.info_outline, l10n.settingsAbout, 'v1.0.0', onTap: () => context.push('/settings/about')),
           const Divider(height: 1),
-          _buildListTile(context, Icons.help_outline, 'Help & Support', '',
-              onTap: () => context.push('/settings/help')),
+          _buildListTile(context, Icons.help_outline, l10n.settingsHelp, '', onTap: () => context.push('/settings/help')),
         ],
       ),
     );
@@ -197,7 +190,7 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLogoutButton(BuildContext context, WidgetRef ref) {
+  Widget _buildLogoutButton(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton.icon(
@@ -206,7 +199,7 @@ class SettingsScreen extends ConsumerWidget {
           context.go('/login');
         },
         icon: const Icon(Icons.logout, color: Colors.red),
-        label: const Text('Log Out', style: TextStyle(color: Colors.red)),
+        label: Text(l10n.commonLogOut, style: const TextStyle(color: Colors.red)),
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.all(AppDimens.spacingL),
           side: const BorderSide(color: Colors.red),

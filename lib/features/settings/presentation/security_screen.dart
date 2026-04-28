@@ -7,6 +7,7 @@ import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../core/presentation/widgets/custom_text_field.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../auth/presentation/providers/auth_provider.dart';
 
 class SecurityScreen extends ConsumerWidget {
@@ -20,15 +21,16 @@ class SecurityScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isGoogle = _isGoogleUser();
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Privacy & Security')),
+      appBar: AppBar(title: Text(l10n.securityTitle)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppDimens.spacingL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _sectionLabel(context, 'Account Security'),
+            _sectionLabel(context, l10n.securityAccountSection),
             const SizedBox(height: AppDimens.spacingM),
             CustomCard(
               padding: EdgeInsets.zero,
@@ -37,8 +39,8 @@ class SecurityScreen extends ConsumerWidget {
                   _tile(
                     context,
                     icon: Icons.lock_outline,
-                    title: 'Change Password',
-                    subtitle: isGoogle ? 'Managed by Google' : null,
+                    title: l10n.securityChangePassword,
+                    subtitle: isGoogle ? l10n.securityManagedByGoogle : null,
                     enabled: !isGoogle,
                     onTap: () => _showChangePassword(context),
                   ),
@@ -46,15 +48,15 @@ class SecurityScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: AppDimens.spacingXL),
-            _sectionLabel(context, 'Danger Zone'),
+            _sectionLabel(context, l10n.securityDangerSection),
             const SizedBox(height: AppDimens.spacingM),
             CustomCard(
               padding: EdgeInsets.zero,
               child: _tile(
                 context,
                 icon: Icons.delete_forever_outlined,
-                title: 'Delete Account',
-                subtitle: 'Permanently delete all your data',
+                title: l10n.securityDeleteAccount,
+                subtitle: l10n.securityDeleteAccountSubtitle,
                 iconColor: Theme.of(context).colorScheme.error,
                 titleColor: Theme.of(context).colorScheme.error,
                 onTap: () => _showDeleteConfirm(context, ref, isGoogle),
@@ -117,17 +119,16 @@ class SecurityScreen extends ConsumerWidget {
   }
 
   void _showDeleteConfirm(BuildContext context, WidgetRef ref, bool isGoogle) {
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete Account?'),
-        content: const Text(
-          'This will permanently delete your account and all data — holdings, goals, and transaction history. This cannot be undone.',
-        ),
+        title: Text(l10n.deleteAccountTitle),
+        content: Text(l10n.deleteAccountWarning),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           FilledButton(
             style: FilledButton.styleFrom(
@@ -137,7 +138,7 @@ class SecurityScreen extends ConsumerWidget {
               Navigator.of(ctx).pop();
               _showDeleteAuth(context, ref, isGoogle);
             },
-            child: const Text('Continue'),
+            child: Text(l10n.commonConfirm),
           ),
         ],
       ),
@@ -177,6 +178,7 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
   bool _obscureCurrent = true;
   bool _obscureNew = true;
   bool _obscureConfirm = true;
+  late AppLocalizations _l10n;
 
   @override
   void dispose() {
@@ -208,9 +210,7 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
       });
     } catch (e) {
       setState(() {
-        _error = e.toString().replaceAll('Exception: ', '').trim().isNotEmpty
-            ? e.toString().replaceAll('Exception: ', '').trim()
-            : 'An unexpected error occurred. Please try again.';
+        _error = _l10n.commonError;
         _loading = false;
       });
     }
@@ -220,19 +220,20 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
     switch (code) {
       case 'wrong-password':
       case 'invalid-credential':
-        return 'Current password is incorrect.';
+        return _l10n.changePasswordErrorWrongPassword;
       case 'weak-password':
-        return 'New password is too weak. Use at least 6 characters.';
+        return _l10n.errorPasswordTooShort;
       case 'requires-recent-login':
-        return 'Please sign out and sign back in before changing your password.';
+        return _l10n.changePasswordErrorRecentLogin;
       default:
-        return 'Failed to change password. Please try again.';
+        return _l10n.changePasswordErrorFailed;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    _l10n = AppLocalizations.of(context);
     return Padding(
       padding: EdgeInsets.only(
         left: AppDimens.spacingL,
@@ -247,39 +248,39 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Change Password',
+              Text(_l10n.changePasswordTitle,
                   style: theme.textTheme.titleLarge
                       ?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: AppDimens.spacingXL),
               _PasswordField(
                 controller: _currentCtrl,
-                label: 'Current password',
+                label: _l10n.changePasswordCurrent,
                 obscure: _obscureCurrent,
                 onToggle: () => setState(() => _obscureCurrent = !_obscureCurrent),
                 validator: (v) =>
-                    (v == null || v.isEmpty) ? 'Required' : null,
+                    (v == null || v.isEmpty) ? _l10n.errorRequiredField : null,
               ),
               const SizedBox(height: AppDimens.spacingM),
               _PasswordField(
                 controller: _newCtrl,
-                label: 'New password',
+                label: _l10n.changePasswordNew,
                 obscure: _obscureNew,
                 onToggle: () => setState(() => _obscureNew = !_obscureNew),
                 validator: (v) {
-                  if (v == null || v.isEmpty) return 'Required';
-                  if (v.length < 6) return 'At least 6 characters';
+                  if (v == null || v.isEmpty) return _l10n.errorRequiredField;
+                  if (v.length < 6) return _l10n.errorPasswordTooShort;
                   return null;
                 },
               ),
               const SizedBox(height: AppDimens.spacingM),
               _PasswordField(
                 controller: _confirmCtrl,
-                label: 'Confirm new password',
+                label: _l10n.changePasswordConfirm,
                 obscure: _obscureConfirm,
                 onToggle: () => setState(() => _obscureConfirm = !_obscureConfirm),
                 validator: (v) {
-                  if (v == null || v.isEmpty) return 'Required';
-                  if (v != _newCtrl.text) return 'Passwords do not match';
+                  if (v == null || v.isEmpty) return _l10n.errorRequiredField;
+                  if (v != _newCtrl.text) return _l10n.errorPasswordMismatch;
                   return null;
                 },
               ),
@@ -293,7 +294,7 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
               ],
               const SizedBox(height: AppDimens.spacingXL),
               PrimaryButton(
-                text: 'Update Password',
+                text: _l10n.changePasswordButton,
                 isLoading: _loading,
                 onPressed: _submit,
               ),
@@ -306,7 +307,7 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
 }
 
 // ---------------------------------------------------------------------------
-// Delete Account Sheet — reauthenticate then delete
+// Delete Account Sheet
 // ---------------------------------------------------------------------------
 
 class _DeleteAccountSheet extends StatefulWidget {
@@ -325,6 +326,7 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
   bool _loading = false;
   String? _error;
   bool _obscurePassword = true;
+  late AppLocalizations _l10n;
 
   String get _currentEmail =>
       firebase_auth.FirebaseAuth.instance.currentUser?.email ?? '';
@@ -336,18 +338,15 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
     super.dispose();
   }
 
-  String _cleanError(Object e) =>
-      e.toString().replaceAll('Exception: ', '').trim();
-
   Future<void> _delete() async {
     if (widget.isGoogle) {
       if (_emailConfirmCtrl.text.trim() != _currentEmail) {
-        setState(() => _error = 'Email does not match. Please try again.');
+        setState(() => _error = _l10n.deleteAccountEmailMismatch);
         return;
       }
     } else {
       if (_passwordCtrl.text.isEmpty) {
-        setState(() => _error = 'Please enter your password.');
+        setState(() => _error = _l10n.deleteAccountEnterPassword);
         return;
       }
     }
@@ -369,7 +368,7 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
       }
     } catch (e) {
       setState(() {
-        _error = _cleanError(e);
+        _error = e.toString().replaceAll('Exception: ', '').trim();
         _loading = false;
       });
     }
@@ -379,6 +378,7 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    _l10n = AppLocalizations.of(context);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -392,13 +392,13 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Confirm Deletion',
+            Text(_l10n.deleteAccountConfirmTitle,
                 style: theme.textTheme.titleLarge
                     ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: AppDimens.spacingM),
             if (widget.isGoogle) ...[
               Text(
-                'Type your account email to confirm deletion.',
+                _l10n.deleteAccountConfirmEmailText,
                 style: theme.textTheme.bodyMedium
                     ?.copyWith(color: cs.onSurfaceVariant),
               ),
@@ -412,7 +412,7 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
               ),
             ] else
               Text(
-                'Enter your password to confirm account deletion.',
+                _l10n.deleteAccountConfirmPasswordText,
                 style: theme.textTheme.bodyMedium
                     ?.copyWith(color: cs.onSurfaceVariant),
               ),
@@ -420,13 +420,13 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
             if (widget.isGoogle)
               CustomTextField(
                 controller: _emailConfirmCtrl,
-                label: 'Your email address',
+                label: _l10n.commonEmail,
                 keyboardType: TextInputType.emailAddress,
               )
             else
               _PasswordField(
                 controller: _passwordCtrl,
-                label: 'Your password',
+                label: _l10n.commonPassword,
                 obscure: _obscurePassword,
                 onToggle: () =>
                     setState(() => _obscurePassword = !_obscurePassword),
@@ -453,8 +453,8 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
                       width: 20,
                       child: CircularProgressIndicator.adaptive(strokeWidth: 2),
                     )
-                  : const Text('Delete My Account',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  : Text(_l10n.deleteAccountButton,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],
         ),
