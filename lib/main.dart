@@ -30,6 +30,9 @@ void main() async {
   // Initialize Hive
   await Hive.initFlutter();
 
+  // Pre-load SharedPreferences so LocaleNotifier.build() can read it synchronously.
+  await initLocaleProvider();
+
   runApp(const ProviderScope(child: InvestyApp()));
 }
 
@@ -41,13 +44,6 @@ class InvestyApp extends ConsumerWidget {
     final goRouter = ref.watch(goRouterProvider);
     final themeMode = ref.watch(themeModeNotifierProvider);
     final locale = ref.watch(localeNotifierProvider);
-
-    // Init locale from SharedPreferences on first build.
-    ref.listen(authNotifierProvider, (prev, next) {
-      if (prev == null && next.hasValue) {
-        ref.read(localeNotifierProvider.notifier).init();
-      }
-    });
 
     // Initialise FCM once the user is authenticated and email-verified.
     ref.listen(authNotifierProvider, (_, next) {
