@@ -111,6 +111,10 @@
   "portfolioQuantity": "Qty",
   "portfolioAvgCost": "Avg cost",
   "portfolioCurrentPrice": "Current price",
+  "portfolioAssetStock": "Stock",
+  "portfolioAssetCrypto": "Crypto",
+  "portfolioAssetEtf": "ETF",
+  "portfolioShares": "shares",
 
   "goalsTitle": "Goals",
   "goalsNoGoals": "No goals yet.\nCreate one to start saving.",

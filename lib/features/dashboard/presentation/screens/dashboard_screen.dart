@@ -154,6 +154,10 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   String _getContributionTitle(AppLocalizations l10n, String type) {
     switch (type.toLowerCase()) {
+      case 'buy':
+        return l10n.dashboardBuy;
+      case 'sell':
+        return l10n.dashboardSell;
       case 'deposit':
         return l10n.activityDeposit;
       case 'withdrawal':

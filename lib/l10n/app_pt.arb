@@ -91,6 +91,10 @@
   "portfolioQuantity": "Qtd",
   "portfolioAvgCost": "Custo médio",
   "portfolioCurrentPrice": "Preço atual",
+  "portfolioAssetStock": "Ação",
+  "portfolioAssetCrypto": "Cripto",
+  "portfolioAssetEtf": "ETF",
+  "portfolioShares": "ações",
 
   "goalsTitle": "Metas",
   "goalsNoGoals": "Sem metas ainda.\nCrie uma para começar a poupar.",

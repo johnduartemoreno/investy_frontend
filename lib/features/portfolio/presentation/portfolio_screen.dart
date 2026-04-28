@@ -210,14 +210,14 @@ class _HoldingCard extends StatelessWidget {
     }
   }
 
-  String _assetClassLabel() {
+  String _assetClassLabel(AppLocalizations l10n) {
     switch (holding.assetClass) {
       case 'crypto':
-        return 'Crypto';
+        return l10n.portfolioAssetCrypto;
       case 'etf':
-        return 'ETF';
+        return l10n.portfolioAssetEtf;
       default:
-        return 'Stock';
+        return l10n.portfolioAssetStock;
     }
   }
 
@@ -225,6 +225,7 @@ class _HoldingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
     final color = _assetColor(context);
     final isPositive = holding.returnPct >= 0;
     final returnColor = isPositive ? cs.tertiary : cs.error;
@@ -254,7 +255,7 @@ class _HoldingCard extends StatelessWidget {
                       Text(holding.symbol,
                           style: theme.textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.bold)),
-                      Text(_assetClassLabel(),
+                      Text(_assetClassLabel(l10n),
                           style: theme.textTheme.bodySmall
                               ?.copyWith(color: cs.onSurfaceVariant)),
                     ],
@@ -270,7 +271,7 @@ class _HoldingCard extends StatelessWidget {
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '${holding.quantity.toStringAsFixed(holding.assetClass == 'crypto' ? 6 : 2)} ${holding.assetClass == 'crypto' ? holding.symbol : 'shares'}',
+                      '${holding.quantity.toStringAsFixed(holding.assetClass == 'crypto' ? 6 : 2)} ${holding.assetClass == 'crypto' ? holding.symbol : l10n.portfolioShares}',
                       style: theme.textTheme.bodySmall
                           ?.copyWith(color: cs.onSurfaceVariant),
                     ),
