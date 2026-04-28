@@ -167,18 +167,38 @@ class AppLocalizationsEs extends AppLocalizations {
   String get emailVerificationLogout => 'Usar otra cuenta';
 
   @override
+  String get emailVerificationNotVerified =>
+      'Por favor verifica tu correo primero';
+
+  @override
+  String get emailVerificationSent =>
+      'Correo de verificación enviado. Revisa tu bandeja.';
+
+  @override
   String dashboardGreeting(String name) {
     return 'Hola, $name';
   }
 
   @override
+  String get dashboardWelcomeBack => 'Bienvenido de vuelta,';
+
+  @override
   String get dashboardTotalBalance => 'Balance total';
+
+  @override
+  String get dashboardInvestedPortfolio => 'Portafolio invertido';
+
+  @override
+  String get dashboardCashToInvest => 'Efectivo para invertir';
 
   @override
   String get dashboardInvestedValue => 'Invertido';
 
   @override
   String get dashboardRecentActivity => 'Actividad reciente';
+
+  @override
+  String get dashboardSeeAll => 'Ver todo';
 
   @override
   String get dashboardNoActivity => 'Sin actividad reciente';
@@ -197,6 +217,31 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get dashboardAvailableCash => 'Efectivo disponible';
+
+  @override
+  String get commonToday => 'Hoy';
+
+  @override
+  String get commonYesterday => 'Ayer';
+
+  @override
+  String activityBought(String symbol) {
+    return 'Comprado $symbol';
+  }
+
+  @override
+  String activitySold(String symbol) {
+    return 'Vendido $symbol';
+  }
+
+  @override
+  String get activityDeposit => 'Depósito';
+
+  @override
+  String get activityWithdrawal => 'Retiro';
+
+  @override
+  String get activityUnknown => 'Desconocido';
 
   @override
   String get portfolioTitle => 'Portafolio';
@@ -219,6 +264,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get portfolioCurrentPrice => 'Precio actual';
+
+  @override
+  String get portfolioAssetStock => 'Acción';
+
+  @override
+  String get portfolioAssetCrypto => 'Cripto';
+
+  @override
+  String get portfolioAssetEtf => 'ETF';
+
+  @override
+  String get portfolioShares => 'acciones';
 
   @override
   String get goalsTitle => 'Metas';
@@ -292,6 +349,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String get categoryOther => 'Otro';
 
   @override
+  String get buyAssetTitle => 'Comprar activo';
+
+  @override
+  String get buySelectAsset => 'Selecciona un activo';
+
+  @override
+  String get buyPerShare => 'por acción';
+
+  @override
+  String get buyEnterQuantity => 'Ingresa cantidad';
+
+  @override
+  String get buyQuantityPositive => 'Debe ser mayor a 0';
+
+  @override
+  String get buyConfirmButton => 'Confirmar compra';
+
+  @override
+  String get buyEstimatedTotal => 'Total estimado';
+
+  @override
   String buyTitle(String symbol) {
     return 'Comprar $symbol';
   }
@@ -310,6 +388,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get buySuccess => 'Compra exitosa';
+
+  @override
+  String get sellAssetTitle => 'Vender activo';
+
+  @override
+  String get sellNoAssets => 'Aún no tienes activos';
+
+  @override
+  String get sellNoAssetsSubtitle =>
+      'Compra tu primer activo para empezar a construir tu portafolio.';
+
+  @override
+  String get sellBuyFirstAsset => 'Comprar mi primer activo';
 
   @override
   String sellTitle(String symbol) {
@@ -334,6 +425,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get topUpTitle => 'Depositar';
 
   @override
+  String get topUpEnterAmount => 'Ingresar monto';
+
+  @override
+  String get topUpAmountRequired => 'Por favor ingresa un monto';
+
+  @override
+  String get topUpAmountInvalid => 'Por favor ingresa un monto válido';
+
+  @override
+  String get topUpConfirmButton => 'Confirmar depósito';
+
+  @override
   String get topUpAmountHint => 'Monto';
 
   @override
@@ -344,6 +447,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get withdrawTitle => 'Retirar';
+
+  @override
+  String get withdrawCash => 'Retirar efectivo';
+
+  @override
+  String get withdrawAvailableTo => 'Disponible para retirar';
+
+  @override
+  String get withdrawConfirmButton => 'Confirmar retiro';
+
+  @override
+  String get withdrawEnterAmount => 'Ingresa un monto';
+
+  @override
+  String get withdrawAmountPositive => 'El monto debe ser positivo';
 
   @override
   String get withdrawAmountHint => 'Monto';
@@ -429,6 +547,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get changePasswordSuccess => 'Contraseña actualizada exitosamente';
 
   @override
+  String get changePasswordErrorWrongPassword =>
+      'La contraseña actual es incorrecta.';
+
+  @override
+  String get changePasswordErrorRecentLogin =>
+      'Por favor cierra sesión y vuelve a iniciarla antes de cambiar tu contraseña.';
+
+  @override
+  String get changePasswordErrorFailed =>
+      'No se pudo cambiar la contraseña. Intenta de nuevo.';
+
+  @override
   String get deleteAccountTitle => 'Eliminar cuenta';
 
   @override
@@ -436,11 +566,29 @@ class AppLocalizationsEs extends AppLocalizations {
       'Esta acción es permanente e irreversible. Todos tus datos serán eliminados.';
 
   @override
+  String get deleteAccountConfirmTitle => 'Confirmar eliminación';
+
+  @override
   String get deleteAccountConfirmPassword =>
       'Ingresa tu contraseña para confirmar';
 
   @override
   String get deleteAccountConfirmEmail => 'Escribe tu correo para confirmar';
+
+  @override
+  String get deleteAccountConfirmEmailText =>
+      'Escribe tu correo para confirmar la eliminación.';
+
+  @override
+  String get deleteAccountConfirmPasswordText =>
+      'Ingresa tu contraseña para confirmar la eliminación.';
+
+  @override
+  String get deleteAccountEmailMismatch =>
+      'El correo no coincide. Intenta de nuevo.';
+
+  @override
+  String get deleteAccountEnterPassword => 'Por favor ingresa tu contraseña.';
 
   @override
   String deleteAccountYourEmail(String email) {
@@ -469,6 +617,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get notificationsEnable => 'Activar notificaciones';
+
+  @override
+  String get notificationsDescription =>
+      'Recibirás notificaciones cuando:\n• Se procesa un depósito o retiro\n• Se confirma una orden de compra o venta\n• La fecha límite de una meta financiera se acerca (30 días)';
 
   @override
   String get appearanceTitle => 'Apariencia';
@@ -524,4 +676,42 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get helpDocumentation => 'Documentación';
+
+  @override
+  String get helpReplyTime => 'Respondemos en menos de 24 horas';
+
+  @override
+  String get helpFaq1Q => '¿Cómo agrego dinero a mi cuenta?';
+
+  @override
+  String get helpFaq1A =>
+      'Toca \"Depositar\" en la pantalla de inicio e ingresa el monto que deseas depositar. Los fondos se acreditarán en tu saldo de efectivo disponible.';
+
+  @override
+  String get helpFaq2Q => '¿Cómo compro un activo?';
+
+  @override
+  String get helpFaq2A =>
+      'Toca \"Comprar\" en la pantalla de inicio, busca el activo por nombre o símbolo, ingresa la cantidad y confirma la compra.';
+
+  @override
+  String get helpFaq3Q => '¿Cómo establezco una meta financiera?';
+
+  @override
+  String get helpFaq3A =>
+      'Ve a la pestaña de Metas y toca el botón \"+\". Ingresa un nombre, monto objetivo, categoría y fecha límite. Tus contribuciones contarán automáticamente hacia tus metas.';
+
+  @override
+  String get helpFaq4Q => '¿Puedo retirar mis fondos en cualquier momento?';
+
+  @override
+  String get helpFaq4A =>
+      'Sí. Toca \"Retirar\" en la pantalla de inicio e ingresa el monto. Los retiros se procesan desde tu saldo de efectivo disponible.';
+
+  @override
+  String get helpFaq5Q => '¿Qué pasa si olvido mi contraseña?';
+
+  @override
+  String get helpFaq5A =>
+      'En la pantalla de inicio de sesión, toca \"¿Olvidaste tu contraseña?\" e ingresa tu correo. Te enviaremos un enlace de restablecimiento en pocos minutos.';
 }

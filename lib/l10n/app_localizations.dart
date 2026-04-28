@@ -406,17 +406,47 @@ abstract class AppLocalizations {
   /// **'Use a different account'**
   String get emailVerificationLogout;
 
+  /// No description provided for @emailVerificationNotVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Please verify your email first'**
+  String get emailVerificationNotVerified;
+
+  /// No description provided for @emailVerificationSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification email sent! Check your inbox'**
+  String get emailVerificationSent;
+
   /// No description provided for @dashboardGreeting.
   ///
   /// In en, this message translates to:
   /// **'Hello, {name}'**
   String dashboardGreeting(String name);
 
+  /// No description provided for @dashboardWelcomeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back,'**
+  String get dashboardWelcomeBack;
+
   /// No description provided for @dashboardTotalBalance.
   ///
   /// In en, this message translates to:
   /// **'Total Balance'**
   String get dashboardTotalBalance;
+
+  /// No description provided for @dashboardInvestedPortfolio.
+  ///
+  /// In en, this message translates to:
+  /// **'Invested Portfolio'**
+  String get dashboardInvestedPortfolio;
+
+  /// No description provided for @dashboardCashToInvest.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash to Invest'**
+  String get dashboardCashToInvest;
 
   /// No description provided for @dashboardInvestedValue.
   ///
@@ -429,6 +459,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recent Activity'**
   String get dashboardRecentActivity;
+
+  /// No description provided for @dashboardSeeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See All'**
+  String get dashboardSeeAll;
 
   /// No description provided for @dashboardNoActivity.
   ///
@@ -465,6 +501,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Available Cash'**
   String get dashboardAvailableCash;
+
+  /// No description provided for @commonToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get commonToday;
+
+  /// No description provided for @commonYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get commonYesterday;
+
+  /// No description provided for @activityBought.
+  ///
+  /// In en, this message translates to:
+  /// **'Bought {symbol}'**
+  String activityBought(String symbol);
+
+  /// No description provided for @activitySold.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold {symbol}'**
+  String activitySold(String symbol);
+
+  /// No description provided for @activityDeposit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deposit'**
+  String get activityDeposit;
+
+  /// No description provided for @activityWithdrawal.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawal'**
+  String get activityWithdrawal;
+
+  /// No description provided for @activityUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get activityUnknown;
 
   /// No description provided for @portfolioTitle.
   ///
@@ -507,6 +585,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Current price'**
   String get portfolioCurrentPrice;
+
+  /// No description provided for @portfolioAssetStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock'**
+  String get portfolioAssetStock;
+
+  /// No description provided for @portfolioAssetCrypto.
+  ///
+  /// In en, this message translates to:
+  /// **'Crypto'**
+  String get portfolioAssetCrypto;
+
+  /// No description provided for @portfolioAssetEtf.
+  ///
+  /// In en, this message translates to:
+  /// **'ETF'**
+  String get portfolioAssetEtf;
+
+  /// No description provided for @portfolioShares.
+  ///
+  /// In en, this message translates to:
+  /// **'shares'**
+  String get portfolioShares;
 
   /// No description provided for @goalsTitle.
   ///
@@ -646,6 +748,48 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get categoryOther;
 
+  /// No description provided for @buyAssetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy Asset'**
+  String get buyAssetTitle;
+
+  /// No description provided for @buySelectAsset.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an asset'**
+  String get buySelectAsset;
+
+  /// No description provided for @buyPerShare.
+  ///
+  /// In en, this message translates to:
+  /// **'per share'**
+  String get buyPerShare;
+
+  /// No description provided for @buyEnterQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter quantity'**
+  String get buyEnterQuantity;
+
+  /// No description provided for @buyQuantityPositive.
+  ///
+  /// In en, this message translates to:
+  /// **'Must be greater than 0'**
+  String get buyQuantityPositive;
+
+  /// No description provided for @buyConfirmButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Purchase'**
+  String get buyConfirmButton;
+
+  /// No description provided for @buyEstimatedTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Total'**
+  String get buyEstimatedTotal;
+
   /// No description provided for @buyTitle.
   ///
   /// In en, this message translates to:
@@ -681,6 +825,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Purchase successful'**
   String get buySuccess;
+
+  /// No description provided for @sellAssetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell Asset'**
+  String get sellAssetTitle;
+
+  /// No description provided for @sellNoAssets.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have any assets yet'**
+  String get sellNoAssets;
+
+  /// No description provided for @sellNoAssetsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy your first asset to start building your portfolio.'**
+  String get sellNoAssetsSubtitle;
+
+  /// No description provided for @sellBuyFirstAsset.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy Your First Asset'**
+  String get sellBuyFirstAsset;
 
   /// No description provided for @sellTitle.
   ///
@@ -718,6 +886,30 @@ abstract class AppLocalizations {
   /// **'Top Up'**
   String get topUpTitle;
 
+  /// No description provided for @topUpEnterAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Amount'**
+  String get topUpEnterAmount;
+
+  /// No description provided for @topUpAmountRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter an amount'**
+  String get topUpAmountRequired;
+
+  /// No description provided for @topUpAmountInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid amount'**
+  String get topUpAmountInvalid;
+
+  /// No description provided for @topUpConfirmButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Deposit'**
+  String get topUpConfirmButton;
+
   /// No description provided for @topUpAmountHint.
   ///
   /// In en, this message translates to:
@@ -741,6 +933,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Withdraw'**
   String get withdrawTitle;
+
+  /// No description provided for @withdrawCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw Cash'**
+  String get withdrawCash;
+
+  /// No description provided for @withdrawAvailableTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Available to Withdraw'**
+  String get withdrawAvailableTo;
+
+  /// No description provided for @withdrawConfirmButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Withdrawal'**
+  String get withdrawConfirmButton;
+
+  /// No description provided for @withdrawEnterAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount'**
+  String get withdrawEnterAmount;
+
+  /// No description provided for @withdrawAmountPositive.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount must be positive'**
+  String get withdrawAmountPositive;
 
   /// No description provided for @withdrawAmountHint.
   ///
@@ -904,6 +1126,24 @@ abstract class AppLocalizations {
   /// **'Password updated successfully'**
   String get changePasswordSuccess;
 
+  /// No description provided for @changePasswordErrorWrongPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password is incorrect.'**
+  String get changePasswordErrorWrongPassword;
+
+  /// No description provided for @changePasswordErrorRecentLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign out and sign back in before changing your password.'**
+  String get changePasswordErrorRecentLogin;
+
+  /// No description provided for @changePasswordErrorFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to change password. Please try again.'**
+  String get changePasswordErrorFailed;
+
   /// No description provided for @deleteAccountTitle.
   ///
   /// In en, this message translates to:
@@ -916,6 +1156,12 @@ abstract class AppLocalizations {
   /// **'This action is permanent and cannot be undone. All your data will be deleted.'**
   String get deleteAccountWarning;
 
+  /// No description provided for @deleteAccountConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Deletion'**
+  String get deleteAccountConfirmTitle;
+
   /// No description provided for @deleteAccountConfirmPassword.
   ///
   /// In en, this message translates to:
@@ -927,6 +1173,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Type your email to confirm'**
   String get deleteAccountConfirmEmail;
+
+  /// No description provided for @deleteAccountConfirmEmailText.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your account email to confirm deletion.'**
+  String get deleteAccountConfirmEmailText;
+
+  /// No description provided for @deleteAccountConfirmPasswordText.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password to confirm account deletion.'**
+  String get deleteAccountConfirmPasswordText;
+
+  /// No description provided for @deleteAccountEmailMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Email does not match. Please try again.'**
+  String get deleteAccountEmailMismatch;
+
+  /// No description provided for @deleteAccountEnterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password.'**
+  String get deleteAccountEnterPassword;
 
   /// No description provided for @deleteAccountYourEmail.
   ///
@@ -975,6 +1245,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enable notifications'**
   String get notificationsEnable;
+
+  /// No description provided for @notificationsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'You will be notified when:\n• A deposit or withdrawal is processed\n• A buy or sell order is confirmed\n• A financial goal deadline is approaching (30 days)'**
+  String get notificationsDescription;
 
   /// No description provided for @appearanceTitle.
   ///
@@ -1083,6 +1359,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Documentation'**
   String get helpDocumentation;
+
+  /// No description provided for @helpReplyTime.
+  ///
+  /// In en, this message translates to:
+  /// **'We reply within 24 hours'**
+  String get helpReplyTime;
+
+  /// No description provided for @helpFaq1Q.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I add money to my account?'**
+  String get helpFaq1Q;
+
+  /// No description provided for @helpFaq1A.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \"Top-up\" on the home screen and enter the amount you want to deposit. The funds will be credited to your available cash balance.'**
+  String get helpFaq1A;
+
+  /// No description provided for @helpFaq2Q.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I buy an asset?'**
+  String get helpFaq2Q;
+
+  /// No description provided for @helpFaq2A.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \"Buy\" on the home screen, search for the asset by name or ticker symbol, enter the quantity and confirm the purchase.'**
+  String get helpFaq2A;
+
+  /// No description provided for @helpFaq3Q.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I set a financial goal?'**
+  String get helpFaq3Q;
+
+  /// No description provided for @helpFaq3A.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigate to the Goals tab and tap the \"+\" button. Enter a name, target amount, category, and deadline. Your contributions will automatically count toward your goals.'**
+  String get helpFaq3A;
+
+  /// No description provided for @helpFaq4Q.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I withdraw my funds at any time?'**
+  String get helpFaq4Q;
+
+  /// No description provided for @helpFaq4A.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes. Tap \"Withdraw\" on the home screen and enter the amount. Withdrawals are processed from your available cash balance.'**
+  String get helpFaq4A;
+
+  /// No description provided for @helpFaq5Q.
+  ///
+  /// In en, this message translates to:
+  /// **'What happens if I forget my password?'**
+  String get helpFaq5Q;
+
+  /// No description provided for @helpFaq5A.
+  ///
+  /// In en, this message translates to:
+  /// **'On the login screen, tap \"Forgot password?\" and enter your email. We will send you a reset link within a few minutes.'**
+  String get helpFaq5A;
 }
 
 class _AppLocalizationsDelegate

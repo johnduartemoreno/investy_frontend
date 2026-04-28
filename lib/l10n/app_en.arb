@@ -281,5 +281,16 @@
   "helpTitle": "Help & Support",
   "helpFaq": "Frequently Asked Questions",
   "helpContact": "Contact Support",
-  "helpDocumentation": "Documentation"
+  "helpDocumentation": "Documentation",
+  "helpReplyTime": "We reply within 24 hours",
+  "helpFaq1Q": "How do I add money to my account?",
+  "helpFaq1A": "Tap \"Top-up\" on the home screen and enter the amount you want to deposit. The funds will be credited to your available cash balance.",
+  "helpFaq2Q": "How do I buy an asset?",
+  "helpFaq2A": "Tap \"Buy\" on the home screen, search for the asset by name or ticker symbol, enter the quantity and confirm the purchase.",
+  "helpFaq3Q": "How do I set a financial goal?",
+  "helpFaq3A": "Navigate to the Goals tab and tap the \"+\" button. Enter a name, target amount, category, and deadline. Your contributions will automatically count toward your goals.",
+  "helpFaq4Q": "Can I withdraw my funds at any time?",
+  "helpFaq4A": "Yes. Tap \"Withdraw\" on the home screen and enter the amount. Withdrawals are processed from your available cash balance.",
+  "helpFaq5Q": "What happens if I forget my password?",
+  "helpFaq5A": "On the login screen, tap \"Forgot password?\" and enter your email. We will send you a reset link within a few minutes."
 }

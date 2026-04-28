@@ -236,5 +236,16 @@
   "helpTitle": "Ajuda e suporte",
   "helpFaq": "Perguntas frequentes",
   "helpContact": "Falar com suporte",
-  "helpDocumentation": "Documentação"
+  "helpDocumentation": "Documentação",
+  "helpReplyTime": "Respondemos em até 24 horas",
+  "helpFaq1Q": "Como adiciono dinheiro à minha conta?",
+  "helpFaq1A": "Toque em \"Depositar\" na tela inicial e insira o valor que deseja depositar. Os fundos serão creditados no seu saldo de caixa disponível.",
+  "helpFaq2Q": "Como compro um ativo?",
+  "helpFaq2A": "Toque em \"Comprar\" na tela inicial, busque o ativo pelo nome ou símbolo, insira a quantidade e confirme a compra.",
+  "helpFaq3Q": "Como defino uma meta financeira?",
+  "helpFaq3A": "Navegue até a aba Metas e toque no botão \"+\". Insira um nome, valor alvo, categoria e prazo. Suas contribuições serão contadas automaticamente para suas metas.",
+  "helpFaq4Q": "Posso sacar meus fundos a qualquer momento?",
+  "helpFaq4A": "Sim. Toque em \"Sacar\" na tela inicial e insira o valor. Os saques são processados do seu saldo de caixa disponível.",
+  "helpFaq5Q": "O que acontece se eu esquecer minha senha?",
+  "helpFaq5A": "Na tela de login, toque em \"Esqueceu a senha?\" e insira seu e-mail. Enviaremos um link de redefinição em poucos minutos."
 }

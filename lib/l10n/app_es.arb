@@ -236,5 +236,16 @@
   "helpTitle": "Ayuda y soporte",
   "helpFaq": "Preguntas frecuentes",
   "helpContact": "Contactar soporte",
-  "helpDocumentation": "Documentación"
+  "helpDocumentation": "Documentación",
+  "helpReplyTime": "Respondemos en menos de 24 horas",
+  "helpFaq1Q": "¿Cómo agrego dinero a mi cuenta?",
+  "helpFaq1A": "Toca \"Depositar\" en la pantalla de inicio e ingresa el monto que deseas depositar. Los fondos se acreditarán en tu saldo de efectivo disponible.",
+  "helpFaq2Q": "¿Cómo compro un activo?",
+  "helpFaq2A": "Toca \"Comprar\" en la pantalla de inicio, busca el activo por nombre o símbolo, ingresa la cantidad y confirma la compra.",
+  "helpFaq3Q": "¿Cómo establezco una meta financiera?",
+  "helpFaq3A": "Ve a la pestaña de Metas y toca el botón \"+\". Ingresa un nombre, monto objetivo, categoría y fecha límite. Tus contribuciones contarán automáticamente hacia tus metas.",
+  "helpFaq4Q": "¿Puedo retirar mis fondos en cualquier momento?",
+  "helpFaq4A": "Sí. Toca \"Retirar\" en la pantalla de inicio e ingresa el monto. Los retiros se procesan desde tu saldo de efectivo disponible.",
+  "helpFaq5Q": "¿Qué pasa si olvido mi contraseña?",
+  "helpFaq5A": "En la pantalla de inicio de sesión, toca \"¿Olvidaste tu contraseña?\" e ingresa tu correo. Te enviaremos un enlace de restablecimiento en pocos minutos."
 }
