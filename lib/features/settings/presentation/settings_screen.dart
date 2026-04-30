@@ -144,6 +144,8 @@ class SettingsScreen extends ConsumerWidget {
         children: [
           _buildListTile(context, Icons.currency_exchange, l10n.settingsCurrency, 'USD (\$)', onTap: () {}),
           const Divider(height: 1),
+          _buildListTile(context, Icons.badge_outlined, l10n.kycSettingsLabel, '', onTap: () => context.push('/settings/kyc')),
+          const Divider(height: 1),
           _buildListTile(context, Icons.notifications_outlined, l10n.settingsNotifications, '', onTap: () => context.push('/settings/notifications')),
           const Divider(height: 1),
           _buildListTile(context, Icons.security, l10n.settingsPrivacySecurity, '', onTap: () => context.push('/settings/security')),

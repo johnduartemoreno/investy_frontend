@@ -292,5 +292,24 @@
   "helpFaq4Q": "Can I withdraw my funds at any time?",
   "helpFaq4A": "Yes. Tap \"Withdraw\" on the home screen and enter the amount. Withdrawals are processed from your available cash balance.",
   "helpFaq5Q": "What happens if I forget my password?",
-  "helpFaq5A": "On the login screen, tap \"Forgot password?\" and enter your email. We will send you a reset link within a few minutes."
+  "helpFaq5A": "On the login screen, tap \"Forgot password?\" and enter your email. We will send you a reset link within a few minutes.",
+
+  "kycTitle": "Identity Verification",
+  "kycIntroBody": "To start investing, we need to verify your identity. This is required by financial regulations and takes about 5 minutes.",
+  "kycStartButton": "Start Verification",
+  "kycRetryButton": "Try Again",
+  "kycApprovedTitle": "Verified",
+  "kycApprovedBody": "Your identity has been verified. You can now buy and sell assets.",
+  "kycPendingTitle": "Under Review",
+  "kycPendingBody": "Your documents have been submitted. We typically complete verification within 24 hours.",
+  "kycRejectedTitle": "Verification Failed",
+  "kycRejectedBody": "We could not verify your identity. Please try again with a clear photo of your ID document.",
+  "kycBannerRequired": "Verify your identity to start trading. Tap here.",
+  "kycBannerPending": "Identity verification is under review. Trading will be enabled once approved.",
+  "kycSettingsLabel": "Identity Verification",
+  "kycReqLegalName": "Full legal name",
+  "kycReqDob": "Date of birth",
+  "kycReqAddress": "Residential address",
+  "kycReqId": "Government-issued ID",
+  "kycReqTaxId": "Tax identification number"
 }
