@@ -709,4 +709,74 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get helpFaq5A =>
       'On the login screen, tap \"Forgot password?\" and enter your email. We will send you a reset link within a few minutes.';
+
+  @override
+  String get kycTitle => 'Identity Verification';
+
+  @override
+  String get kycIntroBody =>
+      'To start investing, we need to verify your identity. This is required by financial regulations and takes about 5 minutes.';
+
+  @override
+  String get kycStartButton => 'Start Verification';
+
+  @override
+  String get kycRetryButton => 'Try Again';
+
+  @override
+  String get kycCameraPermissionTitle => 'Camera Access Required';
+
+  @override
+  String get kycCameraPermissionBody =>
+      'Camera access was denied. Please enable it in Settings to complete identity verification.';
+
+  @override
+  String get kycOpenSettings => 'Open Settings';
+
+  @override
+  String get kycApprovedTitle => 'Verified';
+
+  @override
+  String get kycApprovedBody =>
+      'Your identity has been verified. You can now buy and sell assets.';
+
+  @override
+  String get kycPendingTitle => 'Under Review';
+
+  @override
+  String get kycPendingBody =>
+      'Your documents have been submitted. We typically complete verification within 24 hours.';
+
+  @override
+  String get kycRejectedTitle => 'Verification Failed';
+
+  @override
+  String get kycRejectedBody =>
+      'We could not verify your identity. Please try again with a clear photo of your ID document.';
+
+  @override
+  String get kycBannerRequired =>
+      'Verify your identity to start trading. Tap here.';
+
+  @override
+  String get kycBannerPending =>
+      'Identity verification is under review. Trading will be enabled once approved.';
+
+  @override
+  String get kycSettingsLabel => 'Identity Verification';
+
+  @override
+  String get kycReqLegalName => 'Full legal name';
+
+  @override
+  String get kycReqDob => 'Date of birth';
+
+  @override
+  String get kycReqAddress => 'Residential address';
+
+  @override
+  String get kycReqId => 'Government-issued ID';
+
+  @override
+  String get kycReqTaxId => 'Tax identification number';
 }

@@ -1425,6 +1425,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'On the login screen, tap \"Forgot password?\" and enter your email. We will send you a reset link within a few minutes.'**
   String get helpFaq5A;
+
+  /// No description provided for @kycTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Identity Verification'**
+  String get kycTitle;
+
+  /// No description provided for @kycIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'To start investing, we need to verify your identity. This is required by financial regulations and takes about 5 minutes.'**
+  String get kycIntroBody;
+
+  /// No description provided for @kycStartButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Verification'**
+  String get kycStartButton;
+
+  /// No description provided for @kycRetryButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get kycRetryButton;
+
+  /// No description provided for @kycCameraPermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera Access Required'**
+  String get kycCameraPermissionTitle;
+
+  /// No description provided for @kycCameraPermissionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera access was denied. Please enable it in Settings to complete identity verification.'**
+  String get kycCameraPermissionBody;
+
+  /// No description provided for @kycOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get kycOpenSettings;
+
+  /// No description provided for @kycApprovedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get kycApprovedTitle;
+
+  /// No description provided for @kycApprovedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your identity has been verified. You can now buy and sell assets.'**
+  String get kycApprovedBody;
+
+  /// No description provided for @kycPendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Under Review'**
+  String get kycPendingTitle;
+
+  /// No description provided for @kycPendingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your documents have been submitted. We typically complete verification within 24 hours.'**
+  String get kycPendingBody;
+
+  /// No description provided for @kycRejectedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification Failed'**
+  String get kycRejectedTitle;
+
+  /// No description provided for @kycRejectedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not verify your identity. Please try again with a clear photo of your ID document.'**
+  String get kycRejectedBody;
+
+  /// No description provided for @kycBannerRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your identity to start trading. Tap here.'**
+  String get kycBannerRequired;
+
+  /// No description provided for @kycBannerPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Identity verification is under review. Trading will be enabled once approved.'**
+  String get kycBannerPending;
+
+  /// No description provided for @kycSettingsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Identity Verification'**
+  String get kycSettingsLabel;
+
+  /// No description provided for @kycReqLegalName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full legal name'**
+  String get kycReqLegalName;
+
+  /// No description provided for @kycReqDob.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of birth'**
+  String get kycReqDob;
+
+  /// No description provided for @kycReqAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Residential address'**
+  String get kycReqAddress;
+
+  /// No description provided for @kycReqId.
+  ///
+  /// In en, this message translates to:
+  /// **'Government-issued ID'**
+  String get kycReqId;
+
+  /// No description provided for @kycReqTaxId.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax identification number'**
+  String get kycReqTaxId;
 }
 
 class _AppLocalizationsDelegate

@@ -1,9 +1,17 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart'
+    // ignore: depend_on_referenced_packages
+    if (dart.library.html) 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart'
+    // ignore: depend_on_referenced_packages
+    if (dart.library.html) 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/presentation/widgets/primary_button.dart';
@@ -242,13 +250,44 @@ class _SumsubWebViewScreenState extends State<_SumsubWebViewScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = WebViewController()
+    late final PlatformWebViewControllerCreationParams params;
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      params = WebKitWebViewControllerCreationParams(
+        allowsInlineMediaPlayback: true,
+        mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
+      );
+    } else {
+      params = const PlatformWebViewControllerCreationParams();
+    }
+
+    _controller = WebViewController.fromPlatformCreationParams(params)
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setOnConsoleMessage((msg) => debugPrint('[WebView] ${msg.message}'))
+      ..setNavigationDelegate(NavigationDelegate(
+        onWebResourceError: (e) =>
+            debugPrint('[WebView] resource error: ${e.url} — ${e.description}'),
+      ))
       ..addJavaScriptChannel(
         'FlutterChannel',
         onMessageReceived: _onMessage,
       )
-      ..loadHtmlString(_buildHtml(widget.accessToken));
+      ..loadHtmlString(_buildHtml(widget.accessToken),
+          baseUrl: 'https://api.sumsub.com');
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      (_controller.platform as AndroidWebViewController)
+          .setOnShowFileSelector(_onShowFileSelector);
+    }
+  }
+
+  Future<List<String>> _onShowFileSelector(FileSelectorParams params) async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 90,
+    );
+    if (picked == null) return [];
+    return ['file://${picked.path}'];
   }
 
   void _onMessage(JavaScriptMessage msg) {
@@ -269,7 +308,8 @@ class _SumsubWebViewScreenState extends State<_SumsubWebViewScreen> {
   Future<void> _refreshToken() async {
     try {
       final newToken = await widget.onTokenRefresh();
-      await _controller.loadHtmlString(_buildHtml(newToken));
+      await _controller.loadHtmlString(_buildHtml(newToken),
+          baseUrl: 'https://api.sumsub.com');
     } catch (_) {}
   }
 
@@ -281,30 +321,52 @@ class _SumsubWebViewScreenState extends State<_SumsubWebViewScreen> {
   <style>
     body { margin: 0; padding: 0; background: #fff; }
     #sumsub-websdk-container { height: 100vh; width: 100vw; }
+    #sdk-error { padding: 24px; color: red; font-family: sans-serif; }
   </style>
 </head>
 <body>
   <div id="sumsub-websdk-container"></div>
-  <script src="https://static.sumsub.com/idensic/static/sns-websdk-builder.js"></script>
+  <div id="sdk-error" style="display:none"></div>
   <script>
-    var snsSdk = snsWebSdkBuilder.init(
-      "$token",
-      function() { window.FlutterChannel.postMessage(JSON.stringify({event:"tokenExpired"})); }
-    )
-    .withConf({ lang: "en" })
-    .withOptions({ addViewportTag: false, adaptIframeHeight: true })
-    .on("idCheck.onApplicantSubmitted", function() {
-      window.FlutterChannel.postMessage(JSON.stringify({event:"submitted"}));
-    })
-    .on("idCheck.onApplicantReviewComplete", function(payload) {
-      if (payload && payload.reviewResult && payload.reviewResult.reviewAnswer === "GREEN") {
-        window.FlutterChannel.postMessage(JSON.stringify({event:"approved"}));
-      } else {
-        window.FlutterChannel.postMessage(JSON.stringify({event:"submitted"}));
+    function initSumsub(token) {
+      try {
+        var snsSdk = snsWebSdk.init(
+          token,
+          function() { window.FlutterChannel.postMessage(JSON.stringify({event:"tokenExpired"})); }
+        )
+        .withConf({ lang: "en" })
+        .withOptions({ addViewportTag: false, adaptIframeHeight: true })
+        .on("idCheck.onApplicantSubmitted", function() {
+          window.FlutterChannel.postMessage(JSON.stringify({event:"submitted"}));
+        })
+        .on("idCheck.onApplicantReviewComplete", function(payload) {
+          if (payload && payload.reviewResult && payload.reviewResult.reviewAnswer === "GREEN") {
+            window.FlutterChannel.postMessage(JSON.stringify({event:"approved"}));
+          } else {
+            window.FlutterChannel.postMessage(JSON.stringify({event:"submitted"}));
+          }
+        })
+        .build();
+        snsSdk.launch("#sumsub-websdk-container");
+      } catch(e) {
+        console.error("Sumsub init error: " + e.message);
+        document.getElementById("sdk-error").style.display = "block";
+        document.getElementById("sdk-error").innerText = "Init error: " + e.message;
       }
-    })
-    .build();
-    snsSdk.launch("#sumsub-websdk-container");
+    }
+
+    var sdkScript = document.createElement("script");
+    sdkScript.src = "https://static.sumsub.com/idensic/static/sns-websdk-builder.js";
+    sdkScript.onload = function() {
+      console.log("Sumsub SDK loaded OK");
+      initSumsub("$token");
+    };
+    sdkScript.onerror = function(e) {
+      console.error("Failed to load Sumsub SDK script");
+      document.getElementById("sdk-error").style.display = "block";
+      document.getElementById("sdk-error").innerText = "Could not load verification SDK. Check network.";
+    };
+    document.head.appendChild(sdkScript);
   </script>
 </body>
 </html>

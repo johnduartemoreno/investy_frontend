@@ -714,4 +714,74 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get helpFaq5A =>
       'En la pantalla de inicio de sesión, toca \"¿Olvidaste tu contraseña?\" e ingresa tu correo. Te enviaremos un enlace de restablecimiento en pocos minutos.';
+
+  @override
+  String get kycTitle => 'Verificación de identidad';
+
+  @override
+  String get kycIntroBody =>
+      'Para comenzar a invertir, necesitamos verificar tu identidad. Es requerido por regulaciones financieras y toma aproximadamente 5 minutos.';
+
+  @override
+  String get kycStartButton => 'Iniciar verificación';
+
+  @override
+  String get kycRetryButton => 'Intentar de nuevo';
+
+  @override
+  String get kycCameraPermissionTitle => 'Acceso a la cámara requerido';
+
+  @override
+  String get kycCameraPermissionBody =>
+      'El acceso a la cámara fue denegado. Habilítalo en Configuración para completar la verificación.';
+
+  @override
+  String get kycOpenSettings => 'Abrir Configuración';
+
+  @override
+  String get kycApprovedTitle => 'Verificado';
+
+  @override
+  String get kycApprovedBody =>
+      'Tu identidad ha sido verificada. Ya puedes comprar y vender activos.';
+
+  @override
+  String get kycPendingTitle => 'En revisión';
+
+  @override
+  String get kycPendingBody =>
+      'Tus documentos han sido enviados. Normalmente completamos la verificación en 24 horas.';
+
+  @override
+  String get kycRejectedTitle => 'Verificación fallida';
+
+  @override
+  String get kycRejectedBody =>
+      'No pudimos verificar tu identidad. Por favor intenta de nuevo con una foto clara de tu documento de identidad.';
+
+  @override
+  String get kycBannerRequired =>
+      'Verifica tu identidad para comenzar a operar. Toca aquí.';
+
+  @override
+  String get kycBannerPending =>
+      'La verificación de identidad está en revisión. El trading se habilitará una vez aprobado.';
+
+  @override
+  String get kycSettingsLabel => 'Verificación de identidad';
+
+  @override
+  String get kycReqLegalName => 'Nombre legal completo';
+
+  @override
+  String get kycReqDob => 'Fecha de nacimiento';
+
+  @override
+  String get kycReqAddress => 'Dirección residencial';
+
+  @override
+  String get kycReqId => 'Documento de identidad oficial';
+
+  @override
+  String get kycReqTaxId => 'Número de identificación tributaria';
 }
