@@ -32,7 +32,7 @@ class RiskRemoteDataSourceImpl implements RiskRemoteDataSource {
       String userId, Map<int, int> answers) async {
     final response = await _dio.post(
       '/api/v1/users/$userId/risk-profile',
-      data: {'answers': answers},
+      data: {'answers': answers.map((k, v) => MapEntry(k.toString(), v))},
     );
     return RiskProfileModel.fromJson(response.data as Map<String, dynamic>);
   }
