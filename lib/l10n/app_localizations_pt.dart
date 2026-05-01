@@ -713,4 +713,74 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get helpFaq5A =>
       'Na tela de login, toque em \"Esqueceu a senha?\" e insira seu e-mail. Enviaremos um link de redefinição em poucos minutos.';
+
+  @override
+  String get kycTitle => 'Verificação de identidade';
+
+  @override
+  String get kycIntroBody =>
+      'Para começar a investir, precisamos verificar sua identidade. É exigido por regulamentações financeiras e leva cerca de 5 minutos.';
+
+  @override
+  String get kycStartButton => 'Iniciar verificação';
+
+  @override
+  String get kycRetryButton => 'Tentar novamente';
+
+  @override
+  String get kycCameraPermissionTitle => 'Acesso à câmera necessário';
+
+  @override
+  String get kycCameraPermissionBody =>
+      'O acesso à câmera foi negado. Habilite nas Configurações para completar a verificação.';
+
+  @override
+  String get kycOpenSettings => 'Abrir Configurações';
+
+  @override
+  String get kycApprovedTitle => 'Verificado';
+
+  @override
+  String get kycApprovedBody =>
+      'Sua identidade foi verificada. Agora você pode comprar e vender ativos.';
+
+  @override
+  String get kycPendingTitle => 'Em revisão';
+
+  @override
+  String get kycPendingBody =>
+      'Seus documentos foram enviados. Normalmente concluímos a verificação em 24 horas.';
+
+  @override
+  String get kycRejectedTitle => 'Verificação falhou';
+
+  @override
+  String get kycRejectedBody =>
+      'Não conseguimos verificar sua identidade. Por favor, tente novamente com uma foto clara do seu documento de identidade.';
+
+  @override
+  String get kycBannerRequired =>
+      'Verifique sua identidade para começar a negociar. Toque aqui.';
+
+  @override
+  String get kycBannerPending =>
+      'A verificação de identidade está em análise. A negociação será habilitada após aprovação.';
+
+  @override
+  String get kycSettingsLabel => 'Verificação de identidade';
+
+  @override
+  String get kycReqLegalName => 'Nome legal completo';
+
+  @override
+  String get kycReqDob => 'Data de nascimento';
+
+  @override
+  String get kycReqAddress => 'Endereço residencial';
+
+  @override
+  String get kycReqId => 'Documento de identidade oficial';
+
+  @override
+  String get kycReqTaxId => 'Número de identificação fiscal';
 }

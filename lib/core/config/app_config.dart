@@ -8,11 +8,12 @@ class AppConfig {
   ///   - iOS simulator / macOS: 127.0.0.1 is the host loopback directly.
   /// Release builds point to the production API.
   static String get apiBaseUrl {
-    if (kDebugMode) {
+    if (kDebugMode || kProfileMode) {
       if (defaultTargetPlatform == TargetPlatform.android) {
         return 'http://10.0.2.2:8080';
       }
-      return 'http://127.0.0.1:8080';
+      // iOS physical device: use Mac's LAN IP
+      return 'http://192.168.100.232:8080';
     }
     return 'https://api.investy.com';
   }

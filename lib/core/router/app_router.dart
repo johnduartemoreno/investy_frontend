@@ -17,6 +17,7 @@ import '../../features/settings/presentation/about_screen.dart';
 import '../../features/settings/presentation/help_screen.dart';
 import '../../features/settings/presentation/notifications_screen.dart';
 import '../../features/settings/presentation/security_screen.dart';
+import '../../features/kyc/presentation/screens/kyc_screen.dart';
 import '../../features/transactions/presentation/screens/top_up_screen.dart';
 import '../../features/dashboard/presentation/screens/buy_asset_screen.dart';
 import '../../features/dashboard/presentation/screens/sell_asset_screen.dart';
@@ -177,6 +178,10 @@ GoRouter goRouter(Ref ref) {
                   GoRoute(
                     path: 'security',
                     builder: (context, state) => const SecurityScreen(),
+                  ),
+                  GoRoute(
+                    path: 'kyc',
+                    builder: (context, state) => const KycScreen(),
                   ),
                 ],
               ),

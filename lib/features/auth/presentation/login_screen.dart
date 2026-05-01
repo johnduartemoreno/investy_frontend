@@ -162,7 +162,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
             child: SafeArea(
               bottom: false,
-              child: Column(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Logo with dynamic sizing
@@ -193,6 +195,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ],
                 ],
+              ),
               ),
             ),
           ),

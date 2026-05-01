@@ -247,5 +247,27 @@
   "helpFaq4Q": "Posso sacar meus fundos a qualquer momento?",
   "helpFaq4A": "Sim. Toque em \"Sacar\" na tela inicial e insira o valor. Os saques são processados do seu saldo de caixa disponível.",
   "helpFaq5Q": "O que acontece se eu esquecer minha senha?",
-  "helpFaq5A": "Na tela de login, toque em \"Esqueceu a senha?\" e insira seu e-mail. Enviaremos um link de redefinição em poucos minutos."
+  "helpFaq5A": "Na tela de login, toque em \"Esqueceu a senha?\" e insira seu e-mail. Enviaremos um link de redefinição em poucos minutos.",
+
+  "kycTitle": "Verificação de identidade",
+  "kycIntroBody": "Para começar a investir, precisamos verificar sua identidade. É exigido por regulamentações financeiras e leva cerca de 5 minutos.",
+  "kycStartButton": "Iniciar verificação",
+  "kycRetryButton": "Tentar novamente",
+  "kycCameraPermissionTitle": "Acesso à câmera necessário",
+  "kycCameraPermissionBody": "O acesso à câmera foi negado. Habilite nas Configurações para completar a verificação.",
+  "kycOpenSettings": "Abrir Configurações",
+  "kycApprovedTitle": "Verificado",
+  "kycApprovedBody": "Sua identidade foi verificada. Agora você pode comprar e vender ativos.",
+  "kycPendingTitle": "Em revisão",
+  "kycPendingBody": "Seus documentos foram enviados. Normalmente concluímos a verificação em 24 horas.",
+  "kycRejectedTitle": "Verificação falhou",
+  "kycRejectedBody": "Não conseguimos verificar sua identidade. Por favor, tente novamente com uma foto clara do seu documento de identidade.",
+  "kycBannerRequired": "Verifique sua identidade para começar a negociar. Toque aqui.",
+  "kycBannerPending": "A verificação de identidade está em análise. A negociação será habilitada após aprovação.",
+  "kycSettingsLabel": "Verificação de identidade",
+  "kycReqLegalName": "Nome legal completo",
+  "kycReqDob": "Data de nascimento",
+  "kycReqAddress": "Endereço residencial",
+  "kycReqId": "Documento de identidade oficial",
+  "kycReqTaxId": "Número de identificação fiscal"
 }

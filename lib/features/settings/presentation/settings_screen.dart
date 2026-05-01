@@ -9,6 +9,8 @@ import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/responsive_center.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../auth/presentation/providers/auth_provider.dart';
+import '../../dashboard/presentation/screens/dashboard_screen.dart'
+    show displayCurrencyProvider;
 import 'providers/avatar_upload_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -28,7 +30,8 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               _buildProfileSection(context, ref, l10n),
               const SizedBox(height: AppDimens.spacingXL),
-              _buildSettingsSection(context, l10n),
+
+              _buildSettingsSection(context, ref, l10n),
               const SizedBox(height: AppDimens.spacingXL),
               _buildAboutSection(context, l10n),
               const SizedBox(height: AppDimens.spacingXL),
@@ -137,12 +140,15 @@ class SettingsScreen extends ConsumerWidget {
         .upload(File(picked.path));
   }
 
-  Widget _buildSettingsSection(BuildContext context, AppLocalizations l10n) {
+  Widget _buildSettingsSection(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+    final displayCurrency = ref.watch(displayCurrencyProvider);
     return CustomCard(
       padding: EdgeInsets.zero,
       child: Column(
         children: [
-          _buildListTile(context, Icons.currency_exchange, l10n.settingsCurrency, 'USD (\$)', onTap: () {}),
+          _buildListTile(context, Icons.currency_exchange, l10n.settingsCurrency, displayCurrency, onTap: () {}),
+          const Divider(height: 1),
+          _buildListTile(context, Icons.badge_outlined, l10n.kycSettingsLabel, '', onTap: () => context.push('/settings/kyc')),
           const Divider(height: 1),
           _buildListTile(context, Icons.notifications_outlined, l10n.settingsNotifications, '', onTap: () => context.push('/settings/notifications')),
           const Divider(height: 1),

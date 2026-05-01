@@ -247,5 +247,27 @@
   "helpFaq4Q": "¿Puedo retirar mis fondos en cualquier momento?",
   "helpFaq4A": "Sí. Toca \"Retirar\" en la pantalla de inicio e ingresa el monto. Los retiros se procesan desde tu saldo de efectivo disponible.",
   "helpFaq5Q": "¿Qué pasa si olvido mi contraseña?",
-  "helpFaq5A": "En la pantalla de inicio de sesión, toca \"¿Olvidaste tu contraseña?\" e ingresa tu correo. Te enviaremos un enlace de restablecimiento en pocos minutos."
+  "helpFaq5A": "En la pantalla de inicio de sesión, toca \"¿Olvidaste tu contraseña?\" e ingresa tu correo. Te enviaremos un enlace de restablecimiento en pocos minutos.",
+
+  "kycTitle": "Verificación de identidad",
+  "kycIntroBody": "Para comenzar a invertir, necesitamos verificar tu identidad. Es requerido por regulaciones financieras y toma aproximadamente 5 minutos.",
+  "kycStartButton": "Iniciar verificación",
+  "kycRetryButton": "Intentar de nuevo",
+  "kycCameraPermissionTitle": "Acceso a la cámara requerido",
+  "kycCameraPermissionBody": "El acceso a la cámara fue denegado. Habilítalo en Configuración para completar la verificación.",
+  "kycOpenSettings": "Abrir Configuración",
+  "kycApprovedTitle": "Verificado",
+  "kycApprovedBody": "Tu identidad ha sido verificada. Ya puedes comprar y vender activos.",
+  "kycPendingTitle": "En revisión",
+  "kycPendingBody": "Tus documentos han sido enviados. Normalmente completamos la verificación en 24 horas.",
+  "kycRejectedTitle": "Verificación fallida",
+  "kycRejectedBody": "No pudimos verificar tu identidad. Por favor intenta de nuevo con una foto clara de tu documento de identidad.",
+  "kycBannerRequired": "Verifica tu identidad para comenzar a operar. Toca aquí.",
+  "kycBannerPending": "La verificación de identidad está en revisión. El trading se habilitará una vez aprobado.",
+  "kycSettingsLabel": "Verificación de identidad",
+  "kycReqLegalName": "Nombre legal completo",
+  "kycReqDob": "Fecha de nacimiento",
+  "kycReqAddress": "Dirección residencial",
+  "kycReqId": "Documento de identidad oficial",
+  "kycReqTaxId": "Número de identificación tributaria"
 }

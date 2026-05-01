@@ -43,6 +43,11 @@ dependencies:
   google_fonts: ^8.0.2
   image_picker: ^1.1.2
 
+  # KYC — Sumsub WebSDK via WebView
+  webview_flutter: ^4.8.0
+  webview_flutter_android: ^4.12.0
+  webview_flutter_wkwebview: ^3.23.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

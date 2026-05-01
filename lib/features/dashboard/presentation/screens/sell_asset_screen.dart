@@ -9,6 +9,7 @@ import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../features/portfolio/data/models/portfolio_response_model.dart';
 import '../../../../features/portfolio/presentation/providers/rest_portfolio_provider.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../kyc/presentation/widgets/kyc_gate_banner.dart';
 import '../controllers/sell_asset_controller.dart';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -27,7 +28,11 @@ class SellAssetScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context).sellAssetTitle)),
       body: SafeArea(
-        child: portfolioAsync.when(
+        child: Column(
+          children: [
+            const KycGateBanner(),
+            Expanded(
+              child: portfolioAsync.when(
           loading: () =>
               const Center(child: CircularProgressIndicator.adaptive()),
           error: (error, _) => Center(
@@ -46,6 +51,9 @@ class SellAssetScreen extends ConsumerWidget {
             }
             return _buildHoldingsList(context, portfolio.holdings);
           },
+        ),
+            ),
+          ],
         ),
       ),
     );
