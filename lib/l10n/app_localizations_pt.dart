@@ -783,4 +783,24 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get kycReqTaxId => 'Número de identificação fiscal';
+
+  @override
+  String get brokerSettingsLabel => 'Conta de Investimento';
+
+  @override
+  String get brokerStatusPending => 'Pendente';
+
+  @override
+  String get brokerStatusActive => 'Ativa';
+
+  @override
+  String get brokerStatusRejected => 'Rejeitada';
+
+  @override
+  String get brokerBannerPending =>
+      'Sua conta de investimento está em análise. O trading ao vivo será habilitado após a aprovação.';
+
+  @override
+  String get brokerBannerNotActive =>
+      'Conta de investimento não configurada. O paper trading está ativo.';
 }

@@ -9,6 +9,7 @@ import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../features/portfolio/data/models/portfolio_response_model.dart';
 import '../../../../features/portfolio/presentation/providers/rest_portfolio_provider.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../broker/presentation/widgets/broker_gate_banner.dart';
 import '../../../kyc/presentation/widgets/kyc_gate_banner.dart';
 import '../controllers/sell_asset_controller.dart';
 
@@ -31,6 +32,7 @@ class SellAssetScreen extends ConsumerWidget {
         child: Column(
           children: [
             const KycGateBanner(),
+            const BrokerGateBanner(),
             Expanded(
               child: portfolioAsync.when(
           loading: () =>

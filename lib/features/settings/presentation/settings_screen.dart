@@ -9,6 +9,7 @@ import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/responsive_center.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../auth/presentation/providers/auth_provider.dart';
+import '../../broker/presentation/providers/broker_provider.dart';
 import '../../dashboard/presentation/screens/dashboard_screen.dart'
     show displayCurrencyProvider;
 import 'providers/avatar_upload_provider.dart';
@@ -142,6 +143,16 @@ class SettingsScreen extends ConsumerWidget {
 
   Widget _buildSettingsSection(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     final displayCurrency = ref.watch(displayCurrencyProvider);
+    final brokerAsync = ref.watch(brokerAccountProvider);
+    final brokerStatus = brokerAsync.valueOrNull;
+    final brokerTrailing = brokerStatus == null
+        ? ''
+        : brokerStatus.isActive
+            ? l10n.brokerStatusActive
+            : brokerStatus.isPending
+                ? l10n.brokerStatusPending
+                : l10n.brokerStatusRejected;
+
     return CustomCard(
       padding: EdgeInsets.zero,
       child: Column(
@@ -149,6 +160,8 @@ class SettingsScreen extends ConsumerWidget {
           _buildListTile(context, Icons.currency_exchange, l10n.settingsCurrency, displayCurrency, onTap: () {}),
           const Divider(height: 1),
           _buildListTile(context, Icons.badge_outlined, l10n.kycSettingsLabel, '', onTap: () => context.push('/settings/kyc')),
+          const Divider(height: 1),
+          _buildListTile(context, Icons.account_balance_outlined, l10n.brokerSettingsLabel, brokerTrailing, onTap: () {}),
           const Divider(height: 1),
           _buildListTile(context, Icons.notifications_outlined, l10n.settingsNotifications, '', onTap: () => context.push('/settings/notifications')),
           const Divider(height: 1),

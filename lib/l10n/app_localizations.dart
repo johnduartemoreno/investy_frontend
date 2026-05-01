@@ -1551,6 +1551,13 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tax identification number'**
   String get kycReqTaxId;
+
+  String get brokerSettingsLabel;
+  String get brokerStatusPending;
+  String get brokerStatusActive;
+  String get brokerStatusRejected;
+  String get brokerBannerPending;
+  String get brokerBannerNotActive;
 }
 
 class _AppLocalizationsDelegate
