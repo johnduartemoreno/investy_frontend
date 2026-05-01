@@ -7,7 +7,7 @@ part of 'kyc_remote_datasource.dart';
 // **************************************************************************
 
 String _$kycRemoteDataSourceHash() =>
-    r'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0';
+    r'a797dfab43b17b8bcbf888de560aaeffd3c508cf';
 
 /// See also [kycRemoteDataSource].
 @ProviderFor(kycRemoteDataSource)
