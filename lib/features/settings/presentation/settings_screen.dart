@@ -12,6 +12,7 @@ import '../../auth/presentation/providers/auth_provider.dart';
 import '../../broker/presentation/providers/broker_provider.dart';
 import '../../dashboard/presentation/screens/dashboard_screen.dart'
     show displayCurrencyProvider;
+import '../../kyc/presentation/providers/kyc_provider.dart';
 import 'providers/avatar_upload_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -143,6 +144,17 @@ class SettingsScreen extends ConsumerWidget {
 
   Widget _buildSettingsSection(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     final displayCurrency = ref.watch(displayCurrencyProvider);
+    final kycAsync = ref.watch(kycStatusProvider);
+    final kycStatus = kycAsync.valueOrNull;
+    final kycTrailing = kycStatus == null
+        ? ''
+        : kycStatus.isApproved
+            ? l10n.kycApprovedTitle
+            : kycStatus.isSubmitted
+                ? l10n.kycPendingTitle
+                : kycStatus.isRejected
+                    ? l10n.kycRejectedTitle
+                    : '';
     final brokerAsync = ref.watch(brokerAccountProvider);
     final brokerStatus = brokerAsync.valueOrNull;
     final brokerTrailing = brokerStatus == null
@@ -159,9 +171,18 @@ class SettingsScreen extends ConsumerWidget {
         children: [
           _buildListTile(context, Icons.currency_exchange, l10n.settingsCurrency, displayCurrency, onTap: () {}),
           const Divider(height: 1),
-          _buildListTile(context, Icons.badge_outlined, l10n.kycSettingsLabel, '', onTap: () => context.push('/settings/kyc')),
+          _buildListTile(context, Icons.badge_outlined, l10n.kycSettingsLabel, kycTrailing, onTap: () => context.push('/settings/kyc')),
           const Divider(height: 1),
-          _buildListTile(context, Icons.account_balance_outlined, l10n.brokerSettingsLabel, brokerTrailing, onTap: () {}),
+          _buildListTile(context, Icons.account_balance_outlined, l10n.brokerSettingsLabel, brokerTrailing, onTap: () {
+            final msg = brokerStatus == null
+                ? l10n.brokerBannerNotActive
+                : brokerStatus.isActive
+                    ? l10n.brokerStatusActive
+                    : brokerStatus.isPending
+                        ? l10n.brokerBannerPending
+                        : l10n.brokerStatusRejected;
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+          }),
           const Divider(height: 1),
           _buildListTile(context, Icons.notifications_outlined, l10n.settingsNotifications, '', onTap: () => context.push('/settings/notifications')),
           const Divider(height: 1),
