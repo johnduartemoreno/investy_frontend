@@ -314,5 +314,11 @@
   "kycReqDob": "Date of birth",
   "kycReqAddress": "Residential address",
   "kycReqId": "Government-issued ID",
-  "kycReqTaxId": "Tax identification number"
+  "kycReqTaxId": "Tax identification number",
+  "brokerSettingsLabel": "Brokerage Account",
+  "brokerStatusPending": "Pending",
+  "brokerStatusActive": "Active",
+  "brokerStatusRejected": "Rejected",
+  "brokerBannerPending": "Your brokerage account is being reviewed. Live trading will be enabled once approved.",
+  "brokerBannerNotActive": "Brokerage account not yet set up. Paper trading is active."
 }

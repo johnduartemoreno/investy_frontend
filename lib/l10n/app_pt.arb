@@ -269,5 +269,11 @@
   "kycReqDob": "Data de nascimento",
   "kycReqAddress": "Endereço residencial",
   "kycReqId": "Documento de identidade oficial",
-  "kycReqTaxId": "Número de identificação fiscal"
+  "kycReqTaxId": "Número de identificação fiscal",
+  "brokerSettingsLabel": "Conta de Investimento",
+  "brokerStatusPending": "Pendente",
+  "brokerStatusActive": "Ativa",
+  "brokerStatusRejected": "Rejeitada",
+  "brokerBannerPending": "Sua conta de investimento está em análise. O trading ao vivo será habilitado após a aprovação.",
+  "brokerBannerNotActive": "Conta de investimento não configurada. O paper trading está ativo."
 }
