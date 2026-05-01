@@ -7,6 +7,7 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../broker/presentation/widgets/broker_gate_banner.dart';
 import '../../../kyc/presentation/widgets/kyc_gate_banner.dart';
 import '../../data/models/asset_search_result_model.dart';
 import '../controllers/buy_asset_controller.dart';
@@ -127,6 +128,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const KycGateBanner(),
+                const BrokerGateBanner(),
                 // Search field
                 TextFormField(
                   controller: _searchController,

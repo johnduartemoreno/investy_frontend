@@ -779,4 +779,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kycReqTaxId => 'Tax identification number';
+
+  @override
+  String get brokerSettingsLabel => 'Brokerage Account';
+
+  @override
+  String get brokerStatusPending => 'Pending';
+
+  @override
+  String get brokerStatusActive => 'Active';
+
+  @override
+  String get brokerStatusRejected => 'Rejected';
+
+  @override
+  String get brokerBannerPending =>
+      'Your brokerage account is being reviewed. Live trading will be enabled once approved.';
+
+  @override
+  String get brokerBannerNotActive =>
+      'Brokerage account not yet set up. Paper trading is active.';
 }

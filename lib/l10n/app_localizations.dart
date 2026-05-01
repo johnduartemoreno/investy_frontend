@@ -1551,6 +1551,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tax identification number'**
   String get kycReqTaxId;
+
+  /// No description provided for @brokerSettingsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Brokerage Account'**
+  String get brokerSettingsLabel;
+
+  /// No description provided for @brokerStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get brokerStatusPending;
+
+  /// No description provided for @brokerStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get brokerStatusActive;
+
+  /// No description provided for @brokerStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get brokerStatusRejected;
+
+  /// No description provided for @brokerBannerPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Your brokerage account is being reviewed. Live trading will be enabled once approved.'**
+  String get brokerBannerPending;
+
+  /// No description provided for @brokerBannerNotActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Brokerage account not yet set up. Paper trading is active.'**
+  String get brokerBannerNotActive;
 }
 
 class _AppLocalizationsDelegate
