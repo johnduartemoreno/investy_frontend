@@ -27,6 +27,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get commonSave => 'Salvar';
 
   @override
+  String get commonDone => 'Concluído';
+
+  @override
   String get commonCancel => 'Cancelar';
 
   @override
@@ -831,4 +834,129 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get brokerBannerNotActive =>
       'Conta de investimento não configurada. O paper trading está ativo.';
+
+  @override
+  String get riskProfileSettingsLabel => 'Perfil de risco';
+
+  @override
+  String get riskProfileTitle => 'Perfil de risco';
+
+  @override
+  String riskProfileQuestionOf(int current, int total) {
+    return '$current de $total';
+  }
+
+  @override
+  String get riskProfileQ1 => 'Qual é o seu horizonte de investimento?';
+
+  @override
+  String get riskProfileQ1A1 => 'Menos de 1 ano';
+
+  @override
+  String get riskProfileQ1A2 => '1 a 3 anos';
+
+  @override
+  String get riskProfileQ1A3 => '3 a 7 anos';
+
+  @override
+  String get riskProfileQ1A4 => 'Mais de 7 anos';
+
+  @override
+  String get riskProfileQ2 => 'Se sua carteira caísse 20%, o que você faria?';
+
+  @override
+  String get riskProfileQ2A1 => 'Venderia tudo';
+
+  @override
+  String get riskProfileQ2A2 => 'Venderia algumas posições';
+
+  @override
+  String get riskProfileQ2A3 => 'Manteria e esperaria';
+
+  @override
+  String get riskProfileQ2A4 => 'Compraria mais';
+
+  @override
+  String get riskProfileQ3 =>
+      'Como você descreveria sua experiência em investimentos?';
+
+  @override
+  String get riskProfileQ3A1 => 'Nenhuma';
+
+  @override
+  String get riskProfileQ3A2 => 'Básica';
+
+  @override
+  String get riskProfileQ3A3 => 'Moderada';
+
+  @override
+  String get riskProfileQ3A4 => 'Avançada';
+
+  @override
+  String get riskProfileQ4 => 'Quão estável é sua renda?';
+
+  @override
+  String get riskProfileQ4A1 => 'Muito instável';
+
+  @override
+  String get riskProfileQ4A2 => 'Instável';
+
+  @override
+  String get riskProfileQ4A3 => 'Estável';
+
+  @override
+  String get riskProfileQ4A4 => 'Muito estável';
+
+  @override
+  String get riskProfileQ5 =>
+      'Qual é o seu principal objetivo de investimento?';
+
+  @override
+  String get riskProfileQ5A1 => 'Preservar o capital';
+
+  @override
+  String get riskProfileQ5A2 => 'Renda regular';
+
+  @override
+  String get riskProfileQ5A3 => 'Crescimento moderado';
+
+  @override
+  String get riskProfileQ5A4 => 'Máximo crescimento';
+
+  @override
+  String get riskProfileNext => 'Próximo';
+
+  @override
+  String get riskProfileSubmit => 'Ver meu perfil';
+
+  @override
+  String get riskProfileConservative => 'Conservador';
+
+  @override
+  String get riskProfileModerate => 'Moderado';
+
+  @override
+  String get riskProfileAggressive => 'Agressivo';
+
+  @override
+  String get riskProfileConservativeDesc =>
+      'Você prefere estabilidade. Sua carteira prioriza a preservação de capital com ativos de baixo risco.';
+
+  @override
+  String get riskProfileModerateDesc =>
+      'Você busca crescimento equilibrado. Sua carteira combina ativos estáveis com oportunidades de crescimento moderado.';
+
+  @override
+  String get riskProfileAggressiveDesc =>
+      'Você busca o máximo crescimento. Sua carteira foca em ativos de alto crescimento e tolera a volatilidade.';
+
+  @override
+  String get riskProfileRetake => 'Refazer questionário';
+
+  @override
+  String get riskProfileNotCompleted => 'Não concluído';
+
+  @override
+  String get riskProfileLoadError =>
+      'Não foi possível carregar o perfil de risco.';
 }

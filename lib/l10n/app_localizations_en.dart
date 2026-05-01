@@ -27,6 +27,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonSave => 'Save';
 
   @override
+  String get commonDone => 'Done';
+
+  @override
   String get commonCancel => 'Cancel';
 
   @override
@@ -827,4 +830,128 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get brokerBannerNotActive =>
       'Brokerage account not yet set up. Paper trading is active.';
+
+  @override
+  String get riskProfileSettingsLabel => 'Risk Profile';
+
+  @override
+  String get riskProfileTitle => 'Risk Profile';
+
+  @override
+  String riskProfileQuestionOf(int current, int total) {
+    return '$current of $total';
+  }
+
+  @override
+  String get riskProfileQ1 => 'What is your investment time horizon?';
+
+  @override
+  String get riskProfileQ1A1 => 'Less than 1 year';
+
+  @override
+  String get riskProfileQ1A2 => '1 to 3 years';
+
+  @override
+  String get riskProfileQ1A3 => '3 to 7 years';
+
+  @override
+  String get riskProfileQ1A4 => 'More than 7 years';
+
+  @override
+  String get riskProfileQ2 =>
+      'If your portfolio dropped 20%, what would you do?';
+
+  @override
+  String get riskProfileQ2A1 => 'Sell everything';
+
+  @override
+  String get riskProfileQ2A2 => 'Sell some positions';
+
+  @override
+  String get riskProfileQ2A3 => 'Hold and wait';
+
+  @override
+  String get riskProfileQ2A4 => 'Buy more';
+
+  @override
+  String get riskProfileQ3 =>
+      'How would you describe your investment experience?';
+
+  @override
+  String get riskProfileQ3A1 => 'None';
+
+  @override
+  String get riskProfileQ3A2 => 'Basic';
+
+  @override
+  String get riskProfileQ3A3 => 'Moderate';
+
+  @override
+  String get riskProfileQ3A4 => 'Advanced';
+
+  @override
+  String get riskProfileQ4 => 'How stable is your income?';
+
+  @override
+  String get riskProfileQ4A1 => 'Very unstable';
+
+  @override
+  String get riskProfileQ4A2 => 'Unstable';
+
+  @override
+  String get riskProfileQ4A3 => 'Stable';
+
+  @override
+  String get riskProfileQ4A4 => 'Very stable';
+
+  @override
+  String get riskProfileQ5 => 'What is your primary investment goal?';
+
+  @override
+  String get riskProfileQ5A1 => 'Preserve capital';
+
+  @override
+  String get riskProfileQ5A2 => 'Regular income';
+
+  @override
+  String get riskProfileQ5A3 => 'Moderate growth';
+
+  @override
+  String get riskProfileQ5A4 => 'Maximum growth';
+
+  @override
+  String get riskProfileNext => 'Next';
+
+  @override
+  String get riskProfileSubmit => 'See My Profile';
+
+  @override
+  String get riskProfileConservative => 'Conservative';
+
+  @override
+  String get riskProfileModerate => 'Moderate';
+
+  @override
+  String get riskProfileAggressive => 'Aggressive';
+
+  @override
+  String get riskProfileConservativeDesc =>
+      'You prefer stability. Your portfolio prioritizes capital preservation with low-risk assets.';
+
+  @override
+  String get riskProfileModerateDesc =>
+      'You seek balanced growth. Your portfolio mixes stable assets with moderate growth opportunities.';
+
+  @override
+  String get riskProfileAggressiveDesc =>
+      'You seek maximum growth. Your portfolio focuses on high-growth assets and can handle volatility.';
+
+  @override
+  String get riskProfileRetake => 'Retake Questionnaire';
+
+  @override
+  String get riskProfileNotCompleted => 'Not completed';
+
+  @override
+  String get riskProfileLoadError => 'Could not load risk profile.';
 }
