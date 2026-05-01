@@ -390,7 +390,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        '${_holding.quantity} shares owned',
+                        AppLocalizations.of(context).sellSharesOwned(_holding.quantity.toString()),
                         style: theme.textTheme.bodySmall
                             ?.copyWith(color: colors.onSurfaceVariant),
                       ),
@@ -427,12 +427,13 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                   setState(() => _quantity = parsed ?? 0.0);
                 },
                 validator: (v) {
-                  if (v == null || v.isEmpty) return 'Enter quantity';
+                  final l10n = AppLocalizations.of(context);
+                  if (v == null || v.isEmpty) return l10n.sellEnterQuantity;
                   final qty =
                       ThousandsSeparatorInputFormatter.parseFormatted(v);
-                  if (qty == null || qty <= 0) return 'Must be greater than zero';
+                  if (qty == null || qty <= 0) return l10n.sellQuantityPositive;
                   if (qty > _holding.quantity) {
-                    return 'You only own ${_holding.quantity} shares';
+                    return l10n.sellQuantityExceeds(_holding.quantity.toString());
                   }
                   return null;
                 },
@@ -494,18 +495,15 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                   ),
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: 16),
-                  helperText: 'Price per share (pre-filled from market)',
+                  helperText: AppLocalizations.of(context).sellPricePerShare,
                 ),
                 inputFormatters: [ThousandsSeparatorInputFormatter()],
                 validator: (v) {
-                  if (v == null || v.trim().isEmpty) {
-                    return 'Enter sell price';
-                  }
+                  final l10n = AppLocalizations.of(context);
+                  if (v == null || v.trim().isEmpty) return l10n.sellEnterPrice;
                   final price =
                       ThousandsSeparatorInputFormatter.parseFormatted(v);
-                  if (price == null || price <= 0) {
-                    return 'Must be greater than zero';
-                  }
+                  if (price == null || price <= 0) return l10n.sellQuantityPositive;
                   return null;
                 },
               ),
@@ -523,7 +521,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Estimated Value',
+                        AppLocalizations.of(context).sellEstimatedValue,
                         style: theme.textTheme.bodyLarge
                             ?.copyWith(color: colors.onSurfaceVariant),
                       ),
@@ -541,7 +539,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
 
               // ── Confirm Sale Button ──
               PrimaryButton(
-                text: 'Confirm Sale',
+                text: AppLocalizations.of(context).sellConfirm,
                 isLoading: isSubmitting,
                 onPressed: (_quantity > 0 && _pricePerUnit > 0)
                     ? _submit

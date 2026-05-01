@@ -862,6 +862,54 @@ abstract class AppLocalizations {
   /// **'Quantity'**
   String get sellQuantityLabel;
 
+  /// No description provided for @sellSharesOwned.
+  ///
+  /// In en, this message translates to:
+  /// **'{quantity} shares owned'**
+  String sellSharesOwned(String quantity);
+
+  /// No description provided for @sellPricePerShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Price per share (pre-filled from market)'**
+  String get sellPricePerShare;
+
+  /// No description provided for @sellEstimatedValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Value'**
+  String get sellEstimatedValue;
+
+  /// No description provided for @sellEnterQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter quantity'**
+  String get sellEnterQuantity;
+
+  /// No description provided for @sellQuantityPositive.
+  ///
+  /// In en, this message translates to:
+  /// **'Must be greater than zero'**
+  String get sellQuantityPositive;
+
+  /// No description provided for @sellQuantityExceeds.
+  ///
+  /// In en, this message translates to:
+  /// **'You only own {quantity} shares'**
+  String sellQuantityExceeds(String quantity);
+
+  /// No description provided for @sellEnterPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter sell price'**
+  String get sellEnterPrice;
+
+  /// No description provided for @sellConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Sale'**
+  String get sellConfirm;
+
   /// No description provided for @sellButton.
   ///
   /// In en, this message translates to:

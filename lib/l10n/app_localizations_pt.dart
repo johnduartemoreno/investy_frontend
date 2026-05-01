@@ -412,6 +412,34 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sellQuantityLabel => 'Quantidade';
 
   @override
+  String sellSharesOwned(String quantity) {
+    return '$quantity ações em sua posse';
+  }
+
+  @override
+  String get sellPricePerShare => 'Preço por ação (preço de mercado)';
+
+  @override
+  String get sellEstimatedValue => 'Valor estimado';
+
+  @override
+  String get sellEnterQuantity => 'Insira a quantidade';
+
+  @override
+  String get sellQuantityPositive => 'Deve ser maior que zero';
+
+  @override
+  String sellQuantityExceeds(String quantity) {
+    return 'Você só tem $quantity ações';
+  }
+
+  @override
+  String get sellEnterPrice => 'Insira o preço de venda';
+
+  @override
+  String get sellConfirm => 'Confirmar venda';
+
+  @override
   String get sellButton => 'Vender';
 
   @override

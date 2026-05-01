@@ -177,6 +177,24 @@
     }
   },
   "sellQuantityLabel": "Quantity",
+  "sellSharesOwned": "{quantity} shares owned",
+  "@sellSharesOwned": {
+    "placeholders": {
+      "quantity": { "type": "String" }
+    }
+  },
+  "sellPricePerShare": "Price per share (pre-filled from market)",
+  "sellEstimatedValue": "Estimated Value",
+  "sellEnterQuantity": "Enter quantity",
+  "sellQuantityPositive": "Must be greater than zero",
+  "sellQuantityExceeds": "You only own {quantity} shares",
+  "@sellQuantityExceeds": {
+    "placeholders": {
+      "quantity": { "type": "String" }
+    }
+  },
+  "sellEnterPrice": "Enter sell price",
+  "sellConfirm": "Confirm Sale",
   "sellButton": "Sell",
   "sellSuccess": "Sale successful",
   "sellMaxQuantity": "Max: {quantity}",
