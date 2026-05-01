@@ -13,6 +13,7 @@ import '../../broker/presentation/providers/broker_provider.dart';
 import '../../dashboard/presentation/screens/dashboard_screen.dart'
     show displayCurrencyProvider;
 import '../../kyc/presentation/providers/kyc_provider.dart';
+import '../../risk_profile/presentation/providers/risk_provider.dart';
 import 'providers/avatar_upload_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -165,6 +166,16 @@ class SettingsScreen extends ConsumerWidget {
                 ? l10n.brokerStatusPending
                 : l10n.brokerStatusRejected;
 
+    final riskAsync = ref.watch(riskProfileProvider);
+    final riskProfile = riskAsync.valueOrNull;
+    final riskTrailing = riskProfile == null
+        ? l10n.riskProfileNotCompleted
+        : riskProfile.isConservative
+            ? l10n.riskProfileConservative
+            : riskProfile.isModerate
+                ? l10n.riskProfileModerate
+                : l10n.riskProfileAggressive;
+
     return CustomCard(
       padding: EdgeInsets.zero,
       child: Column(
@@ -183,6 +194,8 @@ class SettingsScreen extends ConsumerWidget {
                         : l10n.brokerStatusRejected;
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
           }),
+          const Divider(height: 1),
+          _buildListTile(context, Icons.psychology_outlined, l10n.riskProfileSettingsLabel, riskTrailing, onTap: () => context.push('/settings/risk-profile')),
           const Divider(height: 1),
           _buildListTile(context, Icons.notifications_outlined, l10n.settingsNotifications, '', onTap: () => context.push('/settings/notifications')),
           const Divider(height: 1),

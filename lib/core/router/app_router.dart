@@ -18,6 +18,8 @@ import '../../features/settings/presentation/help_screen.dart';
 import '../../features/settings/presentation/notifications_screen.dart';
 import '../../features/settings/presentation/security_screen.dart';
 import '../../features/kyc/presentation/screens/kyc_screen.dart';
+import '../../features/risk_profile/presentation/screens/risk_questionnaire_screen.dart';
+import '../../features/risk_profile/presentation/screens/risk_result_screen.dart';
 import '../../features/transactions/presentation/screens/top_up_screen.dart';
 import '../../features/dashboard/presentation/screens/buy_asset_screen.dart';
 import '../../features/dashboard/presentation/screens/sell_asset_screen.dart';
@@ -182,6 +184,17 @@ GoRouter goRouter(Ref ref) {
                   GoRoute(
                     path: 'kyc',
                     builder: (context, state) => const KycScreen(),
+                  ),
+                  GoRoute(
+                    path: 'risk-profile',
+                    builder: (context, state) =>
+                        const RiskQuestionnaireScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'result',
+                        builder: (context, state) => const RiskResultScreen(),
+                      ),
+                    ],
                   ),
                 ],
               ),

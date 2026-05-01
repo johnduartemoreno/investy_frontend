@@ -136,6 +136,12 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get commonSave;
 
+  /// No description provided for @commonDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get commonDone;
+
   /// No description provided for @commonCancel.
   ///
   /// In en, this message translates to:
@@ -1635,6 +1641,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Brokerage account not yet set up. Paper trading is active.'**
   String get brokerBannerNotActive;
+
+  /// No description provided for @riskProfileSettingsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Risk Profile'**
+  String get riskProfileSettingsLabel;
+
+  /// No description provided for @riskProfileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Risk Profile'**
+  String get riskProfileTitle;
+
+  /// No description provided for @riskProfileQuestionOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{current} of {total}'**
+  String riskProfileQuestionOf(int current, int total);
+
+  /// No description provided for @riskProfileQ1.
+  ///
+  /// In en, this message translates to:
+  /// **'What is your investment time horizon?'**
+  String get riskProfileQ1;
+
+  /// No description provided for @riskProfileQ1A1.
+  ///
+  /// In en, this message translates to:
+  /// **'Less than 1 year'**
+  String get riskProfileQ1A1;
+
+  /// No description provided for @riskProfileQ1A2.
+  ///
+  /// In en, this message translates to:
+  /// **'1 to 3 years'**
+  String get riskProfileQ1A2;
+
+  /// No description provided for @riskProfileQ1A3.
+  ///
+  /// In en, this message translates to:
+  /// **'3 to 7 years'**
+  String get riskProfileQ1A3;
+
+  /// No description provided for @riskProfileQ1A4.
+  ///
+  /// In en, this message translates to:
+  /// **'More than 7 years'**
+  String get riskProfileQ1A4;
+
+  /// No description provided for @riskProfileQ2.
+  ///
+  /// In en, this message translates to:
+  /// **'If your portfolio dropped 20%, what would you do?'**
+  String get riskProfileQ2;
+
+  /// No description provided for @riskProfileQ2A1.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell everything'**
+  String get riskProfileQ2A1;
+
+  /// No description provided for @riskProfileQ2A2.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell some positions'**
+  String get riskProfileQ2A2;
+
+  /// No description provided for @riskProfileQ2A3.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold and wait'**
+  String get riskProfileQ2A3;
+
+  /// No description provided for @riskProfileQ2A4.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy more'**
+  String get riskProfileQ2A4;
+
+  /// No description provided for @riskProfileQ3.
+  ///
+  /// In en, this message translates to:
+  /// **'How would you describe your investment experience?'**
+  String get riskProfileQ3;
+
+  /// No description provided for @riskProfileQ3A1.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get riskProfileQ3A1;
+
+  /// No description provided for @riskProfileQ3A2.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic'**
+  String get riskProfileQ3A2;
+
+  /// No description provided for @riskProfileQ3A3.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get riskProfileQ3A3;
+
+  /// No description provided for @riskProfileQ3A4.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get riskProfileQ3A4;
+
+  /// No description provided for @riskProfileQ4.
+  ///
+  /// In en, this message translates to:
+  /// **'How stable is your income?'**
+  String get riskProfileQ4;
+
+  /// No description provided for @riskProfileQ4A1.
+  ///
+  /// In en, this message translates to:
+  /// **'Very unstable'**
+  String get riskProfileQ4A1;
+
+  /// No description provided for @riskProfileQ4A2.
+  ///
+  /// In en, this message translates to:
+  /// **'Unstable'**
+  String get riskProfileQ4A2;
+
+  /// No description provided for @riskProfileQ4A3.
+  ///
+  /// In en, this message translates to:
+  /// **'Stable'**
+  String get riskProfileQ4A3;
+
+  /// No description provided for @riskProfileQ4A4.
+  ///
+  /// In en, this message translates to:
+  /// **'Very stable'**
+  String get riskProfileQ4A4;
+
+  /// No description provided for @riskProfileQ5.
+  ///
+  /// In en, this message translates to:
+  /// **'What is your primary investment goal?'**
+  String get riskProfileQ5;
+
+  /// No description provided for @riskProfileQ5A1.
+  ///
+  /// In en, this message translates to:
+  /// **'Preserve capital'**
+  String get riskProfileQ5A1;
+
+  /// No description provided for @riskProfileQ5A2.
+  ///
+  /// In en, this message translates to:
+  /// **'Regular income'**
+  String get riskProfileQ5A2;
+
+  /// No description provided for @riskProfileQ5A3.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate growth'**
+  String get riskProfileQ5A3;
+
+  /// No description provided for @riskProfileQ5A4.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum growth'**
+  String get riskProfileQ5A4;
+
+  /// No description provided for @riskProfileNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get riskProfileNext;
+
+  /// No description provided for @riskProfileSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'See My Profile'**
+  String get riskProfileSubmit;
+
+  /// No description provided for @riskProfileConservative.
+  ///
+  /// In en, this message translates to:
+  /// **'Conservative'**
+  String get riskProfileConservative;
+
+  /// No description provided for @riskProfileModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get riskProfileModerate;
+
+  /// No description provided for @riskProfileAggressive.
+  ///
+  /// In en, this message translates to:
+  /// **'Aggressive'**
+  String get riskProfileAggressive;
+
+  /// No description provided for @riskProfileConservativeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You prefer stability. Your portfolio prioritizes capital preservation with low-risk assets.'**
+  String get riskProfileConservativeDesc;
+
+  /// No description provided for @riskProfileModerateDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You seek balanced growth. Your portfolio mixes stable assets with moderate growth opportunities.'**
+  String get riskProfileModerateDesc;
+
+  /// No description provided for @riskProfileAggressiveDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You seek maximum growth. Your portfolio focuses on high-growth assets and can handle volatility.'**
+  String get riskProfileAggressiveDesc;
+
+  /// No description provided for @riskProfileRetake.
+  ///
+  /// In en, this message translates to:
+  /// **'Retake Questionnaire'**
+  String get riskProfileRetake;
+
+  /// No description provided for @riskProfileNotCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Not completed'**
+  String get riskProfileNotCompleted;
+
+  /// No description provided for @riskProfileLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load risk profile.'**
+  String get riskProfileLoadError;
 }
 
 class _AppLocalizationsDelegate
