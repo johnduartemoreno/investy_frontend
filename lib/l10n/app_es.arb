@@ -329,5 +329,17 @@
   "riskProfileAggressiveDesc": "Buscas el máximo crecimiento. Tu portafolio se enfoca en activos de alto rendimiento y toleras la volatilidad.",
   "riskProfileRetake": "Repetir cuestionario",
   "riskProfileNotCompleted": "No completado",
-  "riskProfileLoadError": "No se pudo cargar el perfil de riesgo."
+  "riskProfileLoadError": "No se pudo cargar el perfil de riesgo.",
+
+  "owlAiName": "Owl AI",
+  "owlAiAdvisorLabel": "ASESOR IA",
+  "owlAiTagline": "¿En qué invertimos hoy? 🦉",
+  "owlAiPoweredAdvisor": "Asesor con inteligencia artificial",
+  "owlAiAnalyzing": "Analizando tu portafolio…",
+  "owlAiStrongBuy": "Compra fuerte",
+  "owlAiModerateSignal": "Moderado",
+  "owlAiSuggested": "Sugerido:",
+  "owlAiBuyButton": "COMPRAR →",
+  "owlAiRefresh": "Actualizar análisis",
+  "portfolioActive": "Portafolio activo"
 }

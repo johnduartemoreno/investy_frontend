@@ -384,5 +384,17 @@
   "riskProfileAggressiveDesc": "You seek maximum growth. Your portfolio focuses on high-growth assets and can handle volatility.",
   "riskProfileRetake": "Retake Questionnaire",
   "riskProfileNotCompleted": "Not completed",
-  "riskProfileLoadError": "Could not load risk profile."
+  "riskProfileLoadError": "Could not load risk profile.",
+
+  "owlAiName": "Owl AI",
+  "owlAiAdvisorLabel": "AI ADVISOR",
+  "owlAiTagline": "What should we invest in today? 🦉",
+  "owlAiPoweredAdvisor": "AI-powered advisor",
+  "owlAiAnalyzing": "Analyzing your portfolio…",
+  "owlAiStrongBuy": "Strong buy",
+  "owlAiModerateSignal": "Moderate",
+  "owlAiSuggested": "Suggested:",
+  "owlAiBuyButton": "BUY →",
+  "owlAiRefresh": "Refresh analysis",
+  "portfolioActive": "Portfolio active"
 }

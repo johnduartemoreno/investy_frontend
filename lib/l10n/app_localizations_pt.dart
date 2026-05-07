@@ -959,4 +959,27 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get riskProfileLoadError =>
       'Não foi possível carregar o perfil de risco.';
+
+  @override
+  String get owlAiName => 'Owl AI';
+  @override
+  String get owlAiAdvisorLabel => 'ASSESSOR IA';
+  @override
+  String get owlAiTagline => 'No que vamos investir hoje? 🦉';
+  @override
+  String get owlAiPoweredAdvisor => 'Assessor com inteligência artificial';
+  @override
+  String get owlAiAnalyzing => 'Analisando sua carteira…';
+  @override
+  String get owlAiStrongBuy => 'Compra forte';
+  @override
+  String get owlAiModerateSignal => 'Moderado';
+  @override
+  String get owlAiSuggested => 'Sugerido:';
+  @override
+  String get owlAiBuyButton => 'COMPRAR →';
+  @override
+  String get owlAiRefresh => 'Atualizar análise';
+  @override
+  String get portfolioActive => 'Carteira ativa';
 }

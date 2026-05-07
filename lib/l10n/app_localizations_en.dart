@@ -954,4 +954,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get riskProfileLoadError => 'Could not load risk profile.';
+
+  @override
+  String get owlAiName => 'Owl AI';
+  @override
+  String get owlAiAdvisorLabel => 'AI ADVISOR';
+  @override
+  String get owlAiTagline => 'What should we invest in today? 🦉';
+  @override
+  String get owlAiPoweredAdvisor => 'AI-powered advisor';
+  @override
+  String get owlAiAnalyzing => 'Analyzing your portfolio…';
+  @override
+  String get owlAiStrongBuy => 'Strong buy';
+  @override
+  String get owlAiModerateSignal => 'Moderate';
+  @override
+  String get owlAiSuggested => 'Suggested:';
+  @override
+  String get owlAiBuyButton => 'BUY →';
+  @override
+  String get owlAiRefresh => 'Refresh analysis';
+  @override
+  String get portfolioActive => 'Portfolio active';
 }

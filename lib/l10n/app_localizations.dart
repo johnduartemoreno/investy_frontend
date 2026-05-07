@@ -1875,6 +1875,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not load risk profile.'**
   String get riskProfileLoadError;
+
+  String get owlAiName;
+  String get owlAiAdvisorLabel;
+  String get owlAiTagline;
+  String get owlAiPoweredAdvisor;
+  String get owlAiAnalyzing;
+  String get owlAiStrongBuy;
+  String get owlAiModerateSignal;
+  String get owlAiSuggested;
+  String get owlAiBuyButton;
+  String get owlAiRefresh;
+  String get portfolioActive;
 }
 
 class _AppLocalizationsDelegate

@@ -397,7 +397,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'Portfolio active',
+                      l10n.portfolioActive,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
@@ -443,7 +443,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   Row(
                     children: [
                       Text(
-                        'Owl AI',
+                        l10n.owlAiName,
                         style: theme.textTheme.titleSmall?.copyWith(
                           color: theme.colorScheme.onSurface,
                           fontWeight: FontWeight.w700,
@@ -461,7 +461,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          'AI ADVISOR',
+                          l10n.owlAiAdvisorLabel,
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
@@ -474,7 +474,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'What should we invest in today? 🦉',
+                    l10n.owlAiTagline,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -669,10 +669,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return Card(
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 12),
-      color: AppTheme.darkSurface,
+      color: theme.colorScheme.surfaceContainerLow,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
-        side: BorderSide(color: AppTheme.darkCard.withValues(alpha: 0.8)),
+        side: BorderSide(color: theme.colorScheme.outlineVariant),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -713,10 +713,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return Card(
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 12),
-      color: AppTheme.darkSurface,
+      color: theme.colorScheme.surfaceContainerLow,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
-        side: BorderSide(color: AppTheme.darkCard.withValues(alpha: 0.8)),
+        side: BorderSide(color: theme.colorScheme.outlineVariant),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -771,7 +771,6 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
       reason:
           'Strong brand moat + services revenue growing 15% YoY. Low-volatility blue chip aligned with moderate risk.',
       suggested: 300,
-      strength: 'Strong buy',
       strong: true,
     ),
     (
@@ -780,7 +779,6 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
       reason:
           'Broad diversification at 0.03% expense ratio. Ideal anchor for a 20-year retirement goal.',
       suggested: 500,
-      strength: 'Strong buy',
       strong: true,
     ),
     (
@@ -789,7 +787,6 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
       reason:
           '5% allocation adds asymmetric upside. Your 0% crypto exposure leaves return on the table for a 20-year horizon.',
       suggested: 200,
-      strength: 'Moderate',
       strong: false,
     ),
     (
@@ -798,7 +795,6 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
       reason:
           'Azure + AI (Copilot) compound runway. Moderate volatility — complements AAPL without sector overlap.',
       suggested: 150,
-      strength: 'Strong buy',
       strong: true,
     ),
     (
@@ -807,7 +803,6 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
       reason:
           'Inflation hedge for long horizons. ETF form adds stability when equities correct — zero custody risk.',
       suggested: 90,
-      strength: 'Moderate',
       strong: false,
     ),
   ];
@@ -832,6 +827,7 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return DraggableScrollableSheet(
       initialChildSize: 0.92,
@@ -874,14 +870,14 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Owl AI',
+                          l10n.owlAiName,
                           style: theme.textTheme.titleMedium?.copyWith(
                             color: theme.colorScheme.onSurface,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
                         Text(
-                          'AI-powered advisor',
+                          l10n.owlAiPoweredAdvisor,
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: AppTheme.brandPurpleLight,
                           ),
@@ -934,7 +930,7 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
               // Body
               Expanded(
                 child: !_loaded
-                    ? _buildThinking(theme)
+                    ? _buildThinking(theme, l10n)
                     : _buildRecList(theme, scrollController),
               ),
             ],
@@ -944,7 +940,7 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
     );
   }
 
-  Widget _buildThinking(ThemeData theme) {
+  Widget _buildThinking(ThemeData theme, AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -952,7 +948,7 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
           const OwlAiWidget(size: 72, state: OwlState.thinking),
           const SizedBox(height: 16),
           Text(
-            'Analyzing your portfolio…',
+            l10n.owlAiAnalyzing,
             style: theme.textTheme.bodyMedium
                 ?.copyWith(color: AppTheme.brandPurpleLight),
           ),
@@ -1000,7 +996,6 @@ class _RecCard extends StatefulWidget {
     String name,
     String reason,
     int suggested,
-    String strength,
     bool strong
   }) rec;
   final int index;
@@ -1082,7 +1077,7 @@ class _RecCardState extends State<_RecCard>
                       ],
                     ),
                   ),
-                  _strengthBadge(r.strength, r.strong),
+                  _strengthBadge(r.strong),
                 ],
               ),
               const SizedBox(height: 10),
@@ -1110,7 +1105,7 @@ class _RecCardState extends State<_RecCard>
                       style: theme.textTheme.labelSmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant),
                       children: [
-                        const TextSpan(text: 'Suggested: '),
+                        TextSpan(text: '${AppLocalizations.of(context).owlAiSuggested} '),
                         TextSpan(
                           text: '\$${r.suggested}',
                           style: TextStyle(
@@ -1132,9 +1127,9 @@ class _RecCardState extends State<_RecCard>
                         ]),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Text(
-                        'BUY →',
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations.of(context).owlAiBuyButton,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
@@ -1182,7 +1177,9 @@ class _RecCardState extends State<_RecCard>
     );
   }
 
-  Widget _strengthBadge(String label, bool strong) {
+  Widget _strengthBadge(bool strong) {
+    final l10n = AppLocalizations.of(context);
+    final label = strong ? l10n.owlAiStrongBuy : l10n.owlAiModerateSignal;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
