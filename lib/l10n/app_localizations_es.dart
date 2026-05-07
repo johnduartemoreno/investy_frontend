@@ -990,25 +990,33 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get owlAiPillRiskLabel => 'Riesgo';
+
   @override
   String get owlAiPillCashLabel => 'Efectivo';
+
   @override
   String get owlAiPillGoalLabel => 'Largo plazo';
+
   @override
   String get owlAiReasonAapl =>
       'Marca sólida y servicios creciendo 15% anual. Acción estable — encaja con un perfil moderado.';
+
   @override
   String get owlAiReasonVti =>
       'Diversificación amplia con costo 0.03%. Base ideal para un horizonte de retiro a 20 años.';
+
   @override
   String get owlAiReasonBtc =>
       'Una asignación del 5% añade potencial asimétrico. Tu exposición 0% deja rendimiento sobre la mesa.';
+
   @override
   String get owlAiReasonMsft =>
       'Azure + IA (Copilot) con crecimiento compuesto. Volatilidad moderada — complementa AAPL.';
+
   @override
   String get owlAiReasonIau =>
       'Cobertura contra inflación a largo plazo. ETF aporta estabilidad cuando las acciones caen — sin riesgo de custodia.';
+
   @override
   String get portfolioActive => 'Portafolio activo';
 }
