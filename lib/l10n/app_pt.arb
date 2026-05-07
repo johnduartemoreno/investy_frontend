@@ -329,5 +329,25 @@
   "riskProfileAggressiveDesc": "Você busca o máximo crescimento. Sua carteira foca em ativos de alto crescimento e tolera a volatilidade.",
   "riskProfileRetake": "Refazer questionário",
   "riskProfileNotCompleted": "Não concluído",
-  "riskProfileLoadError": "Não foi possível carregar o perfil de risco."
+  "riskProfileLoadError": "Não foi possível carregar o perfil de risco.",
+
+  "owlAiName": "Owl AI",
+  "owlAiAdvisorLabel": "ASSESSOR IA",
+  "owlAiTagline": "No que vamos investir hoje? 🦉",
+  "owlAiPoweredAdvisor": "Assessor com inteligência artificial",
+  "owlAiAnalyzing": "Analisando sua carteira…",
+  "owlAiStrongBuy": "Compra forte",
+  "owlAiModerateSignal": "Moderado",
+  "owlAiSuggested": "Sugerido:",
+  "owlAiBuyButton": "COMPRAR →",
+  "owlAiRefresh": "Atualizar análise",
+  "owlAiPillRiskLabel": "Risco",
+  "owlAiPillCashLabel": "Dinheiro",
+  "owlAiPillGoalLabel": "Longo prazo",
+  "owlAiReasonAapl": "Marca forte e receita de serviços crescendo 15% ao ano. Blue chip de baixa volatilidade — combina com perfil moderado.",
+  "owlAiReasonVti": "Ampla diversificação com taxa de 0,03%. Base ideal para um horizonte de aposentadoria de 20 anos.",
+  "owlAiReasonBtc": "Alocação de 5% adiciona potencial assimétrico. Sua exposição 0% deixa retorno na mesa em horizonte longo.",
+  "owlAiReasonMsft": "Azure + IA (Copilot) com crescimento composto. Volatilidade moderada — complementa AAPL sem sobreposição.",
+  "owlAiReasonIau": "Proteção contra inflação em horizontes longos. ETF dá estabilidade quando ações caem — sem risco de custódia.",
+  "portfolioActive": "Carteira ativa"
 }

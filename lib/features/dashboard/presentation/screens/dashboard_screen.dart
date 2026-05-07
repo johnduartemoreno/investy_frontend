@@ -4,9 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/network/dio_client.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../core/widgets/owl_ai_widget.dart';
 import '../../../../l10n/app_localizations.dart';
 
+import '../../../risk_profile/presentation/providers/risk_provider.dart';
 import '../../data/datasources/dashboard_remote_data_source.dart';
 import '../../data/models/dashboard_response_model.dart';
 import '../widgets/withdraw_bottom_sheet.dart';
@@ -201,28 +204,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       backgroundColor: colorScheme.surface,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // --- HEADER ---
               _buildHeader(theme, l10n, userNameAsync),
-              const SizedBox(height: 24),
-
-              // --- PORTFOLIO SUMMARY (Side-by-Side Cards) ---
-              _buildPortfolioSummary(theme, l10n, netWorthAsync, availableCashAsync,
+              const SizedBox(height: 20),
+              _buildBalanceCard(theme, l10n, netWorthAsync, availableCashAsync,
                   currencyAsync.valueOrNull ?? 'USD'),
-              const SizedBox(height: 32),
-
-              // --- QUICK ACTIONS ---
+              const SizedBox(height: 16),
+              _buildOwlAdvisorCard(theme, l10n),
+              const SizedBox(height: 24),
               _buildQuickActions(theme, l10n),
-              const SizedBox(height: 32),
-
-              // --- RECENT ACTIVITY ---
+              const SizedBox(height: 28),
               _buildRecentActivitySection(
                   theme, l10n, recentActivityAsync, currency, fxRate),
-
-              // Bottom Scroll Padding
               const SizedBox(height: 80),
             ],
           ),
@@ -235,11 +231,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildHeader(
       ThemeData theme, AppLocalizations l10n, AsyncValue<String> userNameAsync) {
-    final displayName = userNameAsync.when(
-      data: (name) => name,
-      loading: () => l10n.commonLoading,
-      error: (_, __) => '',
-    );
+    final rawName = userNameAsync.valueOrNull ?? '';
+    final firstName = _firstName(rawName);
+    final greeting = _greeting();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -248,165 +242,314 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              l10n.dashboardWelcomeBack,
-              style: theme.textTheme.bodyLarge?.copyWith(
+              greeting,
+              style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
-            Text(
-              displayName,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
+            const SizedBox(height: 2),
+            rawName.isEmpty
+                ? const SizedBox(height: 28)
+                : Text(
+                    firstName,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
           ],
         ),
-        IconButton.filledTonal(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications_outlined),
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: const LinearGradient(
+              colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.brandPurple.withValues(alpha: 0.4),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: const Icon(Icons.notifications_outlined,
+              color: Colors.white, size: 20),
         ),
       ],
     );
   }
 
-  Widget _buildPortfolioSummary(ThemeData theme, AppLocalizations l10n,
-      AsyncValue<double> netWorthAsync, AsyncValue<double> availableCashAsync,
-      String currency) {
-    final colors = theme.colorScheme;
-    final textTheme = theme.textTheme;
+  String _greeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Good morning,';
+    if (hour < 18) return 'Good afternoon,';
+    return 'Good evening,';
+  }
 
-    return Row(
-      children: [
-        // Card 1: Invested Portfolio
-        Expanded(
-          child: Card(
-            elevation: 0,
-            color: colors.primaryContainer.withValues(alpha: 0.4),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.dashboardInvestedPortfolio,
-                    style: textTheme.labelMedium?.copyWith(
-                      color: colors.onSurfaceVariant,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  netWorthAsync.when(
-                    data: (value) => Text(
-                      CurrencyFormatter.formatWithCurrency(value, currency),
-                      style: textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colors.onSurface,
-                      ),
-                    ),
-                    loading: () => SizedBox(
-                      height: 24,
-                      width: 80,
-                      child: LinearProgressIndicator(
-                        borderRadius: BorderRadius.circular(4),
-                        color: colors.primary.withValues(alpha: 0.3),
-                      ),
-                    ),
-                    error: (_, __) => Text(
-                      '--',
-                      style: textTheme.titleLarge?.copyWith(
-                        color: colors.error,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+  // Extracts and capitalizes first name (e.g. "johnduartemoreno" → "John")
+  String _firstName(String name) {
+    if (name.isEmpty) return '';
+    // If name has spaces, take first word; otherwise capitalize whole string
+    final part = name.split(' ').first;
+    return part[0].toUpperCase() + part.substring(1).toLowerCase();
+  }
+
+  Widget _buildBalanceCard(
+      ThemeData theme,
+      AppLocalizations l10n,
+      AsyncValue<double> netWorthAsync,
+      AsyncValue<double> availableCashAsync,
+      String currency) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        gradient: const LinearGradient(
+          colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.brandPurple.withValues(alpha: 0.35),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.dashboardInvestedPortfolio,
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: Colors.white.withValues(alpha: 0.75),
             ),
           ),
-        ),
-        const SizedBox(width: 12),
-        // Card 2: Cash to Invest
-        Expanded(
-          child: Card(
-            elevation: 0,
-            color: colors.tertiaryContainer.withValues(alpha: 0.4),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
+          const SizedBox(height: 6),
+          netWorthAsync.when(
+            data: (value) => Text(
+              CurrencyFormatter.formatWithCurrency(value, currency),
+              style: theme.textTheme.displaySmall?.copyWith(
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+                letterSpacing: -1,
+              ),
+            ),
+            loading: () => _shimmer(width: 140, height: 36),
+            error: (_, __) => Text('--',
+                style: theme.textTheme.displaySmall
+                    ?.copyWith(color: Colors.white)),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            height: 1,
+            color: Colors.white.withValues(alpha: 0.2),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     l10n.dashboardCashToInvest,
-                    style: textTheme.labelMedium?.copyWith(
-                      color: colors.onSurfaceVariant,
-                      fontWeight: FontWeight.w500,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.7),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                   availableCashAsync.when(
                     data: (value) => Text(
                       CurrencyFormatter.formatWithCurrency(value, currency),
-                      style: textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colors.onSurface,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                    loading: () => SizedBox(
-                      height: 24,
-                      width: 80,
-                      child: LinearProgressIndicator(
-                        borderRadius: BorderRadius.circular(4),
-                        color: colors.tertiary.withValues(alpha: 0.3),
+                    loading: () => _shimmer(width: 80, height: 20),
+                    error: (_, __) => const Text('--',
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                ],
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF4ade80),
+                        shape: BoxShape.circle,
                       ),
                     ),
-                    error: (_, __) => Text(
-                      '--',
-                      style: textTheme.titleLarge?.copyWith(
-                        color: colors.error,
+                    const SizedBox(width: 6),
+                    Text(
+                      l10n.portfolioActive,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
                       ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOwlAdvisorCard(ThemeData theme, AppLocalizations l10n) {
+    return GestureDetector(
+      onTap: () => _openOwlSheet(),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: theme.colorScheme.surfaceContainerHigh,
+          border: Border.all(
+            color: AppTheme.brandPurple.withValues(alpha: 0.35),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.brandPurple.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            const OwlAiWidget(size: 52, state: OwlState.idle),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        l10n.owlAiName,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: theme.colorScheme.onSurface,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(colors: [
+                            AppTheme.brandPurple,
+                            AppTheme.brandPurpleLight
+                          ]),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          l10n.owlAiAdvisorLabel,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 9,
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    l10n.owlAiTagline,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
+            Icon(Icons.arrow_forward_ios_rounded,
+                size: 16, color: AppTheme.brandPurpleLight),
+          ],
         ),
-      ],
+      ),
+    );
+  }
+
+  void _openOwlSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const _OwlAdvisorSheet(),
+    );
+  }
+
+  Widget _shimmer({required double width, required double height}) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(6),
+      ),
     );
   }
 
   Widget _buildQuickActions(ThemeData theme, AppLocalizations l10n) {
+    const buyColor = Color(0xFF4ade80);
+    const sellColor = Color(0xFFf87171);
+    const topUpColor = AppTheme.brandPurpleLight;
+    const withdrawColor = Color(0xFFfbbf24);
+
     final actions = [
       (
-        icon: Icons.trending_up,
+        icon: Icons.trending_up_rounded,
         label: l10n.dashboardBuy,
+        color: buyColor,
+        bg: buyColor.withValues(alpha: 0.14),
         onTap: () => context.go('/home/buy-asset'),
       ),
       (
-        icon: Icons.trending_down,
+        icon: Icons.trending_down_rounded,
         label: l10n.dashboardSell,
+        color: sellColor,
+        bg: sellColor.withValues(alpha: 0.14),
         onTap: () => context.go('/home/sell-asset'),
       ),
       (
-        icon: Icons.add_card,
+        icon: Icons.add_card_rounded,
         label: l10n.dashboardTopUp,
+        color: topUpColor,
+        bg: topUpColor.withValues(alpha: 0.14),
         onTap: () => context.go('/home/top-up'),
       ),
       (
         icon: Icons.file_download_outlined,
         label: l10n.dashboardWithdraw,
-        onTap: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (context) => const WithdrawBottomSheet(),
-          );
-        },
+        color: withdrawColor,
+        bg: withdrawColor.withValues(alpha: 0.14),
+        onTap: () => showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => const WithdrawBottomSheet(),
+        ),
       ),
     ];
 
@@ -415,24 +558,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       children: actions.map((item) {
         return Column(
           children: [
-            InkWell(
+            GestureDetector(
               onTap: item.onTap,
-              borderRadius: BorderRadius.circular(20),
               child: Container(
-                width: 56,
-                height: 56,
+                width: 60,
+                height: 60,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHigh,
+                  color: item.bg,
                   shape: BoxShape.circle,
+                  border: Border.all(
+                    color: item.color.withValues(alpha: 0.3),
+                  ),
                 ),
-                child: Icon(item.icon, color: theme.colorScheme.primary),
+                child: Icon(item.icon, color: item.color, size: 24),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               item.label,
-              style: theme.textTheme.labelMedium?.copyWith(
-                fontWeight: FontWeight.w500,
+              style: theme.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -451,11 +597,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           children: [
             Text(
               l10n.dashboardRecentActivity,
-              style: theme.textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.onSurface,
+              ),
             ),
             TextButton(
               onPressed: () {},
+              style: TextButton.styleFrom(
+                foregroundColor: AppTheme.brandPurpleLight,
+              ),
               child: Text(l10n.dashboardSeeAll),
             ),
           ],
@@ -520,7 +671,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 12),
       color: theme.colorScheme.surfaceContainerLow,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(color: theme.colorScheme.outlineVariant),
+      ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         leading: CircleAvatar(
@@ -561,7 +715,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 12),
       color: theme.colorScheme.surfaceContainerLow,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(color: theme.colorScheme.outlineVariant),
+      ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         leading: CircleAvatar(
@@ -587,6 +744,468 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
         ),
         onTap: () {},
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// F4 — Owl Advisor Bottom Sheet
+// ─────────────────────────────────────────────────────────────
+
+class _OwlAdvisorSheet extends ConsumerStatefulWidget {
+  const _OwlAdvisorSheet();
+
+  @override
+  ConsumerState<_OwlAdvisorSheet> createState() => _OwlAdvisorSheetState();
+}
+
+class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
+  OwlState _owlState = OwlState.thinking;
+  bool _loaded = false;
+
+  // Placeholder recs — Claude API will return localized reasons in S15.
+  // For now we map ticker → l10n key so reasons render in the user's language.
+  static const _recs = [
+    (ticker: 'AAPL', name: 'Apple Inc.', suggested: 300, strong: true),
+    (ticker: 'VTI', name: 'Vanguard Total Market', suggested: 500, strong: true),
+    (ticker: 'BTC', name: 'Bitcoin', suggested: 200, strong: false),
+    (ticker: 'MSFT', name: 'Microsoft Corp.', suggested: 150, strong: true),
+    (ticker: 'IAU', name: 'iShares Gold Trust', suggested: 90, strong: false),
+  ];
+
+  static String localizedReason(AppLocalizations l10n, String ticker) {
+    return switch (ticker) {
+      'AAPL' => l10n.owlAiReasonAapl,
+      'VTI' => l10n.owlAiReasonVti,
+      'BTC' => l10n.owlAiReasonBtc,
+      'MSFT' => l10n.owlAiReasonMsft,
+      'IAU' => l10n.owlAiReasonIau,
+      _ => '',
+    };
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Simulate thinking delay — replaced by real API call in S15
+    Future.delayed(const Duration(milliseconds: 1800), () {
+      if (!mounted) return;
+      setState(() {
+        _owlState = OwlState.celebrating;
+        _loaded = true;
+      });
+      Future.delayed(const Duration(milliseconds: 700), () {
+        if (!mounted) return;
+        setState(() => _owlState = OwlState.idle);
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.92,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainer,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            border: const Border(
+              top: BorderSide(color: Color(0x596C63FF), width: 1),
+            ),
+          ),
+          child: Column(
+            children: [
+              // Handle
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 4),
+                child: Center(
+                  child: Container(
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.outlineVariant,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+              ),
+              // Header
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                child: Row(
+                  children: [
+                    OwlAiWidget(size: 44, state: _owlState),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.owlAiName,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          l10n.owlAiPoweredAdvisor,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: AppTheme.brandPurpleLight,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.close,
+                            color: theme.colorScheme.onSurfaceVariant, size: 16),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Divider
+              Divider(
+                  height: 1,
+                  color: Colors.white.withValues(alpha: 0.06),
+                  indent: 20,
+                  endIndent: 20),
+              // Context pills — read live data from providers
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _buildContextPills(l10n),
+                ),
+              ),
+              Divider(
+                  height: 1,
+                  color: Colors.white.withValues(alpha: 0.06),
+                  indent: 20,
+                  endIndent: 20),
+              const SizedBox(height: 4),
+              // Body
+              Expanded(
+                child: !_loaded
+                    ? _buildThinking(theme, l10n)
+                    : _buildRecList(theme, scrollController),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildThinking(ThemeData theme, AppLocalizations l10n) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const OwlAiWidget(size: 72, state: OwlState.thinking),
+          const SizedBox(height: 16),
+          Text(
+            l10n.owlAiAnalyzing,
+            style: theme.textTheme.bodyMedium
+                ?.copyWith(color: AppTheme.brandPurpleLight),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecList(ThemeData theme, ScrollController ctrl) {
+    final bottomPad = MediaQuery.of(context).padding.bottom + 80;
+    return ListView.builder(
+      controller: ctrl,
+      padding: EdgeInsets.fromLTRB(20, 8, 20, bottomPad),
+      itemCount: _recs.length,
+      itemBuilder: (context, i) {
+        return _RecCard(rec: _recs[i], index: i);
+      },
+    );
+  }
+
+  // Builds context pills from live data: real risk profile + cash from dashboard.
+  // Goal pill is intentionally informational ("Long-term") to avoid confusion
+  // with multiple risk profiles. S15 will replace with goal-specific data.
+  List<Widget> _buildContextPills(AppLocalizations l10n) {
+    final pills = <Widget>[];
+
+    final riskAsync = ref.watch(riskProfileProvider);
+    final risk = riskAsync.valueOrNull;
+    if (risk != null) {
+      final label = switch (risk.profile) {
+        'conservative' => l10n.riskProfileConservative,
+        'moderate' => l10n.riskProfileModerate,
+        'aggressive' => l10n.riskProfileAggressive,
+        _ => '',
+      };
+      if (label.isNotEmpty) {
+        pills.add(_pill('📊 ${l10n.owlAiPillRiskLabel}: $label'));
+      }
+    }
+
+    final cashAsync = ref.watch(restAvailableCashProvider);
+    final cash = cashAsync.valueOrNull;
+    final currency = ref.watch(displayCurrencyProvider);
+    if (cash != null) {
+      final formatted = CurrencyFormatter.formatWithCurrency(cash, currency);
+      pills.add(_pill('💵 ${l10n.owlAiPillCashLabel}: $formatted'));
+    }
+
+    pills.add(_pill('🎯 ${l10n.owlAiPillGoalLabel}'));
+    return pills;
+  }
+
+  Widget _pill(String label) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: cs.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: cs.outlineVariant),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: cs.onSurfaceVariant,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+}
+
+class _RecCard extends StatefulWidget {
+  final ({
+    String ticker,
+    String name,
+    int suggested,
+    bool strong
+  }) rec;
+  final int index;
+
+  const _RecCard({required this.rec, required this.index});
+
+  @override
+  State<_RecCard> createState() => _RecCardState();
+}
+
+class _RecCardState extends State<_RecCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _opacity;
+  late final Animation<Offset> _slide;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _opacity = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
+    _slide = Tween<Offset>(
+      begin: const Offset(0, 0.25),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
+
+    // Staggered delay per card
+    Future.delayed(Duration(milliseconds: 80 * widget.index), () {
+      if (mounted) _ctrl.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final r = widget.rec;
+
+    return FadeTransition(
+      opacity: _opacity,
+      child: SlideTransition(
+        position: _slide,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outlineVariant,
+            ),
+          ),
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  _tickerIcon(r.ticker),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(r.ticker,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                                color: theme.colorScheme.onSurface,
+                                fontWeight: FontWeight.w800)),
+                        Text(r.name,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant)),
+                      ],
+                    ),
+                  ),
+                  _strengthBadge(r.strong),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.only(left: 10),
+                decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(
+                        color: AppTheme.brandPurple.withValues(alpha: 0.5),
+                        width: 2),
+                  ),
+                ),
+                child: Text(
+                  _OwlAdvisorSheetState.localizedReason(
+                      AppLocalizations.of(context), r.ticker),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant, height: 1.5),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant),
+                      children: [
+                        TextSpan(text: '${AppLocalizations.of(context).owlAiSuggested} '),
+                        TextSpan(
+                          text: '\$${r.suggested}',
+                          style: TextStyle(
+                              color: theme.colorScheme.onSurface,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => context.push('/home/buy-asset'),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18, vertical: 8),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(colors: [
+                          AppTheme.brandPurple,
+                          AppTheme.brandPurpleLight
+                        ]),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context).owlAiBuyButton,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _tickerIcon(String ticker) {
+    final colors = {
+      'AAPL': [const Color(0xFF1d4ed8), const Color(0xFF3b82f6)],
+      'VTI': [const Color(0xFF065f46), const Color(0xFF10b981)],
+      'BTC': [const Color(0xFF78350f), const Color(0xFFf59e0b)],
+      'MSFT': [const Color(0xFF4c1d95), const Color(0xFF8b5cf6)],
+      'IAU': [const Color(0xFF881337), const Color(0xFFf43f5e)],
+    };
+    final c = colors[ticker] ??
+        [AppTheme.brandPurple, AppTheme.brandPurpleLight];
+
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: c,
+            begin: Alignment.topLeft, end: Alignment.bottomRight),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        ticker.length > 4 ? ticker.substring(0, 4) : ticker,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 10,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
+
+  Widget _strengthBadge(bool strong) {
+    final l10n = AppLocalizations.of(context);
+    final label = strong ? l10n.owlAiStrongBuy : l10n.owlAiModerateSignal;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: strong
+            ? const Color(0xFF4ade80).withValues(alpha: 0.12)
+            : const Color(0xFFfbbf24).withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: strong
+              ? const Color(0xFF4ade80).withValues(alpha: 0.35)
+              : const Color(0xFFfbbf24).withValues(alpha: 0.35),
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: strong ? const Color(0xFF4ade80) : const Color(0xFFfbbf24),
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }
