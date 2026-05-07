@@ -230,7 +230,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildHeader(
       ThemeData theme, AppLocalizations l10n, AsyncValue<String> userNameAsync) {
-    final displayName = userNameAsync.valueOrNull ?? '';
+    final rawName = userNameAsync.valueOrNull ?? '';
+    final firstName = _firstName(rawName);
     final greeting = _greeting();
 
     return Row(
@@ -246,13 +247,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
             ),
             const SizedBox(height: 2),
-            displayName.isEmpty
+            rawName.isEmpty
                 ? const SizedBox(height: 28)
                 : Text(
-                    displayName,
+                    firstName,
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: Colors.white,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
           ],
@@ -287,6 +288,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (hour < 12) return 'Good morning,';
     if (hour < 18) return 'Good afternoon,';
     return 'Good evening,';
+  }
+
+  // Extracts and capitalizes first name (e.g. "johnduartemoreno" → "John")
+  String _firstName(String name) {
+    if (name.isEmpty) return '';
+    // If name has spaces, take first word; otherwise capitalize whole string
+    final part = name.split(' ').first;
+    return part[0].toUpperCase() + part.substring(1).toLowerCase();
   }
 
   Widget _buildBalanceCard(
@@ -410,7 +419,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: AppTheme.darkElevated,
+          color: theme.colorScheme.surfaceContainerHigh,
           border: Border.all(
             color: AppTheme.brandPurple.withValues(alpha: 0.35),
           ),
@@ -436,7 +445,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       Text(
                         'Owl AI',
                         style: theme.textTheme.titleSmall?.copyWith(
-                          color: Colors.white,
+                          color: theme.colorScheme.onSurface,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -465,7 +474,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '5 personalized picks ready for you',
+                    'What should we invest in today? 🦉',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -502,33 +511,38 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Widget _buildQuickActions(ThemeData theme, AppLocalizations l10n) {
+    const buyColor = Color(0xFF4ade80);
+    const sellColor = Color(0xFFf87171);
+    const topUpColor = AppTheme.brandPurpleLight;
+    const withdrawColor = Color(0xFFfbbf24);
+
     final actions = [
       (
         icon: Icons.trending_up_rounded,
         label: l10n.dashboardBuy,
-        color: const Color(0xFF4ade80),
-        bg: const Color(0xFF0F2A1A),
+        color: buyColor,
+        bg: buyColor.withValues(alpha: 0.14),
         onTap: () => context.go('/home/buy-asset'),
       ),
       (
         icon: Icons.trending_down_rounded,
         label: l10n.dashboardSell,
-        color: const Color(0xFFf87171),
-        bg: const Color(0xFF2A0F0F),
+        color: sellColor,
+        bg: sellColor.withValues(alpha: 0.14),
         onTap: () => context.go('/home/sell-asset'),
       ),
       (
         icon: Icons.add_card_rounded,
         label: l10n.dashboardTopUp,
-        color: AppTheme.brandPurpleLight,
-        bg: AppTheme.darkElevated,
+        color: topUpColor,
+        bg: topUpColor.withValues(alpha: 0.14),
         onTap: () => context.go('/home/top-up'),
       ),
       (
         icon: Icons.file_download_outlined,
         label: l10n.dashboardWithdraw,
-        color: const Color(0xFFfbbf24),
-        bg: const Color(0xFF2A1F00),
+        color: withdrawColor,
+        bg: withdrawColor.withValues(alpha: 0.14),
         onTap: () => showModalBottomSheet(
           context: context,
           isScrollControlled: true,
@@ -584,7 +598,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               l10n.dashboardRecentActivity,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: Colors.white,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             TextButton(
@@ -825,14 +839,11 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
       maxChildSize: 0.95,
       builder: (context, scrollController) {
         return Container(
-          decoration: const BoxDecoration(
-            color: AppTheme.darkElevated,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-            border: Border(
-              top: BorderSide(
-                color: Color(0x596C63FF),
-                width: 1,
-              ),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainer,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            border: const Border(
+              top: BorderSide(color: Color(0x596C63FF), width: 1),
             ),
           ),
           child: Column(
@@ -845,7 +856,7 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
                     width: 36,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF3A3A50),
+                      color: theme.colorScheme.outlineVariant,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -865,7 +876,7 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
                         Text(
                           'Owl AI',
                           style: theme.textTheme.titleMedium?.copyWith(
-                            color: Colors.white,
+                            color: theme.colorScheme.onSurface,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -884,11 +895,11 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
                         width: 30,
                         height: 30,
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.08),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.close,
-                            color: Colors.white54, size: 16),
+                        child: Icon(Icons.close,
+                            color: theme.colorScheme.onSurfaceVariant, size: 16),
                       ),
                     ),
                   ],
@@ -900,16 +911,16 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
                   color: Colors.white.withValues(alpha: 0.06),
                   indent: 20,
                   endIndent: 20),
-              // Context pills
+              // Context pills — Wrap prevents overflow on small screens
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                child: Row(
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
                     _pill('📊 Moderate risk'),
-                    const SizedBox(width: 8),
                     _pill('🎯 Retire in 20y'),
-                    const SizedBox(width: 8),
                     _pill('💵 Cash ready'),
                   ],
                 ),
@@ -951,9 +962,10 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
   }
 
   Widget _buildRecList(ThemeData theme, ScrollController ctrl) {
+    final bottomPad = MediaQuery.of(context).padding.bottom + 80;
     return ListView.builder(
       controller: ctrl,
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+      padding: EdgeInsets.fromLTRB(20, 8, 20, bottomPad),
       itemCount: _recs.length,
       itemBuilder: (context, i) {
         return _RecCard(rec: _recs[i], index: i);
@@ -962,17 +974,18 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
   }
 
   Widget _pill(String label) {
+    final cs = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: cs.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        border: Border.all(color: cs.outlineVariant),
       ),
       child: Text(
         label,
-        style: const TextStyle(
-          color: Colors.white70,
+        style: TextStyle(
+          color: cs.onSurfaceVariant,
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
@@ -1041,9 +1054,11 @@ class _RecCardState extends State<_RecCard>
         child: Container(
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
-            color: AppTheme.darkSurface,
+            color: Theme.of(context).colorScheme.surfaceContainerLow,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outlineVariant,
+            ),
           ),
           padding: const EdgeInsets.all(14),
           child: Column(
@@ -1059,11 +1074,11 @@ class _RecCardState extends State<_RecCard>
                       children: [
                         Text(r.ticker,
                             style: theme.textTheme.titleSmall?.copyWith(
-                                color: Colors.white,
+                                color: theme.colorScheme.onSurface,
                                 fontWeight: FontWeight.w800)),
                         Text(r.name,
-                            style: theme.textTheme.labelSmall
-                                ?.copyWith(color: Colors.white38)),
+                            style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant)),
                       ],
                     ),
                   ),
@@ -1073,16 +1088,17 @@ class _RecCardState extends State<_RecCard>
               const SizedBox(height: 10),
               Container(
                 padding: const EdgeInsets.only(left: 10),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   border: Border(
                     left: BorderSide(
-                        color: Color(0x806C63FF), width: 2),
+                        color: AppTheme.brandPurple.withValues(alpha: 0.5),
+                        width: 2),
                   ),
                 ),
                 child: Text(
                   r.reason,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: Colors.white60, height: 1.5),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant, height: 1.5),
                 ),
               ),
               const SizedBox(height: 12),
@@ -1091,14 +1107,14 @@ class _RecCardState extends State<_RecCard>
                 children: [
                   RichText(
                     text: TextSpan(
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: Colors.white38),
+                      style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant),
                       children: [
                         const TextSpan(text: 'Suggested: '),
                         TextSpan(
                           text: '\$${r.suggested}',
-                          style: const TextStyle(
-                              color: Colors.white,
+                          style: TextStyle(
+                              color: theme.colorScheme.onSurface,
                               fontWeight: FontWeight.w700),
                         ),
                       ],
