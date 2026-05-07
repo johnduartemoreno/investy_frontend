@@ -233,39 +233,38 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                   ?.copyWith(color: colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 10),
-            Row(
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
               children: [
                 // Preset chips
                 ...List.generate(_presets.length, (i) {
                   final isActive = _activePreset == i;
-                  return Padding(
-                    padding: EdgeInsets.only(right: i < _presets.length ? 6 : 0),
-                    child: GestureDetector(
-                      onTap: () => _selectPreset(i),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 150),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 9),
-                        decoration: BoxDecoration(
+                  return GestureDetector(
+                    onTap: () => _selectPreset(i),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 150),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 9),
+                      decoration: BoxDecoration(
+                        color: isActive
+                            ? colorScheme.primaryContainer
+                            : colorScheme.surfaceContainerLow,
+                        borderRadius: BorderRadius.circular(20),
+                        border: isActive
+                            ? Border.all(
+                                color: colorScheme.primary, width: 1.5)
+                            : null,
+                      ),
+                      child: Text(
+                        _presets[i].label,
+                        style: theme.textTheme.labelLarge?.copyWith(
                           color: isActive
-                              ? colorScheme.primaryContainer
-                              : colorScheme.surfaceContainerLow,
-                          borderRadius: BorderRadius.circular(20),
-                          border: isActive
-                              ? Border.all(
-                                  color: colorScheme.primary, width: 1.5)
-                              : null,
-                        ),
-                        child: Text(
-                          _presets[i].label,
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            color: isActive
-                                ? colorScheme.primary
-                                : colorScheme.onSurfaceVariant,
-                            fontWeight: isActive
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
+                              ? colorScheme.primary
+                              : colorScheme.onSurfaceVariant,
+                          fontWeight: isActive
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                       ),
                     ),
