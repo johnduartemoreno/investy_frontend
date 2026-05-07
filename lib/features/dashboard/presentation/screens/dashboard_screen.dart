@@ -9,6 +9,7 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/widgets/owl_ai_widget.dart';
 import '../../../../l10n/app_localizations.dart';
 
+import '../../../risk_profile/presentation/providers/risk_provider.dart';
 import '../../data/datasources/dashboard_remote_data_source.dart';
 import '../../data/models/dashboard_response_model.dart';
 import '../widgets/withdraw_bottom_sheet.dart';
@@ -752,60 +753,37 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 // F4 — Owl Advisor Bottom Sheet
 // ─────────────────────────────────────────────────────────────
 
-class _OwlAdvisorSheet extends StatefulWidget {
+class _OwlAdvisorSheet extends ConsumerStatefulWidget {
   const _OwlAdvisorSheet();
 
   @override
-  State<_OwlAdvisorSheet> createState() => _OwlAdvisorSheetState();
+  ConsumerState<_OwlAdvisorSheet> createState() => _OwlAdvisorSheetState();
 }
 
-class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
+class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
   OwlState _owlState = OwlState.thinking;
   bool _loaded = false;
 
-  // Placeholder recs — replaced by Claude API in S15
+  // Placeholder recs — Claude API will return localized reasons in S15.
+  // For now we map ticker → l10n key so reasons render in the user's language.
   static const _recs = [
-    (
-      ticker: 'AAPL',
-      name: 'Apple Inc.',
-      reason:
-          'Strong brand moat + services revenue growing 15% YoY. Low-volatility blue chip aligned with moderate risk.',
-      suggested: 300,
-      strong: true,
-    ),
-    (
-      ticker: 'VTI',
-      name: 'Vanguard Total Market',
-      reason:
-          'Broad diversification at 0.03% expense ratio. Ideal anchor for a 20-year retirement goal.',
-      suggested: 500,
-      strong: true,
-    ),
-    (
-      ticker: 'BTC',
-      name: 'Bitcoin',
-      reason:
-          '5% allocation adds asymmetric upside. Your 0% crypto exposure leaves return on the table for a 20-year horizon.',
-      suggested: 200,
-      strong: false,
-    ),
-    (
-      ticker: 'MSFT',
-      name: 'Microsoft Corp.',
-      reason:
-          'Azure + AI (Copilot) compound runway. Moderate volatility — complements AAPL without sector overlap.',
-      suggested: 150,
-      strong: true,
-    ),
-    (
-      ticker: 'IAU',
-      name: 'iShares Gold Trust',
-      reason:
-          'Inflation hedge for long horizons. ETF form adds stability when equities correct — zero custody risk.',
-      suggested: 90,
-      strong: false,
-    ),
+    (ticker: 'AAPL', name: 'Apple Inc.', suggested: 300, strong: true),
+    (ticker: 'VTI', name: 'Vanguard Total Market', suggested: 500, strong: true),
+    (ticker: 'BTC', name: 'Bitcoin', suggested: 200, strong: false),
+    (ticker: 'MSFT', name: 'Microsoft Corp.', suggested: 150, strong: true),
+    (ticker: 'IAU', name: 'iShares Gold Trust', suggested: 90, strong: false),
   ];
+
+  static String localizedReason(AppLocalizations l10n, String ticker) {
+    return switch (ticker) {
+      'AAPL' => l10n.owlAiReasonAapl,
+      'VTI' => l10n.owlAiReasonVti,
+      'BTC' => l10n.owlAiReasonBtc,
+      'MSFT' => l10n.owlAiReasonMsft,
+      'IAU' => l10n.owlAiReasonIau,
+      _ => '',
+    };
+  }
 
   @override
   void initState() {
@@ -907,18 +885,14 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
                   color: Colors.white.withValues(alpha: 0.06),
                   indent: 20,
                   endIndent: 20),
-              // Context pills — Wrap prevents overflow on small screens
+              // Context pills — read live data from providers
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 child: Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: [
-                    _pill('📊 Moderate risk'),
-                    _pill('🎯 Retire in 20y'),
-                    _pill('💵 Cash ready'),
-                  ],
+                  children: _buildContextPills(l10n),
                 ),
               ),
               Divider(
@@ -969,6 +943,38 @@ class _OwlAdvisorSheetState extends State<_OwlAdvisorSheet> {
     );
   }
 
+  // Builds context pills from live data: real risk profile + cash from dashboard.
+  // Goal pill is intentionally informational ("Long-term") to avoid confusion
+  // with multiple risk profiles. S15 will replace with goal-specific data.
+  List<Widget> _buildContextPills(AppLocalizations l10n) {
+    final pills = <Widget>[];
+
+    final riskAsync = ref.watch(riskProfileProvider);
+    final risk = riskAsync.valueOrNull;
+    if (risk != null) {
+      final label = switch (risk.profile) {
+        'conservative' => l10n.riskProfileConservative,
+        'moderate' => l10n.riskProfileModerate,
+        'aggressive' => l10n.riskProfileAggressive,
+        _ => '',
+      };
+      if (label.isNotEmpty) {
+        pills.add(_pill('📊 ${l10n.owlAiPillRiskLabel}: $label'));
+      }
+    }
+
+    final cashAsync = ref.watch(restAvailableCashProvider);
+    final cash = cashAsync.valueOrNull;
+    final currency = ref.watch(displayCurrencyProvider);
+    if (cash != null) {
+      final formatted = CurrencyFormatter.formatWithCurrency(cash, currency);
+      pills.add(_pill('💵 ${l10n.owlAiPillCashLabel}: $formatted'));
+    }
+
+    pills.add(_pill('🎯 ${l10n.owlAiPillGoalLabel}'));
+    return pills;
+  }
+
   Widget _pill(String label) {
     final cs = Theme.of(context).colorScheme;
     return Container(
@@ -994,7 +1000,6 @@ class _RecCard extends StatefulWidget {
   final ({
     String ticker,
     String name,
-    String reason,
     int suggested,
     bool strong
   }) rec;
@@ -1091,7 +1096,8 @@ class _RecCardState extends State<_RecCard>
                   ),
                 ),
                 child: Text(
-                  r.reason,
+                  _OwlAdvisorSheetState.localizedReason(
+                      AppLocalizations.of(context), r.ticker),
                   style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant, height: 1.5),
                 ),
@@ -1116,7 +1122,10 @@ class _RecCardState extends State<_RecCard>
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.pop(context),
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.go('/home/buy-asset');
+                    },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 18, vertical: 8),

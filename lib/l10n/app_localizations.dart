@@ -1876,16 +1876,79 @@ abstract class AppLocalizations {
   /// **'Could not load risk profile.'**
   String get riskProfileLoadError;
 
+  /// No description provided for @owlAiName.
+  ///
+  /// In en, this message translates to:
+  /// **'Owl AI'**
   String get owlAiName;
+
+  /// No description provided for @owlAiAdvisorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'AI ADVISOR'**
   String get owlAiAdvisorLabel;
+
+  /// No description provided for @owlAiTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'What should we invest in today? 🦉'**
   String get owlAiTagline;
+
+  /// No description provided for @owlAiPoweredAdvisor.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-powered advisor'**
   String get owlAiPoweredAdvisor;
+
+  /// No description provided for @owlAiAnalyzing.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing your portfolio…'**
   String get owlAiAnalyzing;
+
+  /// No description provided for @owlAiStrongBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong buy'**
   String get owlAiStrongBuy;
+
+  /// No description provided for @owlAiModerateSignal.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
   String get owlAiModerateSignal;
+
+  /// No description provided for @owlAiSuggested.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested:'**
   String get owlAiSuggested;
+
+  /// No description provided for @owlAiBuyButton.
+  ///
+  /// In en, this message translates to:
+  /// **'BUY →'**
   String get owlAiBuyButton;
+
+  /// No description provided for @owlAiRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh analysis'**
   String get owlAiRefresh;
+
+  String get owlAiPillRiskLabel;
+  String get owlAiPillCashLabel;
+  String get owlAiPillGoalLabel;
+  String get owlAiReasonAapl;
+  String get owlAiReasonVti;
+  String get owlAiReasonBtc;
+  String get owlAiReasonMsft;
+  String get owlAiReasonIau;
+
+  /// No description provided for @portfolioActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Portfolio active'**
   String get portfolioActive;
 }
 
