@@ -1122,10 +1122,7 @@ class _RecCardState extends State<_RecCard>
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                      context.go('/home/buy-asset');
-                    },
+                    onTap: () => context.push('/home/buy-asset'),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 18, vertical: 8),
