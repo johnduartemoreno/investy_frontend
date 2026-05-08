@@ -866,6 +866,37 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                       ],
                     ),
                     const Spacer(),
+                    if (recsAsync is AsyncData && _owlState != OwlState.thinking) ...[
+                      GestureDetector(
+                        onTap: _refresh,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                          margin: const EdgeInsets.only(right: 8),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.auto_awesome_rounded,
+                                  color: Colors.white, size: 13),
+                              const SizedBox(width: 5),
+                              Text(
+                                l10n.owlAiAskNewRecs,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
                       child: Container(
@@ -982,44 +1013,12 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
   }
 
   Widget _buildRecList(ThemeData theme, ScrollController ctrl, List<RecommendationModel> recs) {
-    final l10n = AppLocalizations.of(context);
     final bottomPad = MediaQuery.of(context).padding.bottom + 80;
-    return ListView(
+    return ListView.builder(
       controller: ctrl,
       padding: EdgeInsets.fromLTRB(20, 8, 20, bottomPad),
-      children: [
-        ...List.generate(recs.length, (i) => _RecCard(rec: recs[i], index: i)),
-        const SizedBox(height: 8),
-        // Refresh button — descriptive, full-width, at end of list
-        GestureDetector(
-          onTap: _refresh,
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: AppTheme.brandPurple.withValues(alpha: 0.3),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.auto_awesome_rounded,
-                    size: 16, color: AppTheme.brandPurpleLight),
-                const SizedBox(width: 8),
-                Text(
-                  l10n.owlAiAskNewRecs,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: AppTheme.brandPurpleLight,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+      itemCount: recs.length,
+      itemBuilder: (context, i) => _RecCard(rec: recs[i], index: i),
     );
   }
 
