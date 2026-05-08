@@ -1019,8 +1019,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get greetingMorning => 'Good morning,';
+
   @override
   String get greetingAfternoon => 'Good afternoon,';
+
   @override
   String get greetingEvening => 'Good evening,';
 }
