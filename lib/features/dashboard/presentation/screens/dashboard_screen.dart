@@ -857,50 +857,47 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                               color: theme.colorScheme.onSurface,
                               fontWeight: FontWeight.w700,
                             ),
-                            overflow: TextOverflow.ellipsis,
                           ),
                           Text(
                             l10n.owlAiPoweredAdvisor,
                             style: theme.textTheme.labelSmall?.copyWith(
                               color: AppTheme.brandPurpleLight,
                             ),
-                            overflow: TextOverflow.ellipsis,
                           ),
+                          if (recsAsync is AsyncData && _owlState != OwlState.thinking) ...[
+                            const SizedBox(height: 8),
+                            GestureDetector(
+                              onTap: _refresh,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.auto_awesome_rounded,
+                                        color: Colors.white, size: 13),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      l10n.owlAiAskNewRecs,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
-                    if (recsAsync is AsyncData && _owlState != OwlState.thinking) ...[
-                      const SizedBox(width: 8),
-                      GestureDetector(
-                        onTap: _refresh,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-                          margin: const EdgeInsets.only(right: 8),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.auto_awesome_rounded,
-                                  color: Colors.white, size: 13),
-                              const SizedBox(width: 5),
-                              Text(
-                                l10n.owlAiAskNewRecs,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
                       child: Container(
