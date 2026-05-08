@@ -6,7 +6,7 @@ part of 'recommendation_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$recommendationsHash() => r'9f4700ae3f637ecc9a53337c122485448c9e9c18';
+String _$recommendationsHash() => r'c8961a2b562cdfb5ebc7d4935bdf65c425539082';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,6 +30,7 @@ class _SystemHash {
 }
 
 /// Fetches AI recommendations for the current user.
+/// Reasons are returned in the user's current app language (en/es/pt).
 /// Pass [forceRefresh] = true to bypass the server-side 24h cache.
 ///
 /// Copied from [recommendations].
@@ -37,18 +38,21 @@ class _SystemHash {
 const recommendationsProvider = RecommendationsFamily();
 
 /// Fetches AI recommendations for the current user.
+/// Reasons are returned in the user's current app language (en/es/pt).
 /// Pass [forceRefresh] = true to bypass the server-side 24h cache.
 ///
 /// Copied from [recommendations].
 class RecommendationsFamily
     extends Family<AsyncValue<List<RecommendationModel>>> {
   /// Fetches AI recommendations for the current user.
+  /// Reasons are returned in the user's current app language (en/es/pt).
   /// Pass [forceRefresh] = true to bypass the server-side 24h cache.
   ///
   /// Copied from [recommendations].
   const RecommendationsFamily();
 
   /// Fetches AI recommendations for the current user.
+  /// Reasons are returned in the user's current app language (en/es/pt).
   /// Pass [forceRefresh] = true to bypass the server-side 24h cache.
   ///
   /// Copied from [recommendations].
@@ -85,12 +89,14 @@ class RecommendationsFamily
 }
 
 /// Fetches AI recommendations for the current user.
+/// Reasons are returned in the user's current app language (en/es/pt).
 /// Pass [forceRefresh] = true to bypass the server-side 24h cache.
 ///
 /// Copied from [recommendations].
 class RecommendationsProvider
     extends AutoDisposeFutureProvider<List<RecommendationModel>> {
   /// Fetches AI recommendations for the current user.
+  /// Reasons are returned in the user's current app language (en/es/pt).
   /// Pass [forceRefresh] = true to bypass the server-side 24h cache.
   ///
   /// Copied from [recommendations].

@@ -40,9 +40,11 @@ abstract class DashboardRemoteDataSource {
   Future<List<AssetSearchResultModel>> searchAssets(String query);
 
   /// Fetches AI-generated investment recommendations for [userId].
+  /// [language] sets the language of AI-generated reasons (en/es/pt).
   /// Pass [forceRefresh] = true to bypass the server-side cache.
   Future<List<RecommendationModel>> getRecommendations(
     String userId, {
+    String language = 'en',
     bool forceRefresh = false,
   });
 }
@@ -112,11 +114,15 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
   @override
   Future<List<RecommendationModel>> getRecommendations(
     String userId, {
+    String language = 'en',
     bool forceRefresh = false,
   }) async {
+    final params = <String, String>{'lang': language};
+    if (forceRefresh) params['refresh'] = 'true';
     final response = await _dio.get(
       '/api/v1/users/$userId/recommendations',
-      queryParameters: forceRefresh ? {'refresh': 'true'} : null,
+      queryParameters: params,
+      options: Options(headers: {'Accept-Language': language}),
     );
     final data = response.data as Map<String, dynamic>;
     final list = data['recommendations'] as List<dynamic>;
