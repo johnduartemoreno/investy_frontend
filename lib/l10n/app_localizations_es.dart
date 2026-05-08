@@ -997,6 +997,15 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudieron cargar las recomendaciones. Toca para reintentar.';
 
   @override
+  String get owlAiRefreshing => 'Actualizando tus recomendaciones…';
+
+  @override
+  String get owlAiRefreshingSubtitle => 'Analizando tu portafolio y metas';
+
+  @override
+  String get owlAiAskNewRecs => 'Actualizar';
+
+  @override
   String get owlAiPillRiskLabel => 'Riesgo';
 
   @override
@@ -1004,6 +1013,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get owlAiPillGoalLabel => 'Largo plazo';
+
+  @override
+  String get owlAiCashAvailable => 'Disponible para invertir';
+
+  @override
+  String get owlAiContextProfile => 'perfil';
+
+  @override
+  String get owlAiContextCash => 'disponibles';
+
+  @override
+  String get owlAiContextGoalsAnd => 'y';
+
+  @override
+  String get owlAiContextGoalsMore => 'metas más';
 
   @override
   String get owlAiReasonAapl =>
