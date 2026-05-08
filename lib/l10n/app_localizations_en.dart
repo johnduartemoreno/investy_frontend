@@ -986,6 +986,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get owlAiRefresh => 'Refresh analysis';
 
   @override
+  String get owlAiUnavailable => 'AI advisor is temporarily unavailable.';
+
+  @override
+  String get owlAiErrorRetry => 'Could not load recommendations. Tap to retry.';
+
+  @override
   String get owlAiPillRiskLabel => 'Risk';
 
   @override

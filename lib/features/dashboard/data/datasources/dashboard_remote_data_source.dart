@@ -7,6 +7,7 @@ import '../models/asset_search_result_model.dart';
 import '../models/create_goal_request_model.dart';
 import '../models/dashboard_response_model.dart';
 import '../models/goal_response_model.dart';
+import '../models/recommendation_model.dart';
 import '../models/transaction_request_model.dart';
 import '../../../../features/portfolio/data/models/portfolio_response_model.dart';
 
@@ -37,6 +38,13 @@ abstract class DashboardRemoteDataSource {
 
   /// Searches assets by symbol or name prefix. Returns up to 10 results.
   Future<List<AssetSearchResultModel>> searchAssets(String query);
+
+  /// Fetches AI-generated investment recommendations for [userId].
+  /// Pass [forceRefresh] = true to bypass the server-side cache.
+  Future<List<RecommendationModel>> getRecommendations(
+    String userId, {
+    bool forceRefresh = false,
+  });
 }
 
 class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
@@ -98,6 +106,22 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
     final list = response.data as List<dynamic>;
     return list
         .map((e) => AssetSearchResultModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<List<RecommendationModel>> getRecommendations(
+    String userId, {
+    bool forceRefresh = false,
+  }) async {
+    final response = await _dio.get(
+      '/api/v1/users/$userId/recommendations',
+      queryParameters: forceRefresh ? {'refresh': 'true'} : null,
+    );
+    final data = response.data as Map<String, dynamic>;
+    final list = data['recommendations'] as List<dynamic>;
+    return list
+        .map((e) => RecommendationModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
 }

@@ -396,6 +396,8 @@
   "owlAiSuggested": "Suggested:",
   "owlAiBuyButton": "BUY →",
   "owlAiRefresh": "Refresh analysis",
+  "owlAiUnavailable": "AI advisor is temporarily unavailable.",
+  "owlAiErrorRetry": "Could not load recommendations. Tap to retry.",
   "owlAiPillRiskLabel": "Risk",
   "owlAiPillCashLabel": "Cash",
   "owlAiPillGoalLabel": "Long-term",

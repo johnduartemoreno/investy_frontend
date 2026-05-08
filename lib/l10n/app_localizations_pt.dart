@@ -991,6 +991,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String get owlAiRefresh => 'Atualizar análise';
 
   @override
+  String get owlAiUnavailable =>
+      'O assistente IA está temporariamente indisponível.';
+
+  @override
+  String get owlAiErrorRetry =>
+      'Não foi possível carregar as recomendações. Toque para tentar novamente.';
+
+  @override
   String get owlAiPillRiskLabel => 'Risco';
 
   @override

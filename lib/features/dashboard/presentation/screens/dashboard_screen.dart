@@ -12,6 +12,8 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../risk_profile/presentation/providers/risk_provider.dart';
 import '../../data/datasources/dashboard_remote_data_source.dart';
 import '../../data/models/dashboard_response_model.dart';
+import '../../data/models/recommendation_model.dart';
+import '../providers/recommendation_provider.dart';
 import '../widgets/withdraw_bottom_sheet.dart';
 import '../../domain/entities/contribution.dart';
 import '../../domain/entities/transaction.dart';
@@ -762,43 +764,25 @@ class _OwlAdvisorSheet extends ConsumerStatefulWidget {
 
 class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
   OwlState _owlState = OwlState.thinking;
-  bool _loaded = false;
+  bool _forceRefresh = false;
 
-  // Placeholder recs — Claude API will return localized reasons in S15.
-  // For now we map ticker → l10n key so reasons render in the user's language.
-  static const _recs = [
-    (ticker: 'AAPL', name: 'Apple Inc.', suggested: 300, strong: true),
-    (ticker: 'VTI', name: 'Vanguard Total Market', suggested: 500, strong: true),
-    (ticker: 'BTC', name: 'Bitcoin', suggested: 200, strong: false),
-    (ticker: 'MSFT', name: 'Microsoft Corp.', suggested: 150, strong: true),
-    (ticker: 'IAU', name: 'iShares Gold Trust', suggested: 90, strong: false),
-  ];
-
-  static String localizedReason(AppLocalizations l10n, String ticker) {
-    return switch (ticker) {
-      'AAPL' => l10n.owlAiReasonAapl,
-      'VTI' => l10n.owlAiReasonVti,
-      'BTC' => l10n.owlAiReasonBtc,
-      'MSFT' => l10n.owlAiReasonMsft,
-      'IAU' => l10n.owlAiReasonIau,
-      _ => '',
-    };
+  void _onRecsLoaded() {
+    if (!mounted) return;
+    setState(() => _owlState = OwlState.celebrating);
+    Future.delayed(const Duration(milliseconds: 700), () {
+      if (!mounted) return;
+      setState(() => _owlState = OwlState.idle);
+    });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    // Simulate thinking delay — replaced by real API call in S15
-    Future.delayed(const Duration(milliseconds: 1800), () {
-      if (!mounted) return;
-      setState(() {
-        _owlState = OwlState.celebrating;
-        _loaded = true;
-      });
-      Future.delayed(const Duration(milliseconds: 700), () {
-        if (!mounted) return;
-        setState(() => _owlState = OwlState.idle);
-      });
+  void _refresh() {
+    setState(() {
+      _owlState = OwlState.thinking;
+      _forceRefresh = true;
+    });
+    ref.invalidate(recommendationsProvider(forceRefresh: true));
+    Future.microtask(() {
+      if (mounted) setState(() => _forceRefresh = false);
     });
   }
 
@@ -806,6 +790,14 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final recsAsync = ref.watch(recommendationsProvider(forceRefresh: _forceRefresh));
+
+    // Trigger owl celebrate animation when recs load successfully
+    ref.listen(recommendationsProvider(forceRefresh: _forceRefresh), (prev, next) {
+      if (next is AsyncData && prev is! AsyncData) {
+        _onRecsLoaded();
+      }
+    });
 
     return DraggableScrollableSheet(
       initialChildSize: 0.92,
@@ -863,6 +855,22 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                       ],
                     ),
                     const Spacer(),
+                    // Refresh button
+                    if (recsAsync is AsyncData)
+                      GestureDetector(
+                        onTap: _refresh,
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          margin: const EdgeInsets.only(right: 8),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(Icons.refresh,
+                              color: theme.colorScheme.onSurfaceVariant, size: 16),
+                        ),
+                      ),
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
                       child: Container(
@@ -901,11 +909,13 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                   indent: 20,
                   endIndent: 20),
               const SizedBox(height: 4),
-              // Body
+              // Body — driven by the recommendations provider
               Expanded(
-                child: !_loaded
-                    ? _buildThinking(theme, l10n)
-                    : _buildRecList(theme, scrollController),
+                child: recsAsync.when(
+                  loading: () => _buildThinking(theme, l10n),
+                  error: (e, _) => _buildError(theme, l10n, e),
+                  data: (recs) => _buildRecList(theme, scrollController, recs),
+                ),
               ),
             ],
           ),
@@ -931,14 +941,48 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
     );
   }
 
-  Widget _buildRecList(ThemeData theme, ScrollController ctrl) {
+  Widget _buildError(ThemeData theme, AppLocalizations l10n, Object error) {
+    final isNotConfigured = error.toString().contains('ERR_AI_NOT_CONFIGURED') ||
+        error.toString().contains('503');
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.cloud_off_outlined,
+                size: 48, color: theme.colorScheme.onSurfaceVariant),
+            const SizedBox(height: 16),
+            Text(
+              isNotConfigured
+                  ? l10n.owlAiUnavailable
+                  : l10n.owlAiErrorRetry,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
+            if (!isNotConfigured) ...[
+              const SizedBox(height: 20),
+              FilledButton.icon(
+                onPressed: _refresh,
+                icon: const Icon(Icons.refresh, size: 16),
+                label: Text(l10n.owlAiRefresh),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecList(ThemeData theme, ScrollController ctrl, List<RecommendationModel> recs) {
     final bottomPad = MediaQuery.of(context).padding.bottom + 80;
     return ListView.builder(
       controller: ctrl,
       padding: EdgeInsets.fromLTRB(20, 8, 20, bottomPad),
-      itemCount: _recs.length,
+      itemCount: recs.length,
       itemBuilder: (context, i) {
-        return _RecCard(rec: _recs[i], index: i);
+        return _RecCard(rec: recs[i], index: i);
       },
     );
   }
@@ -997,12 +1041,7 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
 }
 
 class _RecCard extends StatefulWidget {
-  final ({
-    String ticker,
-    String name,
-    int suggested,
-    bool strong
-  }) rec;
+  final RecommendationModel rec;
   final int index;
 
   const _RecCard({required this.rec, required this.index});
@@ -1045,7 +1084,9 @@ class _RecCardState extends State<_RecCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final r = widget.rec;
+    final suggestedDollars = (r.suggestedAmountCents / 100).toStringAsFixed(0);
 
     return FadeTransition(
       opacity: _opacity,
@@ -1096,8 +1137,7 @@ class _RecCardState extends State<_RecCard>
                   ),
                 ),
                 child: Text(
-                  _OwlAdvisorSheetState.localizedReason(
-                      AppLocalizations.of(context), r.ticker),
+                  r.reason,
                   style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant, height: 1.5),
                 ),
@@ -1111,9 +1151,9 @@ class _RecCardState extends State<_RecCard>
                       style: theme.textTheme.labelSmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant),
                       children: [
-                        TextSpan(text: '${AppLocalizations.of(context).owlAiSuggested} '),
+                        TextSpan(text: '${l10n.owlAiSuggested} '),
                         TextSpan(
-                          text: '\$${r.suggested}',
+                          text: '\$$suggestedDollars',
                           style: TextStyle(
                               color: theme.colorScheme.onSurface,
                               fontWeight: FontWeight.w700),
@@ -1134,7 +1174,7 @@ class _RecCardState extends State<_RecCard>
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        AppLocalizations.of(context).owlAiBuyButton,
+                        l10n.owlAiBuyButton,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,

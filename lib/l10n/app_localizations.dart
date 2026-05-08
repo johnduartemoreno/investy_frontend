@@ -1936,6 +1936,18 @@ abstract class AppLocalizations {
   /// **'Refresh analysis'**
   String get owlAiRefresh;
 
+  /// No description provided for @owlAiUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'AI advisor is temporarily unavailable.'**
+  String get owlAiUnavailable;
+
+  /// No description provided for @owlAiErrorRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load recommendations. Tap to retry.'**
+  String get owlAiErrorRetry;
+
   /// No description provided for @owlAiPillRiskLabel.
   ///
   /// In en, this message translates to:
