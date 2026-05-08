@@ -986,6 +986,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get owlAiRefresh => 'Refresh analysis';
 
   @override
+  String get owlAiUnavailable => 'AI advisor is temporarily unavailable.';
+
+  @override
+  String get owlAiErrorRetry => 'Could not load recommendations. Tap to retry.';
+
+  @override
+  String get owlAiRefreshing => 'Updating your recommendations…';
+
+  @override
+  String get owlAiRefreshingSubtitle => 'Analyzing your portfolio and goals';
+
+  @override
+  String get owlAiAskNewRecs => 'Refresh';
+
+  @override
   String get owlAiPillRiskLabel => 'Risk';
 
   @override
@@ -993,6 +1008,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get owlAiPillGoalLabel => 'Long-term';
+
+  @override
+  String get owlAiCashAvailable => 'Available to invest';
+
+  @override
+  String get owlAiContextProfile => 'profile';
+
+  @override
+  String get owlAiContextCash => 'available';
+
+  @override
+  String get owlAiContextGoalsAnd => 'and';
+
+  @override
+  String get owlAiContextGoalsMore => 'more goals';
 
   @override
   String get owlAiReasonAapl =>

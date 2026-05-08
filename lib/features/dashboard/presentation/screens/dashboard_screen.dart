@@ -4,14 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/network/dio_client.dart';
+import '../../../../core/providers/locale_provider.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/widgets/owl_ai_widget.dart';
 import '../../../../l10n/app_localizations.dart';
 
+import '../../../goals/presentation/providers/rest_goals_provider.dart';
 import '../../../risk_profile/presentation/providers/risk_provider.dart';
 import '../../data/datasources/dashboard_remote_data_source.dart';
 import '../../data/models/dashboard_response_model.dart';
+import '../../data/models/recommendation_model.dart';
+import '../providers/recommendation_provider.dart';
 import '../widgets/withdraw_bottom_sheet.dart';
 import '../../domain/entities/contribution.dart';
 import '../../domain/entities/transaction.dart';
@@ -762,50 +766,54 @@ class _OwlAdvisorSheet extends ConsumerStatefulWidget {
 
 class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
   OwlState _owlState = OwlState.thinking;
-  bool _loaded = false;
+  bool _isRefreshing = false;
 
-  // Placeholder recs — Claude API will return localized reasons in S15.
-  // For now we map ticker → l10n key so reasons render in the user's language.
-  static const _recs = [
-    (ticker: 'AAPL', name: 'Apple Inc.', suggested: 300, strong: true),
-    (ticker: 'VTI', name: 'Vanguard Total Market', suggested: 500, strong: true),
-    (ticker: 'BTC', name: 'Bitcoin', suggested: 200, strong: false),
-    (ticker: 'MSFT', name: 'Microsoft Corp.', suggested: 150, strong: true),
-    (ticker: 'IAU', name: 'iShares Gold Trust', suggested: 90, strong: false),
-  ];
-
-  static String localizedReason(AppLocalizations l10n, String ticker) {
-    return switch (ticker) {
-      'AAPL' => l10n.owlAiReasonAapl,
-      'VTI' => l10n.owlAiReasonVti,
-      'BTC' => l10n.owlAiReasonBtc,
-      'MSFT' => l10n.owlAiReasonMsft,
-      'IAU' => l10n.owlAiReasonIau,
-      _ => '',
-    };
+  void _onRecsLoaded() {
+    if (!mounted) return;
+    setState(() => _owlState = OwlState.celebrating);
+    Future.delayed(const Duration(milliseconds: 700), () {
+      if (!mounted) return;
+      setState(() => _owlState = OwlState.idle);
+    });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    // Simulate thinking delay — replaced by real API call in S15
-    Future.delayed(const Duration(milliseconds: 1800), () {
-      if (!mounted) return;
-      setState(() {
-        _owlState = OwlState.celebrating;
-        _loaded = true;
-      });
-      Future.delayed(const Duration(milliseconds: 700), () {
-        if (!mounted) return;
-        setState(() => _owlState = OwlState.idle);
-      });
-    });
+  Future<void> _refresh() async {
+    if (!mounted) return;
+    setState(() { _owlState = OwlState.thinking; _isRefreshing = true; });
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      final language = ref.read(localeNotifierProvider).languageCode;
+      if (userId == null) return;
+      // Bust server-side cache first, then re-fetch via provider
+      await ref
+          .read(dashboardRemoteDataSourceProvider)
+          .getRecommendations(userId, language: language, forceRefresh: true);
+    } catch (_) {
+      // If bust fails, still try to re-fetch
+    }
+    if (mounted) {
+      setState(() => _isRefreshing = false);
+      ref.invalidate(recommendationsProvider);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final recsAsync = ref.watch(recommendationsProvider);
+
+    // Fire celebrate when provider transitions to data.
+    ref.listen(recommendationsProvider, (prev, next) {
+      if (next is AsyncData && prev is! AsyncData) _onRecsLoaded();
+    });
+    // Edge case: cached data already present on first build — listener never fires.
+    // Only schedule when NOT in a manual refresh (which uses _isRefreshing to gate body).
+    if (!_isRefreshing && _owlState == OwlState.thinking && recsAsync is AsyncData) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _owlState == OwlState.thinking) _onRecsLoaded();
+      });
+    }
 
     return DraggableScrollableSheet(
       initialChildSize: 0.92,
@@ -844,25 +852,57 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                   children: [
                     OwlAiWidget(size: 44, state: _owlState),
                     const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.owlAiName,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: theme.colorScheme.onSurface,
-                            fontWeight: FontWeight.w700,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.owlAiName,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: theme.colorScheme.onSurface,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
-                        ),
-                        Text(
-                          l10n.owlAiPoweredAdvisor,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: AppTheme.brandPurpleLight,
+                          Text(
+                            l10n.owlAiPoweredAdvisor,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: AppTheme.brandPurpleLight,
+                            ),
                           ),
-                        ),
-                      ],
+                          if (recsAsync is AsyncData && _owlState != OwlState.thinking) ...[
+                            const SizedBox(height: 8),
+                            GestureDetector(
+                              onTap: _refresh,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.auto_awesome_rounded,
+                                        color: Colors.white, size: 13),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      l10n.owlAiAskNewRecs,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
                     ),
-                    const Spacer(),
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
                       child: Container(
@@ -879,33 +919,19 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                   ],
                 ),
               ),
-              // Divider
-              Divider(
-                  height: 1,
-                  color: Colors.white.withValues(alpha: 0.06),
-                  indent: 20,
-                  endIndent: 20),
-              // Context pills — read live data from providers
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: _buildContextPills(l10n),
-                ),
-              ),
-              Divider(
-                  height: 1,
-                  color: Colors.white.withValues(alpha: 0.06),
-                  indent: 20,
-                  endIndent: 20),
+              // Available cash — prominent
+              _buildCashBanner(theme, l10n),
               const SizedBox(height: 4),
-              // Body
+              // Body — _isRefreshing gates immediate thinking during manual refresh;
+              // provider state handles initial load and error cases.
               Expanded(
-                child: !_loaded
+                child: _isRefreshing
                     ? _buildThinking(theme, l10n)
-                    : _buildRecList(theme, scrollController),
+                    : recsAsync.when(
+                        loading: () => _buildThinking(theme, l10n),
+                        error: (e, _) => _buildError(theme, l10n, e),
+                        data: (recs) => _buildRecList(theme, scrollController, recs),
+                      ),
               ),
             ],
           ),
@@ -922,87 +948,133 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
           const OwlAiWidget(size: 72, state: OwlState.thinking),
           const SizedBox(height: 16),
           Text(
-            l10n.owlAiAnalyzing,
+            _isRefreshing ? l10n.owlAiRefreshing : l10n.owlAiAnalyzing,
             style: theme.textTheme.bodyMedium
                 ?.copyWith(color: AppTheme.brandPurpleLight),
           ),
+          if (_isRefreshing) ...[
+            const SizedBox(height: 6),
+            Text(
+              l10n.owlAiRefreshingSubtitle,
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildRecList(ThemeData theme, ScrollController ctrl) {
+  Widget _buildError(ThemeData theme, AppLocalizations l10n, Object error) {
+    final isNotConfigured = error.toString().contains('ERR_AI_NOT_CONFIGURED') ||
+        error.toString().contains('503');
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.cloud_off_outlined,
+                size: 48, color: theme.colorScheme.onSurfaceVariant),
+            const SizedBox(height: 16),
+            Text(
+              isNotConfigured
+                  ? l10n.owlAiUnavailable
+                  : l10n.owlAiErrorRetry,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
+            if (!isNotConfigured) ...[
+              const SizedBox(height: 20),
+              FilledButton.icon(
+                onPressed: _refresh,
+                icon: const Icon(Icons.refresh, size: 16),
+                label: Text(l10n.owlAiRefresh),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecList(ThemeData theme, ScrollController ctrl, List<RecommendationModel> recs) {
     final bottomPad = MediaQuery.of(context).padding.bottom + 80;
     return ListView.builder(
       controller: ctrl,
       padding: EdgeInsets.fromLTRB(20, 8, 20, bottomPad),
-      itemCount: _recs.length,
-      itemBuilder: (context, i) {
-        return _RecCard(rec: _recs[i], index: i);
-      },
+      itemCount: recs.length,
+      itemBuilder: (context, i) => _RecCard(rec: recs[i], index: i),
     );
   }
 
-  // Builds context pills from live data: real risk profile + cash from dashboard.
-  // Goal pill is intentionally informational ("Long-term") to avoid confusion
-  // with multiple risk profiles. S15 will replace with goal-specific data.
-  List<Widget> _buildContextPills(AppLocalizations l10n) {
-    final pills = <Widget>[];
-
-    final riskAsync = ref.watch(riskProfileProvider);
-    final risk = riskAsync.valueOrNull;
-    if (risk != null) {
-      final label = switch (risk.profile) {
-        'conservative' => l10n.riskProfileConservative,
-        'moderate' => l10n.riskProfileModerate,
-        'aggressive' => l10n.riskProfileAggressive,
-        _ => '',
-      };
-      if (label.isNotEmpty) {
-        pills.add(_pill('📊 ${l10n.owlAiPillRiskLabel}: $label'));
-      }
-    }
-
-    final cashAsync = ref.watch(restAvailableCashProvider);
-    final cash = cashAsync.valueOrNull;
+  Widget _buildCashBanner(ThemeData theme, AppLocalizations l10n) {
+    final cash = ref.watch(restAvailableCashProvider).valueOrNull;
     final currency = ref.watch(displayCurrencyProvider);
-    if (cash != null) {
-      final formatted = CurrencyFormatter.formatWithCurrency(cash, currency);
-      pills.add(_pill('💵 ${l10n.owlAiPillCashLabel}: $formatted'));
-    }
 
-    pills.add(_pill('🎯 ${l10n.owlAiPillGoalLabel}'));
-    return pills;
-  }
-
-  Widget _pill(String label) {
-    final cs = Theme.of(context).colorScheme;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: cs.outlineVariant),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: cs.onSurfaceVariant,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
+        color: theme.colorScheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppTheme.brandPurple.withValues(alpha: 0.25),
         ),
+      ),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.owlAiCashAvailable,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 4),
+              cash != null
+                  ? Text(
+                      CurrencyFormatter.formatWithCurrency(cash, currency),
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        color: AppTheme.brandPurpleLight,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    )
+                  : Container(
+                      width: 100,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+            ],
+          ),
+          const Spacer(),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppTheme.brandPurple.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.account_balance_wallet_outlined,
+              color: AppTheme.brandPurpleLight,
+              size: 22,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class _RecCard extends StatefulWidget {
-  final ({
-    String ticker,
-    String name,
-    int suggested,
-    bool strong
-  }) rec;
+  final RecommendationModel rec;
   final int index;
 
   const _RecCard({required this.rec, required this.index});
@@ -1045,7 +1117,9 @@ class _RecCardState extends State<_RecCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final r = widget.rec;
+    final suggestedDollars = (r.suggestedAmountCents / 100).toStringAsFixed(0);
 
     return FadeTransition(
       opacity: _opacity,
@@ -1096,8 +1170,7 @@ class _RecCardState extends State<_RecCard>
                   ),
                 ),
                 child: Text(
-                  _OwlAdvisorSheetState.localizedReason(
-                      AppLocalizations.of(context), r.ticker),
+                  r.reason,
                   style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant, height: 1.5),
                 ),
@@ -1111,9 +1184,9 @@ class _RecCardState extends State<_RecCard>
                       style: theme.textTheme.labelSmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant),
                       children: [
-                        TextSpan(text: '${AppLocalizations.of(context).owlAiSuggested} '),
+                        TextSpan(text: '${l10n.owlAiSuggested} '),
                         TextSpan(
-                          text: '\$${r.suggested}',
+                          text: '\$$suggestedDollars',
                           style: TextStyle(
                               color: theme.colorScheme.onSurface,
                               fontWeight: FontWeight.w700),
@@ -1134,7 +1207,7 @@ class _RecCardState extends State<_RecCard>
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        AppLocalizations.of(context).owlAiBuyButton,
+                        l10n.owlAiBuyButton,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,

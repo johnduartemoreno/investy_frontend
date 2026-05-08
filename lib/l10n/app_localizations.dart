@@ -1936,6 +1936,36 @@ abstract class AppLocalizations {
   /// **'Refresh analysis'**
   String get owlAiRefresh;
 
+  /// No description provided for @owlAiUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'AI advisor is temporarily unavailable.'**
+  String get owlAiUnavailable;
+
+  /// No description provided for @owlAiErrorRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load recommendations. Tap to retry.'**
+  String get owlAiErrorRetry;
+
+  /// No description provided for @owlAiRefreshing.
+  ///
+  /// In en, this message translates to:
+  /// **'Updating your recommendations…'**
+  String get owlAiRefreshing;
+
+  /// No description provided for @owlAiRefreshingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing your portfolio and goals'**
+  String get owlAiRefreshingSubtitle;
+
+  /// No description provided for @owlAiAskNewRecs.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get owlAiAskNewRecs;
+
   /// No description provided for @owlAiPillRiskLabel.
   ///
   /// In en, this message translates to:
@@ -1953,6 +1983,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Long-term'**
   String get owlAiPillGoalLabel;
+
+  /// No description provided for @owlAiCashAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available to invest'**
+  String get owlAiCashAvailable;
+
+  /// No description provided for @owlAiContextProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'profile'**
+  String get owlAiContextProfile;
+
+  /// No description provided for @owlAiContextCash.
+  ///
+  /// In en, this message translates to:
+  /// **'available'**
+  String get owlAiContextCash;
+
+  /// No description provided for @owlAiContextGoalsAnd.
+  ///
+  /// In en, this message translates to:
+  /// **'and'**
+  String get owlAiContextGoalsAnd;
+
+  /// No description provided for @owlAiContextGoalsMore.
+  ///
+  /// In en, this message translates to:
+  /// **'more goals'**
+  String get owlAiContextGoalsMore;
 
   /// No description provided for @owlAiReasonAapl.
   ///
