@@ -803,13 +803,13 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
     final l10n = AppLocalizations.of(context);
     final recsAsync = ref.watch(recommendationsProvider);
 
-    // Trigger owl celebrate animation when recs load successfully.
-    // ref.listen only fires on CHANGES — if data is already cached on first build,
-    // the listener never fires. addPostFrameCallback covers that race condition.
+    // Fire celebrate when provider transitions to data.
     ref.listen(recommendationsProvider, (prev, next) {
       if (next is AsyncData && prev is! AsyncData) _onRecsLoaded();
     });
-    if (_owlState == OwlState.thinking && recsAsync is AsyncData) {
+    // Edge case: cached data already present on first build — listener never fires.
+    // Only schedule when NOT in a manual refresh (which uses _isRefreshing to gate body).
+    if (!_isRefreshing && _owlState == OwlState.thinking && recsAsync is AsyncData) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _owlState == OwlState.thinking) _onRecsLoaded();
       });
@@ -922,9 +922,10 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
               // Available cash — prominent
               _buildCashBanner(theme, l10n),
               const SizedBox(height: 4),
-              // Body — show thinking immediately on refresh, then drive by provider
+              // Body — _isRefreshing gates immediate thinking during manual refresh;
+              // provider state handles initial load and error cases.
               Expanded(
-                child: _owlState == OwlState.thinking
+                child: _isRefreshing
                     ? _buildThinking(theme, l10n)
                     : recsAsync.when(
                         loading: () => _buildThinking(theme, l10n),
