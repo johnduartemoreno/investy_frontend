@@ -404,6 +404,7 @@
   "owlAiPillRiskLabel": "Risk",
   "owlAiPillCashLabel": "Cash",
   "owlAiPillGoalLabel": "Long-term",
+  "owlAiCashAvailable": "Available to invest",
   "owlAiContextProfile": "profile",
   "owlAiContextCash": "available",
   "owlAiContextGoalsAnd": "and",

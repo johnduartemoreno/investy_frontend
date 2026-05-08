@@ -349,6 +349,7 @@
   "owlAiPillRiskLabel": "Risco",
   "owlAiPillCashLabel": "Dinheiro",
   "owlAiPillGoalLabel": "Longo prazo",
+  "owlAiCashAvailable": "Disponível para investir",
   "owlAiContextProfile": "perfil",
   "owlAiContextCash": "disponíveis",
   "owlAiContextGoalsAnd": "e",

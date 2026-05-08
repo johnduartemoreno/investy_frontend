@@ -914,16 +914,8 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                   ],
                 ),
               ),
-              // Context sentence
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                child: _buildContextSentence(theme, l10n),
-              ),
-              Divider(
-                  height: 1,
-                  color: Colors.white.withValues(alpha: 0.06),
-                  indent: 20,
-                  endIndent: 20),
+              // Available cash — prominent
+              _buildCashBanner(theme, l10n),
               const SizedBox(height: 4),
               // Body — show thinking immediately on refresh, then drive by provider
               Expanded(
@@ -1012,74 +1004,64 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
     );
   }
 
-  Widget _buildContextSentence(ThemeData theme, AppLocalizations l10n) {
-    final subtle = theme.colorScheme.onSurfaceVariant;
-    final bold = theme.colorScheme.onSurface;
-    const accent = AppTheme.brandPurpleLight;
-
-    final riskLabel = () {
-      final r = ref.watch(riskProfileProvider).valueOrNull;
-      if (r == null) return null;
-      return switch (r.profile) {
-        'conservative' => l10n.riskProfileConservative,
-        'moderate'     => l10n.riskProfileModerate,
-        'aggressive'   => l10n.riskProfileAggressive,
-        _              => null,
-      };
-    }();
-
+  Widget _buildCashBanner(ThemeData theme, AppLocalizations l10n) {
     final cash = ref.watch(restAvailableCashProvider).valueOrNull;
     final currency = ref.watch(displayCurrencyProvider);
-    final cashStr = cash != null
-        ? CurrencyFormatter.formatWithCurrency(cash, currency)
-        : null;
 
-    final goals = ref.watch(restGoalsProvider).valueOrNull ?? [];
-
-    TextSpan highlight(String text) => TextSpan(
-          text: text,
-          style: TextStyle(color: accent, fontWeight: FontWeight.w700),
-        );
-    TextSpan plain(String text) => TextSpan(
-          text: text,
-          style: TextStyle(color: subtle),
-        );
-    TextSpan strong(String text) => TextSpan(
-          text: text,
-          style: TextStyle(color: bold, fontWeight: FontWeight.w600),
-        );
-
-    final spans = <TextSpan>[];
-
-    if (riskLabel != null) {
-      spans.add(plain('📊 ${l10n.owlAiContextProfile} '));
-      spans.add(highlight(riskLabel));
-    }
-
-    if (cashStr != null) {
-      if (spans.isNotEmpty) spans.add(plain('  ·  '));
-      spans.add(plain('💵 ${l10n.owlAiContextCash} '));
-      spans.add(strong(cashStr));
-    }
-
-    if (goals.isNotEmpty) {
-      if (spans.isNotEmpty) spans.add(plain('  ·  '));
-      spans.add(plain('🎯 '));
-      if (goals.length == 1) {
-        spans.add(strong(goals.first.name));
-      } else {
-        spans.add(strong(goals.first.name));
-        spans.add(plain(' ${l10n.owlAiContextGoalsAnd} '));
-        spans.add(highlight('${goals.length - 1} ${l10n.owlAiContextGoalsMore}'));
-      }
-    }
-
-    if (spans.isEmpty) return const SizedBox.shrink();
-
-    return RichText(
-      text: TextSpan(
-        style: theme.textTheme.bodySmall?.copyWith(height: 1.6),
-        children: spans,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppTheme.brandPurple.withValues(alpha: 0.25),
+        ),
+      ),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.owlAiCashAvailable,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 4),
+              cash != null
+                  ? Text(
+                      CurrencyFormatter.formatWithCurrency(cash, currency),
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        color: AppTheme.brandPurpleLight,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    )
+                  : Container(
+                      width: 100,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+            ],
+          ),
+          const Spacer(),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppTheme.brandPurple.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.account_balance_wallet_outlined,
+              color: AppTheme.brandPurpleLight,
+              size: 22,
+            ),
+          ),
+        ],
       ),
     );
   }
