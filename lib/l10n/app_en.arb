@@ -400,7 +400,7 @@
   "owlAiErrorRetry": "Could not load recommendations. Tap to retry.",
   "owlAiRefreshing": "Updating your recommendations…",
   "owlAiRefreshingSubtitle": "Analyzing your portfolio and goals",
-  "owlAiAskNewRecs": "Ask for new recommendations",
+  "owlAiAskNewRecs": "Refresh",
   "owlAiPillRiskLabel": "Risk",
   "owlAiPillCashLabel": "Cash",
   "owlAiPillGoalLabel": "Long-term",

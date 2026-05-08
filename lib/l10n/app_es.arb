@@ -345,7 +345,7 @@
   "owlAiErrorRetry": "No se pudieron cargar las recomendaciones. Toca para reintentar.",
   "owlAiRefreshing": "Actualizando tus recomendaciones…",
   "owlAiRefreshingSubtitle": "Analizando tu portafolio y metas",
-  "owlAiAskNewRecs": "Pedir nuevas recomendaciones",
+  "owlAiAskNewRecs": "Actualizar",
   "owlAiPillRiskLabel": "Riesgo",
   "owlAiPillCashLabel": "Efectivo",
   "owlAiPillGoalLabel": "Largo plazo",
