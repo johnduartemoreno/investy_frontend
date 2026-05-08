@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/network/dio_client.dart';
+import '../../../../core/providers/locale_provider.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/widgets/owl_ai_widget.dart';
 import '../../../../l10n/app_localizations.dart';
 
+import '../../../goals/presentation/providers/rest_goals_provider.dart';
 import '../../../risk_profile/presentation/providers/risk_provider.dart';
 import '../../data/datasources/dashboard_remote_data_source.dart';
 import '../../data/models/dashboard_response_model.dart';
@@ -764,7 +766,6 @@ class _OwlAdvisorSheet extends ConsumerStatefulWidget {
 
 class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
   OwlState _owlState = OwlState.thinking;
-  bool _forceRefresh = false;
 
   void _onRecsLoaded() {
     if (!mounted) return;
@@ -775,25 +776,31 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
     });
   }
 
-  void _refresh() {
-    setState(() {
-      _owlState = OwlState.thinking;
-      _forceRefresh = true;
-    });
-    ref.invalidate(recommendationsProvider(forceRefresh: true));
-    Future.microtask(() {
-      if (mounted) setState(() => _forceRefresh = false);
-    });
+  Future<void> _refresh() async {
+    if (!mounted) return;
+    setState(() => _owlState = OwlState.thinking);
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      final language = ref.read(localeNotifierProvider).languageCode;
+      if (userId == null) return;
+      // Bust server-side cache first, then re-fetch via provider
+      await ref
+          .read(dashboardRemoteDataSourceProvider)
+          .getRecommendations(userId, language: language, forceRefresh: true);
+    } catch (_) {
+      // If bust fails, still try to re-fetch
+    }
+    if (mounted) ref.invalidate(recommendationsProvider);
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    final recsAsync = ref.watch(recommendationsProvider(forceRefresh: _forceRefresh));
+    final recsAsync = ref.watch(recommendationsProvider);
 
     // Trigger owl celebrate animation when recs load successfully
-    ref.listen(recommendationsProvider(forceRefresh: _forceRefresh), (prev, next) {
+    ref.listen(recommendationsProvider, (prev, next) {
       if (next is AsyncData && prev is! AsyncData) {
         _onRecsLoaded();
       }
@@ -1015,7 +1022,18 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
       pills.add(_pill('💵 ${l10n.owlAiPillCashLabel}: $formatted'));
     }
 
-    pills.add(_pill('🎯 ${l10n.owlAiPillGoalLabel}'));
+    final goalsAsync = ref.watch(restGoalsProvider);
+    final goals = goalsAsync.valueOrNull ?? [];
+    if (goals.isEmpty) {
+      pills.add(_pill('🎯 ${l10n.owlAiPillGoalLabel}'));
+    } else {
+      for (final g in goals.take(2)) {
+        pills.add(_pill('🎯 ${g.name}'));
+      }
+      if (goals.length > 2) {
+        pills.add(_pill('🎯 +${goals.length - 2}'));
+      }
+    }
     return pills;
   }
 

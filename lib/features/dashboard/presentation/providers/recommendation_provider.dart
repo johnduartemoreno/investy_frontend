@@ -10,18 +10,14 @@ part 'recommendation_provider.g.dart';
 
 /// Fetches AI recommendations for the current user.
 /// Reasons are returned in the user's current app language (en/es/pt).
-/// Pass [forceRefresh] = true to bypass the server-side 24h cache.
+/// To force refresh: call datasource with forceRefresh=true then ref.invalidate(recommendationsProvider).
 @riverpod
-Future<List<RecommendationModel>> recommendations(
-  Ref ref, {
-  bool forceRefresh = false,
-}) async {
+Future<List<RecommendationModel>> recommendations(Ref ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) throw Exception('ERR_UNAUTHENTICATED');
   final language = ref.watch(localeNotifierProvider).languageCode;
   return ref.read(dashboardRemoteDataSourceProvider).getRecommendations(
         userId,
         language: language,
-        forceRefresh: forceRefresh,
       );
 }
