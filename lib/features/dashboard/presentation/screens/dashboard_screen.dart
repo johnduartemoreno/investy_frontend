@@ -766,6 +766,7 @@ class _OwlAdvisorSheet extends ConsumerStatefulWidget {
 
 class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
   OwlState _owlState = OwlState.thinking;
+  bool _isRefreshing = false;
 
   void _onRecsLoaded() {
     if (!mounted) return;
@@ -778,7 +779,7 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
 
   Future<void> _refresh() async {
     if (!mounted) return;
-    setState(() => _owlState = OwlState.thinking);
+    setState(() { _owlState = OwlState.thinking; _isRefreshing = true; });
     try {
       final userId = FirebaseAuth.instance.currentUser?.uid;
       final language = ref.read(localeNotifierProvider).languageCode;
@@ -790,7 +791,10 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
     } catch (_) {
       // If bust fails, still try to re-fetch
     }
-    if (mounted) ref.invalidate(recommendationsProvider);
+    if (mounted) {
+      setState(() => _isRefreshing = false);
+      ref.invalidate(recommendationsProvider);
+    }
   }
 
   @override
@@ -862,22 +866,6 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                       ],
                     ),
                     const Spacer(),
-                    // Refresh button
-                    if (recsAsync is AsyncData)
-                      GestureDetector(
-                        onTap: _refresh,
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          margin: const EdgeInsets.only(right: 8),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(Icons.refresh,
-                              color: theme.colorScheme.onSurfaceVariant, size: 16),
-                        ),
-                      ),
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
                       child: Container(
@@ -916,13 +904,15 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                   indent: 20,
                   endIndent: 20),
               const SizedBox(height: 4),
-              // Body — driven by the recommendations provider
+              // Body — show thinking immediately on refresh, then drive by provider
               Expanded(
-                child: recsAsync.when(
-                  loading: () => _buildThinking(theme, l10n),
-                  error: (e, _) => _buildError(theme, l10n, e),
-                  data: (recs) => _buildRecList(theme, scrollController, recs),
-                ),
+                child: _owlState == OwlState.thinking
+                    ? _buildThinking(theme, l10n)
+                    : recsAsync.when(
+                        loading: () => _buildThinking(theme, l10n),
+                        error: (e, _) => _buildError(theme, l10n, e),
+                        data: (recs) => _buildRecList(theme, scrollController, recs),
+                      ),
               ),
             ],
           ),
@@ -939,10 +929,19 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
           const OwlAiWidget(size: 72, state: OwlState.thinking),
           const SizedBox(height: 16),
           Text(
-            l10n.owlAiAnalyzing,
+            _isRefreshing ? l10n.owlAiRefreshing : l10n.owlAiAnalyzing,
             style: theme.textTheme.bodyMedium
                 ?.copyWith(color: AppTheme.brandPurpleLight),
           ),
+          if (_isRefreshing) ...[
+            const SizedBox(height: 6),
+            Text(
+              l10n.owlAiRefreshingSubtitle,
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ],
       ),
     );
@@ -983,14 +982,44 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
   }
 
   Widget _buildRecList(ThemeData theme, ScrollController ctrl, List<RecommendationModel> recs) {
+    final l10n = AppLocalizations.of(context);
     final bottomPad = MediaQuery.of(context).padding.bottom + 80;
-    return ListView.builder(
+    return ListView(
       controller: ctrl,
       padding: EdgeInsets.fromLTRB(20, 8, 20, bottomPad),
-      itemCount: recs.length,
-      itemBuilder: (context, i) {
-        return _RecCard(rec: recs[i], index: i);
-      },
+      children: [
+        ...List.generate(recs.length, (i) => _RecCard(rec: recs[i], index: i)),
+        const SizedBox(height: 8),
+        // Refresh button — descriptive, full-width, at end of list
+        GestureDetector(
+          onTap: _refresh,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppTheme.brandPurple.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.auto_awesome_rounded,
+                    size: 16, color: AppTheme.brandPurpleLight),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.owlAiAskNewRecs,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: AppTheme.brandPurpleLight,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
