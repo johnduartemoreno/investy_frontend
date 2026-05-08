@@ -349,5 +349,8 @@
   "owlAiReasonBtc": "Alocação de 5% adiciona potencial assimétrico. Sua exposição 0% deixa retorno na mesa em horizonte longo.",
   "owlAiReasonMsft": "Azure + IA (Copilot) com crescimento composto. Volatilidade moderada — complementa AAPL sem sobreposição.",
   "owlAiReasonIau": "Proteção contra inflação em horizontes longos. ETF dá estabilidade quando ações caem — sem risco de custódia.",
-  "portfolioActive": "Carteira ativa"
+  "portfolioActive": "Carteira ativa",
+  "greetingMorning": "Bom dia,",
+  "greetingAfternoon": "Boa tarde,",
+  "greetingEvening": "Boa noite,"
 }

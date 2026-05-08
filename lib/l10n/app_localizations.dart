@@ -1989,6 +1989,10 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Portfolio active'**
   String get portfolioActive;
+
+  String get greetingMorning;
+  String get greetingAfternoon;
+  String get greetingEvening;
 }
 
 class _AppLocalizationsDelegate

@@ -1021,4 +1021,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get portfolioActive => 'Carteira ativa';
+
+  @override
+  String get greetingMorning => 'Bom dia,';
+  @override
+  String get greetingAfternoon => 'Boa tarde,';
+  @override
+  String get greetingEvening => 'Boa noite,';
 }

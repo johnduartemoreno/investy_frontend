@@ -233,7 +233,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ThemeData theme, AppLocalizations l10n, AsyncValue<String> userNameAsync) {
     final rawName = userNameAsync.valueOrNull ?? '';
     final firstName = _firstName(rawName);
-    final greeting = _greeting();
+    final greeting = _greeting(l10n);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -284,11 +284,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  String _greeting() {
+  String _greeting(AppLocalizations l10n) {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning,';
-    if (hour < 18) return 'Good afternoon,';
-    return 'Good evening,';
+    if (hour < 12) return l10n.greetingMorning;
+    if (hour < 18) return l10n.greetingAfternoon;
+    return l10n.greetingEvening;
   }
 
   // Extracts and capitalizes first name (e.g. "johnduartemoreno" → "John")

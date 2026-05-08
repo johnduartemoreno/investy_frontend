@@ -404,5 +404,8 @@
   "owlAiReasonBtc": "5% allocation adds asymmetric upside. Your 0% crypto exposure leaves return on the table for a long horizon.",
   "owlAiReasonMsft": "Azure + AI (Copilot) compound runway. Moderate volatility — complements AAPL without sector overlap.",
   "owlAiReasonIau": "Inflation hedge for long horizons. ETF form adds stability when equities correct — zero custody risk.",
-  "portfolioActive": "Portfolio active"
+  "portfolioActive": "Portfolio active",
+  "greetingMorning": "Good morning,",
+  "greetingAfternoon": "Good afternoon,",
+  "greetingEvening": "Good evening,"
 }
