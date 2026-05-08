@@ -803,12 +803,17 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
     final l10n = AppLocalizations.of(context);
     final recsAsync = ref.watch(recommendationsProvider);
 
-    // Trigger owl celebrate animation when recs load successfully
+    // Trigger owl celebrate animation when recs load successfully.
+    // ref.listen only fires on CHANGES — if data is already cached on first build,
+    // the listener never fires. addPostFrameCallback covers that race condition.
     ref.listen(recommendationsProvider, (prev, next) {
-      if (next is AsyncData && prev is! AsyncData) {
-        _onRecsLoaded();
-      }
+      if (next is AsyncData && prev is! AsyncData) _onRecsLoaded();
     });
+    if (_owlState == OwlState.thinking && recsAsync is AsyncData) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _owlState == OwlState.thinking) _onRecsLoaded();
+      });
+    }
 
     return DraggableScrollableSheet(
       initialChildSize: 0.92,
