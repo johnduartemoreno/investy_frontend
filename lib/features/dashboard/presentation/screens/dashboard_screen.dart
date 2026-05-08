@@ -847,26 +847,30 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                   children: [
                     OwlAiWidget(size: 44, state: _owlState),
                     const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.owlAiName,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: theme.colorScheme.onSurface,
-                            fontWeight: FontWeight.w700,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.owlAiName,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: theme.colorScheme.onSurface,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                        Text(
-                          l10n.owlAiPoweredAdvisor,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: AppTheme.brandPurpleLight,
+                          Text(
+                            l10n.owlAiPoweredAdvisor,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: AppTheme.brandPurpleLight,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    const Spacer(),
                     if (recsAsync is AsyncData && _owlState != OwlState.thinking) ...[
+                      const SizedBox(width: 8),
                       GestureDetector(
                         onTap: _refresh,
                         child: Container(
