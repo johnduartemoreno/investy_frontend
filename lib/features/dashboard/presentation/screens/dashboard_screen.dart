@@ -914,21 +914,10 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                   ],
                 ),
               ),
-              // Divider
-              Divider(
-                  height: 1,
-                  color: Colors.white.withValues(alpha: 0.06),
-                  indent: 20,
-                  endIndent: 20),
-              // Context pills — read live data from providers
+              // Context sentence
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: _buildContextPills(l10n),
-                ),
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                child: _buildContextSentence(theme, l10n),
               ),
               Divider(
                   height: 1,
@@ -1023,65 +1012,74 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
     );
   }
 
-  // Builds context pills from live data: real risk profile + cash from dashboard.
-  // Goal pill is intentionally informational ("Long-term") to avoid confusion
-  // with multiple risk profiles. S15 will replace with goal-specific data.
-  List<Widget> _buildContextPills(AppLocalizations l10n) {
-    final pills = <Widget>[];
+  Widget _buildContextSentence(ThemeData theme, AppLocalizations l10n) {
+    final subtle = theme.colorScheme.onSurfaceVariant;
+    final bold = theme.colorScheme.onSurface;
+    const accent = AppTheme.brandPurpleLight;
 
-    final riskAsync = ref.watch(riskProfileProvider);
-    final risk = riskAsync.valueOrNull;
-    if (risk != null) {
-      final label = switch (risk.profile) {
+    final riskLabel = () {
+      final r = ref.watch(riskProfileProvider).valueOrNull;
+      if (r == null) return null;
+      return switch (r.profile) {
         'conservative' => l10n.riskProfileConservative,
-        'moderate' => l10n.riskProfileModerate,
-        'aggressive' => l10n.riskProfileAggressive,
-        _ => '',
+        'moderate'     => l10n.riskProfileModerate,
+        'aggressive'   => l10n.riskProfileAggressive,
+        _              => null,
       };
-      if (label.isNotEmpty) {
-        pills.add(_pill('📊 ${l10n.owlAiPillRiskLabel}: $label'));
-      }
-    }
+    }();
 
-    final cashAsync = ref.watch(restAvailableCashProvider);
-    final cash = cashAsync.valueOrNull;
+    final cash = ref.watch(restAvailableCashProvider).valueOrNull;
     final currency = ref.watch(displayCurrencyProvider);
-    if (cash != null) {
-      final formatted = CurrencyFormatter.formatWithCurrency(cash, currency);
-      pills.add(_pill('💵 ${l10n.owlAiPillCashLabel}: $formatted'));
+    final cashStr = cash != null
+        ? CurrencyFormatter.formatWithCurrency(cash, currency)
+        : null;
+
+    final goals = ref.watch(restGoalsProvider).valueOrNull ?? [];
+
+    TextSpan highlight(String text) => TextSpan(
+          text: text,
+          style: TextStyle(color: accent, fontWeight: FontWeight.w700),
+        );
+    TextSpan plain(String text) => TextSpan(
+          text: text,
+          style: TextStyle(color: subtle),
+        );
+    TextSpan strong(String text) => TextSpan(
+          text: text,
+          style: TextStyle(color: bold, fontWeight: FontWeight.w600),
+        );
+
+    final spans = <TextSpan>[];
+
+    if (riskLabel != null) {
+      spans.add(plain('📊 ${l10n.owlAiContextProfile} '));
+      spans.add(highlight(riskLabel));
     }
 
-    final goalsAsync = ref.watch(restGoalsProvider);
-    final goals = goalsAsync.valueOrNull ?? [];
-    if (goals.isEmpty) {
-      pills.add(_pill('🎯 ${l10n.owlAiPillGoalLabel}'));
-    } else {
-      for (final g in goals.take(2)) {
-        pills.add(_pill('🎯 ${g.name}'));
-      }
-      if (goals.length > 2) {
-        pills.add(_pill('🎯 +${goals.length - 2}'));
+    if (cashStr != null) {
+      if (spans.isNotEmpty) spans.add(plain('  ·  '));
+      spans.add(plain('💵 ${l10n.owlAiContextCash} '));
+      spans.add(strong(cashStr));
+    }
+
+    if (goals.isNotEmpty) {
+      if (spans.isNotEmpty) spans.add(plain('  ·  '));
+      spans.add(plain('🎯 '));
+      if (goals.length == 1) {
+        spans.add(strong(goals.first.name));
+      } else {
+        spans.add(strong(goals.first.name));
+        spans.add(plain(' ${l10n.owlAiContextGoalsAnd} '));
+        spans.add(highlight('${goals.length - 1} ${l10n.owlAiContextGoalsMore}'));
       }
     }
-    return pills;
-  }
 
-  Widget _pill(String label) {
-    final cs = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: cs.outlineVariant),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: cs.onSurfaceVariant,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
+    if (spans.isEmpty) return const SizedBox.shrink();
+
+    return RichText(
+      text: TextSpan(
+        style: theme.textTheme.bodySmall?.copyWith(height: 1.6),
+        children: spans,
       ),
     );
   }
