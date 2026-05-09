@@ -964,10 +964,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get owlAiName => 'Owl AI';
 
   @override
-  String get owlAiAdvisorLabel => 'ASSESSOR IA';
-
-  @override
-  String get owlAiTagline => 'No que vamos investir hoje? 🦉';
+  String get owlAiTagline => 'Recomendações de investimento para você';
 
   @override
   String get owlAiPoweredAdvisor => 'Assessor com inteligência artificial';
@@ -1008,48 +1005,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get owlAiAskNewRecs => 'Atualizar';
 
   @override
-  String get owlAiPillRiskLabel => 'Risco';
-
-  @override
-  String get owlAiPillCashLabel => 'Dinheiro';
-
-  @override
-  String get owlAiPillGoalLabel => 'Longo prazo';
-
-  @override
   String get owlAiCashAvailable => 'Disponível para investir';
-
-  @override
-  String get owlAiContextProfile => 'perfil';
-
-  @override
-  String get owlAiContextCash => 'disponíveis';
-
-  @override
-  String get owlAiContextGoalsAnd => 'e';
-
-  @override
-  String get owlAiContextGoalsMore => 'metas a mais';
-
-  @override
-  String get owlAiReasonAapl =>
-      'Marca forte e receita de serviços crescendo 15% ao ano. Blue chip de baixa volatilidade — combina com perfil moderado.';
-
-  @override
-  String get owlAiReasonVti =>
-      'Ampla diversificação com taxa de 0,03%. Base ideal para um horizonte de aposentadoria de 20 anos.';
-
-  @override
-  String get owlAiReasonBtc =>
-      'Alocação de 5% adiciona potencial assimétrico. Sua exposição 0% deixa retorno na mesa em horizonte longo.';
-
-  @override
-  String get owlAiReasonMsft =>
-      'Azure + IA (Copilot) com crescimento composto. Volatilidade moderada — complementa AAPL sem sobreposição.';
-
-  @override
-  String get owlAiReasonIau =>
-      'Proteção contra inflação em horizontes longos. ETF dá estabilidade quando ações caem — sem risco de custódia.';
 
   @override
   String get portfolioActive => 'Carteira ativa';

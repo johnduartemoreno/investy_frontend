@@ -959,10 +959,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get owlAiName => 'Owl AI';
 
   @override
-  String get owlAiAdvisorLabel => 'AI ADVISOR';
-
-  @override
-  String get owlAiTagline => 'What should we invest in today? 🦉';
+  String get owlAiTagline => 'Investment picks made for you';
 
   @override
   String get owlAiPoweredAdvisor => 'AI-powered advisor';
@@ -1001,48 +998,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get owlAiAskNewRecs => 'Refresh';
 
   @override
-  String get owlAiPillRiskLabel => 'Risk';
-
-  @override
-  String get owlAiPillCashLabel => 'Cash';
-
-  @override
-  String get owlAiPillGoalLabel => 'Long-term';
-
-  @override
   String get owlAiCashAvailable => 'Available to invest';
-
-  @override
-  String get owlAiContextProfile => 'profile';
-
-  @override
-  String get owlAiContextCash => 'available';
-
-  @override
-  String get owlAiContextGoalsAnd => 'and';
-
-  @override
-  String get owlAiContextGoalsMore => 'more goals';
-
-  @override
-  String get owlAiReasonAapl =>
-      'Strong brand moat and services revenue growing 15% YoY. Low-volatility blue chip — fits a moderate profile.';
-
-  @override
-  String get owlAiReasonVti =>
-      'Broad diversification at 0.03% expense ratio. Ideal anchor for a 20-year retirement horizon.';
-
-  @override
-  String get owlAiReasonBtc =>
-      '5% allocation adds asymmetric upside. Your 0% crypto exposure leaves return on the table for a long horizon.';
-
-  @override
-  String get owlAiReasonMsft =>
-      'Azure + AI (Copilot) compound runway. Moderate volatility — complements AAPL without sector overlap.';
-
-  @override
-  String get owlAiReasonIau =>
-      'Inflation hedge for long horizons. ETF form adds stability when equities correct — zero custody risk.';
 
   @override
   String get portfolioActive => 'Portfolio active';

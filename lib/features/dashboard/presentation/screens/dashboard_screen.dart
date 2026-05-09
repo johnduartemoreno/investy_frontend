@@ -10,8 +10,6 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/widgets/owl_ai_widget.dart';
 import '../../../../l10n/app_localizations.dart';
 
-import '../../../goals/presentation/providers/rest_goals_provider.dart';
-import '../../../risk_profile/presentation/providers/risk_provider.dart';
 import '../../data/datasources/dashboard_remote_data_source.dart';
 import '../../data/models/dashboard_response_model.dart';
 import '../../data/models/recommendation_model.dart';
@@ -445,37 +443,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        l10n.owlAiName,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: theme.colorScheme.onSurface,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(colors: [
-                            AppTheme.brandPurple,
-                            AppTheme.brandPurpleLight
-                          ]),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          l10n.owlAiAdvisorLabel,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 9,
-                            letterSpacing: 0.8,
-                          ),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    l10n.owlAiName,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.onSurface,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -487,8 +460,25 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios_rounded,
-                size: 16, color: AppTheme.brandPurpleLight),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.auto_awesome_rounded,
+                      color: Colors.white, size: 13),
+                  SizedBox(width: 4),
+                  Icon(Icons.arrow_forward_ios_rounded,
+                      color: Colors.white, size: 11),
+                ],
+              ),
+            ),
           ],
         ),
       ),
