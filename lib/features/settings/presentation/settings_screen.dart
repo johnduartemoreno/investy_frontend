@@ -192,7 +192,16 @@ class SettingsScreen extends ConsumerWidget {
                     : brokerStatus.isPending
                         ? l10n.brokerBannerPending
                         : l10n.brokerStatusRejected;
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(msg),
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+                ),
+              ),
+            );
           }),
           const Divider(height: 1),
           _buildListTile(context, Icons.psychology_outlined, l10n.riskProfileSettingsLabel, riskTrailing, onTap: () => context.push('/settings/risk-profile')),

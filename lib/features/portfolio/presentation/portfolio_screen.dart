@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -228,7 +229,7 @@ class _HoldingCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final color = _assetColor(context);
     final isPositive = holding.returnPct >= 0;
-    final returnColor = isPositive ? cs.tertiary : cs.error;
+    final returnColor = isPositive ? AppTheme.signalGreen : cs.error;
 
     return CustomCard(
       child: Padding(
