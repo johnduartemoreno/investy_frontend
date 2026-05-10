@@ -17,12 +17,14 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Card(
-      elevation: 2,
+      elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppDimens.radius),
+        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+        side: BorderSide(color: cs.outlineVariant),
       ),
-      color: color,
+      color: color ?? cs.surfaceContainerLow,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
