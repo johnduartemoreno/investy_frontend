@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'app_dimens.dart';
+
 /// Typography system: DM Sans throughout — clean, consistent, modern fintech.
 /// All roles use DM Sans with weight/size hierarchy for visual structure.
 class AppTheme {
@@ -21,7 +23,7 @@ class AppTheme {
         fontSize: 32, fontWeight: FontWeight.w600,
       ),
       headlineMedium: GoogleFonts.dmSans(
-        fontSize: 28, fontWeight: FontWeight.w600,
+        fontSize: 28, fontWeight: FontWeight.w700,
       ),
       headlineSmall: GoogleFonts.dmSans(
         fontSize: 24, fontWeight: FontWeight.w600,
@@ -51,7 +53,7 @@ class AppTheme {
         fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 0.5,
       ),
       labelSmall: GoogleFonts.dmSans(
-        fontSize: 11, fontWeight: FontWeight.w500, letterSpacing: 0.5,
+        fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5,
       ),
     );
   }
@@ -83,6 +85,12 @@ class AppTheme {
   static const brandPurple = Color(0xFF6C63FF);
   static const brandPurpleLight = Color(0xFFa78bfa);
 
+  // Semantic signal colors (badges: Strong buy, Moderate, Sell)
+  static const signalGreen = Color(0xFF4ade80);
+  static const signalGreenContainer = Color(0xFF0F2A1A);
+  static const signalAmber = Color(0xFFD97706);
+  static const signalAmberContainer = Color(0xFF2A1A00);
+
   // Layered dark surfaces
   static const darkBase = Color(0xFF0F0F13);
   static const darkSurface = Color(0xFF1A1A20);
@@ -91,7 +99,7 @@ class AppTheme {
 
   static final darkTheme = ThemeData(
     useMaterial3: true,
-    colorScheme: ColorScheme(
+    colorScheme: const ColorScheme(
       brightness: Brightness.dark,
       primary: brandPurple,
       onPrimary: Colors.white,
@@ -142,7 +150,7 @@ class AppTheme {
       color: darkSurface,
       elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
         side: const BorderSide(color: Color(0xFF2A2A38), width: 1),
       ),
     ),
