@@ -5,6 +5,8 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/gradient_icon_box.dart';
 import '../../../../core/presentation/widgets/gradient_pill_button.dart';
+import '../../../../core/presentation/widgets/left_accent_box.dart';
+import '../../../../core/presentation/widgets/signal_badge.dart';
 import '../../../../core/presentation/widgets/responsive_center.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -107,69 +109,111 @@ class _GoalCard extends StatelessWidget {
     final progress = goal.progress;
     final gradient = _categoryGradient(goal.category);
 
+    final l10n = AppLocalizations.of(context);
+    final cs = theme.colorScheme;
+
     return CustomCard(
+      padding: const EdgeInsets.all(14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header — icon + name + progress badge
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  GradientIconBox(
-                    colors: gradient,
-                    circle: true,
-                    child: Icon(_categoryIcon(goal.category),
-                        size: 20, color: Colors.white),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    goal.name,
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                ],
+              GradientIconBox(
+                colors: gradient,
+                circle: true,
+                child: Icon(_categoryIcon(goal.category),
+                    size: 20, color: Colors.white),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(20),
-                ),
+              const SizedBox(width: 10),
+              Expanded(
                 child: Text(
-                  '${(progress * 100).toStringAsFixed(1)}%',
-                  style: TextStyle(
-                    color: theme.colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  goal.name,
+                  style: theme.textTheme.titleSmall
+                      ?.copyWith(fontWeight: FontWeight.w800),
+                  overflow: TextOverflow.ellipsis,
                 ),
+              ),
+              const SizedBox(width: 8),
+              SignalBadge(
+                label: '${(progress * 100).toStringAsFixed(1)}%',
+                color: cs.primary,
               ),
             ],
           ),
-          const SizedBox(height: AppDimens.spacingM),
-          LinearProgressIndicator(
-            value: progress,
-            backgroundColor: theme.colorScheme.surfaceContainerHighest,
-            minHeight: 8,
-            borderRadius: BorderRadius.circular(4),
+          const SizedBox(height: 10),
+          // Progress bar + amounts with left accent
+          LeftAccentBox(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LinearProgressIndicator(
+                  value: progress,
+                  backgroundColor: cs.surfaceContainerHighest,
+                  minHeight: 6,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _AmountLabel(
+                      label: l10n.goalSaved,
+                      value: CurrencyFormatter.formatWithCurrency(
+                          goal.currentAmount * fxRate, currency),
+                      theme: theme,
+                    ),
+                    _AmountLabel(
+                      label: l10n.goalTarget,
+                      value: CurrencyFormatter.formatWithCurrency(
+                          goal.targetAmount * fxRate, currency),
+                      theme: theme,
+                      alignEnd: true,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: AppDimens.spacingM),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('${AppLocalizations.of(context).goalSaved}: ${CurrencyFormatter.formatWithCurrency(goal.currentAmount * fxRate, currency)}'),
-              Text('${AppLocalizations.of(context).goalTarget}: ${CurrencyFormatter.formatWithCurrency(goal.targetAmount * fxRate, currency)}'),
-            ],
-          ),
-          const SizedBox(height: AppDimens.spacingS),
+          const SizedBox(height: 8),
           Text(
-            '${AppLocalizations.of(context).goalDeadline}: ${_formatDate(goal.deadlineDate)}',
+            '${l10n.goalDeadline}: ${_formatDate(goal.deadlineDate)}',
             style: theme.textTheme.bodySmall
-                ?.copyWith(color: Colors.grey),
+                ?.copyWith(color: cs.onSurfaceVariant),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _AmountLabel extends StatelessWidget {
+  final String label;
+  final String value;
+  final ThemeData theme;
+  final bool alignEnd;
+
+  const _AmountLabel({
+    required this.label,
+    required this.value,
+    required this.theme,
+    this.alignEnd = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment:
+          alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: theme.textTheme.labelSmall
+                ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+        Text(value,
+            style: theme.textTheme.labelLarge
+                ?.copyWith(fontWeight: FontWeight.w700)),
+      ],
     );
   }
 }

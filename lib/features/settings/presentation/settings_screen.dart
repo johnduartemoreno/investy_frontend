@@ -103,13 +103,13 @@ class SettingsScreen extends ConsumerWidget {
                   user?.name ?? 'User',
                   style: Theme.of(context)
                       .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                      .titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w700),
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   user?.email ?? 'email@example.com',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -232,20 +232,21 @@ class SettingsScreen extends ConsumerWidget {
   Widget _buildListTile(
       BuildContext context, IconData icon, String title, String trailing,
       {required VoidCallback onTap}) {
+    final cs = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return ListTile(
-      leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+      leading: Icon(icon, color: cs.primary, size: 22),
+      title: Text(title,
+          style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(trailing,
-              style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 13)),
+          if (trailing.isNotEmpty)
+            Text(trailing,
+                style: textTheme.labelSmall?.copyWith(
+                    color: cs.onSurfaceVariant)),
           const SizedBox(width: 4),
-          Icon(Icons.chevron_right,
-              size: 20,
-              color: Theme.of(context).colorScheme.onSurfaceVariant),
+          Icon(Icons.chevron_right, size: 18, color: cs.onSurfaceVariant),
         ],
       ),
       onTap: onTap,
