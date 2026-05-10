@@ -130,8 +130,8 @@ class _GoalCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   goal.name,
-                  style: theme.textTheme.titleSmall
-                      ?.copyWith(fontWeight: FontWeight.w800),
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w700),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

@@ -258,10 +258,10 @@ class _HoldingCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(holding.symbol,
-                        style: theme.textTheme.titleSmall
-                            ?.copyWith(fontWeight: FontWeight.w800)),
+                        style: theme.textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w700)),
                     Text(_assetClassLabel(l10n),
-                        style: theme.textTheme.labelSmall
+                        style: theme.textTheme.bodySmall
                             ?.copyWith(color: cs.onSurfaceVariant)),
                   ],
                 ),
