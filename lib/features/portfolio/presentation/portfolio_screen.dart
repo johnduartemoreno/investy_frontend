@@ -234,101 +234,143 @@ class _HoldingCard extends StatelessWidget {
         : holding.symbol;
 
     return CustomCard(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(children: [
-                  // Gradient icon — same pattern as Owl rec cards
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: gradient,
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(AppDimens.radiusAssetIcon),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      label,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header — same layout as Owl rec card
+          Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: gradient,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  const SizedBox(width: AppDimens.spacingM),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(holding.symbol,
-                          style: theme.textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.bold)),
-                      Text(_assetClassLabel(l10n),
-                          style: theme.textTheme.bodySmall
-                              ?.copyWith(color: cs.onSurfaceVariant)),
-                    ],
+                  borderRadius: BorderRadius.circular(AppDimens.radiusAssetIcon),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w800,
                   ),
-                ]),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      CurrencyFormatter.formatWithCurrency(
-                          holding.marketValue * fxRate, currency),
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    // Return badge — colored pill like Owl signal badge
-                    Container(
-                      margin: const EdgeInsets.only(top: 4),
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: returnColor.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(AppDimens.radiusPill),
-                      ),
-                      child: Text(
-                        '${isPositive ? '+' : ''}${holding.returnPct.toStringAsFixed(2)}%',
-                        style: TextStyle(
-                          color: returnColor,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
+                    Text(holding.symbol,
+                        style: theme.textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w800)),
+                    Text(_assetClassLabel(l10n),
+                        style: theme.textTheme.labelSmall
+                            ?.copyWith(color: cs.onSurfaceVariant)),
                   ],
                 ),
-              ],
+              ),
+              // Return badge pill — same as Owl signal badge
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: returnColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusPill),
+                  border: Border.all(color: returnColor.withValues(alpha: 0.3)),
+                ),
+                child: Text(
+                  '${isPositive ? '+' : ''}${holding.returnPct.toStringAsFixed(2)}%',
+                  style: TextStyle(
+                    color: returnColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          // Stats with left purple accent — same as Owl reason text
+          Container(
+            padding: const EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+              border: Border(
+                left: BorderSide(
+                  color: AppTheme.brandPurple.withValues(alpha: 0.5),
+                  width: 2,
+                ),
+              ),
             ),
-            const Divider(height: 24),
-            Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _Stat(
-                  label: AppLocalizations.of(context).portfolioCurrentPrice,
+                  label: l10n.portfolioCurrentPrice,
                   value: CurrencyFormatter.formatWithCurrency(
                       holding.currentPrice * fxRate, currency),
                 ),
                 _Stat(
-                  label: AppLocalizations.of(context).portfolioAvgCost,
+                  label: l10n.portfolioAvgCost,
                   value: CurrencyFormatter.formatWithCurrency(
                       holding.avgCost * fxRate, currency),
                 ),
                 _Stat(
-                  label: '${holding.quantity.toStringAsFixed(holding.assetClass == 'crypto' ? 4 : 2)} ${holding.assetClass == 'crypto' ? holding.symbol : l10n.portfolioShares}',
-                  value: '',
+                  label: l10n.portfolioShares,
+                  value: holding.quantity.toStringAsFixed(
+                      holding.assetClass == 'crypto' ? 4 : 2),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 12),
+          // Footer — market value + VENDER pill
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              RichText(
+                text: TextSpan(
+                  style: theme.textTheme.labelSmall
+                      ?.copyWith(color: cs.onSurfaceVariant),
+                  children: [
+                    TextSpan(text: '${l10n.portfolioReturn}: '),
+                    TextSpan(
+                      text: CurrencyFormatter.formatWithCurrency(
+                          holding.marketValue * fxRate, currency),
+                      style: TextStyle(
+                          color: cs.onSurface, fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () => context.push('/home/sell-asset'),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
+                    ),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusPill),
+                  ),
+                  child: Text(
+                    l10n.dashboardSell,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
