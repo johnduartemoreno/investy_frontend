@@ -1118,11 +1118,18 @@ class _RecCardState extends State<_RecCard>
         child: Container(
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerLow,
+            color: Theme.of(context).colorScheme.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Theme.of(context).colorScheme.outlineVariant,
+              color: AppTheme.brandPurple.withValues(alpha: 0.35),
             ),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.brandPurple.withValues(alpha: 0.08),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           padding: const EdgeInsets.all(14),
           child: Column(
