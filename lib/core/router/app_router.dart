@@ -28,23 +28,22 @@ import 'go_router_refresh_stream.dart';
 
 part 'app_router.g.dart';
 
-final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorHomeKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellHome');
-final _shellNavigatorGoalsKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellGoals');
-final _shellNavigatorPortfolioKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellPortfolio');
-final _shellNavigatorSettingsKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellSettings');
-
 @riverpod
 GoRouter goRouter(Ref ref) {
+  final rootNavigatorKey = GlobalKey<NavigatorState>();
+  final shellNavigatorHomeKey =
+      GlobalKey<NavigatorState>(debugLabel: 'shellHome');
+  final shellNavigatorGoalsKey =
+      GlobalKey<NavigatorState>(debugLabel: 'shellGoals');
+  final shellNavigatorPortfolioKey =
+      GlobalKey<NavigatorState>(debugLabel: 'shellPortfolio');
+  final shellNavigatorSettingsKey =
+      GlobalKey<NavigatorState>(debugLabel: 'shellSettings');
   // Create a notifier that rebuilds GoRouter when auth state changes
   final authStateStream = FirebaseAuth.instance.authStateChanges();
 
   return GoRouter(
-    navigatorKey: _rootNavigatorKey,
+    navigatorKey: rootNavigatorKey,
     initialLocation: '/home',
     debugLogDiagnostics: true,
     refreshListenable: GoRouterRefreshStream(authStateStream),
@@ -111,7 +110,7 @@ GoRouter goRouter(Ref ref) {
         branches: [
           // 1. Home
           StatefulShellBranch(
-            navigatorKey: _shellNavigatorHomeKey,
+            navigatorKey: shellNavigatorHomeKey,
             routes: [
               GoRoute(
                 path: '/home',
@@ -135,7 +134,7 @@ GoRouter goRouter(Ref ref) {
           ),
           // 2. Goals
           StatefulShellBranch(
-            navigatorKey: _shellNavigatorGoalsKey,
+            navigatorKey: shellNavigatorGoalsKey,
             routes: [
               GoRoute(
                 path: '/goals',
@@ -145,7 +144,7 @@ GoRouter goRouter(Ref ref) {
           ),
           // 3. Portfolio
           StatefulShellBranch(
-            navigatorKey: _shellNavigatorPortfolioKey,
+            navigatorKey: shellNavigatorPortfolioKey,
             routes: [
               GoRoute(
                 path: '/portfolio',
@@ -155,7 +154,7 @@ GoRouter goRouter(Ref ref) {
           ),
           // 4. Settings
           StatefulShellBranch(
-            navigatorKey: _shellNavigatorSettingsKey,
+            navigatorKey: shellNavigatorSettingsKey,
             routes: [
               GoRoute(
                 path: '/settings',
