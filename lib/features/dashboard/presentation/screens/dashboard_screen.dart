@@ -4,6 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/network/dio_client.dart';
+import '../../../../core/presentation/widgets/gradient_icon_box.dart';
+import '../../../../core/presentation/widgets/gradient_pill_button.dart';
+import '../../../../core/presentation/widgets/left_accent_box.dart';
+import '../../../../core/presentation/widgets/signal_badge.dart';
 import '../../../../core/providers/locale_provider.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/currency_formatter.dart';
@@ -1157,15 +1161,7 @@ class _RecCardState extends State<_RecCard>
                 ],
               ),
               const SizedBox(height: 10),
-              Container(
-                padding: const EdgeInsets.only(left: 10),
-                decoration: BoxDecoration(
-                  border: Border(
-                    left: BorderSide(
-                        color: AppTheme.brandPurple.withValues(alpha: 0.5),
-                        width: 2),
-                  ),
-                ),
+              LeftAccentBox(
                 child: Text(
                   r.reason,
                   style: theme.textTheme.bodySmall?.copyWith(
@@ -1191,27 +1187,9 @@ class _RecCardState extends State<_RecCard>
                       ],
                     ),
                   ),
-                  GestureDetector(
+                  GradientPillButton(
+                    label: l10n.owlAiBuyButton,
                     onTap: () => context.push('/home/buy-asset'),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 18, vertical: 8),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(colors: [
-                          AppTheme.brandPurple,
-                          AppTheme.brandPurpleLight
-                        ]),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        l10n.owlAiBuyButton,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -1223,60 +1201,29 @@ class _RecCardState extends State<_RecCard>
   }
 
   Widget _tickerIcon(String ticker) {
-    final colors = {
-      'AAPL': [const Color(0xFF1d4ed8), const Color(0xFF3b82f6)],
-      'VTI': [const Color(0xFF065f46), const Color(0xFF10b981)],
-      'BTC': [const Color(0xFF78350f), const Color(0xFFf59e0b)],
-      'MSFT': [const Color(0xFF4c1d95), const Color(0xFF8b5cf6)],
-      'IAU': [const Color(0xFF881337), const Color(0xFFf43f5e)],
+    const colorMap = {
+      'AAPL': [Color(0xFF1d4ed8), Color(0xFF3b82f6)],
+      'VTI':  [Color(0xFF065f46), Color(0xFF10b981)],
+      'BTC':  [Color(0xFF78350f), Color(0xFFf59e0b)],
+      'MSFT': [Color(0xFF4c1d95), Color(0xFF8b5cf6)],
+      'IAU':  [Color(0xFF881337), Color(0xFFf43f5e)],
     };
-    final c = colors[ticker] ??
-        [AppTheme.brandPurple, AppTheme.brandPurpleLight];
+    final c = colorMap[ticker] ?? [AppTheme.brandPurple, AppTheme.brandPurpleLight];
+    final displayLabel = ticker.length > 4 ? ticker.substring(0, 4) : ticker;
 
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: c,
-            begin: Alignment.topLeft, end: Alignment.bottomRight),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        ticker.length > 4 ? ticker.substring(0, 4) : ticker,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 10,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
+    return GradientIconBox(
+      colors: c,
+      child: Text(displayLabel,
+          style: const TextStyle(
+              color: Colors.white, fontSize: 10, fontWeight: FontWeight.w800)),
     );
   }
 
   Widget _strengthBadge(bool strong) {
     final l10n = AppLocalizations.of(context);
-    final label = strong ? l10n.owlAiStrongBuy : l10n.owlAiModerateSignal;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: strong
-            ? const Color(0xFF4ade80).withValues(alpha: 0.12)
-            : const Color(0xFFfbbf24).withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: strong
-              ? const Color(0xFF4ade80).withValues(alpha: 0.35)
-              : const Color(0xFFfbbf24).withValues(alpha: 0.35),
-        ),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: strong ? const Color(0xFF4ade80) : const Color(0xFFfbbf24),
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
+    return SignalBadge(
+      label: strong ? l10n.owlAiStrongBuy : l10n.owlAiModerateSignal,
+      color: strong ? AppTheme.signalGreen : AppTheme.signalAmber,
     );
   }
 }

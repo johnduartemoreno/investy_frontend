@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
+import '../../../../core/presentation/widgets/gradient_icon_box.dart';
+import '../../../../core/presentation/widgets/gradient_pill_button.dart';
 import '../../../../core/presentation/widgets/responsive_center.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -42,54 +44,16 @@ class GoalsScreen extends ConsumerWidget {
             const Center(child: CircularProgressIndicator.adaptive()),
         error: (err, stack) => Center(child: Text(AppLocalizations.of(context).commonError)),
       ),
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
+      floatingActionButton: GradientPillButton(
+        label: AppLocalizations.of(context).goalsAddButton,
+        leading: const Icon(Icons.add, color: Colors.white, size: 18),
+        onTap: () => showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
-          borderRadius: BorderRadius.circular(AppDimens.radiusPill),
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.brandPurple.withValues(alpha: 0.35),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(AppDimens.radiusPill),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(AppDimens.radiusPill),
-            onTap: () => showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-              ),
-              builder: (_) => const CreateGoalSheet(),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.add, color: Colors.white, size: 20),
-                  const SizedBox(width: 8),
-                  Text(
-                    AppLocalizations.of(context).goalsAddButton,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          builder: (_) => const CreateGoalSheet(),
         ),
       ),
     );
@@ -152,23 +116,11 @@ class _GoalCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  // Gradient circle icon — same pattern as Owl rec cards
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: gradient,
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      _categoryIcon(goal.category),
-                      size: 20,
-                      color: Colors.white,
-                    ),
+                  GradientIconBox(
+                    colors: gradient,
+                    circle: true,
+                    child: Icon(_categoryIcon(goal.category),
+                        size: 20, color: Colors.white),
                   ),
                   const SizedBox(width: 12),
                   Text(

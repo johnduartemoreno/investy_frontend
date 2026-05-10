@@ -5,6 +5,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
+import '../../../../core/presentation/widgets/gradient_icon_box.dart';
+import '../../../../core/presentation/widgets/gradient_pill_button.dart';
+import '../../../../core/presentation/widgets/left_accent_box.dart';
+import '../../../../core/presentation/widgets/signal_badge.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../data/models/portfolio_response_model.dart';
@@ -238,29 +242,15 @@ class _HoldingCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header — same layout as Owl rec card
           Row(
             children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: gradient,
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(AppDimens.radiusAssetIcon),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  label,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
+              GradientIconBox(
+                colors: gradient,
+                child: Text(label,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800)),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -276,37 +266,15 @@ class _HoldingCard extends StatelessWidget {
                   ],
                 ),
               ),
-              // Return badge pill — same as Owl signal badge
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: returnColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppDimens.radiusPill),
-                  border: Border.all(color: returnColor.withValues(alpha: 0.3)),
-                ),
-                child: Text(
-                  '${isPositive ? '+' : ''}${holding.returnPct.toStringAsFixed(2)}%',
-                  style: TextStyle(
-                    color: returnColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+              SignalBadge(
+                label:
+                    '${isPositive ? '+' : ''}${holding.returnPct.toStringAsFixed(2)}%',
+                color: returnColor,
               ),
             ],
           ),
           const SizedBox(height: 10),
-          // Stats with left purple accent — same as Owl reason text
-          Container(
-            padding: const EdgeInsets.only(left: 10),
-            decoration: BoxDecoration(
-              border: Border(
-                left: BorderSide(
-                  color: AppTheme.brandPurple.withValues(alpha: 0.5),
-                  width: 2,
-                ),
-              ),
-            ),
+          LeftAccentBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -322,14 +290,13 @@ class _HoldingCard extends StatelessWidget {
                 ),
                 _Stat(
                   label: l10n.portfolioShares,
-                  value: holding.quantity.toStringAsFixed(
-                      holding.assetClass == 'crypto' ? 4 : 2),
+                  value: holding.quantity
+                      .toStringAsFixed(holding.assetClass == 'crypto' ? 4 : 2),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 12),
-          // Footer — market value + VENDER pill
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -348,25 +315,9 @@ class _HoldingCard extends StatelessWidget {
                   ],
                 ),
               ),
-              GestureDetector(
+              GradientPillButton(
+                label: l10n.dashboardSell,
                 onTap: () => context.push('/home/sell-asset'),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
-                    ),
-                    borderRadius: BorderRadius.circular(AppDimens.radiusPill),
-                  ),
-                  child: Text(
-                    l10n.dashboardSell,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
               ),
             ],
           ),
