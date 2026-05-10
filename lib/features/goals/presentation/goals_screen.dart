@@ -109,21 +109,27 @@ class _GoalCard extends StatelessWidget {
 
   IconData _categoryIcon(String category) {
     switch (category.toLowerCase()) {
-      case 'car':
-        return Icons.directions_car;
-      case 'home':
-        return Icons.home;
+      case 'car': return Icons.directions_car;
+      case 'home': return Icons.home;
       case 'vacation':
-      case 'travel':
-        return Icons.flight;
-      case 'education':
-        return Icons.school;
-      case 'emergency':
-        return Icons.shield;
-      case 'health':
-        return Icons.favorite;
-      default:
-        return Icons.flag;
+      case 'travel': return Icons.flight;
+      case 'education': return Icons.school;
+      case 'emergency': return Icons.shield;
+      case 'health': return Icons.favorite;
+      default: return Icons.flag;
+    }
+  }
+
+  List<Color> _categoryGradient(String category) {
+    switch (category.toLowerCase()) {
+      case 'car': return [const Color(0xFF1d4ed8), const Color(0xFF3b82f6)];
+      case 'home': return [const Color(0xFF065f46), const Color(0xFF10b981)];
+      case 'vacation':
+      case 'travel': return [const Color(0xFF0369a1), const Color(0xFF38bdf8)];
+      case 'education': return [AppTheme.brandPurple, AppTheme.brandPurpleLight];
+      case 'emergency': return [const Color(0xFF991b1b), const Color(0xFFf87171)];
+      case 'health': return [const Color(0xFF9d174d), const Color(0xFFf472b6)];
+      default: return [const Color(0xFF78350f), const Color(0xFFf59e0b)];
     }
   }
 
@@ -134,7 +140,8 @@ class _GoalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final progress = goal.progress; // safe: clamp(0.0, 1.0), guard on targetAmountCents > 0
+    final progress = goal.progress;
+    final gradient = _categoryGradient(goal.category);
 
     return CustomCard(
       child: Column(
@@ -145,15 +152,28 @@ class _GoalCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(
-                    _categoryIcon(goal.category),
-                    size: 20,
-                    color: theme.colorScheme.primary,
+                  // Gradient circle icon — same pattern as Owl rec cards
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: gradient,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      _categoryIcon(goal.category),
+                      size: 20,
+                      color: Colors.white,
+                    ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 12),
                   Text(
                     goal.name,
-                    style: theme.textTheme.titleLarge
+                    style: theme.textTheme.titleMedium
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ],

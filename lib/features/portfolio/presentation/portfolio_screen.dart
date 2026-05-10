@@ -199,15 +199,14 @@ class _HoldingCard extends StatelessWidget {
     required this.fxRate,
   });
 
-  Color _assetColor(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+  List<Color> _assetGradient() {
     switch (holding.assetClass) {
       case 'crypto':
-        return cs.tertiary;
+        return [const Color(0xFF78350f), const Color(0xFFf59e0b)];
       case 'etf':
-        return cs.secondary;
+        return [AppTheme.brandPurple, AppTheme.brandPurpleLight];
       default:
-        return cs.primary;
+        return [const Color(0xFF1d4ed8), const Color(0xFF3b82f6)];
     }
   }
 
@@ -227,26 +226,42 @@ class _HoldingCard extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
-    final color = _assetColor(context);
     final isPositive = holding.returnPct >= 0;
     final returnColor = isPositive ? AppTheme.signalGreen : cs.error;
+    final gradient = _assetGradient();
+    final label = holding.symbol.length > 4
+        ? holding.symbol.substring(0, 4)
+        : holding.symbol;
 
     return CustomCard(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Column(
           children: [
-            // Header row: symbol + market value
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(children: [
-                  CircleAvatar(
-                    backgroundColor: color.withValues(alpha: 0.12),
+                  // Gradient icon — same pattern as Owl rec cards
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: gradient,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusAssetIcon),
+                    ),
+                    alignment: Alignment.center,
                     child: Text(
-                      holding.symbol.isNotEmpty ? holding.symbol[0] : '?',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: color),
+                      label,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                   const SizedBox(width: AppDimens.spacingM),
@@ -271,17 +286,28 @@ class _HoldingCard extends StatelessWidget {
                       style: theme.textTheme.titleMedium
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      '${holding.quantity.toStringAsFixed(holding.assetClass == 'crypto' ? 6 : 2)} ${holding.assetClass == 'crypto' ? holding.symbol : l10n.portfolioShares}',
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: cs.onSurfaceVariant),
+                    // Return badge — colored pill like Owl signal badge
+                    Container(
+                      margin: const EdgeInsets.only(top: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: returnColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusPill),
+                      ),
+                      child: Text(
+                        '${isPositive ? '+' : ''}${holding.returnPct.toStringAsFixed(2)}%',
+                        style: TextStyle(
+                          color: returnColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
             const Divider(height: 24),
-            // Stats row: current price / avg cost / return
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -296,10 +322,8 @@ class _HoldingCard extends StatelessWidget {
                       holding.avgCost * fxRate, currency),
                 ),
                 _Stat(
-                  label: AppLocalizations.of(context).portfolioReturn,
-                  value:
-                      '${isPositive ? '+' : ''}${holding.returnPct.toStringAsFixed(2)}%',
-                  valueColor: returnColor,
+                  label: '${holding.quantity.toStringAsFixed(holding.assetClass == 'crypto' ? 4 : 2)} ${holding.assetClass == 'crypto' ? holding.symbol : l10n.portfolioShares}',
+                  value: '',
                 ),
               ],
             ),
