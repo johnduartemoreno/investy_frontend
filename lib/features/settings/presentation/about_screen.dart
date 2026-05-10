@@ -20,7 +20,7 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(height: 16),
             Material(
               elevation: 4,
-              color: Colors.white,
+              color: colorScheme.surfaceContainerHigh,
               shape: const CircleBorder(),
               child: Padding(
                 padding: const EdgeInsets.all(20),

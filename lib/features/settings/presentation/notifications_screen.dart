@@ -92,10 +92,13 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  AppLocalizations.of(context).notificationsDescription,
-                  style: textTheme.bodySmall
-                      ?.copyWith(color: colorScheme.onSurfaceVariant),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Text(
+                    AppLocalizations.of(context).notificationsDescription,
+                    style: textTheme.bodySmall
+                        ?.copyWith(color: colorScheme.onSurfaceVariant),
+                  ),
                 ),
               ],
             ),

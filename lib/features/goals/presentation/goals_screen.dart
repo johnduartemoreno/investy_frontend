@@ -125,13 +125,13 @@ class _GoalCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: theme.primaryColor.withValues(alpha: 0.1),
+                  color: theme.colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   '${(progress * 100).toStringAsFixed(1)}%',
                   style: TextStyle(
-                    color: theme.primaryColor,
+                    color: theme.colorScheme.onPrimaryContainer,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

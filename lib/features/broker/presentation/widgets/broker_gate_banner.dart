@@ -34,35 +34,28 @@ class BrokerGateBanner extends ConsumerWidget {
   Widget _banner(BuildContext context, bool isPending) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isPending
-            ? theme.colorScheme.secondaryContainer
-            : theme.colorScheme.tertiaryContainer,
+        color: cs.primaryContainer,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
           Icon(
-            isPending ? Icons.hourglass_top : Icons.account_balance_outlined,
-            color: isPending
-                ? theme.colorScheme.onSecondaryContainer
-                : theme.colorScheme.onTertiaryContainer,
+            isPending ? Icons.hourglass_top : Icons.info_outline,
+            color: cs.onPrimaryContainer,
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              isPending
-                  ? l10n.brokerBannerPending
-                  : l10n.brokerBannerNotActive,
+              isPending ? l10n.brokerBannerPending : l10n.brokerBannerNotActive,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: isPending
-                    ? theme.colorScheme.onSecondaryContainer
-                    : theme.colorScheme.onTertiaryContainer,
+                color: cs.onPrimaryContainer,
                 fontWeight: FontWeight.w500,
               ),
             ),

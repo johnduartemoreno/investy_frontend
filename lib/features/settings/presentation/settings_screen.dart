@@ -233,7 +233,7 @@ class SettingsScreen extends ConsumerWidget {
       BuildContext context, IconData icon, String title, String trailing,
       {required VoidCallback onTap}) {
     return ListTile(
-      leading: Icon(icon, color: Theme.of(context).primaryColor),
+      leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,

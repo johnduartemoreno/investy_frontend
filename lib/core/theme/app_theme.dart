@@ -67,15 +67,36 @@ class AppTheme {
     textTheme: _buildTextTheme(ThemeData.light().textTheme),
     appBarTheme: AppBarTheme(
       centerTitle: true,
+      elevation: 0,
       titleTextStyle: GoogleFonts.dmSans(
         fontSize: 18,
         fontWeight: FontWeight.w600,
         color: const Color(0xFF1C1B1F),
       ),
     ),
+    cardTheme: CardThemeData(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+        side: const BorderSide(color: Color(0xFFE0E0E8), width: 1),
+      ),
+    ),
+    dividerTheme: const DividerThemeData(
+      color: Color(0xFFE0E0E8),
+      thickness: 1,
+    ),
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimens.radiusInput),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppDimens.radiusInput),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppDimens.radiusInput),
+        borderSide: const BorderSide(color: Color(0xFF6750A4), width: 1.5),
       ),
       filled: true,
     ),

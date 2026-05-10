@@ -252,9 +252,8 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                             : colorScheme.surfaceContainerLow,
                         borderRadius: BorderRadius.circular(20),
                         border: isActive
-                            ? Border.all(
-                                color: colorScheme.primary, width: 1.5)
-                            : null,
+                            ? Border.all(color: colorScheme.primary, width: 1.5)
+                            : Border.all(color: colorScheme.outlineVariant, width: 1),
                       ),
                       child: Text(
                         _presets[i].label,
@@ -283,9 +282,8 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                           : colorScheme.surfaceContainerLow,
                       borderRadius: BorderRadius.circular(20),
                       border: (_activePreset == null && _selectedDeadline != null)
-                          ? Border.all(
-                              color: colorScheme.primary, width: 1.5)
-                          : null,
+                          ? Border.all(color: colorScheme.primary, width: 1.5)
+                          : Border.all(color: colorScheme.outlineVariant, width: 1),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
