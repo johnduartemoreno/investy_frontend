@@ -73,10 +73,8 @@ class SettingsScreen extends ConsumerWidget {
                               user?.name.isNotEmpty == true
                                   ? user!.name[0].toUpperCase()
                                   : 'U',
-                              style: TextStyle(
-                                  fontSize: 24,
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  color: Theme.of(context).colorScheme.onPrimary,
                                   fontWeight: FontWeight.bold),
                             )
                           : null,
@@ -116,9 +114,8 @@ class SettingsScreen extends ConsumerWidget {
                 if (uploadState.status == AvatarUploadStatus.error)
                   Text(
                     uploadState.errorMessage ?? l10n.commonError,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
-                        fontSize: 12),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.error),
                   ),
               ],
             ),
@@ -261,11 +258,11 @@ class SettingsScreen extends ConsumerWidget {
           ref.read(authNotifierProvider.notifier).logout();
           context.go('/login');
         },
-        icon: const Icon(Icons.logout, color: Colors.red),
-        label: Text(l10n.commonLogOut, style: const TextStyle(color: Colors.red)),
+        icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
+        label: Text(l10n.commonLogOut, style: TextStyle(color: Theme.of(context).colorScheme.error)),
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.all(AppDimens.spacingL),
-          side: const BorderSide(color: Colors.red),
+          side: BorderSide(color: Theme.of(context).colorScheme.error),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(AppDimens.radius)),
         ),

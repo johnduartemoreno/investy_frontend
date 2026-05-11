@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_dimens.dart';
 import '../../../l10n/app_localizations.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -13,11 +14,11 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.aboutTitle)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppDimens.spacingXL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 16),
+            const SizedBox(height: AppDimens.spacingL),
             Material(
               elevation: 4,
               color: colorScheme.surfaceContainerHigh,

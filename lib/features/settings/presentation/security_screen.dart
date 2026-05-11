@@ -95,7 +95,7 @@ class SecurityScreen extends ConsumerWidget {
       title: Text(
         title,
         style: TextStyle(
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w700,
           color: enabled ? titleColor : cs.onSurfaceVariant,
         ),
       ),
@@ -249,8 +249,8 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(_l10n.changePasswordTitle,
-                  style: theme.textTheme.titleLarge
-                      ?.copyWith(fontWeight: FontWeight.bold)),
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w700)),
               const SizedBox(height: AppDimens.spacingXL),
               _PasswordField(
                 controller: _currentCtrl,
@@ -393,8 +393,8 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(_l10n.deleteAccountConfirmTitle,
-                style: theme.textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold)),
+                style: theme.textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppDimens.spacingM),
             if (widget.isGoogle) ...[
               Text(
@@ -504,7 +504,7 @@ class _PasswordField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppDimens.radius),
-          borderSide: const BorderSide(width: 2, color: Colors.blue),
+          borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppDimens.radius),
@@ -512,7 +512,7 @@ class _PasswordField extends StatelessWidget {
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppDimens.radius),
-          borderSide: const BorderSide(width: 2, color: Colors.blue),
+          borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary),
         ),
         filled: true,
         contentPadding: const EdgeInsets.all(AppDimens.spacingL),

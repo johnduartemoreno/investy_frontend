@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'providers/auth_provider.dart';
+import '../../../core/presentation/widgets/primary_button.dart';
+import '../../../core/theme/app_dimens.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -72,7 +74,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppDimens.spacingXL),
           child: Form(
             key: _formKey,
             child: Column(
@@ -124,32 +126,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     },
                   ),
                   const SizedBox(height: 24),
-                  SizedBox(
-                    height: 56,
-                    child: FilledButton(
-                      onPressed: _isLoading ? null : _submit,
-                      style: FilledButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: _isLoading
-                          ? SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                color: colorScheme.onPrimary,
-                                strokeWidth: 2.5,
-                              ),
-                            )
-                          : Text(
-                              'Send Reset Link',
-                              style: textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: colorScheme.onPrimary,
-                              ),
-                            ),
-                    ),
+                  PrimaryButton(
+                    text: 'Send Reset Link',
+                    isLoading: _isLoading,
+                    onPressed: _submit,
                   ),
                 ] else ...[
                   Icon(
@@ -158,23 +138,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     color: colorScheme.primary,
                   ),
                   const SizedBox(height: 32),
-                  SizedBox(
-                    height: 56,
-                    child: FilledButton(
-                      onPressed: () => context.go('/login'),
-                      style: FilledButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text(
-                        'Back to Sign In',
-                        style: textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: colorScheme.onPrimary,
-                        ),
-                      ),
-                    ),
+                  PrimaryButton(
+                    text: 'Back to Sign In',
+                    onPressed: () => context.go('/login'),
                   ),
                 ],
               ],

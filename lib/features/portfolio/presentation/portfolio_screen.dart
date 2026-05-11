@@ -330,9 +330,8 @@ class _HoldingCard extends StatelessWidget {
 class _Stat extends StatelessWidget {
   final String label;
   final String value;
-  final Color? valueColor;
 
-  const _Stat({required this.label, required this.value, this.valueColor});
+  const _Stat({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -347,7 +346,6 @@ class _Stat extends StatelessWidget {
           value,
           style: theme.textTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w600,
-            color: valueColor,
           ),
         ),
       ],
