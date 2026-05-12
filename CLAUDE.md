@@ -1,10 +1,14 @@
 # Investy Frontend — Agent Instructions
 
-## 🎨 Design System Skill
+## 🛠️ Skills — Invoke Before Working
 
-**MANDATORY:** Before creating or significantly modifying any screen or widget, invoke the `/investy-design-system` skill.
-It enforces brand tokens, mandatory widgets, naming conventions, and the "never do" list.
-Skill location: `.claude/skills/investy-design-system/SKILL.md`
+| Work type | Skill to invoke | Location |
+|-----------|----------------|----------|
+| New screen / widget / visual change | `/investy-design-system` | `.claude/skills/investy-design-system/SKILL.md` |
+| New provider / controller / datasource | `/investy-state-management` | `.claude/skills/investy-state-management/SKILL.md` |
+| Full feature (screen + state) | **Both** | — |
+
+**MANDATORY:** These skills enforce brand tokens, Riverpod patterns, naming conventions, and "never do" rules. Do not skip.
 
 ## 🎨 UX & Design Standard
 
