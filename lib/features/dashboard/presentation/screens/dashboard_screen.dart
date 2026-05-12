@@ -15,6 +15,7 @@ import '../../../../core/widgets/owl_ai_widget.dart';
 import '../../../../l10n/app_localizations.dart';
 
 import '../../data/datasources/dashboard_remote_data_source.dart';
+import '../../data/models/buy_asset_args.dart';
 import '../../data/models/dashboard_response_model.dart';
 import '../../data/models/recommendation_model.dart';
 import '../providers/recommendation_provider.dart';
@@ -1189,7 +1190,20 @@ class _RecCardState extends State<_RecCard>
                   ),
                   GradientPillButton(
                     label: l10n.owlAiBuyButton,
-                    onTap: () => context.push('/home/buy-asset'),
+                    onTap: () => context.push(
+                      '/home/buy-asset',
+                      extra: BuyAssetArgs(
+                        symbol: r.ticker,
+                        name: r.name,
+                        priceCents: 0,
+                        signalLabel: r.strong
+                            ? l10n.owlAiStrongBuy
+                            : l10n.owlAiModerateSignal,
+                        signalColor: r.strong
+                            ? AppTheme.signalGreen
+                            : AppTheme.signalAmber,
+                      ),
+                    ),
                   ),
                 ],
               ),
