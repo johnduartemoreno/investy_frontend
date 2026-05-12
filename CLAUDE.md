@@ -1,5 +1,11 @@
 # Investy Frontend — Agent Instructions
 
+## 🎨 Design System Skill
+
+**MANDATORY:** Before creating or significantly modifying any screen or widget, invoke the `/investy-design-system` skill.
+It enforces brand tokens, mandatory widgets, naming conventions, and the "never do" list.
+Skill location: `.claude/skills/investy-design-system/SKILL.md`
+
 ## 🎨 UX & Design Standard
 
 **Framework:** Flutter with Material 3 (`useMaterial3: true`).
