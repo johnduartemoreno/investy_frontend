@@ -1,6 +1,8 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/presentation/widgets/custom_card.dart';
+import '../../../core/theme/app_dimens.dart';
 import '../../../core/services/notification_service.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -68,20 +70,16 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator.adaptive())
           : ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppDimens.spacingL),
               children: [
-                Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: colorScheme.outlineVariant),
-                  ),
+                CustomCard(
+                  padding: EdgeInsets.zero,
                   child: SwitchListTile(
                     value: _enabled,
                     onChanged: _toggle,
                     title: Text(AppLocalizations.of(context).notificationsPush,
-                        style: textTheme.bodyLarge
-                            ?.copyWith(fontWeight: FontWeight.w500)),
+                        style: textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w700)),
                     subtitle: Text(
                       AppLocalizations.of(context).notificationsPushSubtitle,
                       style: textTheme.bodySmall
@@ -91,11 +89,14 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                         Icon(Icons.notifications_outlined, color: colorScheme.primary),
                   ),
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  AppLocalizations.of(context).notificationsDescription,
-                  style: textTheme.bodySmall
-                      ?.copyWith(color: colorScheme.onSurfaceVariant),
+                const SizedBox(height: AppDimens.spacingL),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppDimens.spacingXS),
+                  child: Text(
+                    AppLocalizations.of(context).notificationsDescription,
+                    style: textTheme.bodySmall
+                        ?.copyWith(color: colorScheme.onSurfaceVariant),
+                  ),
                 ),
               ],
             ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'providers/auth_provider.dart';
+import '../../../core/theme/app_dimens.dart';
 import '../../../l10n/app_localizations.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
@@ -76,7 +77,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       ),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(AppDimens.spacingXL),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 400),
             child: Column(
@@ -131,7 +132,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                       : const Icon(Icons.refresh),
                   label: Text(_isRefreshing ? l10n.commonLoading : l10n.commonConfirm),
                   style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(AppDimens.spacingL),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -148,7 +149,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                       : const Icon(Icons.email_outlined),
                   label: Text(_isResending ? l10n.commonLoading : l10n.emailVerificationResend),
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(AppDimens.spacingL),
                   ),
                 ),
                 const SizedBox(height: 24),

@@ -73,10 +73,8 @@ class SettingsScreen extends ConsumerWidget {
                               user?.name.isNotEmpty == true
                                   ? user!.name[0].toUpperCase()
                                   : 'U',
-                              style: TextStyle(
-                                  fontSize: 24,
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  color: Theme.of(context).colorScheme.onPrimary,
                                   fontWeight: FontWeight.bold),
                             )
                           : null,
@@ -103,22 +101,21 @@ class SettingsScreen extends ConsumerWidget {
                   user?.name ?? 'User',
                   style: Theme.of(context)
                       .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                      .titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w700),
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   user?.email ?? 'email@example.com',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant),
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (uploadState.status == AvatarUploadStatus.error)
                   Text(
                     uploadState.errorMessage ?? l10n.commonError,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
-                        fontSize: 12),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.error),
                   ),
               ],
             ),
@@ -192,7 +189,16 @@ class SettingsScreen extends ConsumerWidget {
                     : brokerStatus.isPending
                         ? l10n.brokerBannerPending
                         : l10n.brokerStatusRejected;
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(msg),
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+                ),
+              ),
+            );
           }),
           const Divider(height: 1),
           _buildListTile(context, Icons.psychology_outlined, l10n.riskProfileSettingsLabel, riskTrailing, onTap: () => context.push('/settings/risk-profile')),
@@ -223,20 +229,21 @@ class SettingsScreen extends ConsumerWidget {
   Widget _buildListTile(
       BuildContext context, IconData icon, String title, String trailing,
       {required VoidCallback onTap}) {
+    final cs = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return ListTile(
-      leading: Icon(icon, color: Theme.of(context).primaryColor),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+      leading: Icon(icon, color: cs.primary, size: 22),
+      title: Text(title,
+          style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(trailing,
-              style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 13)),
+          if (trailing.isNotEmpty)
+            Text(trailing,
+                style: textTheme.labelSmall?.copyWith(
+                    color: cs.onSurfaceVariant)),
           const SizedBox(width: 4),
-          Icon(Icons.chevron_right,
-              size: 20,
-              color: Theme.of(context).colorScheme.onSurfaceVariant),
+          Icon(Icons.chevron_right, size: 18, color: cs.onSurfaceVariant),
         ],
       ),
       onTap: onTap,
@@ -251,11 +258,11 @@ class SettingsScreen extends ConsumerWidget {
           ref.read(authNotifierProvider.notifier).logout();
           context.go('/login');
         },
-        icon: const Icon(Icons.logout, color: Colors.red),
-        label: Text(l10n.commonLogOut, style: const TextStyle(color: Colors.red)),
+        icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
+        label: Text(l10n.commonLogOut, style: TextStyle(color: Theme.of(context).colorScheme.error)),
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.all(AppDimens.spacingL),
-          side: const BorderSide(color: Colors.red),
+          side: BorderSide(color: Theme.of(context).colorScheme.error),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(AppDimens.radius)),
         ),

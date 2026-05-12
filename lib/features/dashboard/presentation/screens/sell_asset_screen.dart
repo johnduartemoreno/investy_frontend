@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../features/portfolio/data/models/portfolio_response_model.dart';
@@ -215,7 +216,7 @@ class _HoldingListTile extends StatelessWidget {
                     '${holding.returnPct >= 0 ? '+' : ''}${holding.returnPct.toStringAsFixed(1)}%',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: holding.returnPct >= 0
-                          ? colors.tertiary
+                          ? AppTheme.signalGreen
                           : colors.error,
                       fontWeight: FontWeight.w600,
                     ),
@@ -334,7 +335,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(AppLocalizations.of(context).sellSuccess),
-            backgroundColor: colors.tertiary,
+            backgroundColor: AppTheme.signalGreen,
           ),
         );
         if (context.canPop()) context.pop();

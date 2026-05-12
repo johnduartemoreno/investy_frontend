@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/presentation/widgets/custom_card.dart';
+import '../../../core/theme/app_dimens.dart';
 import '../../../core/providers/locale_provider.dart';
 import '../../../core/theme/theme_mode_provider.dart';
 import '../../../l10n/app_localizations.dart';
@@ -30,11 +32,11 @@ class AppearanceScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.appearanceTitle)),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimens.spacingL),
         children: [
           _sectionHeader(context, l10n.appearanceTheme),
-          Card(
-            margin: EdgeInsets.zero,
+          CustomCard(
+            padding: EdgeInsets.zero,
             child: Column(
               children: [
                 for (int i = 0; i < themeOptions.length; i++) ...[
@@ -56,8 +58,8 @@ class AppearanceScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
           _sectionHeader(context, l10n.appearanceLanguage),
-          Card(
-            margin: EdgeInsets.zero,
+          CustomCard(
+            padding: EdgeInsets.zero,
             child: Column(
               children: [
                 for (int i = 0; i < languageOptions.length; i++) ...[
@@ -89,7 +91,7 @@ class AppearanceScreen extends ConsumerWidget {
         title,
         style: Theme.of(context).textTheme.titleSmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
             ),
       ),
     );
@@ -109,8 +111,8 @@ class AppearanceScreen extends ConsumerWidget {
           color: selected ? colorScheme.primary : colorScheme.onSurfaceVariant),
       title: Text(
         label,
-        style: textTheme.bodyLarge?.copyWith(
-          fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+        style: textTheme.titleSmall?.copyWith(
+          fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
           color: selected ? colorScheme.primary : colorScheme.onSurface,
         ),
       ),

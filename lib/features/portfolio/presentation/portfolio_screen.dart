@@ -3,7 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
+import '../../../../core/presentation/widgets/gradient_icon_box.dart';
+import '../../../../core/presentation/widgets/gradient_pill_button.dart';
+import '../../../../core/presentation/widgets/left_accent_box.dart';
+import '../../../../core/presentation/widgets/signal_badge.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../data/models/portfolio_response_model.dart';
@@ -198,15 +203,14 @@ class _HoldingCard extends StatelessWidget {
     required this.fxRate,
   });
 
-  Color _assetColor(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+  List<Color> _assetGradient() {
     switch (holding.assetClass) {
       case 'crypto':
-        return cs.tertiary;
+        return [const Color(0xFF78350f), const Color(0xFFf59e0b)];
       case 'etf':
-        return cs.secondary;
+        return [AppTheme.brandPurple, AppTheme.brandPurpleLight];
       default:
-        return cs.primary;
+        return [const Color(0xFF1d4ed8), const Color(0xFF3b82f6)];
     }
   }
 
@@ -226,84 +230,98 @@ class _HoldingCard extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
-    final color = _assetColor(context);
     final isPositive = holding.returnPct >= 0;
-    final returnColor = isPositive ? cs.tertiary : cs.error;
+    final returnColor = isPositive ? AppTheme.signalGreen : cs.error;
+    final gradient = _assetGradient();
+    final label = holding.symbol.length > 4
+        ? holding.symbol.substring(0, 4)
+        : holding.symbol;
 
     return CustomCard(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: Column(
-          children: [
-            // Header row: symbol + market value
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(children: [
-                  CircleAvatar(
-                    backgroundColor: color.withValues(alpha: 0.12),
-                    child: Text(
-                      holding.symbol.isNotEmpty ? holding.symbol[0] : '?',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: color),
-                    ),
-                  ),
-                  const SizedBox(width: AppDimens.spacingM),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(holding.symbol,
-                          style: theme.textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.bold)),
-                      Text(_assetClassLabel(l10n),
-                          style: theme.textTheme.bodySmall
-                              ?.copyWith(color: cs.onSurfaceVariant)),
-                    ],
-                  ),
-                ]),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              GradientIconBox(
+                colors: gradient,
+                child: Text(label,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800)),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      CurrencyFormatter.formatWithCurrency(
-                          holding.marketValue * fxRate, currency),
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      '${holding.quantity.toStringAsFixed(holding.assetClass == 'crypto' ? 6 : 2)} ${holding.assetClass == 'crypto' ? holding.symbol : l10n.portfolioShares}',
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: cs.onSurfaceVariant),
-                    ),
+                    Text(holding.symbol,
+                        style: theme.textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w700)),
+                    Text(_assetClassLabel(l10n),
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: cs.onSurfaceVariant)),
                   ],
                 ),
-              ],
-            ),
-            const Divider(height: 24),
-            // Stats row: current price / avg cost / return
-            Row(
+              ),
+              SignalBadge(
+                label:
+                    '${isPositive ? '+' : ''}${holding.returnPct.toStringAsFixed(2)}%',
+                color: returnColor,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          LeftAccentBox(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _Stat(
-                  label: AppLocalizations.of(context).portfolioCurrentPrice,
+                  label: l10n.portfolioCurrentPrice,
                   value: CurrencyFormatter.formatWithCurrency(
                       holding.currentPrice * fxRate, currency),
                 ),
                 _Stat(
-                  label: AppLocalizations.of(context).portfolioAvgCost,
+                  label: l10n.portfolioAvgCost,
                   value: CurrencyFormatter.formatWithCurrency(
                       holding.avgCost * fxRate, currency),
                 ),
                 _Stat(
-                  label: AppLocalizations.of(context).portfolioReturn,
-                  value:
-                      '${isPositive ? '+' : ''}${holding.returnPct.toStringAsFixed(2)}%',
-                  valueColor: returnColor,
+                  label: l10n.portfolioShares,
+                  value: holding.quantity
+                      .toStringAsFixed(holding.assetClass == 'crypto' ? 4 : 2),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              RichText(
+                text: TextSpan(
+                  style: theme.textTheme.labelSmall
+                      ?.copyWith(color: cs.onSurfaceVariant),
+                  children: [
+                    TextSpan(text: '${l10n.portfolioReturn}: '),
+                    TextSpan(
+                      text: CurrencyFormatter.formatWithCurrency(
+                          holding.marketValue * fxRate, currency),
+                      style: TextStyle(
+                          color: cs.onSurface, fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+              ),
+              GradientPillButton(
+                label: l10n.dashboardSell,
+                onTap: () => context.push('/home/sell-asset'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -312,9 +330,8 @@ class _HoldingCard extends StatelessWidget {
 class _Stat extends StatelessWidget {
   final String label;
   final String value;
-  final Color? valueColor;
 
-  const _Stat({required this.label, required this.value, this.valueColor});
+  const _Stat({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -329,7 +346,6 @@ class _Stat extends StatelessWidget {
           value,
           style: theme.textTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w600,
-            color: valueColor,
           ),
         ),
       ],

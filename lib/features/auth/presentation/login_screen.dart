@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'providers/auth_provider.dart';
+import '../../../core/presentation/widgets/custom_card.dart';
+import '../../../core/presentation/widgets/primary_button.dart';
 import '../../../core/services/email_storage_service.dart';
 import '../../../core/providers/session_provider.dart';
+import '../../../core/theme/app_dimens.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -153,11 +157,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             curve: Curves.easeInOut,
             height: isKeyboardOpen ? screenHeight * 0.15 : screenHeight * 0.35,
             width: double.infinity,
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(32),
-                bottomRight: Radius.circular(32),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(AppDimens.radiusBottomSheet),
+                bottomRight: Radius.circular(AppDimens.radiusBottomSheet),
               ),
             ),
             child: SafeArea(
@@ -167,7 +175,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Logo with dynamic sizing
                   Material(
                     elevation: 4.0,
                     color: Colors.white,
@@ -179,18 +186,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       child: Icon(
                         Icons.savings_outlined,
                         size: isKeyboardOpen ? 32 : 56,
-                        color: colorScheme.primary,
+                        color: AppTheme.brandPurple,
                       ),
                     ),
                   ),
-                  // Conditionally show the "Investy" text based on keyboard state
                   if (!isKeyboardOpen) ...[
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppDimens.spacingL),
                     Text(
                       'Investy',
                       style: textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: colorScheme.onPrimaryContainer,
+                        color: Colors.white,
                       ),
                     ),
                   ],
@@ -209,48 +215,45 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Transform.translate(
                     offset: const Offset(0, -24),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Card(
-                        elevation: 0,
-                        color: colorScheme.surface,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          side: BorderSide(
-                            color: colorScheme.outlineVariant
-                                .withValues(alpha: 0.5),
-                          ),
+                      padding: const EdgeInsets.symmetric(horizontal: AppDimens.spacingXL),
+                      child: CustomCard(
+                        padding: const EdgeInsets.fromLTRB(
+                          AppDimens.spacingXL,
+                          AppDimens.spacingXL + AppDimens.spacingS,
+                          AppDimens.spacingXL,
+                          AppDimens.spacingXL,
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Form(
+                        child: Form(
                             key: _formKey,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                // Welcome Text
+                                // ── Header block ──
                                 Text(
                                   l10n.loginTitle,
-                                  style: textTheme.headlineMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
+                                  style: textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.w700,
                                     color: colorScheme.onSurface,
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: AppDimens.spacingS),
                                 Text(
                                   l10n.loginSubtitle,
-                                  style: textTheme.bodyLarge?.copyWith(
+                                  style: textTheme.bodyMedium?.copyWith(
                                     color: colorScheme.onSurfaceVariant,
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
-                                const SizedBox(height: 32),
+                                const SizedBox(height: AppDimens.spacingM),
+                                Divider(color: colorScheme.outlineVariant),
+                                const SizedBox(height: AppDimens.spacingL),
 
-                                // Email Field
+                                // ── Fields block ──
                                 TextFormField(
                                   controller: _emailController,
                                   decoration: InputDecoration(
-                                    labelText: l10n.loginEmailHint,
+                                    hintText: l10n.loginEmailHint,
                                     prefixIcon: const Icon(Icons.email_outlined),
                                   ),
                                   keyboardType: TextInputType.emailAddress,
@@ -265,13 +268,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     return null;
                                   },
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: AppDimens.spacingL),
 
-                                // Password Field
                                 TextFormField(
                                   controller: _passwordController,
                                   decoration: InputDecoration(
-                                    labelText: l10n.loginPasswordHint,
+                                    hintText: l10n.loginPasswordHint,
                                     prefixIcon: const Icon(Icons.lock_outlined),
                                     suffixIcon: IconButton(
                                       icon: Icon(
@@ -279,14 +281,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                             ? Icons.visibility_outlined
                                             : Icons.visibility_off_outlined,
                                       ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _obscurePassword = !_obscurePassword;
-                                        });
-                                      },
-                                      tooltip: _obscurePassword
-                                          ? 'Show password'
-                                          : 'Hide password',
+                                      onPressed: () => setState(() =>
+                                          _obscurePassword = !_obscurePassword),
                                     ),
                                   ),
                                   obscureText: _obscurePassword,
@@ -299,9 +295,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     return null;
                                   },
                                 ),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: AppDimens.spacingM),
 
-                                // Remember & Forgot Password Row
+                                // ── Remember / Forgot ──
                                 Row(
                                   children: [
                                     SizedBox(
@@ -341,36 +337,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 24),
+                                const SizedBox(height: AppDimens.spacingXL),
 
                                 // Sign In Button
-                                SizedBox(
-                                  height: 56,
-                                  child: FilledButton(
-                                    onPressed: _isLoading ? null : _login,
-                                    style: FilledButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                    ),
-                                    child: _isLoading
-                                        ? SizedBox(
-                                            height: 24,
-                                            width: 24,
-                                            child: CircularProgressIndicator(
-                                              color: colorScheme.onPrimary,
-                                              strokeWidth: 2.5,
-                                            ),
-                                          )
-                                        : Text(
-                                            l10n.loginButton,
-                                            style:
-                                                textTheme.titleMedium?.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              color: colorScheme.onPrimary,
-                                            ),
-                                          ),
-                                  ),
+                                PrimaryButton(
+                                  text: l10n.loginButton,
+                                  isLoading: _isLoading,
+                                  onPressed: _login,
                                 ),
                                 const SizedBox(height: 24),
 
@@ -384,7 +357,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 16),
+                                          horizontal: AppDimens.spacingL),
                                       child: Text(
                                         l10n.loginOrContinueWith,
                                         style: textTheme.bodySmall?.copyWith(
@@ -412,7 +385,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 14),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                                     ),
                                     side: BorderSide(
                                       color: colorScheme.outline,
@@ -432,7 +405,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ),
                               ],
                             ),
-                          ),
                         ),
                       ),
                     ),
@@ -440,7 +412,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                   // Sign Up Link
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 32.0),
+                    padding: const EdgeInsets.fromLTRB(AppDimens.spacingXL, AppDimens.spacingS, AppDimens.spacingXL, 32),
                     child: TextButton(
                       onPressed: () => context.push('/signup'),
                       child: RichText(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../core/presentation/widgets/custom_card.dart';
+import '../../../core/theme/app_dimens.dart';
 import '../../../l10n/app_localizations.dart';
 
 class HelpScreen extends StatelessWidget {
@@ -21,39 +23,37 @@ class HelpScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.helpTitle)),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimens.spacingL),
         children: [
           Text(l10n.helpFaq,
               style: textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w600)),
+                  ?.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(height: 12),
           ...faqs.map(
-            (faq) => Card(
-              margin: const EdgeInsets.only(bottom: 8),
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: BorderSide(color: colorScheme.outlineVariant),
-              ),
-              child: ExpansionTile(
-                tilePadding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                title: Text(faq.$1,
-                    style: textTheme.bodyLarge
-                        ?.copyWith(fontWeight: FontWeight.w500)),
-                children: [
-                  Text(faq.$2,
-                      style: textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurfaceVariant)),
-                ],
+            (faq) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: CustomCard(
+                padding: EdgeInsets.zero,
+                child: ExpansionTile(
+                  tilePadding: const EdgeInsets.symmetric(
+                      horizontal: AppDimens.spacingL, vertical: AppDimens.spacingXS),
+                  childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  title: Text(faq.$1,
+                      style: textTheme.titleSmall
+                          ?.copyWith(fontWeight: FontWeight.w700)),
+                  children: [
+                    Text(faq.$2,
+                        style: textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant)),
+                  ],
+                ),
               ),
             ),
           ),
           const SizedBox(height: 24),
           Text(l10n.helpContact,
               style:
-                  textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                  textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(height: 8),
           ListTile(
             contentPadding: EdgeInsets.zero,

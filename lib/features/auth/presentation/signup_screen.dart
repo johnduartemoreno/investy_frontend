@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'providers/auth_provider.dart';
+import '../../../core/presentation/widgets/custom_card.dart';
+import '../../../core/presentation/widgets/primary_button.dart';
+import '../../../core/theme/app_dimens.dart';
+import '../../../core/theme/app_theme.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
@@ -174,28 +178,29 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             curve: Curves.easeInOut,
             height: isKeyboardOpen ? screenHeight * 0.12 : screenHeight * 0.28,
             width: double.infinity,
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(32),
-                bottomRight: Radius.circular(32),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(AppDimens.radiusBottomSheet),
+                bottomRight: Radius.circular(AppDimens.radiusBottomSheet),
               ),
             ),
             child: SafeArea(
               bottom: false,
               child: Stack(
                 children: [
-                  // Back button
                   Positioned(
                     top: 4,
                     left: 4,
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back,
-                          color: colorScheme.onPrimaryContainer),
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
                       onPressed: () => context.pop(),
                     ),
                   ),
-                  // Logo + title
                   Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -212,17 +217,17 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                             child: Icon(
                               Icons.savings_outlined,
                               size: isKeyboardOpen ? 24 : 44,
-                              color: colorScheme.primary,
+                              color: AppTheme.brandPurple,
                             ),
                           ),
                         ),
                         if (!isKeyboardOpen) ...[
-                          const SizedBox(height: 12),
+                          const SizedBox(height: AppDimens.spacingM),
                           Text(
                             'Investy',
                             style: textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: colorScheme.onPrimaryContainer,
+                              color: Colors.white,
                             ),
                           ),
                         ],
@@ -242,21 +247,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   Transform.translate(
                     offset: const Offset(0, -24),
                     child: Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Card(
-                        elevation: 0,
-                        color: colorScheme.surface,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          side: BorderSide(
-                            color: colorScheme.outlineVariant
-                                .withValues(alpha: 0.5),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Form(
+                      padding: const EdgeInsets.symmetric(horizontal: AppDimens.spacingXL),
+                      child: CustomCard(
+                        padding: const EdgeInsets.all(AppDimens.spacingXL),
+                        child: Form(
                             key: _formKey,
                             child: Column(
                               crossAxisAlignment:
@@ -408,39 +402,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                 ),
                                 const SizedBox(height: 24),
 
-                                // Sign Up button
-                                SizedBox(
-                                  height: 56,
-                                  child: FilledButton(
-                                    onPressed:
-                                        _isLoading ? null : _signUp,
-                                    style: FilledButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12),
-                                      ),
-                                    ),
-                                    child: _isLoading
-                                        ? SizedBox(
-                                            height: 24,
-                                            width: 24,
-                                            child:
-                                                CircularProgressIndicator(
-                                              color:
-                                                  colorScheme.onPrimary,
-                                              strokeWidth: 2.5,
-                                            ),
-                                          )
-                                        : Text(
-                                            'Sign Up',
-                                            style: textTheme.titleMedium
-                                                ?.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              color:
-                                                  colorScheme.onPrimary,
-                                            ),
-                                          ),
-                                  ),
+                                PrimaryButton(
+                                  text: 'Sign Up',
+                                  isLoading: _isLoading,
+                                  onPressed: _signUp,
                                 ),
                                 const SizedBox(height: 24),
 
@@ -453,7 +418,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                                 colorScheme.outlineVariant)),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 16),
+                                          horizontal: AppDimens.spacingL),
                                       child: Text(
                                         'Or continue with',
                                         style:
@@ -484,7 +449,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                         vertical: 14),
                                     shape: RoundedRectangleBorder(
                                       borderRadius:
-                                          BorderRadius.circular(12),
+                                          BorderRadius.circular(AppDimens.radiusInput),
                                     ),
                                     side: BorderSide(
                                         color: colorScheme.outline),
@@ -503,7 +468,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                 ),
                               ],
                             ),
-                          ),
                         ),
                       ),
                     ),
