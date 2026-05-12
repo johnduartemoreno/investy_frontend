@@ -106,19 +106,43 @@ Three locales supported: **EN** (default), **ES**, **PT**.
 - Claude API recommendation reasons returned in the user's current language
 - Add new keys to all three `.arb` files, then run `flutter gen-l10n`
 
+## Core Shared Widgets
+
+Always use these — never inline equivalents:
+
+| Widget | File | Use for |
+|--------|------|---------|
+| `PrimaryButton` | `core/presentation/widgets/primary_button.dart` | All confirm/submit buttons — gradient fill + glow |
+| `CustomTextField` | `core/presentation/widgets/custom_text_field.dart` | Standard text inputs |
+| `CustomCard` | `core/presentation/widgets/custom_card.dart` | All card containers — purple border + glow |
+| `GradientIconBox` | `core/presentation/widgets/gradient_icon_box.dart` | Asset/feature icons in cards and sheets |
+| `SignalBadge` | `core/presentation/widgets/signal_badge.dart` | Trading signal chips — Strong Buy / Moderate / Sell |
+| `LeftAccentBox` | `core/presentation/widgets/left_accent_box.dart` | Highlighted insights with left purple bar |
+| `GradientPillButton` | `core/presentation/widgets/gradient_pill_button.dart` | Compact pill actions in sheets |
+| `ThousandsSeparatorInputFormatter` | `core/utils/thousands_separator_input_formatter.dart` | ALL amount/money inputs |
+| `CurrencyFormatter` | `core/utils/currency_formatter.dart` | All money display strings |
+
 ## Theme
 
-Material 3 with full custom dark surface tokens:
+Material 3 with explicit light + dark `ColorScheme` — both built without `ColorScheme.fromSeed`:
 
-| Token | Color | Used for |
-|-------|-------|---------|
-| `darkBase` | `#0F0F13` | Scaffold background |
-| `darkSurface` | `#1A1A20` | Cards, containers |
-| `darkElevated` | `#1E1C2A` | Bottom sheets |
-| `brandPurple` | `#6C63FF` | Primary actions, gradients |
-| `brandPurpleLight` | `#a78bfa` | Accents, subtitles |
+| Token | Light | Dark | Used for |
+|-------|-------|------|---------|
+| `brandPurple` | `#6C63FF` | `#6C63FF` | Primary actions, gradients |
+| `brandPurpleLight` | `#a78bfa` | `#a78bfa` | Accents, subtitles, gradient end |
+| `signalGreen` | `#4ade80` | `#4ade80` | Strong Buy badge |
+| `signalAmber` | `#D97706` | `#D97706` | Moderate badge |
+| `lightSurface` / `darkBase` | `#F8F8FC` | `#0F0F13` | Scaffold background |
+| `lightCard` / `darkSurface` | `#EEEDF8` | `#1A1A20` | Cards, containers |
+| — / `darkElevated` | — | `#1E1C2A` | Bottom sheets |
 
 Rule: **never use raw hex colors in widgets** — always `Theme.of(context).colorScheme.*` tokens.
+
+## Screenshots
+
+Screen registry: `docs/design/screenshots/SCREENS.md` — maps each screen ID to its source `.dart` file and screenshot paths (`light_mode/XX.png` + `dark_mode/XX.png`).
+
+After modifying any screen in `lib/features/`, check `SCREENS.md` and ask the user for an updated screenshot before marking the task done.
 
 ## Local Development
 
