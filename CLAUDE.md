@@ -1,5 +1,15 @@
 # Investy Frontend — Agent Instructions
 
+## 🛠️ Skills — Invoke Before Working
+
+| Work type | Skill to invoke | Location |
+|-----------|----------------|----------|
+| New screen / widget / visual change | `/investy-design-system` | `.claude/skills/investy-design-system/SKILL.md` |
+| New provider / controller / datasource | `/investy-state-management` | `.claude/skills/investy-state-management/SKILL.md` |
+| Full feature (screen + state) | **Both** | — |
+
+**MANDATORY:** These skills enforce brand tokens, Riverpod patterns, naming conventions, and "never do" rules. Do not skip.
+
 ## 🎨 UX & Design Standard
 
 **Framework:** Flutter with Material 3 (`useMaterial3: true`).
