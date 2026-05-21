@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'providers/auth_provider.dart';
 import '../../../core/theme/app_dimens.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
@@ -34,7 +35,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(AppLocalizations.of(context).emailVerificationNotVerified),
-            backgroundColor: Colors.orange,
+            backgroundColor: AppTheme.signalAmber,
           ),
         );
       }
@@ -51,7 +52,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context).emailVerificationSent),
-          backgroundColor: Colors.green,
+          backgroundColor: AppTheme.signalGreen,
         ),
       );
     }

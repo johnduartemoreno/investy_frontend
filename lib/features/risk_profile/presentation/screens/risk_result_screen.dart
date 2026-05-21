@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/risk_profile_model.dart';
@@ -55,19 +56,19 @@ class _ProfileContent extends StatelessWidget {
           l10n.riskProfileModerate,
           l10n.riskProfileModerateDesc,
           Icons.balance_outlined,
-          Colors.orange,
+          AppTheme.signalAmber,
         ),
       'aggressive' => (
           l10n.riskProfileAggressive,
           l10n.riskProfileAggressiveDesc,
           Icons.trending_up,
-          Colors.green,
+          AppTheme.signalGreen,
         ),
       _ => (
           l10n.riskProfileConservative,
           l10n.riskProfileConservativeDesc,
           Icons.shield_outlined,
-          Colors.blue,
+          AppTheme.brandPurple,
         ),
     };
 
