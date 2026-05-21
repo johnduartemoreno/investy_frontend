@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../l10n/app_localizations.dart';
 
+import '../../../../core/presentation/widgets/primary_button.dart';
+import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../data/datasources/dashboard_remote_data_source.dart';
 import '../../data/models/transaction_request_model.dart';
@@ -41,8 +44,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
   Future<void> _handleWithdraw(double maxAvailable) async {
     if (!_formKey.currentState!.validate()) return;
     if (_amount <= 0) return;
-    if (_amount > maxAvailable)
-      return; // Should be caught by validator but double check
+    if (_amount > maxAvailable) return;
 
     setState(() => _isLoading = true);
 
@@ -82,9 +84,8 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = theme.colorScheme;
     final availableCashAsync = ref.watch(restAvailableCashProvider);
-    final currencyFmt = NumberFormat.simpleCurrency();
 
     // Default to 0 if loading/error, but UI handles loading state
     final maxAvailable = availableCashAsync.valueOrNull ?? 0.0;
@@ -93,14 +94,15 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: theme.scaffoldBackgroundColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        color: cs.surfaceContainer,
+        borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(AppDimens.radiusBottomSheet)),
       ),
       child: SingleChildScrollView(
         padding: EdgeInsets.only(
-          top: 24,
-          left: 24,
-          right: 24,
+          top: AppDimens.spacingXL,
+          left: AppDimens.spacingXL,
+          right: AppDimens.spacingXL,
           bottom: MediaQuery.of(context).viewInsets.bottom + 32,
         ),
         child: Column(
@@ -129,18 +131,18 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
           Text(
             AppLocalizations.of(context).withdrawAvailableTo,
             style: theme.textTheme.labelMedium?.copyWith(
-              color: colorScheme.outline,
+              color: cs.outline,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           isLoadingData
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator.adaptive())
               : Text(
-                  currencyFmt.format(maxAvailable),
+                  CurrencyFormatter.format(maxAvailable),
                   style: theme.textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: colorScheme.primary,
+                    color: cs.primary,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -162,7 +164,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
                 hintText: '0',
                 border: InputBorder.none,
                 hintStyle: theme.textTheme.displayMedium?.copyWith(
-                  color: colorScheme.outline.withValues(alpha: 0.5),
+                  color: cs.outline.withValues(alpha: 0.5),
                 ),
               ),
               inputFormatters: [
@@ -213,24 +215,10 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
           const SizedBox(height: 24),
 
           // Action Button
-          FilledButton(
+          PrimaryButton(
+            text: AppLocalizations.of(context).withdrawConfirmButton,
+            isLoading: _isLoading,
             onPressed: _isLoading ? null : () => _handleWithdraw(maxAvailable),
-            style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-            ),
-            child: _isLoading
-                ? SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: colorScheme.onPrimary,
-                    ),
-                  )
-                : Text(AppLocalizations.of(context).withdrawConfirmButton),
           ),
         ],
       ),
