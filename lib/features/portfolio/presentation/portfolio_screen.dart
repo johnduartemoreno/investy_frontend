@@ -307,10 +307,10 @@ class _HoldingCard extends StatelessWidget {
                   children: [
                     TextSpan(text: '${l10n.portfolioReturn}: '),
                     TextSpan(
-                      text: CurrencyFormatter.formatWithCurrency(
-                          holding.marketValue * fxRate, currency),
+                      text:
+                          '${holding.unrealizedGainLoss >= 0 ? '+' : ''}${CurrencyFormatter.formatWithCurrency(holding.unrealizedGainLoss * fxRate, currency)}',
                       style: TextStyle(
-                          color: cs.onSurface, fontWeight: FontWeight.w700),
+                          color: returnColor, fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
