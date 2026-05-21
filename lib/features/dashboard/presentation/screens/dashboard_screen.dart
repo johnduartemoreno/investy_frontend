@@ -134,6 +134,10 @@ IconData _getContributionIcon(String type) {
       return Icons.arrow_downward;
     case 'withdrawal':
       return Icons.arrow_upward;
+    case 'buy':
+      return Icons.trending_up;
+    case 'sell':
+      return Icons.trending_down;
     default:
       return Icons.swap_horiz;
   }
@@ -142,8 +146,10 @@ IconData _getContributionIcon(String type) {
 Color _getContributionColor(ColorScheme cs, String type) {
   switch (type.toLowerCase()) {
     case 'deposit':
+    case 'sell':
       return AppTheme.signalGreen;
     case 'withdrawal':
+    case 'buy':
       return cs.error;
     default:
       return cs.onSurfaceVariant;
@@ -704,9 +710,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildContributionActivityItem(
       ThemeData theme, AppLocalizations l10n, Contribution contribution, String currency, double fxRate) {
-    final isWithdrawal = contribution.type == 'withdrawal';
-    final icon = _getContributionIcon(contribution.type);
-    final color = _getContributionColor(theme.colorScheme, contribution.type);
+    final type = contribution.type.toLowerCase();
+    final isDebit = type == 'withdrawal' || type == 'buy';
+    final icon = _getContributionIcon(type);
+    final color = _getContributionColor(theme.colorScheme, type);
     final title = _getContributionTitle(l10n, contribution.type);
     final dateStr = _formatContributionDate(l10n, contribution.createdAt);
 
@@ -735,11 +742,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),
         trailing: Text(
-          '${isWithdrawal ? '-' : '+'} ${CurrencyFormatter.formatWithCurrency(contribution.amount * fxRate, currency)}',
+          '${isDebit ? '-' : '+'} ${CurrencyFormatter.formatWithCurrency(contribution.amount * fxRate, currency)}',
           style: theme.textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.bold,
-            color:
-                isWithdrawal ? theme.colorScheme.error : AppTheme.signalGreen,
+            color: isDebit ? theme.colorScheme.error : AppTheme.signalGreen,
           ),
         ),
         onTap: () {},
