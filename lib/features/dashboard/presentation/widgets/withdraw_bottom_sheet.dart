@@ -86,6 +86,8 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final availableCashAsync = ref.watch(restAvailableCashProvider);
+    final currency = ref.watch(displayCurrencyProvider);
+    final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
 
     // Default to 0 if loading/error, but UI handles loading state
     final maxAvailable = availableCashAsync.valueOrNull ?? 0.0;
@@ -139,7 +141,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
           isLoadingData
               ? const Center(child: CircularProgressIndicator.adaptive())
               : Text(
-                  CurrencyFormatter.format(maxAvailable),
+                  CurrencyFormatter.formatWithCurrency(maxAvailable * fxRate, currency),
                   style: theme.textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: cs.primary,
