@@ -50,10 +50,12 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
     });
   }
 
-  Future<void> _handleWithdraw(double maxAvailable) async {
+  // maxAvailableDisplay is in display currency (e.g. EUR).
+  // _amount is also in display currency — convert to USD before sending.
+  Future<void> _handleWithdraw(double maxAvailableDisplay) async {
     if (!_formKey.currentState!.validate()) return;
     if (_amount <= 0) return;
-    if (_amount > maxAvailable) return;
+    if (_amount > maxAvailableDisplay) return;
 
     setState(() => _isLoading = true);
 
@@ -61,9 +63,12 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
       final userId = FirebaseAuth.instance.currentUser?.uid;
       if (userId == null) throw Exception('User not authenticated');
 
+      final fxRate = ref.read(fxRateProvider).valueOrNull ?? 1.0;
+      final amountUsd = fxRate > 0 ? _amount / fxRate : _amount;
+
       await ref.read(dashboardRemoteDataSourceProvider).createTransaction(
             userId,
-            TransactionRequestModel.forCash(_amount, 'WITHDRAWAL'),
+            TransactionRequestModel.forCash(amountUsd, 'WITHDRAWAL'),
           );
 
       ref.invalidate(restDashboardProvider);
@@ -98,8 +103,10 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
     final currency = ref.watch(displayCurrencyProvider);
     final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
 
-    // Default to 0 if loading/error, but UI handles loading state
-    final maxAvailable = availableCashAsync.valueOrNull ?? 0.0;
+    // maxAvailableUsd is raw USD dollars from the provider.
+    // maxAvailableDisplay converts to user's display currency for UI use.
+    final maxAvailableUsd = availableCashAsync.valueOrNull ?? 0.0;
+    final maxAvailableDisplay = maxAvailableUsd * fxRate;
     final isLoadingData = availableCashAsync.isLoading;
 
     return Container(
@@ -150,7 +157,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
           isLoadingData
               ? const Center(child: CircularProgressIndicator.adaptive())
               : Text(
-                  CurrencyFormatter.formatWithCurrency(maxAvailable * fxRate, currency),
+                  CurrencyFormatter.formatWithCurrency(maxAvailableDisplay, currency),
                   style: theme.textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: cs.primary,
@@ -191,7 +198,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
                 if (value == null || value.isEmpty) return l10n.withdrawEnterAmount;
                 final val = ThousandsSeparatorInputFormatter.parseFormatted(value);
                 if (val == null || val <= 0) return l10n.withdrawAmountPositive;
-                if (val > maxAvailable) return l10n.withdrawInsufficientFunds;
+                if (val > maxAvailableDisplay) return l10n.withdrawInsufficientFunds;
                 return null;
               },
             ),
@@ -204,21 +211,21 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
               Expanded(
                 child: _QuickActionChip(
                   label: '25%',
-                  onTap: () => _updateAmount(maxAvailable * 0.25),
+                  onTap: () => _updateAmount(maxAvailableDisplay * 0.25),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: _QuickActionChip(
                   label: '50%',
-                  onTap: () => _updateAmount(maxAvailable * 0.50),
+                  onTap: () => _updateAmount(maxAvailableDisplay * 0.50),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: _QuickActionChip(
                   label: 'MAX',
-                  onTap: () => _updateAmount(maxAvailable),
+                  onTap: () => _updateAmount(maxAvailableDisplay),
                 ),
               ),
             ],
@@ -229,7 +236,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
           PrimaryButton(
             text: AppLocalizations.of(context).withdrawConfirmButton,
             isLoading: _isLoading,
-            onPressed: _isLoading ? null : () => _handleWithdraw(maxAvailable),
+            onPressed: _isLoading ? null : () => _handleWithdraw(maxAvailableDisplay),
           ),
         ],
       ),
