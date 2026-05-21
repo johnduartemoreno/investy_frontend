@@ -62,7 +62,7 @@ class GoalsScreen extends ConsumerWidget {
   }
 }
 
-class _GoalCard extends StatelessWidget {
+class _GoalCard extends StatefulWidget {
   final GoalResponseModel goal;
   final String currency;
   final double fxRate;
@@ -72,6 +72,35 @@ class _GoalCard extends StatelessWidget {
     required this.currency,
     required this.fxRate,
   });
+
+  @override
+  State<_GoalCard> createState() => _GoalCardState();
+}
+
+class _GoalCardState extends State<_GoalCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _progressAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
+    _progressAnim = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   IconData _categoryIcon(String category) {
     switch (category.toLowerCase()) {
@@ -106,8 +135,8 @@ class _GoalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final progress = goal.progress;
-    final gradient = _categoryGradient(goal.category);
+    final progress = widget.goal.progress;
+    final gradient = _categoryGradient(widget.goal.category);
 
     final l10n = AppLocalizations.of(context);
     final cs = theme.colorScheme;
@@ -123,13 +152,13 @@ class _GoalCard extends StatelessWidget {
               GradientIconBox(
                 colors: gradient,
                 circle: true,
-                child: Icon(_categoryIcon(goal.category),
+                child: Icon(_categoryIcon(widget.goal.category),
                     size: 20, color: Colors.white),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  goal.name,
+                  widget.goal.name,
                   style: theme.textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.w700),
                   overflow: TextOverflow.ellipsis,
@@ -148,11 +177,14 @@ class _GoalCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                LinearProgressIndicator(
-                  value: progress,
-                  backgroundColor: cs.surfaceContainerHighest,
-                  minHeight: 6,
-                  borderRadius: BorderRadius.circular(4),
+                AnimatedBuilder(
+                  animation: _progressAnim,
+                  builder: (_, __) => LinearProgressIndicator(
+                    value: _progressAnim.value * progress,
+                    backgroundColor: cs.surfaceContainerHighest,
+                    minHeight: 6,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -161,13 +193,13 @@ class _GoalCard extends StatelessWidget {
                     _AmountLabel(
                       label: l10n.goalSaved,
                       value: CurrencyFormatter.formatWithCurrency(
-                          goal.currentAmount * fxRate, currency),
+                          widget.goal.currentAmount * widget.fxRate, widget.currency),
                       theme: theme,
                     ),
                     _AmountLabel(
                       label: l10n.goalTarget,
                       value: CurrencyFormatter.formatWithCurrency(
-                          goal.targetAmount * fxRate, currency),
+                          widget.goal.targetAmount * widget.fxRate, widget.currency),
                       theme: theme,
                       alignEnd: true,
                     ),
@@ -178,7 +210,7 @@ class _GoalCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '${l10n.goalDeadline}: ${_formatDate(goal.deadlineDate)}',
+            '${l10n.goalDeadline}: ${_formatDate(widget.goal.deadlineDate)}',
             style: theme.textTheme.bodySmall
                 ?.copyWith(color: cs.onSurfaceVariant),
           ),
