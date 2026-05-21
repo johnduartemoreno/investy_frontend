@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +8,7 @@ import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../dashboard/data/datasources/dashboard_remote_data_source.dart';
 import '../../../dashboard/data/models/transaction_request_model.dart';
 import '../../../dashboard/presentation/screens/dashboard_screen.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../l10n/app_localizations.dart';
 
 // ==========================================
@@ -134,7 +134,7 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
         SnackBar(
           content: Text(
               'Successfully deposited ${CurrencyFormatter.format(_amount)}'),
-          backgroundColor: Colors.green,
+          backgroundColor: AppTheme.signalGreen,
         ),
       );
       context.pop();
@@ -294,7 +294,7 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
                           ],
                         ),
                       ),
-                      const Icon(Icons.chevron_right, color: Colors.grey),
+                      Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
                     ],
                   ),
                 ),

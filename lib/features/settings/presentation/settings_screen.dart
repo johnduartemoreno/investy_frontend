@@ -201,7 +201,7 @@ class SettingsScreen extends ConsumerWidget {
             );
           }),
           const Divider(height: 1),
-          _buildListTile(context, Icons.psychology_outlined, l10n.riskProfileSettingsLabel, riskTrailing, onTap: () => context.push('/settings/risk-profile')),
+          _buildListTile(context, Icons.psychology_outlined, l10n.riskProfileSettingsLabel, riskTrailing, onTap: () => context.push(riskProfile != null ? '/settings/risk-profile/result' : '/settings/risk-profile')),
           const Divider(height: 1),
           _buildListTile(context, Icons.notifications_outlined, l10n.settingsNotifications, '', onTap: () => context.push('/settings/notifications')),
           const Divider(height: 1),
