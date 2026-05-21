@@ -378,6 +378,10 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get buyInsufficientFunds =>
+      'Saldo insuficiente. Deposita fondos para continuar.';
+
+  @override
   String get buyQuantityLabel => 'Cantidad';
 
   @override

@@ -21,6 +21,7 @@ import '../../features/kyc/presentation/screens/kyc_screen.dart';
 import '../../features/risk_profile/presentation/screens/risk_questionnaire_screen.dart';
 import '../../features/risk_profile/presentation/screens/risk_result_screen.dart';
 import '../../features/transactions/presentation/screens/top_up_screen.dart';
+import '../../features/dashboard/data/models/buy_asset_args.dart';
 import '../../features/dashboard/presentation/screens/buy_asset_screen.dart';
 import '../../features/dashboard/presentation/screens/sell_asset_screen.dart';
 import '../presentation/main_shell_screen.dart';
@@ -122,7 +123,9 @@ GoRouter goRouter(Ref ref) {
                   ),
                   GoRoute(
                     path: 'buy-asset',
-                    builder: (context, state) => const BuyAssetScreen(),
+                    builder: (context, state) => BuyAssetScreen(
+                      args: state.extra as BuyAssetArgs?,
+                    ),
                   ),
                   GoRoute(
                     path: 'sell-asset',

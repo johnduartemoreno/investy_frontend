@@ -802,6 +802,12 @@ abstract class AppLocalizations {
   /// **'Buy {symbol}'**
   String buyTitle(String symbol);
 
+  /// No description provided for @buyInsufficientFunds.
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient funds. Top up your account to continue.'**
+  String get buyInsufficientFunds;
+
   /// No description provided for @buyQuantityLabel.
   ///
   /// In en, this message translates to:

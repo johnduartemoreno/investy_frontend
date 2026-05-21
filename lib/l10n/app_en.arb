@@ -161,6 +161,7 @@
       "symbol": { "type": "String" }
     }
   },
+  "buyInsufficientFunds": "Insufficient funds. Top up your account to continue.",
   "buyQuantityLabel": "Quantity",
   "buyPriceLabel": "Price per unit",
   "buyTotalLabel": "Total",
