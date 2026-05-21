@@ -131,6 +131,7 @@
   "buyConfirmButton": "Confirmar compra",
   "buyEstimatedTotal": "Total estimado",
   "buyTitle": "Comprar {symbol}",
+  "buyInsufficientFunds": "Saldo insuficiente. Deposite fundos para continuar.",
   "buyQuantityLabel": "Quantidade",
   "buyPriceLabel": "Preço por unidade",
   "buyTotalLabel": "Total",

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -158,15 +159,32 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
 
     ref.listen(buyAssetControllerProvider, (_, next) {
       if (next is AsyncError) {
+        final err = next.error;
+        final isInsufficientFunds = err is DioException &&
+            err.response?.data is Map &&
+            (err.response?.data as Map)['code'] == 'ERR_INSUFFICIENT_FUNDS';
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.commonError)),
+          SnackBar(
+            content: Text(isInsufficientFunds
+                ? l10n.buyInsufficientFunds
+                : l10n.commonError),
+          ),
         );
       } else if (next is AsyncData && !next.isLoading) {
-        if (context.canPop()) {
-          context.pop();
-        } else {
-          context.go('/home');
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.buySuccess),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+        Future.delayed(const Duration(milliseconds: 600), () {
+          if (!context.mounted) return;
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.go('/home');
+          }
+        });
       }
     });
 
@@ -180,7 +198,6 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
-        centerTitle: true,
         title: Text(
           l10n.buyAssetTitle,
           style: theme.textTheme.titleMedium?.copyWith(
@@ -352,74 +369,76 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                   ],
                 ],
 
-                // ── Quantity input ────────────────────────────────────────
+                // ── Quantity + summary card ───────────────────────────────
                 const SizedBox(height: AppDimens.spacingL),
-                Text(
-                  l10n.buyQuantityLabel,
-                  style: theme.textTheme.labelLarge
-                      ?.copyWith(color: cs.onSurfaceVariant),
-                ),
-                const SizedBox(height: AppDimens.spacingS),
-                TextFormField(
-                  controller: _quantityController,
-                  enabled: _selectedAsset != null,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  style: theme.textTheme.headlineMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    hintText: '0',
-                    hintStyle: theme.textTheme.headlineMedium?.copyWith(
-                        color: cs.outline.withValues(alpha: 0.4)),
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  inputFormatters: [ThousandsSeparatorInputFormatter()],
-                  onChanged: (v) {
-                    final parsed =
-                        ThousandsSeparatorInputFormatter.parseFormatted(v);
-                    setState(() => _quantity = parsed ?? 0.0);
-                  },
-                  validator: (v) {
-                    if (v == null || v.isEmpty) return l10n.buyEnterQuantity;
-                    final qty =
-                        ThousandsSeparatorInputFormatter.parseFormatted(v);
-                    if (qty == null || qty <= 0) return l10n.buyQuantityPositive;
-                    return null;
-                  },
-                ),
-
-                // ── Order summary card ────────────────────────────────────
-                if (_selectedAsset != null && _quantity > 0) ...[
-                  const SizedBox(height: AppDimens.spacingL),
-                  CustomCard(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppDimens.spacingL,
-                        vertical: AppDimens.spacingM),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          l10n.buyEstimatedTotal,
-                          style: theme.textTheme.bodyLarge
-                              ?.copyWith(color: cs.onSurfaceVariant),
+                CustomCard(
+                  padding: const EdgeInsets.all(AppDimens.spacingL),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        l10n.buyQuantityLabel,
+                        style: theme.textTheme.titleSmall
+                            ?.copyWith(color: cs.onSurfaceVariant),
+                      ),
+                      const SizedBox(height: AppDimens.spacingS),
+                      TextFormField(
+                        controller: _quantityController,
+                        enabled: _selectedAsset != null,
+                        keyboardType:
+                            const TextInputType.numberWithOptions(decimal: true),
+                        style: theme.textTheme.headlineMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          hintText: '0',
+                          hintStyle: theme.textTheme.headlineMedium?.copyWith(
+                              color: cs.outline.withValues(alpha: 0.4)),
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.circular(AppDimens.radiusInput),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        Text(
-                          CurrencyFormatter.format(_estimatedTotal),
-                          style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: AppTheme.brandPurpleLight),
+                        inputFormatters: [ThousandsSeparatorInputFormatter()],
+                        onChanged: (v) {
+                          final parsed =
+                              ThousandsSeparatorInputFormatter.parseFormatted(v);
+                          setState(() => _quantity = parsed ?? 0.0);
+                        },
+                        validator: (v) {
+                          if (v == null || v.isEmpty) return l10n.buyEnterQuantity;
+                          final qty =
+                              ThousandsSeparatorInputFormatter.parseFormatted(v);
+                          if (qty == null || qty <= 0) return l10n.buyQuantityPositive;
+                          return null;
+                        },
+                      ),
+                      if (_selectedAsset != null && _quantity > 0) ...[
+                        const Divider(height: AppDimens.spacingXL),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              l10n.buyEstimatedTotal,
+                              style: theme.textTheme.bodyLarge
+                                  ?.copyWith(color: cs.onSurfaceVariant),
+                            ),
+                            Text(
+                              CurrencyFormatter.format(_estimatedTotal),
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: AppTheme.brandPurpleLight),
+                            ),
+                          ],
                         ),
                       ],
-                    ),
+                    ],
                   ),
-                ],
+                ),
 
                 const SizedBox(height: AppDimens.spacingXL),
 
