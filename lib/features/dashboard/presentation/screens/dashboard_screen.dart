@@ -325,6 +325,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       AsyncValue<double> availableCashAsync,
       String currency,
       double fxRate) {
+    final investedVal = netWorthAsync.valueOrNull;
+    final cashVal = availableCashAsync.valueOrNull;
+    final totalVal = (investedVal != null && cashVal != null)
+        ? (investedVal + cashVal) * fxRate
+        : null;
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
@@ -346,26 +352,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10n.dashboardInvestedPortfolio,
+            l10n.dashboardTotalBalance,
             style: theme.textTheme.labelMedium?.copyWith(
               color: Colors.white.withValues(alpha: 0.75),
             ),
           ),
           const SizedBox(height: 6),
-          netWorthAsync.when(
-            data: (value) => Text(
-              CurrencyFormatter.formatWithCurrency(value * fxRate, currency),
-              style: theme.textTheme.displaySmall?.copyWith(
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
-                letterSpacing: -1,
-              ),
-            ),
-            loading: () => _shimmer(width: 140, height: 36),
-            error: (_, __) => Text('--',
-                style: theme.textTheme.displaySmall
-                    ?.copyWith(color: Colors.white)),
-          ),
+          totalVal != null
+              ? Text(
+                  CurrencyFormatter.formatWithCurrency(totalVal, currency),
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                    letterSpacing: -1,
+                  ),
+                )
+              : (netWorthAsync.isLoading || availableCashAsync.isLoading)
+                  ? _shimmer(width: 140, height: 36)
+                  : Text('--',
+                      style: theme.textTheme.displaySmall
+                          ?.copyWith(color: Colors.white)),
           const SizedBox(height: 16),
           Container(
             height: 1,
@@ -379,52 +385,71 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
+                    l10n.dashboardInvestedValue,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.7),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  investedVal != null
+                      ? Text(
+                          CurrencyFormatter.formatWithCurrency(
+                              investedVal * fxRate, currency),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )
+                      : netWorthAsync.isLoading
+                          ? _shimmer(width: 70, height: 20)
+                          : const Text('--',
+                              style: TextStyle(color: Colors.white)),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
                     l10n.dashboardCashToInvest,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: Colors.white.withValues(alpha: 0.7),
                     ),
                   ),
                   const SizedBox(height: 4),
-                  availableCashAsync.when(
-                    data: (value) => Text(
-                      CurrencyFormatter.formatWithCurrency(value * fxRate, currency),
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    loading: () => _shimmer(width: 80, height: 20),
-                    error: (_, __) => const Text('--',
-                        style: TextStyle(color: Colors.white)),
-                  ),
+                  cashVal != null
+                      ? Text(
+                          CurrencyFormatter.formatWithCurrency(
+                              cashVal * fxRate, currency),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )
+                      : availableCashAsync.isLoading
+                          ? _shimmer(width: 70, height: 20)
+                          : const Text('--',
+                              style: TextStyle(color: Colors.white)),
                 ],
               ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(20),
+                width: 6,
+                height: 6,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF4ade80),
+                  shape: BoxShape.circle,
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF4ade80),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      l10n.portfolioActive,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
+              ),
+              const SizedBox(width: 6),
+              Text(
+                l10n.portfolioActive,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.7),
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],

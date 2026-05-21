@@ -28,6 +28,15 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
   double _amount = 0.0;
 
   @override
+  void initState() {
+    super.initState();
+    // Force fresh balance every time the sheet opens.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.invalidate(restDashboardProvider);
+    });
+  }
+
+  @override
   void dispose() {
     _amountController.dispose();
     super.dispose();
@@ -162,7 +171,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
               ),
               textAlign: TextAlign.center,
               decoration: InputDecoration(
-                prefixText: '\$ ',
+                prefixText: '${CurrencyFormatter.symbolFor(currency)} ',
                 hintText: '0',
                 border: InputBorder.none,
                 hintStyle: theme.textTheme.displayMedium?.copyWith(

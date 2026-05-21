@@ -25,6 +25,15 @@ class CurrencyFormatter {
     }
   }
 
+  /// Returns the currency symbol for the given ISO 4217 [currencyCode] (e.g. "EUR" → "€").
+  static String symbolFor(String currencyCode) {
+    try {
+      return NumberFormat.simpleCurrency(name: currencyCode).currencySymbol;
+    } catch (_) {
+      return '\$';
+    }
+  }
+
   /// The raw [NumberFormat] instance for widgets that need to pass it around.
   static NumberFormat get instance => _usdFmt;
 }
