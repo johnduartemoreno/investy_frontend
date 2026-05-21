@@ -184,17 +184,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   String _formatContributionDate(AppLocalizations l10n, DateTime date) {
+    final local = date.toLocal();
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
-    final dateOnly = DateTime(date.year, date.month, date.day);
+    final dateOnly = DateTime(local.year, local.month, local.day);
 
     if (dateOnly == today) {
-      return '${l10n.commonToday}, ${DateFormat.jm().format(date)}';
+      return '${l10n.commonToday}, ${DateFormat.jm().format(local)}';
     } else if (dateOnly == yesterday) {
-      return '${l10n.commonYesterday}, ${DateFormat.jm().format(date)}';
+      return '${l10n.commonYesterday}, ${DateFormat.jm().format(local)}';
     } else {
-      return DateFormat.yMMMd().format(date);
+      return DateFormat.yMMMd().format(local);
     }
   }
 
