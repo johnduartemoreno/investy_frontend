@@ -963,7 +963,7 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                     ? _buildThinking(theme, l10n)
                     : recsAsync.when(
                         loading: () => _buildThinking(theme, l10n),
-                        error: (e, _) => _buildError(theme, l10n, e),
+                        error: (e, _) => SingleChildScrollView(child: _buildError(theme, l10n, e)),
                         data: (recs) => _buildRecList(theme, scrollController, recs),
                       ),
               ),
