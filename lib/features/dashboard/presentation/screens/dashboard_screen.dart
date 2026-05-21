@@ -224,7 +224,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               _buildHeader(theme, l10n, userNameAsync),
               const SizedBox(height: 20),
               _buildBalanceCard(theme, l10n, netWorthAsync, availableCashAsync,
-                  currencyAsync.valueOrNull ?? 'USD'),
+                  currencyAsync.valueOrNull ?? 'USD', fxRate),
               const SizedBox(height: 16),
               _buildOwlAdvisorCard(theme, l10n),
               const SizedBox(height: 24),
@@ -323,7 +323,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       AppLocalizations l10n,
       AsyncValue<double> netWorthAsync,
       AsyncValue<double> availableCashAsync,
-      String currency) {
+      String currency,
+      double fxRate) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
@@ -353,7 +354,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           const SizedBox(height: 6),
           netWorthAsync.when(
             data: (value) => Text(
-              CurrencyFormatter.formatWithCurrency(value, currency),
+              CurrencyFormatter.formatWithCurrency(value * fxRate, currency),
               style: theme.textTheme.displaySmall?.copyWith(
                 fontWeight: FontWeight.w800,
                 color: Colors.white,
@@ -386,7 +387,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   const SizedBox(height: 4),
                   availableCashAsync.when(
                     data: (value) => Text(
-                      CurrencyFormatter.formatWithCurrency(value, currency),
+                      CurrencyFormatter.formatWithCurrency(value * fxRate, currency),
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
