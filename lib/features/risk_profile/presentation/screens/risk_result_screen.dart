@@ -20,8 +20,6 @@ class RiskResultScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.riskProfileTitle),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
       ),
       body: profileAsync.when(
         loading: () =>
