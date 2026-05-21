@@ -247,30 +247,36 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final rawName = userNameAsync.valueOrNull ?? '';
     final firstName = _firstName(rawName);
     final greeting = _greeting(l10n);
+    final photoURL = FirebaseAuth.instance.currentUser?.photoURL;
+    final initial =
+        rawName.isNotEmpty ? rawName.trim()[0].toUpperCase() : '?';
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              greeting,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+        _UserAvatar(photoURL: photoURL, initial: initial),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                greeting,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
-            ),
-            const SizedBox(height: 2),
-            rawName.isEmpty
-                ? const SizedBox(height: 28)
-                : Text(
-                    firstName,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSurface,
+              const SizedBox(height: 2),
+              rawName.isEmpty
+                  ? const SizedBox(height: 28)
+                  : Text(
+                      firstName,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.onSurface,
+                      ),
                     ),
-                  ),
-          ],
+            ],
+          ),
         ),
         Container(
           width: 40,
@@ -1244,6 +1250,46 @@ class _RecCardState extends State<_RecCard>
     return SignalBadge(
       label: strong ? l10n.owlAiStrongBuy : l10n.owlAiModerateSignal,
       color: strong ? AppTheme.signalGreen : AppTheme.signalAmber,
+    );
+  }
+}
+
+class _UserAvatar extends StatelessWidget {
+  final String? photoURL;
+  final String initial;
+
+  const _UserAvatar({required this.photoURL, required this.initial});
+
+  @override
+  Widget build(BuildContext context) {
+    if (photoURL != null && photoURL!.isNotEmpty) {
+      return CircleAvatar(
+        radius: 22,
+        backgroundColor: AppTheme.brandPurple,
+        backgroundImage: NetworkImage(photoURL!),
+      );
+    }
+    return Container(
+      width: 44,
+      height: 44,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Text(
+          initial,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+            fontSize: 16,
+          ),
+        ),
+      ),
     );
   }
 }
