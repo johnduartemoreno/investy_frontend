@@ -146,6 +146,9 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final topUpState = ref.watch(topUpProvider);
+    final displayCurrency = ref.watch(displayCurrencyProvider);
+    final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
+    final showEquivalent = displayCurrency != 'USD' && _amount > 0;
 
     // Listen for errors
     ref.listen<TopUpState>(topUpProvider, (previous, next) {
@@ -194,7 +197,7 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
                   ),
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
-                    prefixText: '\$ ',
+                    prefixText: 'USD \$ ',
                     prefixStyle: theme.textTheme.displayMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: colorScheme.onSurface,
@@ -227,6 +230,17 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
                     return null;
                   },
                 ),
+                if (showEquivalent)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(
+                      '≈ ${CurrencyFormatter.formatWithCurrency(_amount * fxRate, displayCurrency)}',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 const SizedBox(height: 24),
 
                 // ── Quick-Select Amount Chips ──
