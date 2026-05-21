@@ -49,12 +49,28 @@
   "signupButton": "Crear cuenta",
   "signupHaveAccount": "¿Ya tienes cuenta?",
   "signupLogIn": "Inicia sesión",
+  "signupNameRequired": "El nombre es obligatorio",
+  "signupEmailRequired": "El correo es obligatorio",
+  "signupPasswordRequired": "La contraseña es obligatoria",
+  "signupPasswordMinLength": "Mínimo 6 caracteres",
+  "signupConfirmPasswordRequired": "Por favor confirma tu contraseña",
+  "signupPasswordMismatch": "Las contraseñas no coinciden",
+  "signupShowPassword": "Mostrar contraseña",
+  "signupHidePassword": "Ocultar contraseña",
 
   "forgotPasswordTitle": "Restablecer contraseña",
   "forgotPasswordSubtitle": "Ingresa tu correo y te enviaremos un enlace de restablecimiento",
   "forgotPasswordEmailHint": "Correo",
   "forgotPasswordButton": "Enviar enlace",
   "forgotPasswordSuccess": "Enlace enviado. Revisa tu bandeja de entrada.",
+  "forgotPasswordEmailRequired": "El correo es obligatorio",
+  "forgotPasswordSentMessage": "Enviamos un enlace a {email}. Revisa tu bandeja de entrada y sigue las instrucciones.",
+  "@forgotPasswordSentMessage": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "forgotPasswordBackToSignIn": "Volver al inicio de sesión",
 
   "emailVerificationTitle": "Verifica tu correo",
   "emailVerificationSubtitle": "Enviamos un enlace de verificación a {email}. Revisa tu bandeja.",

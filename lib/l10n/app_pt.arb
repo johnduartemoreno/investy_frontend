@@ -49,12 +49,28 @@
   "signupButton": "Criar conta",
   "signupHaveAccount": "Já tem uma conta?",
   "signupLogIn": "Entrar",
+  "signupNameRequired": "O nome é obrigatório",
+  "signupEmailRequired": "O e-mail é obrigatório",
+  "signupPasswordRequired": "A senha é obrigatória",
+  "signupPasswordMinLength": "Mínimo 6 caracteres",
+  "signupConfirmPasswordRequired": "Por favor, confirme sua senha",
+  "signupPasswordMismatch": "As senhas não coincidem",
+  "signupShowPassword": "Mostrar senha",
+  "signupHidePassword": "Ocultar senha",
 
   "forgotPasswordTitle": "Redefinir senha",
   "forgotPasswordSubtitle": "Insira seu e-mail e enviaremos um link de redefinição",
   "forgotPasswordEmailHint": "E-mail",
   "forgotPasswordButton": "Enviar link",
   "forgotPasswordSuccess": "Link enviado. Verifique sua caixa de entrada.",
+  "forgotPasswordEmailRequired": "O e-mail é obrigatório",
+  "forgotPasswordSentMessage": "Enviamos um link para {email}. Verifique sua caixa de entrada e siga as instruções.",
+  "@forgotPasswordSentMessage": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "forgotPasswordBackToSignIn": "Voltar para entrar",
 
   "emailVerificationTitle": "Verifique seu e-mail",
   "emailVerificationSubtitle": "Enviamos um link de verificação para {email}. Verifique sua caixa de entrada.",

@@ -6,6 +6,7 @@ import '../../../core/presentation/widgets/custom_card.dart';
 import '../../../core/presentation/widgets/primary_button.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
@@ -57,6 +58,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       _kCurrencies.firstWhere((c) => c.$1 == code, orElse: () => (code, code)).$2;
 
   Future<void> _pickCurrency(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     await showModalBottomSheet<void>(
@@ -88,7 +90,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Text('Display Currency',
+                  child: Text(l10n.signupCurrencyLabel,
                       style: textTheme.titleMedium
                           ?.copyWith(fontWeight: FontWeight.w600)),
                 ),
@@ -137,6 +139,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -257,7 +260,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                   CrossAxisAlignment.stretch,
                               children: [
                                 Text(
-                                  'Create Account',
+                                  l10n.signupTitle,
                                   style:
                                       textTheme.headlineMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
@@ -267,7 +270,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Start your investment journey today.',
+                                  l10n.signupSubtitle,
                                   style: textTheme.bodyLarge?.copyWith(
                                     color: colorScheme.onSurfaceVariant,
                                   ),
@@ -278,15 +281,15 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                 // Full Name
                                 TextFormField(
                                   controller: _nameController,
-                                  decoration: const InputDecoration(
-                                    hintText: 'Full Name',
+                                  decoration: InputDecoration(
+                                    hintText: l10n.signupNameHint,
                                     prefixIcon:
-                                        Icon(Icons.person_outline),
+                                        const Icon(Icons.person_outline),
                                   ),
                                   textInputAction: TextInputAction.next,
                                   validator: (value) =>
                                       (value == null || value.trim().isEmpty)
-                                          ? 'Full name is required'
+                                          ? l10n.signupNameRequired
                                           : null,
                                 ),
                                 const SizedBox(height: 16),
@@ -294,20 +297,20 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                 // Email
                                 TextFormField(
                                   controller: _emailController,
-                                  decoration: const InputDecoration(
-                                    hintText: 'Email',
+                                  decoration: InputDecoration(
+                                    hintText: l10n.signupEmailHint,
                                     prefixIcon:
-                                        Icon(Icons.email_outlined),
+                                        const Icon(Icons.email_outlined),
                                   ),
                                   keyboardType:
                                       TextInputType.emailAddress,
                                   textInputAction: TextInputAction.next,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Email is required';
+                                      return l10n.signupEmailRequired;
                                     }
                                     if (!_isValidEmail(value.trim())) {
-                                      return 'Please enter a valid email';
+                                      return l10n.errorInvalidEmail;
                                     }
                                     return null;
                                   },
@@ -318,7 +321,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                 TextFormField(
                                   controller: _passwordController,
                                   decoration: InputDecoration(
-                                    hintText: 'Password',
+                                    hintText: l10n.signupPasswordHint,
                                     prefixIcon:
                                         const Icon(Icons.lock_outlined),
                                     suffixIcon: IconButton(
@@ -332,18 +335,18 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                           _obscurePassword =
                                               !_obscurePassword),
                                       tooltip: _obscurePassword
-                                          ? 'Show password'
-                                          : 'Hide password',
+                                          ? l10n.signupShowPassword
+                                          : l10n.signupHidePassword,
                                     ),
                                   ),
                                   obscureText: _obscurePassword,
                                   textInputAction: TextInputAction.next,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Password is required';
+                                      return l10n.signupPasswordRequired;
                                     }
                                     if (value.length < 6) {
-                                      return 'Minimum 6 characters';
+                                      return l10n.signupPasswordMinLength;
                                     }
                                     return null;
                                   },
@@ -354,7 +357,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                 TextFormField(
                                   controller: _confirmPasswordController,
                                   decoration: InputDecoration(
-                                    hintText: 'Confirm Password',
+                                    hintText: l10n.signupConfirmPasswordHint,
                                     prefixIcon:
                                         const Icon(Icons.lock_outlined),
                                     suffixIcon: IconButton(
@@ -373,10 +376,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                   onFieldSubmitted: (_) => _signUp(),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please confirm your password';
+                                      return l10n.signupConfirmPasswordRequired;
                                     }
                                     if (value != _passwordController.text) {
-                                      return 'Passwords do not match';
+                                      return l10n.signupPasswordMismatch;
                                     }
                                     return null;
                                   },
@@ -388,12 +391,12 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                   onTap: () => _pickCurrency(context),
                                   borderRadius: BorderRadius.circular(12),
                                   child: InputDecorator(
-                                    decoration: const InputDecoration(
-                                      hintText: 'Display Currency',
+                                    decoration: InputDecoration(
+                                      hintText: l10n.signupCurrencyLabel,
                                       prefixIcon:
-                                          Icon(Icons.currency_exchange),
+                                          const Icon(Icons.currency_exchange),
                                       suffixIcon:
-                                          Icon(Icons.arrow_drop_down),
+                                          const Icon(Icons.arrow_drop_down),
                                     ),
                                     child: Text(
                                       '$_displayCurrency — ${_currencyLabel(_displayCurrency)}',
@@ -403,7 +406,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                 const SizedBox(height: 24),
 
                                 PrimaryButton(
-                                  text: 'Sign Up',
+                                  text: l10n.signupButton,
                                   isLoading: _isLoading,
                                   onPressed: _signUp,
                                 ),
@@ -420,7 +423,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: AppDimens.spacingL),
                                       child: Text(
-                                        'Or continue with',
+                                        l10n.loginOrContinueWith,
                                         style:
                                             textTheme.bodySmall?.copyWith(
                                           color:
@@ -460,7 +463,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                     color: colorScheme.onSurfaceVariant,
                                   ),
                                   label: Text(
-                                    'Continue with Google',
+                                    l10n.loginWithGoogle,
                                     style: textTheme.labelLarge?.copyWith(
                                       color: colorScheme.onSurface,
                                     ),
@@ -480,13 +483,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       onPressed: () => context.pop(),
                       child: RichText(
                         text: TextSpan(
-                          text: 'Already have an account? ',
+                          text: '${l10n.signupHaveAccount} ',
                           style: textTheme.bodyMedium?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
                           children: [
                             TextSpan(
-                              text: 'Sign In',
+                              text: l10n.loginButton,
                               style: textTheme.bodyMedium?.copyWith(
                                 color: colorScheme.primary,
                                 fontWeight: FontWeight.w600,

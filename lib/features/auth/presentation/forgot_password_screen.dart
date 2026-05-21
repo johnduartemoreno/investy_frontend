@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'providers/auth_provider.dart';
 import '../../../core/presentation/widgets/primary_button.dart';
 import '../../../core/theme/app_dimens.dart';
+import '../../../l10n/app_localizations.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -40,10 +41,12 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       await ref
           .read(authNotifierProvider.notifier)
           .forgotPassword(email);
-      if (mounted) setState(() {
-        _sentToEmail = email;
-        _emailSent = true;
-      });
+      if (mounted) {
+        setState(() {
+          _sentToEmail = email;
+          _emailSent = true;
+        });
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -60,6 +63,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
@@ -88,7 +92,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Reset Password',
+                  l10n.forgotPasswordTitle,
                   style: textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -97,8 +101,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 const SizedBox(height: 8),
                 Text(
                   _emailSent
-                      ? 'We sent a reset link to\n$_sentToEmail\n\nCheck your inbox and follow the instructions.'
-                      : 'Enter your email and we\'ll send you a link to reset your password.',
+                      ? l10n.forgotPasswordSentMessage(_sentToEmail)
+                      : l10n.forgotPasswordSubtitle,
                   style: textTheme.bodyLarge?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -108,26 +112,26 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 if (!_emailSent) ...[
                   TextFormField(
                     controller: _emailController,
-                    decoration: const InputDecoration(
-                      hintText: 'Email',
-                      prefixIcon: Icon(Icons.email_outlined),
+                    decoration: InputDecoration(
+                      hintText: l10n.forgotPasswordEmailHint,
+                      prefixIcon: const Icon(Icons.email_outlined),
                     ),
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (_) => _submit(),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Email is required';
+                        return l10n.forgotPasswordEmailRequired;
                       }
                       if (!_isValidEmail(value.trim())) {
-                        return 'Please enter a valid email';
+                        return l10n.errorInvalidEmail;
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 24),
                   PrimaryButton(
-                    text: 'Send Reset Link',
+                    text: l10n.forgotPasswordButton,
                     isLoading: _isLoading,
                     onPressed: _submit,
                   ),
@@ -139,7 +143,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   ),
                   const SizedBox(height: 32),
                   PrimaryButton(
-                    text: 'Back to Sign In',
+                    text: l10n.forgotPasswordBackToSignIn,
                     onPressed: () => context.go('/login'),
                   ),
                 ],

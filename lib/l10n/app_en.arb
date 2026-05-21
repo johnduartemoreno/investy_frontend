@@ -49,12 +49,28 @@
   "signupButton": "Create account",
   "signupHaveAccount": "Already have an account?",
   "signupLogIn": "Log in",
+  "signupNameRequired": "Full name is required",
+  "signupEmailRequired": "Email is required",
+  "signupPasswordRequired": "Password is required",
+  "signupPasswordMinLength": "Minimum 6 characters",
+  "signupConfirmPasswordRequired": "Please confirm your password",
+  "signupPasswordMismatch": "Passwords do not match",
+  "signupShowPassword": "Show password",
+  "signupHidePassword": "Hide password",
 
   "forgotPasswordTitle": "Reset password",
   "forgotPasswordSubtitle": "Enter your email and we'll send you a reset link",
   "forgotPasswordEmailHint": "Email",
   "forgotPasswordButton": "Send reset link",
   "forgotPasswordSuccess": "Reset link sent. Check your inbox.",
+  "forgotPasswordEmailRequired": "Email is required",
+  "forgotPasswordSentMessage": "We sent a reset link to {email}. Check your inbox and follow the instructions.",
+  "@forgotPasswordSentMessage": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "forgotPasswordBackToSignIn": "Back to Sign In",
 
   "emailVerificationTitle": "Verify your email",
   "emailVerificationSubtitle": "We sent a verification link to {email}. Check your inbox.",
