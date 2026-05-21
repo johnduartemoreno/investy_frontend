@@ -282,6 +282,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String get activityUnknown => 'Desconhecido';
 
   @override
+  String get activityDetailQuantity => 'Quantidade';
+
+  @override
+  String get activityDetailPricePerUnit => 'Preço por unidade';
+
+  @override
+  String get activityDetailTotal => 'Total';
+
+  @override
+  String get activityDetailAmount => 'Valor';
+
+  @override
+  String get activityDetailDate => 'Data';
+
+  @override
   String get portfolioTitle => 'Portfólio';
 
   @override

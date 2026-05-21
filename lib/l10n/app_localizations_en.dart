@@ -279,6 +279,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get activityUnknown => 'Unknown';
 
   @override
+  String get activityDetailQuantity => 'Quantity';
+
+  @override
+  String get activityDetailPricePerUnit => 'Price per unit';
+
+  @override
+  String get activityDetailTotal => 'Total';
+
+  @override
+  String get activityDetailAmount => 'Amount';
+
+  @override
+  String get activityDetailDate => 'Date';
+
+  @override
   String get portfolioTitle => 'Portfolio';
 
   @override

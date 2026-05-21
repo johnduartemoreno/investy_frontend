@@ -616,6 +616,36 @@ abstract class AppLocalizations {
   /// **'Unknown'**
   String get activityUnknown;
 
+  /// No description provided for @activityDetailQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get activityDetailQuantity;
+
+  /// No description provided for @activityDetailPricePerUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Price per unit'**
+  String get activityDetailPricePerUnit;
+
+  /// No description provided for @activityDetailTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get activityDetailTotal;
+
+  /// No description provided for @activityDetailAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get activityDetailAmount;
+
+  /// No description provided for @activityDetailDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get activityDetailDate;
+
   /// No description provided for @portfolioTitle.
   ///
   /// In en, this message translates to:

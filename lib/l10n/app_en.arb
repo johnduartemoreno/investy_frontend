@@ -120,6 +120,11 @@
   "activityDeposit": "Deposit",
   "activityWithdrawal": "Withdrawal",
   "activityUnknown": "Unknown",
+  "activityDetailQuantity": "Quantity",
+  "activityDetailPricePerUnit": "Price per unit",
+  "activityDetailTotal": "Total",
+  "activityDetailAmount": "Amount",
+  "activityDetailDate": "Date",
 
   "portfolioTitle": "Portfolio",
   "portfolioNoHoldings": "No holdings yet.\nBuy your first asset to get started.",

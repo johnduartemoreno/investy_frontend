@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/network/dio_client.dart';
+import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/gradient_icon_box.dart';
 import '../../../../core/presentation/widgets/gradient_pill_button.dart';
 import '../../../../core/presentation/widgets/left_accent_box.dart';
 import '../../../../core/presentation/widgets/signal_badge.dart';
 import '../../../../core/providers/locale_provider.dart';
+import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/widgets/owl_ai_widget.dart';
@@ -113,14 +115,17 @@ final fxRateProvider = FutureProvider.autoDispose<double>((ref) async {
 });
 
 /// Derived: Recent Activity feed from the REST backend.
-/// Maps each ActivityItemModel → ActivityItemContribution wrapping a Contribution,
-/// compatible with the existing ActivityItem sealed class used in the UI.
+/// BUY/SELL → ActivityItemTransaction; DEPOSIT/WITHDRAWAL → ActivityItemContribution.
 final restRecentActivityProvider =
     Provider.autoDispose<AsyncValue<List<ActivityItem>>>((ref) {
   return ref.watch(restDashboardProvider).whenData(
-        (dash) => dash.recentActivity
-            .map((m) => ActivityItemContribution(m.toDomain()))
-            .toList(),
+        (dash) => dash.recentActivity.map((m) {
+          final t = m.type.toUpperCase();
+          if (t == 'BUY' || t == 'SELL') {
+            return ActivityItemTransaction(m.toTransaction());
+          }
+          return ActivityItemContribution(m.toDomain());
+        }).toList(),
       );
 });
 
@@ -736,7 +741,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             color: isBuy ? theme.colorScheme.error : AppTheme.signalGreen,
           ),
         ),
-        onTap: () {},
+        onTap: () => _showActivityDetail(context, ActivityItemTransaction(transaction)),
       ),
     );
   }
@@ -781,8 +786,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             color: isDebit ? theme.colorScheme.error : AppTheme.signalGreen,
           ),
         ),
-        onTap: () {},
+        onTap: () => _showActivityDetail(context, ActivityItemContribution(contribution)),
       ),
+    );
+  }
+
+  void _showActivityDetail(BuildContext context, ActivityItem item) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _ActivityDetailSheet(item: item),
     );
   }
 }
@@ -1318,5 +1332,267 @@ class _UserAvatar extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Activity Detail Bottom Sheet
+// ─────────────────────────────────────────────────────────────
+
+class _ActivityDetailSheet extends ConsumerWidget {
+  final ActivityItem item;
+  const _ActivityDetailSheet({required this.item});
+
+  static const _colorMap = {
+    'AAPL': [Color(0xFF1d4ed8), Color(0xFF3b82f6)],
+    'VTI':  [Color(0xFF065f46), Color(0xFF10b981)],
+    'BTC':  [Color(0xFF78350f), Color(0xFFf59e0b)],
+    'MSFT': [Color(0xFF4c1d95), Color(0xFF8b5cf6)],
+    'IAU':  [Color(0xFF881337), Color(0xFFf43f5e)],
+  };
+
+  List<Color> _tickerColors(String ticker) =>
+      _colorMap[ticker] ?? [AppTheme.brandPurple, AppTheme.brandPurpleLight];
+
+  String _formatQuantity(double qty) {
+    if (qty == qty.truncateToDouble()) return qty.toStringAsFixed(0);
+    final s = qty.toStringAsFixed(8).replaceAll(RegExp(r'0+$'), '');
+    return s.endsWith('.') ? s.replaceAll('.', '') : s;
+  }
+
+  String _fullDate(DateTime dt) =>
+      DateFormat('MMM d, y — h:mm a').format(dt.toLocal());
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
+    final currency = ref.watch(displayCurrencyProvider);
+    final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: cs.surfaceContainer,
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(AppDimens.radiusBottomSheet),
+        ),
+      ),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom + 32,
+      ),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: AppDimens.spacingL),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Handle
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: 12, bottom: 20),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: cs.onSurfaceVariant.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            switch (item) {
+              ActivityItemTransaction(:final transaction) =>
+                _buildTransactionDetail(theme, cs, l10n, transaction, currency, fxRate),
+              ActivityItemContribution(:final contribution) =>
+                _buildContributionDetail(theme, cs, l10n, contribution, currency, fxRate),
+            },
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTransactionDetail(
+    ThemeData theme,
+    ColorScheme cs,
+    AppLocalizations l10n,
+    Transaction tx,
+    String currency,
+    double fxRate,
+  ) {
+    final isBuy = tx.type.toLowerCase() == 'buy';
+    final typeLabel = isBuy ? l10n.dashboardBuy : l10n.dashboardSell;
+    final amountColor = isBuy ? cs.error : AppTheme.signalGreen;
+    final signPrefix = isBuy ? '−' : '+';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Header: ticker icon + type label
+        Row(
+          children: [
+            GradientIconBox(
+              colors: _tickerColors(tx.symbol),
+              size: 44,
+              child: Text(
+                tx.symbol.length > 4 ? tx.symbol.substring(0, 4) : tx.symbol,
+                style: const TextStyle(
+                    color: Colors.white, fontSize: 10, fontWeight: FontWeight.w800),
+              ),
+            ),
+            const SizedBox(width: AppDimens.spacingM),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  typeLabel,
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  tx.symbol,
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: cs.onSurfaceVariant),
+                ),
+              ],
+            ),
+            const Spacer(),
+            Text(
+              '$signPrefix ${CurrencyFormatter.formatWithCurrency(tx.totalBeforeFees * fxRate, currency)}',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: amountColor,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppDimens.spacingL),
+        // Detail rows
+        CustomCard(
+          padding: const EdgeInsets.symmetric(
+              horizontal: AppDimens.spacingL, vertical: AppDimens.spacingM),
+          child: Column(
+            children: [
+              _detailRow(theme, cs, l10n.activityDetailQuantity,
+                  _formatQuantity(tx.quantity)),
+              _divider(cs),
+              _detailRow(theme, cs, l10n.activityDetailPricePerUnit,
+                  CurrencyFormatter.formatWithCurrency(tx.price * fxRate, currency)),
+              _divider(cs),
+              _detailRow(theme, cs, l10n.activityDetailTotal,
+                  CurrencyFormatter.formatWithCurrency(tx.totalBeforeFees * fxRate, currency)),
+              _divider(cs),
+              _detailRow(theme, cs, l10n.activityDetailDate,
+                  _fullDate(tx.createdAt)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildContributionDetail(
+    ThemeData theme,
+    ColorScheme cs,
+    AppLocalizations l10n,
+    Contribution contribution,
+    String currency,
+    double fxRate,
+  ) {
+    final type = contribution.type.toLowerCase();
+    final isDebit = type == 'withdrawal';
+    final icon = _getContributionIcon(type);
+    final color = _getContributionColor(cs, type);
+    final typeLabel = _getContributionLabel(l10n, type);
+    final signPrefix = isDebit ? '−' : '+';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Header: icon + label + amount
+        Row(
+          children: [
+            CircleAvatar(
+              radius: 22,
+              backgroundColor: color.withValues(alpha: 0.15),
+              child: Icon(icon, size: 22, color: color),
+            ),
+            const SizedBox(width: AppDimens.spacingM),
+            Text(
+              typeLabel,
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const Spacer(),
+            Text(
+              '$signPrefix ${CurrencyFormatter.formatWithCurrency(contribution.amount * fxRate, currency)}',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: isDebit ? cs.error : AppTheme.signalGreen,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppDimens.spacingL),
+        CustomCard(
+          padding: const EdgeInsets.symmetric(
+              horizontal: AppDimens.spacingL, vertical: AppDimens.spacingM),
+          child: Column(
+            children: [
+              _detailRow(theme, cs, l10n.activityDetailAmount,
+                  CurrencyFormatter.formatWithCurrency(contribution.amount * fxRate, currency)),
+              _divider(cs),
+              _detailRow(theme, cs, l10n.activityDetailDate,
+                  _fullDate(contribution.createdAt)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _detailRow(ThemeData theme, ColorScheme cs, String label, String value) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppDimens.spacingS),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label,
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: cs.onSurfaceVariant)),
+            Text(value,
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w600)),
+          ],
+        ),
+      );
+
+  Widget _divider(ColorScheme cs) => Divider(
+        height: 1,
+        thickness: 0.5,
+        color: cs.outlineVariant.withValues(alpha: 0.5),
+      );
+
+  String _getContributionLabel(AppLocalizations l10n, String type) {
+    switch (type) {
+      case 'deposit': return l10n.activityDeposit;
+      case 'withdrawal': return l10n.activityWithdrawal;
+      default: return type;
+    }
+  }
+
+  IconData _getContributionIcon(String type) {
+    switch (type) {
+      case 'deposit': return Icons.arrow_downward;
+      case 'withdrawal': return Icons.arrow_upward;
+      default: return Icons.swap_horiz;
+    }
+  }
+
+  Color _getContributionColor(ColorScheme cs, String type) {
+    switch (type) {
+      case 'deposit': return AppTheme.signalGreen;
+      case 'withdrawal': return cs.error;
+      default: return cs.onSurfaceVariant;
+    }
   }
 }

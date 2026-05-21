@@ -12,6 +12,9 @@ ActivityItemModel _$ActivityItemModelFromJson(Map<String, dynamic> json) =>
       amount: (json['amount'] as num?)?.toInt() ?? 0,
       type: json['type'] as String? ?? 'UNKNOWN',
       timestamp: json['timestamp'] as String? ?? '',
+      symbol: json['symbol'] as String? ?? '',
+      quantityUnits: (json['quantityUnits'] as num?)?.toInt() ?? 0,
+      priceCents: (json['priceCents'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$ActivityItemModelToJson(ActivityItemModel instance) =>
@@ -20,4 +23,7 @@ Map<String, dynamic> _$ActivityItemModelToJson(ActivityItemModel instance) =>
       'amount': instance.amount,
       'type': instance.type,
       'timestamp': instance.timestamp,
+      'symbol': instance.symbol,
+      'quantityUnits': instance.quantityUnits,
+      'priceCents': instance.priceCents,
     };

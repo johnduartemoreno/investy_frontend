@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../domain/entities/contribution.dart';
+import '../../domain/entities/transaction.dart';
 
 part 'activity_item_model.g.dart';
 
@@ -24,11 +25,26 @@ class ActivityItemModel {
   @JsonKey(defaultValue: '')
   final String timestamp;
 
+  /// Asset ticker symbol. Non-empty for BUY/SELL items only.
+  @JsonKey(defaultValue: '')
+  final String symbol;
+
+  /// Quantity in units × 10^8. Non-zero for BUY/SELL items only.
+  @JsonKey(defaultValue: 0)
+  final int quantityUnits;
+
+  /// Price per unit in integer cents. Non-zero for BUY/SELL items only.
+  @JsonKey(defaultValue: 0)
+  final int priceCents;
+
   const ActivityItemModel({
     required this.id,
     required this.amount,
     required this.type,
     required this.timestamp,
+    this.symbol = '',
+    this.quantityUnits = 0,
+    this.priceCents = 0,
   });
 
   factory ActivityItemModel.fromJson(Map<String, dynamic> json) =>
@@ -36,15 +52,30 @@ class ActivityItemModel {
 
   Map<String, dynamic> toJson() => _$ActivityItemModelToJson(this);
 
+  DateTime get _parsedAt =>
+      timestamp.isEmpty ? DateTime.now().toUtc() : DateTime.parse(timestamp).toLocal();
+
   /// Maps integer cents → domain Contribution entity (double dollars).
-  /// Precision rule: amount (int cents) / 100.0 → Contribution.amount (double dollars).
-  /// Normalises type to lowercase ("BUY" → "buy") for domain entity consistency.
   Contribution toDomain() {
     return Contribution(
       id: id,
-      amount: amount / 100.0, // cents → dollars: $1.00 = 100
+      amount: amount / 100.0,
       type: type.toLowerCase(),
-      createdAt: timestamp.isEmpty ? DateTime.now().toUtc() : DateTime.parse(timestamp),
+      createdAt: _parsedAt,
+    );
+  }
+
+  /// Maps BUY/SELL fields → domain Transaction entity (double dollars, quantity in units).
+  /// quantityUnits uses 10^8 fixed-point: divide by 1e8 for human-readable quantity.
+  Transaction toTransaction() {
+    return Transaction(
+      id: id,
+      symbol: symbol,
+      type: type.toLowerCase(),
+      quantity: quantityUnits / 1e8,
+      price: priceCents / 100.0,
+      totalBeforeFees: amount / 100.0,
+      createdAt: _parsedAt,
     );
   }
 }

@@ -100,6 +100,11 @@
   "activityDeposit": "Depósito",
   "activityWithdrawal": "Retiro",
   "activityUnknown": "Desconocido",
+  "activityDetailQuantity": "Cantidad",
+  "activityDetailPricePerUnit": "Precio por unidad",
+  "activityDetailTotal": "Total",
+  "activityDetailAmount": "Monto",
+  "activityDetailDate": "Fecha",
 
   "portfolioTitle": "Portafolio",
   "portfolioNoHoldings": "Sin posiciones aún.\nCompra tu primer activo para empezar.",
