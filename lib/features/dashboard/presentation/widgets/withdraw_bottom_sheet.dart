@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../l10n/app_localizations.dart';
 
+import '../../../../core/presentation/widgets/primary_button.dart';
+import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../data/datasources/dashboard_remote_data_source.dart';
 import '../../data/models/transaction_request_model.dart';
@@ -25,6 +28,15 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
   double _amount = 0.0;
 
   @override
+  void initState() {
+    super.initState();
+    // Force fresh balance every time the sheet opens.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.invalidate(restDashboardProvider);
+    });
+  }
+
+  @override
   void dispose() {
     _amountController.dispose();
     super.dispose();
@@ -38,11 +50,12 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
     });
   }
 
-  Future<void> _handleWithdraw(double maxAvailable) async {
+  // maxAvailableDisplay is in display currency (e.g. EUR).
+  // _amount is also in display currency — convert to USD before sending.
+  Future<void> _handleWithdraw(double maxAvailableDisplay) async {
     if (!_formKey.currentState!.validate()) return;
     if (_amount <= 0) return;
-    if (_amount > maxAvailable)
-      return; // Should be caught by validator but double check
+    if (_amount > maxAvailableDisplay) return;
 
     setState(() => _isLoading = true);
 
@@ -50,9 +63,12 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
       final userId = FirebaseAuth.instance.currentUser?.uid;
       if (userId == null) throw Exception('User not authenticated');
 
+      final fxRate = ref.read(fxRateProvider).valueOrNull ?? 1.0;
+      final amountUsd = fxRate > 0 ? _amount / fxRate : _amount;
+
       await ref.read(dashboardRemoteDataSourceProvider).createTransaction(
             userId,
-            TransactionRequestModel.forCash(_amount, 'WITHDRAWAL'),
+            TransactionRequestModel.forCash(amountUsd, 'WITHDRAWAL'),
           );
 
       ref.invalidate(restDashboardProvider);
@@ -82,25 +98,29 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = theme.colorScheme;
     final availableCashAsync = ref.watch(restAvailableCashProvider);
-    final currencyFmt = NumberFormat.simpleCurrency();
+    final currency = ref.watch(displayCurrencyProvider);
+    final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
 
-    // Default to 0 if loading/error, but UI handles loading state
-    final maxAvailable = availableCashAsync.valueOrNull ?? 0.0;
+    // maxAvailableUsd is raw USD dollars from the provider.
+    // maxAvailableDisplay converts to user's display currency for UI use.
+    final maxAvailableUsd = availableCashAsync.valueOrNull ?? 0.0;
+    final maxAvailableDisplay = maxAvailableUsd * fxRate;
     final isLoadingData = availableCashAsync.isLoading;
 
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: theme.scaffoldBackgroundColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        color: cs.surfaceContainer,
+        borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(AppDimens.radiusBottomSheet)),
       ),
       child: SingleChildScrollView(
         padding: EdgeInsets.only(
-          top: 24,
-          left: 24,
-          right: 24,
+          top: AppDimens.spacingXL,
+          left: AppDimens.spacingXL,
+          right: AppDimens.spacingXL,
           bottom: MediaQuery.of(context).viewInsets.bottom + 32,
         ),
         child: Column(
@@ -129,18 +149,18 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
           Text(
             AppLocalizations.of(context).withdrawAvailableTo,
             style: theme.textTheme.labelMedium?.copyWith(
-              color: colorScheme.outline,
+              color: cs.outline,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           isLoadingData
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator.adaptive())
               : Text(
-                  currencyFmt.format(maxAvailable),
+                  CurrencyFormatter.formatWithCurrency(maxAvailableDisplay, currency),
                   style: theme.textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: colorScheme.primary,
+                    color: cs.primary,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -158,11 +178,11 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
               ),
               textAlign: TextAlign.center,
               decoration: InputDecoration(
-                prefixText: '\$ ',
+                prefixText: '${CurrencyFormatter.symbolFor(currency)} ',
                 hintText: '0',
                 border: InputBorder.none,
                 hintStyle: theme.textTheme.displayMedium?.copyWith(
-                  color: colorScheme.outline.withValues(alpha: 0.5),
+                  color: cs.outline.withValues(alpha: 0.5),
                 ),
               ),
               inputFormatters: [
@@ -178,7 +198,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
                 if (value == null || value.isEmpty) return l10n.withdrawEnterAmount;
                 final val = ThousandsSeparatorInputFormatter.parseFormatted(value);
                 if (val == null || val <= 0) return l10n.withdrawAmountPositive;
-                if (val > maxAvailable) return l10n.withdrawInsufficientFunds;
+                if (val > maxAvailableDisplay) return l10n.withdrawInsufficientFunds;
                 return null;
               },
             ),
@@ -191,21 +211,21 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
               Expanded(
                 child: _QuickActionChip(
                   label: '25%',
-                  onTap: () => _updateAmount(maxAvailable * 0.25),
+                  onTap: () => _updateAmount(maxAvailableDisplay * 0.25),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: _QuickActionChip(
                   label: '50%',
-                  onTap: () => _updateAmount(maxAvailable * 0.50),
+                  onTap: () => _updateAmount(maxAvailableDisplay * 0.50),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: _QuickActionChip(
                   label: 'MAX',
-                  onTap: () => _updateAmount(maxAvailable),
+                  onTap: () => _updateAmount(maxAvailableDisplay),
                 ),
               ),
             ],
@@ -213,24 +233,10 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
           const SizedBox(height: 24),
 
           // Action Button
-          FilledButton(
-            onPressed: _isLoading ? null : () => _handleWithdraw(maxAvailable),
-            style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-            ),
-            child: _isLoading
-                ? SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: colorScheme.onPrimary,
-                    ),
-                  )
-                : Text(AppLocalizations.of(context).withdrawConfirmButton),
+          PrimaryButton(
+            text: AppLocalizations.of(context).withdrawConfirmButton,
+            isLoading: _isLoading,
+            onPressed: _isLoading ? null : () => _handleWithdraw(maxAvailableDisplay),
           ),
         ],
       ),

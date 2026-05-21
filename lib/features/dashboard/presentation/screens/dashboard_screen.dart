@@ -184,17 +184,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   String _formatContributionDate(AppLocalizations l10n, DateTime date) {
+    final local = date.toLocal();
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
-    final dateOnly = DateTime(date.year, date.month, date.day);
+    final dateOnly = DateTime(local.year, local.month, local.day);
 
     if (dateOnly == today) {
-      return '${l10n.commonToday}, ${DateFormat.jm().format(date)}';
+      return '${l10n.commonToday}, ${DateFormat.jm().format(local)}';
     } else if (dateOnly == yesterday) {
-      return '${l10n.commonYesterday}, ${DateFormat.jm().format(date)}';
+      return '${l10n.commonYesterday}, ${DateFormat.jm().format(local)}';
     } else {
-      return DateFormat.yMMMd().format(date);
+      return DateFormat.yMMMd().format(local);
     }
   }
 
@@ -224,7 +225,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               _buildHeader(theme, l10n, userNameAsync),
               const SizedBox(height: 20),
               _buildBalanceCard(theme, l10n, netWorthAsync, availableCashAsync,
-                  currencyAsync.valueOrNull ?? 'USD'),
+                  currencyAsync.valueOrNull ?? 'USD', fxRate),
               const SizedBox(height: 16),
               _buildOwlAdvisorCard(theme, l10n),
               const SizedBox(height: 24),
@@ -247,30 +248,36 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final rawName = userNameAsync.valueOrNull ?? '';
     final firstName = _firstName(rawName);
     final greeting = _greeting(l10n);
+    final photoURL = FirebaseAuth.instance.currentUser?.photoURL;
+    final initial =
+        rawName.isNotEmpty ? rawName.trim()[0].toUpperCase() : '?';
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              greeting,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+        _UserAvatar(photoURL: photoURL, initial: initial),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                greeting,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
-            ),
-            const SizedBox(height: 2),
-            rawName.isEmpty
-                ? const SizedBox(height: 28)
-                : Text(
-                    firstName,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSurface,
+              const SizedBox(height: 2),
+              rawName.isEmpty
+                  ? const SizedBox(height: 28)
+                  : Text(
+                      firstName,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.onSurface,
+                      ),
                     ),
-                  ),
-          ],
+            ],
+          ),
         ),
         Container(
           width: 40,
@@ -317,7 +324,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       AppLocalizations l10n,
       AsyncValue<double> netWorthAsync,
       AsyncValue<double> availableCashAsync,
-      String currency) {
+      String currency,
+      double fxRate) {
+    final investedVal = netWorthAsync.valueOrNull;
+    final cashVal = availableCashAsync.valueOrNull;
+    final totalVal = (investedVal != null && cashVal != null)
+        ? (investedVal + cashVal) * fxRate
+        : null;
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
@@ -339,26 +353,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10n.dashboardInvestedPortfolio,
+            l10n.dashboardTotalBalance,
             style: theme.textTheme.labelMedium?.copyWith(
               color: Colors.white.withValues(alpha: 0.75),
             ),
           ),
           const SizedBox(height: 6),
-          netWorthAsync.when(
-            data: (value) => Text(
-              CurrencyFormatter.formatWithCurrency(value, currency),
-              style: theme.textTheme.displaySmall?.copyWith(
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
-                letterSpacing: -1,
-              ),
-            ),
-            loading: () => _shimmer(width: 140, height: 36),
-            error: (_, __) => Text('--',
-                style: theme.textTheme.displaySmall
-                    ?.copyWith(color: Colors.white)),
-          ),
+          totalVal != null
+              ? Text(
+                  CurrencyFormatter.formatWithCurrency(totalVal, currency),
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                    letterSpacing: -1,
+                  ),
+                )
+              : (netWorthAsync.isLoading || availableCashAsync.isLoading)
+                  ? _shimmer(width: 140, height: 36)
+                  : Text('--',
+                      style: theme.textTheme.displaySmall
+                          ?.copyWith(color: Colors.white)),
           const SizedBox(height: 16),
           Container(
             height: 1,
@@ -372,52 +386,71 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
+                    l10n.dashboardInvestedValue,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.7),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  investedVal != null
+                      ? Text(
+                          CurrencyFormatter.formatWithCurrency(
+                              investedVal * fxRate, currency),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )
+                      : netWorthAsync.isLoading
+                          ? _shimmer(width: 70, height: 20)
+                          : const Text('--',
+                              style: TextStyle(color: Colors.white)),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
                     l10n.dashboardCashToInvest,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: Colors.white.withValues(alpha: 0.7),
                     ),
                   ),
                   const SizedBox(height: 4),
-                  availableCashAsync.when(
-                    data: (value) => Text(
-                      CurrencyFormatter.formatWithCurrency(value, currency),
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    loading: () => _shimmer(width: 80, height: 20),
-                    error: (_, __) => const Text('--',
-                        style: TextStyle(color: Colors.white)),
-                  ),
+                  cashVal != null
+                      ? Text(
+                          CurrencyFormatter.formatWithCurrency(
+                              cashVal * fxRate, currency),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )
+                      : availableCashAsync.isLoading
+                          ? _shimmer(width: 70, height: 20)
+                          : const Text('--',
+                              style: TextStyle(color: Colors.white)),
                 ],
               ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(20),
+                width: 6,
+                height: 6,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF4ade80),
+                  shape: BoxShape.circle,
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF4ade80),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      l10n.portfolioActive,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
+              ),
+              const SizedBox(width: 6),
+              Text(
+                l10n.portfolioActive,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.7),
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -1244,6 +1277,46 @@ class _RecCardState extends State<_RecCard>
     return SignalBadge(
       label: strong ? l10n.owlAiStrongBuy : l10n.owlAiModerateSignal,
       color: strong ? AppTheme.signalGreen : AppTheme.signalAmber,
+    );
+  }
+}
+
+class _UserAvatar extends StatelessWidget {
+  final String? photoURL;
+  final String initial;
+
+  const _UserAvatar({required this.photoURL, required this.initial});
+
+  @override
+  Widget build(BuildContext context) {
+    if (photoURL != null && photoURL!.isNotEmpty) {
+      return CircleAvatar(
+        radius: 22,
+        backgroundColor: AppTheme.brandPurple,
+        backgroundImage: NetworkImage(photoURL!),
+      );
+    }
+    return Container(
+      width: 44,
+      height: 44,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Text(
+          initial,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+            fontSize: 16,
+          ),
+        ),
+      ),
     );
   }
 }

@@ -138,6 +138,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signupLogIn => 'Log in';
 
   @override
+  String get signupNameRequired => 'Full name is required';
+
+  @override
+  String get signupEmailRequired => 'Email is required';
+
+  @override
+  String get signupPasswordRequired => 'Password is required';
+
+  @override
+  String get signupPasswordMinLength => 'Minimum 6 characters';
+
+  @override
+  String get signupConfirmPasswordRequired => 'Please confirm your password';
+
+  @override
+  String get signupPasswordMismatch => 'Passwords do not match';
+
+  @override
+  String get signupShowPassword => 'Show password';
+
+  @override
+  String get signupHidePassword => 'Hide password';
+
+  @override
   String get forgotPasswordTitle => 'Reset password';
 
   @override
@@ -152,6 +176,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get forgotPasswordSuccess => 'Reset link sent. Check your inbox.';
+
+  @override
+  String get forgotPasswordEmailRequired => 'Email is required';
+
+  @override
+  String forgotPasswordSentMessage(String email) {
+    return 'We sent a reset link to $email. Check your inbox and follow the instructions.';
+  }
+
+  @override
+  String get forgotPasswordBackToSignIn => 'Back to Sign In';
 
   @override
   String get emailVerificationTitle => 'Verify your email';

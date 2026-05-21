@@ -139,6 +139,30 @@ class AppLocalizationsPt extends AppLocalizations {
   String get signupLogIn => 'Entrar';
 
   @override
+  String get signupNameRequired => 'O nome é obrigatório';
+
+  @override
+  String get signupEmailRequired => 'O e-mail é obrigatório';
+
+  @override
+  String get signupPasswordRequired => 'A senha é obrigatória';
+
+  @override
+  String get signupPasswordMinLength => 'Mínimo 6 caracteres';
+
+  @override
+  String get signupConfirmPasswordRequired => 'Por favor, confirme sua senha';
+
+  @override
+  String get signupPasswordMismatch => 'As senhas não coincidem';
+
+  @override
+  String get signupShowPassword => 'Mostrar senha';
+
+  @override
+  String get signupHidePassword => 'Ocultar senha';
+
+  @override
   String get forgotPasswordTitle => 'Redefinir senha';
 
   @override
@@ -154,6 +178,17 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get forgotPasswordSuccess =>
       'Link enviado. Verifique sua caixa de entrada.';
+
+  @override
+  String get forgotPasswordEmailRequired => 'O e-mail é obrigatório';
+
+  @override
+  String forgotPasswordSentMessage(String email) {
+    return 'Enviamos um link para $email. Verifique sua caixa de entrada e siga as instruções.';
+  }
+
+  @override
+  String get forgotPasswordBackToSignIn => 'Voltar para entrar';
 
   @override
   String get emailVerificationTitle => 'Verifique seu e-mail';

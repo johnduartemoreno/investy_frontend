@@ -358,6 +358,54 @@ abstract class AppLocalizations {
   /// **'Log in'**
   String get signupLogIn;
 
+  /// No description provided for @signupNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name is required'**
+  String get signupNameRequired;
+
+  /// No description provided for @signupEmailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get signupEmailRequired;
+
+  /// No description provided for @signupPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get signupPasswordRequired;
+
+  /// No description provided for @signupPasswordMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum 6 characters'**
+  String get signupPasswordMinLength;
+
+  /// No description provided for @signupConfirmPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your password'**
+  String get signupConfirmPasswordRequired;
+
+  /// No description provided for @signupPasswordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get signupPasswordMismatch;
+
+  /// No description provided for @signupShowPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get signupShowPassword;
+
+  /// No description provided for @signupHidePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get signupHidePassword;
+
   /// No description provided for @forgotPasswordTitle.
   ///
   /// In en, this message translates to:
@@ -387,6 +435,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset link sent. Check your inbox.'**
   String get forgotPasswordSuccess;
+
+  /// No description provided for @forgotPasswordEmailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get forgotPasswordEmailRequired;
+
+  /// No description provided for @forgotPasswordSentMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a reset link to {email}. Check your inbox and follow the instructions.'**
+  String forgotPasswordSentMessage(String email);
+
+  /// No description provided for @forgotPasswordBackToSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Sign In'**
+  String get forgotPasswordBackToSignIn;
 
   /// No description provided for @emailVerificationTitle.
   ///
