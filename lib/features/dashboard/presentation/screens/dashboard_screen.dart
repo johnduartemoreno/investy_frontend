@@ -883,7 +883,7 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                 padding: const EdgeInsets.only(top: 10, bottom: 4),
                 child: Center(
                   child: Container(
-                    width: 36,
+                    width: 40,
                     height: 4,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.outlineVariant,
@@ -1393,7 +1393,7 @@ class _ActivityDetailSheet extends ConsumerWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: cs.onSurfaceVariant.withValues(alpha: 0.3),
+                  color: cs.outlineVariant,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
