@@ -105,6 +105,9 @@
   "activityDetailTotal": "Total",
   "activityDetailAmount": "Valor",
   "activityDetailDate": "Data",
+  "activityDetailRealizedPnl": "P&L realizado",
+  "activityDetailGain": "Ganho",
+  "activityDetailLoss": "Perda",
 
   "portfolioTitle": "Portfólio",
   "portfolioNoHoldings": "Sem posições ainda.\nCompre seu primeiro ativo para começar.",

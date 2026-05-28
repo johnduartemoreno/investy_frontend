@@ -125,6 +125,9 @@
   "activityDetailTotal": "Total",
   "activityDetailAmount": "Amount",
   "activityDetailDate": "Date",
+  "activityDetailRealizedPnl": "Realized P&L",
+  "activityDetailGain": "Gain",
+  "activityDetailLoss": "Loss",
 
   "portfolioTitle": "Portfolio",
   "portfolioNoHoldings": "No holdings yet.\nBuy your first asset to get started.",

@@ -14,6 +14,7 @@ _$TransactionImpl _$$TransactionImplFromJson(Map<String, dynamic> json) =>
       quantity: (json['quantity'] as num).toDouble(),
       price: (json['price'] as num).toDouble(),
       totalBeforeFees: (json['total_before_fees'] as num).toDouble(),
+      realizedPnlCents: (json['realizedPnlCents'] as num?)?.toInt() ?? 0,
       createdAt: DateTime.parse(json['created_at'] as String),
     );
 
@@ -25,5 +26,6 @@ Map<String, dynamic> _$$TransactionImplToJson(_$TransactionImpl instance) =>
       'quantity': instance.quantity,
       'price': instance.price,
       'total_before_fees': instance.totalBeforeFees,
+      'realizedPnlCents': instance.realizedPnlCents,
       'created_at': instance.createdAt.toIso8601String(),
     };

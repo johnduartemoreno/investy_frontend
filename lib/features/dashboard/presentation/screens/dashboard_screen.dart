@@ -1423,6 +1423,10 @@ class _ActivityDetailSheet extends ConsumerWidget {
     final typeLabel = isBuy ? l10n.dashboardBuy : l10n.dashboardSell;
     final amountColor = isBuy ? cs.error : AppTheme.signalGreen;
     final signPrefix = isBuy ? '−' : '+';
+    final hasPnl = !isBuy && tx.realizedPnlCents != 0;
+    final pnlIsGain = tx.realizedPnlCents > 0;
+    final pnlColor = pnlIsGain ? AppTheme.signalGreen : cs.error;
+    final pnlLabel = pnlIsGain ? l10n.activityDetailGain : l10n.activityDetailLoss;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1483,10 +1487,50 @@ class _ActivityDetailSheet extends ConsumerWidget {
               _divider(cs),
               _detailRow(theme, cs, l10n.activityDetailDate,
                   _fullDate(tx.createdAt)),
+              if (hasPnl) ...[
+                _divider(cs),
+                _pnlRow(theme, cs, l10n.activityDetailRealizedPnl,
+                    tx.realizedPnlCents, fxRate, currency, pnlColor, pnlLabel),
+              ],
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _pnlRow(
+    ThemeData theme,
+    ColorScheme cs,
+    String label,
+    int pnlCents,
+    double fxRate,
+    String currency,
+    Color color,
+    String badgeLabel,
+  ) {
+    final pnlDisplay = CurrencyFormatter.formatWithCurrency(
+        pnlCents.abs() / 100.0 * fxRate, currency);
+    final sign = pnlCents >= 0 ? '+' : '−';
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppDimens.spacingS),
+      child: Row(
+        children: [
+          Text(label,
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: cs.onSurfaceVariant)),
+          const Spacer(),
+          SignalBadge(label: badgeLabel, color: color),
+          const SizedBox(width: AppDimens.spacingS),
+          Text(
+            '$sign $pnlDisplay',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
