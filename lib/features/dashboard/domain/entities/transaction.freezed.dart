@@ -30,6 +30,10 @@ mixin _$Transaction {
   @JsonKey(name: 'total_before_fees')
   double get totalBeforeFees => throw _privateConstructorUsedError;
 
+  /// Net realized P&L in integer cents for SELL transactions.
+  /// 0 means BUY, DEPOSIT, WITHDRAWAL, or pre-migration SELL (avg cost unknown).
+  int get realizedPnlCents => throw _privateConstructorUsedError;
+
   /// Audit: immutable creation time.
   @JsonKey(name: 'created_at')
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -53,6 +57,7 @@ abstract class $TransactionCopyWith<$Res> {
       double quantity,
       double price,
       @JsonKey(name: 'total_before_fees') double totalBeforeFees,
+      int realizedPnlCents,
       @JsonKey(name: 'created_at') DateTime createdAt});
 }
 
@@ -75,6 +80,7 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
     Object? quantity = null,
     Object? price = null,
     Object? totalBeforeFees = null,
+    Object? realizedPnlCents = null,
     Object? createdAt = null,
   }) {
     return _then(_value.copyWith(
@@ -102,6 +108,10 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
           ? _value.totalBeforeFees
           : totalBeforeFees // ignore: cast_nullable_to_non_nullable
               as double,
+      realizedPnlCents: null == realizedPnlCents
+          ? _value.realizedPnlCents
+          : realizedPnlCents // ignore: cast_nullable_to_non_nullable
+              as int,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -125,6 +135,7 @@ abstract class _$$TransactionImplCopyWith<$Res>
       double quantity,
       double price,
       @JsonKey(name: 'total_before_fees') double totalBeforeFees,
+      int realizedPnlCents,
       @JsonKey(name: 'created_at') DateTime createdAt});
 }
 
@@ -145,6 +156,7 @@ class __$$TransactionImplCopyWithImpl<$Res>
     Object? quantity = null,
     Object? price = null,
     Object? totalBeforeFees = null,
+    Object? realizedPnlCents = null,
     Object? createdAt = null,
   }) {
     return _then(_$TransactionImpl(
@@ -172,6 +184,10 @@ class __$$TransactionImplCopyWithImpl<$Res>
           ? _value.totalBeforeFees
           : totalBeforeFees // ignore: cast_nullable_to_non_nullable
               as double,
+      realizedPnlCents: null == realizedPnlCents
+          ? _value.realizedPnlCents
+          : realizedPnlCents // ignore: cast_nullable_to_non_nullable
+              as int,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -190,6 +206,7 @@ class _$TransactionImpl implements _Transaction {
       required this.quantity,
       required this.price,
       @JsonKey(name: 'total_before_fees') required this.totalBeforeFees,
+      this.realizedPnlCents = 0,
       @JsonKey(name: 'created_at') required this.createdAt});
 
   factory _$TransactionImpl.fromJson(Map<String, dynamic> json) =>
@@ -211,6 +228,12 @@ class _$TransactionImpl implements _Transaction {
   @JsonKey(name: 'total_before_fees')
   final double totalBeforeFees;
 
+  /// Net realized P&L in integer cents for SELL transactions.
+  /// 0 means BUY, DEPOSIT, WITHDRAWAL, or pre-migration SELL (avg cost unknown).
+  @override
+  @JsonKey()
+  final int realizedPnlCents;
+
   /// Audit: immutable creation time.
   @override
   @JsonKey(name: 'created_at')
@@ -218,7 +241,7 @@ class _$TransactionImpl implements _Transaction {
 
   @override
   String toString() {
-    return 'Transaction(id: $id, symbol: $symbol, type: $type, quantity: $quantity, price: $price, totalBeforeFees: $totalBeforeFees, createdAt: $createdAt)';
+    return 'Transaction(id: $id, symbol: $symbol, type: $type, quantity: $quantity, price: $price, totalBeforeFees: $totalBeforeFees, realizedPnlCents: $realizedPnlCents, createdAt: $createdAt)';
   }
 
   @override
@@ -234,6 +257,8 @@ class _$TransactionImpl implements _Transaction {
             (identical(other.price, price) || other.price == price) &&
             (identical(other.totalBeforeFees, totalBeforeFees) ||
                 other.totalBeforeFees == totalBeforeFees) &&
+            (identical(other.realizedPnlCents, realizedPnlCents) ||
+                other.realizedPnlCents == realizedPnlCents) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
@@ -241,7 +266,7 @@ class _$TransactionImpl implements _Transaction {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, symbol, type, quantity,
-      price, totalBeforeFees, createdAt);
+      price, totalBeforeFees, realizedPnlCents, createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -265,6 +290,7 @@ abstract class _Transaction implements Transaction {
       required final double quantity,
       required final double price,
       @JsonKey(name: 'total_before_fees') required final double totalBeforeFees,
+      final int realizedPnlCents,
       @JsonKey(name: 'created_at')
       required final DateTime createdAt}) = _$TransactionImpl;
 
@@ -286,6 +312,11 @@ abstract class _Transaction implements Transaction {
   @override
   @JsonKey(name: 'total_before_fees')
   double get totalBeforeFees;
+  @override
+
+  /// Net realized P&L in integer cents for SELL transactions.
+  /// 0 means BUY, DEPOSIT, WITHDRAWAL, or pre-migration SELL (avg cost unknown).
+  int get realizedPnlCents;
   @override
 
   /// Audit: immutable creation time.

@@ -18,6 +18,10 @@ class Transaction with _$Transaction {
     required double price,
     @JsonKey(name: 'total_before_fees') required double totalBeforeFees,
 
+    /// Net realized P&L in integer cents for SELL transactions.
+    /// 0 means BUY, DEPOSIT, WITHDRAWAL, or pre-migration SELL (avg cost unknown).
+    @Default(0) int realizedPnlCents,
+
     /// Audit: immutable creation time.
     @JsonKey(name: 'created_at') required DateTime createdAt,
   }) = _Transaction;

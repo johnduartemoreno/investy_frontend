@@ -37,6 +37,12 @@ class ActivityItemModel {
   @JsonKey(defaultValue: 0)
   final int priceCents;
 
+  /// Net realized P&L in cents for SELL transactions.
+  /// Formula: (sell_price - avg_cost_at_sell) * qty / 1e8 - fee_cents.
+  /// Zero means: BUY, DEPOSIT, WITHDRAWAL, or pre-migration SELL (avg cost unknown).
+  @JsonKey(defaultValue: 0)
+  final int realizedPnlCents;
+
   const ActivityItemModel({
     required this.id,
     required this.amount,
@@ -45,6 +51,7 @@ class ActivityItemModel {
     this.symbol = '',
     this.quantityUnits = 0,
     this.priceCents = 0,
+    this.realizedPnlCents = 0,
   });
 
   factory ActivityItemModel.fromJson(Map<String, dynamic> json) =>
@@ -75,6 +82,7 @@ class ActivityItemModel {
       quantity: quantityUnits / 1e8,
       price: priceCents / 100.0,
       totalBeforeFees: amount / 100.0,
+      realizedPnlCents: realizedPnlCents,
       createdAt: _parsedAt,
     );
   }
