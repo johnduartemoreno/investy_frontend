@@ -5,11 +5,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:investy/features/kyc/data/models/kyc_status_model.dart';
 import 'package:investy/features/kyc/presentation/providers/kyc_provider.dart';
 import 'package:investy/features/kyc/presentation/widgets/kyc_gate_banner.dart';
+import 'package:investy/l10n/app_localizations.dart';
 
 Widget _wrap(Widget child, Override override) {
   return ProviderScope(
     overrides: [override],
     child: MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(body: child),
     ),
   );
