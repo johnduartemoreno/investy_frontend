@@ -85,6 +85,10 @@ class GoalResponseModel {
     final centsPerDay = currentAmountCents / elapsedDays;
     if (centsPerDay <= 0) return null;
     final remainingDays = (remainingCents / centsPerDay).ceil();
+    // Sanity cap: a projection beyond ~100 years is meaningless (tiny saving
+    // rate vs a very large target). Show the "keep contributing" fallback instead
+    // of an absurd far-future date.
+    if (remainingDays > 36500) return null;
     return DateTime.now().add(Duration(days: remainingDays));
   }
 }
