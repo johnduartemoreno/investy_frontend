@@ -10,6 +10,7 @@ class TransactionRequestModel {
   final String? symbol;   // required for BUY/SELL
   final String? quantity; // BUY/SELL: decimal string e.g. "2.5"
   final int? priceCents;  // BUY/SELL: price per unit in integer cents
+  final String? goalId;   // BUY: optional goal (UUID) to assign this purchase to
 
   const TransactionRequestModel({
     this.amount,
@@ -17,6 +18,7 @@ class TransactionRequestModel {
     this.symbol,
     this.quantity,
     this.priceCents,
+    this.goalId,
   });
 
   /// For DEPOSIT / WITHDRAWAL — sends total amount in cents.
@@ -34,12 +36,14 @@ class TransactionRequestModel {
     required String symbol,
     required double quantity,
     required double pricePerUnit,
+    String? goalId,
   }) {
     return TransactionRequestModel(
       type: type.toUpperCase(),
       symbol: symbol,
       quantity: quantity.toString(),
       priceCents: (pricePerUnit * 100).round(),
+      goalId: goalId,
     );
   }
 
@@ -49,5 +53,6 @@ class TransactionRequestModel {
         if (symbol != null) 'symbol': symbol,
         if (quantity != null) 'quantity': quantity,
         if (priceCents != null) 'priceCents': priceCents,
+        if (goalId != null) 'goalId': goalId,
       };
 }

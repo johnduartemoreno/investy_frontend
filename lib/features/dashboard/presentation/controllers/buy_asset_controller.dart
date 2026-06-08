@@ -6,6 +6,7 @@ import '../../data/models/asset_search_result_model.dart';
 import '../../data/models/transaction_request_model.dart';
 import '../screens/dashboard_screen.dart';
 import '../../../../features/portfolio/presentation/providers/rest_portfolio_provider.dart';
+import '../../../../features/goals/presentation/providers/rest_goals_provider.dart';
 
 part 'buy_asset_controller.g.dart';
 
@@ -18,6 +19,7 @@ class BuyAssetController extends _$BuyAssetController {
     required String symbol,
     required double quantity,
     required double pricePerUnit,
+    String? goalId,
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
@@ -30,12 +32,14 @@ class BuyAssetController extends _$BuyAssetController {
               symbol: symbol,
               quantity: quantity,
               pricePerUnit: pricePerUnit,
+              goalId: goalId,
             ),
           );
     });
     if (state is AsyncData) {
       ref.invalidate(restDashboardProvider);
       ref.invalidate(restPortfolioProvider);
+      ref.invalidate(restGoalsProvider);
     }
   }
 
