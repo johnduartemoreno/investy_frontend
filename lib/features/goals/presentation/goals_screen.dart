@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
@@ -141,7 +142,9 @@ class _GoalCardState extends State<_GoalCard>
     final l10n = AppLocalizations.of(context);
     final cs = theme.colorScheme;
 
-    return CustomCard(
+    return GestureDetector(
+      onTap: () => context.push('/goals/${widget.goal.id}', extra: widget.goal),
+      child: CustomCard(
       padding: const EdgeInsets.all(14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,6 +208,30 @@ class _GoalCardState extends State<_GoalCard>
                     ),
                   ],
                 ),
+                // Breakdown — only when holdings are assigned to this goal.
+                if (widget.goal.hasInvestments) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _AmountLabel(
+                        label: l10n.goalCash,
+                        value: CurrencyFormatter.formatWithCurrency(
+                            widget.goal.cashContributed * widget.fxRate,
+                            widget.currency),
+                        theme: theme,
+                      ),
+                      _AmountLabel(
+                        label: l10n.goalInvested,
+                        value: CurrencyFormatter.formatWithCurrency(
+                            widget.goal.investedValue * widget.fxRate,
+                            widget.currency),
+                        theme: theme,
+                        alignEnd: true,
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
@@ -215,6 +242,7 @@ class _GoalCardState extends State<_GoalCard>
                 ?.copyWith(color: cs.onSurfaceVariant),
           ),
         ],
+      ),
       ),
     );
   }
