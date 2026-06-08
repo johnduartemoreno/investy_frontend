@@ -182,6 +182,19 @@ class _GoalDetailBody extends ConsumerWidget {
                         ),
                       ],
                     ),
+                    const SizedBox(height: AppDimens.spacingS),
+                    Row(
+                      children: [
+                        Icon(Icons.event_outlined,
+                            size: 14, color: cs.onSurfaceVariant),
+                        const SizedBox(width: 6),
+                        Text(
+                          '${l10n.goalDeadline}: ${_formatDate(goal.deadlineDate)}',
+                          style: theme.textTheme.bodySmall
+                              ?.copyWith(color: cs.onSurfaceVariant),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
