@@ -129,6 +129,21 @@
   "goalSaved": "Ahorrado",
   "goalDeadline": "Fecha límite",
   "goalCategory": "Categoría",
+  "goalCash": "Efectivo",
+  "goalInvested": "Invertido",
+  "goalDetailInvestmentsTitle": "Inversiones hacia esta meta",
+  "goalDetailNoInvestments": "Aún no hay inversiones asignadas a esta meta.",
+  "goalDetailCashTitle": "Efectivo ahorrado",
+  "goalDetailProjection": "A este ritmo, la alcanzarás cerca de {date}",
+  "@goalDetailProjection": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "goalDetailProjectionUnknown": "Agrega fondos para ver una fecha estimada.",
+  "goalInvestButton": "Invertir hacia esta meta",
+  "buyAssignGoalLabel": "¿Asignar a una meta? (opcional)",
+  "buyNoGoalOption": "Sin meta",
 
   "goalFormTitle": "Nueva meta",
   "goalFormNameHint": "Nombre de la meta",

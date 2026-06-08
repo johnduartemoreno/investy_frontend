@@ -297,6 +297,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get activityDetailDate => 'Data';
 
   @override
+  String get activityDetailRealizedPnl => 'P&L realizado';
+
+  @override
+  String get activityDetailGain => 'Ganho';
+
+  @override
+  String get activityDetailLoss => 'Perda';
+
+  @override
   String get portfolioTitle => 'Portfólio';
 
   @override
@@ -356,6 +365,40 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get goalCategory => 'Categoria';
+
+  @override
+  String get goalCash => 'Em caixa';
+
+  @override
+  String get goalInvested => 'Investido';
+
+  @override
+  String get goalDetailInvestmentsTitle => 'Investimentos para esta meta';
+
+  @override
+  String get goalDetailNoInvestments =>
+      'Ainda não há investimentos atribuídos a esta meta.';
+
+  @override
+  String get goalDetailCashTitle => 'Dinheiro guardado';
+
+  @override
+  String goalDetailProjection(String date) {
+    return 'Neste ritmo, você alcançará por volta de $date';
+  }
+
+  @override
+  String get goalDetailProjectionUnknown =>
+      'Adicione fundos para ver uma data estimada.';
+
+  @override
+  String get goalInvestButton => 'Investir para esta meta';
+
+  @override
+  String get buyAssignGoalLabel => 'Atribuir a uma meta? (opcional)';
+
+  @override
+  String get buyNoGoalOption => 'Sem meta';
 
   @override
   String get goalFormTitle => 'Nova meta';
