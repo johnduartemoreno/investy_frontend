@@ -10,6 +10,8 @@ import '../../features/auth/presentation/signup_screen.dart';
 import '../../features/auth/presentation/verify_email_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/goals/presentation/goals_screen.dart';
+import '../../features/goals/presentation/goal_detail_screen.dart';
+import '../../features/dashboard/data/models/goal_response_model.dart';
 import '../../features/portfolio/presentation/portfolio_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/settings/presentation/appearance_screen.dart';
@@ -142,6 +144,15 @@ GoRouter goRouter(Ref ref) {
               GoRoute(
                 path: '/goals',
                 builder: (context, state) => const GoalsScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':goalId',
+                    builder: (context, state) => GoalDetailScreen(
+                      goalId: state.pathParameters['goalId']!,
+                      goal: state.extra as GoalResponseModel?,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
