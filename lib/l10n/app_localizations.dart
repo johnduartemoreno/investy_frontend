@@ -646,6 +646,24 @@ abstract class AppLocalizations {
   /// **'Date'**
   String get activityDetailDate;
 
+  /// No description provided for @activityDetailRealizedPnl.
+  ///
+  /// In en, this message translates to:
+  /// **'Realized P&L'**
+  String get activityDetailRealizedPnl;
+
+  /// No description provided for @activityDetailGain.
+  ///
+  /// In en, this message translates to:
+  /// **'Gain'**
+  String get activityDetailGain;
+
+  /// No description provided for @activityDetailLoss.
+  ///
+  /// In en, this message translates to:
+  /// **'Loss'**
+  String get activityDetailLoss;
+
   /// No description provided for @portfolioTitle.
   ///
   /// In en, this message translates to:
@@ -759,6 +777,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Category'**
   String get goalCategory;
+
+  /// No description provided for @goalCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get goalCash;
+
+  /// No description provided for @goalInvested.
+  ///
+  /// In en, this message translates to:
+  /// **'Invested'**
+  String get goalInvested;
+
+  /// No description provided for @goalDetailInvestmentsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Investments toward this goal'**
+  String get goalDetailInvestmentsTitle;
+
+  /// No description provided for @goalDetailNoInvestments.
+  ///
+  /// In en, this message translates to:
+  /// **'No investments assigned to this goal yet.'**
+  String get goalDetailNoInvestments;
+
+  /// No description provided for @goalDetailCashTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash saved'**
+  String get goalDetailCashTitle;
+
+  /// No description provided for @goalDetailProjection.
+  ///
+  /// In en, this message translates to:
+  /// **'At this pace, you\'ll reach it around {date}'**
+  String goalDetailProjection(String date);
+
+  /// No description provided for @goalDetailProjectionUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Add funds to see an estimated completion date.'**
+  String get goalDetailProjectionUnknown;
+
+  /// No description provided for @goalInvestButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Invest toward this goal'**
+  String get goalInvestButton;
+
+  /// No description provided for @buyAssignGoalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign to a goal? (optional)'**
+  String get buyAssignGoalLabel;
+
+  /// No description provided for @buyNoGoalOption.
+  ///
+  /// In en, this message translates to:
+  /// **'No goal'**
+  String get buyNoGoalOption;
 
   /// No description provided for @goalFormTitle.
   ///

@@ -294,6 +294,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get activityDetailDate => 'Date';
 
   @override
+  String get activityDetailRealizedPnl => 'Realized P&L';
+
+  @override
+  String get activityDetailGain => 'Gain';
+
+  @override
+  String get activityDetailLoss => 'Loss';
+
+  @override
   String get portfolioTitle => 'Portfolio';
 
   @override
@@ -352,6 +361,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goalCategory => 'Category';
+
+  @override
+  String get goalCash => 'Cash';
+
+  @override
+  String get goalInvested => 'Invested';
+
+  @override
+  String get goalDetailInvestmentsTitle => 'Investments toward this goal';
+
+  @override
+  String get goalDetailNoInvestments =>
+      'No investments assigned to this goal yet.';
+
+  @override
+  String get goalDetailCashTitle => 'Cash saved';
+
+  @override
+  String goalDetailProjection(String date) {
+    return 'At this pace, you\'ll reach it around $date';
+  }
+
+  @override
+  String get goalDetailProjectionUnknown =>
+      'Add funds to see an estimated completion date.';
+
+  @override
+  String get goalInvestButton => 'Invest toward this goal';
+
+  @override
+  String get buyAssignGoalLabel => 'Assign to a goal? (optional)';
+
+  @override
+  String get buyNoGoalOption => 'No goal';
 
   @override
   String get goalFormTitle => 'New Goal';

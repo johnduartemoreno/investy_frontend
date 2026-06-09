@@ -17,6 +17,7 @@ import '../../../kyc/presentation/widgets/kyc_gate_banner.dart';
 import '../../data/models/asset_search_result_model.dart';
 import '../../data/models/buy_asset_args.dart';
 import '../controllers/buy_asset_controller.dart';
+import '../../../goals/presentation/providers/rest_goals_provider.dart';
 
 class BuyAssetScreen extends ConsumerStatefulWidget {
   final BuyAssetArgs? args;
@@ -36,6 +37,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
   List<AssetSearchResultModel> _searchResults = [];
   bool _isSearching = false;
   double _quantity = 0.0;
+  String? _selectedGoalId; // optional goal assignment (S18)
 
   static const _tickerColors = {
     'AAPL': [Color(0xFF1d4ed8), Color(0xFF3b82f6)],
@@ -49,6 +51,8 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
+
+    _selectedGoalId = widget.args?.goalId; // pre-assign goal when coming from goal detail
 
     final preselect = widget.args?.symbol;
     if (preselect != null && preselect.isNotEmpty) {
@@ -127,6 +131,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
           symbol: _selectedAsset!.symbol,
           quantity: _quantity,
           pricePerUnit: _selectedAsset!.currentPrice,
+          goalId: _selectedGoalId,
         );
   }
 
@@ -148,6 +153,50 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
         style: const TextStyle(
             color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
       ),
+    );
+  }
+
+  /// Optional goal selector (S18). Lets the user assign this BUY to a goal.
+  /// "No goal" is always available and selected by default.
+  Widget _buildGoalSelector(ThemeData theme, ColorScheme cs, AppLocalizations l10n) {
+    final goalsAsync = ref.watch(restGoalsProvider);
+    return goalsAsync.maybeWhen(
+      data: (goals) {
+        if (goals.isEmpty) return const SizedBox.shrink();
+        return CustomCard(
+          padding: const EdgeInsets.all(AppDimens.spacingL),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.buyAssignGoalLabel,
+                style: theme.textTheme.titleSmall
+                    ?.copyWith(color: cs.onSurfaceVariant),
+              ),
+              const SizedBox(height: AppDimens.spacingM),
+              Wrap(
+                spacing: AppDimens.spacingS,
+                runSpacing: AppDimens.spacingS,
+                children: [
+                  ChoiceChip(
+                    label: Text(l10n.buyNoGoalOption),
+                    selected: _selectedGoalId == null,
+                    onSelected: (_) => setState(() => _selectedGoalId = null),
+                  ),
+                  for (final g in goals)
+                    ChoiceChip(
+                      label: Text(g.name),
+                      selected: _selectedGoalId == g.id,
+                      onSelected: (_) =>
+                          setState(() => _selectedGoalId = g.id),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+      orElse: () => const SizedBox.shrink(),
     );
   }
 
@@ -439,6 +488,12 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                     ],
                   ),
                 ),
+
+                // ── Optional goal assignment (S18) ────────────────────────
+                if (_selectedAsset != null) ...[
+                  const SizedBox(height: AppDimens.spacingL),
+                  _buildGoalSelector(theme, cs, l10n),
+                ],
 
                 const SizedBox(height: AppDimens.spacingXL),
 

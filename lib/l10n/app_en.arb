@@ -154,6 +154,21 @@
   "goalSaved": "Saved",
   "goalDeadline": "Deadline",
   "goalCategory": "Category",
+  "goalCash": "Cash",
+  "goalInvested": "Invested",
+  "goalDetailInvestmentsTitle": "Investments toward this goal",
+  "goalDetailNoInvestments": "No investments assigned to this goal yet.",
+  "goalDetailCashTitle": "Cash saved",
+  "goalDetailProjection": "At this pace, you'll reach it around {date}",
+  "@goalDetailProjection": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "goalDetailProjectionUnknown": "Add funds to see an estimated completion date.",
+  "goalInvestButton": "Invest toward this goal",
+  "buyAssignGoalLabel": "Assign to a goal? (optional)",
+  "buyNoGoalOption": "No goal",
 
   "goalFormTitle": "New Goal",
   "goalFormNameHint": "Goal name",

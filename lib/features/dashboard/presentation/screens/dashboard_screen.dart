@@ -21,6 +21,7 @@ import '../../data/models/buy_asset_args.dart';
 import '../../data/models/dashboard_response_model.dart';
 import '../../data/models/recommendation_model.dart';
 import '../providers/recommendation_provider.dart';
+import '../../../goals/presentation/providers/rest_goals_provider.dart';
 import '../widgets/withdraw_bottom_sheet.dart';
 import '../../domain/entities/contribution.dart';
 import '../../domain/entities/transaction.dart';
@@ -967,6 +968,8 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                   ],
                 ),
               ),
+              // Active goals context — what the user is investing toward (S18)
+              _buildGoalChips(theme),
               // Available cash — prominent
               _buildCashBanner(theme, l10n),
               const SizedBox(height: 4),
@@ -985,6 +988,58 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
           ),
         );
       },
+    );
+  }
+
+  /// Horizontal scrollable chips of the user's active goals (S18 / F8).
+  /// Visual context for what the user is investing toward. Hidden when there
+  /// are no goals or while the list is still loading.
+  Widget _buildGoalChips(ThemeData theme) {
+    final goalsAsync = ref.watch(restGoalsProvider);
+    return goalsAsync.maybeWhen(
+      data: (goals) {
+        if (goals.isEmpty) return const SizedBox.shrink();
+        return SizedBox(
+          height: 36,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            itemCount: goals.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            itemBuilder: (_, i) {
+              final g = goals[i];
+              return GestureDetector(
+                onTap: () => context.push('/goals/${g.id}', extra: g),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: AppTheme.brandPurple.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: AppTheme.brandPurple.withValues(alpha: 0.4)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('🎯', style: TextStyle(fontSize: 12)),
+                      const SizedBox(width: 6),
+                      Text(
+                        g.name,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: AppTheme.brandPurpleLight,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+      orElse: () => const SizedBox.shrink(),
     );
   }
 
