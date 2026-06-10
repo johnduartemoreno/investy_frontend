@@ -1102,6 +1102,38 @@ class AppLocalizationsPt extends AppLocalizations {
   String get owlAiAskNewRecs => 'Atualizar';
 
   @override
+  String get owlHistoryButton => 'Histórico';
+
+  @override
+  String get owlHistoryTitle => 'Histórico da Coruja';
+
+  @override
+  String get owlHistoryEmpty =>
+      'Ainda não há sessões. Peça recomendações à coruja para começar seu histórico.';
+
+  @override
+  String owlHistorySessionBanner(String date) {
+    return 'Sessão de $date';
+  }
+
+  @override
+  String owlHistoryDaysAgo(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Há $days dias',
+      one: 'Ontem',
+      zero: 'Hoje',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String owlHistoryContext(String portfolio, String cash) {
+    return 'Portfólio $portfolio · Dinheiro $cash';
+  }
+
+  @override
   String get owlAiCashAvailable => 'Disponível para investir';
 
   @override

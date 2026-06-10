@@ -26,6 +26,7 @@ import '../../features/transactions/presentation/screens/top_up_screen.dart';
 import '../../features/dashboard/data/models/buy_asset_args.dart';
 import '../../features/dashboard/presentation/screens/buy_asset_screen.dart';
 import '../../features/dashboard/presentation/screens/sell_asset_screen.dart';
+import '../../features/dashboard/presentation/screens/owl_history_screen.dart';
 import '../presentation/main_shell_screen.dart';
 import 'go_router_refresh_stream.dart';
 
@@ -132,6 +133,10 @@ GoRouter goRouter(Ref ref) {
                   GoRoute(
                     path: 'sell-asset',
                     builder: (context, state) => const SellAssetScreen(),
+                  ),
+                  GoRoute(
+                    path: 'owl-history',
+                    builder: (context, state) => const OwlHistoryScreen(),
                   ),
                 ],
               ),

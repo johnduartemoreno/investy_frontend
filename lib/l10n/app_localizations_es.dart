@@ -1101,6 +1101,38 @@ class AppLocalizationsEs extends AppLocalizations {
   String get owlAiAskNewRecs => 'Actualizar';
 
   @override
+  String get owlHistoryButton => 'Historial';
+
+  @override
+  String get owlHistoryTitle => 'Historial del Búho';
+
+  @override
+  String get owlHistoryEmpty =>
+      'Aún no hay sesiones. Pide recomendaciones al búho para empezar tu historial.';
+
+  @override
+  String owlHistorySessionBanner(String date) {
+    return 'Sesión del $date';
+  }
+
+  @override
+  String owlHistoryDaysAgo(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Hace $days días',
+      one: 'Ayer',
+      zero: 'Hoy',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String owlHistoryContext(String portfolio, String cash) {
+    return 'Portafolio $portfolio · Efectivo $cash';
+  }
+
+  @override
   String get owlAiCashAvailable => 'Disponible para invertir';
 
   @override

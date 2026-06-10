@@ -385,6 +385,28 @@
   "owlAiRefreshing": "Actualizando tus recomendaciones…",
   "owlAiRefreshingSubtitle": "Analizando tu portafolio y metas",
   "owlAiAskNewRecs": "Actualizar",
+  "owlHistoryButton": "Historial",
+  "owlHistoryTitle": "Historial del Búho",
+  "owlHistoryEmpty": "Aún no hay sesiones. Pide recomendaciones al búho para empezar tu historial.",
+  "owlHistorySessionBanner": "Sesión del {date}",
+  "@owlHistorySessionBanner": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "owlHistoryDaysAgo": "{days, plural, =0{Hoy} =1{Ayer} other{Hace {days} días}}",
+  "@owlHistoryDaysAgo": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "owlHistoryContext": "Portafolio {portfolio} · Efectivo {cash}",
+  "@owlHistoryContext": {
+    "placeholders": {
+      "portfolio": { "type": "String" },
+      "cash": { "type": "String" }
+    }
+  },
   "owlAiCashAvailable": "Disponible para invertir",
   "portfolioActive": "Portafolio activo",
   "greetingMorning": "Buenos días,",
