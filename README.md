@@ -73,6 +73,7 @@ Use `--dart-define=USE_STAGING=true` to force staging URL in debug builds.
 | `restGoalsProvider` | `GET /goals` | Goals with progress |
 | `riskProfileProvider` | `GET /risk-profile` | Conservative / Moderate / Aggressive |
 | `recommendationsProvider` | `GET /recommendations` | AI picks (Claude API, cache 24h) |
+| `owlHistoryProvider` | `GET /recommendations/history` | Persisted Owl AI sessions (B29) |
 | `BuyAssetController` | `POST /transactions` | BUY order |
 | `SellAssetController` | `POST /transactions` | SELL order |
 
@@ -96,6 +97,10 @@ The Owl AI sheet (`_OwlAdvisorSheet` in `dashboard_screen.dart`):
 - Refresh button (🔄) invalidates cache and calls `?refresh=true`
 - Error state shows friendly message + retry button
 - BUY button uses `context.push` (not `go`) so sheet stays in stack when navigating
+- Goal chips in the header show active goals — tap navigates to goal detail (S18)
+- History button (🕐 icon) pushes `/home/owl-history` — list of persisted sessions
+  with date, ticker chips and context snapshot; tap opens a read-only detail sheet
+  (`owl_history_screen.dart`, B29). Old sessions keep their original language.
 
 ## i18n
 
