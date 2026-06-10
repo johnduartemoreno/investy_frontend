@@ -385,6 +385,28 @@
   "owlAiRefreshing": "Atualizando suas recomendações…",
   "owlAiRefreshingSubtitle": "Analisando seu portfólio e metas",
   "owlAiAskNewRecs": "Atualizar",
+  "owlHistoryButton": "Histórico",
+  "owlHistoryTitle": "Histórico da Coruja",
+  "owlHistoryEmpty": "Ainda não há sessões. Peça recomendações à coruja para começar seu histórico.",
+  "owlHistorySessionBanner": "Sessão de {date}",
+  "@owlHistorySessionBanner": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "owlHistoryDaysAgo": "{days, plural, =0{Hoje} =1{Ontem} other{Há {days} dias}}",
+  "@owlHistoryDaysAgo": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "owlHistoryContext": "Portfólio {portfolio} · Dinheiro {cash}",
+  "@owlHistoryContext": {
+    "placeholders": {
+      "portfolio": { "type": "String" },
+      "cash": { "type": "String" }
+    }
+  },
   "owlAiCashAvailable": "Disponível para investir",
   "portfolioActive": "Carteira ativa",
   "greetingMorning": "Bom dia,",

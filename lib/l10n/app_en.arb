@@ -440,6 +440,28 @@
   "owlAiRefreshing": "Updating your recommendations…",
   "owlAiRefreshingSubtitle": "Analyzing your portfolio and goals",
   "owlAiAskNewRecs": "Refresh",
+  "owlHistoryButton": "History",
+  "owlHistoryTitle": "Owl AI History",
+  "owlHistoryEmpty": "No sessions yet. Ask Owl for recommendations to start your history.",
+  "owlHistorySessionBanner": "Session from {date}",
+  "@owlHistorySessionBanner": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "owlHistoryDaysAgo": "{days, plural, =0{Today} =1{Yesterday} other{{days} days ago}}",
+  "@owlHistoryDaysAgo": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "owlHistoryContext": "Portfolio {portfolio} · Cash {cash}",
+  "@owlHistoryContext": {
+    "placeholders": {
+      "portfolio": { "type": "String" },
+      "cash": { "type": "String" }
+    }
+  },
   "owlAiCashAvailable": "Available to invest",
   "portfolioActive": "Portfolio active",
   "greetingMorning": "Good morning,",

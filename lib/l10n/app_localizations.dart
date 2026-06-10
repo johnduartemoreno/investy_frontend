@@ -2140,6 +2140,42 @@ abstract class AppLocalizations {
   /// **'Refresh'**
   String get owlAiAskNewRecs;
 
+  /// No description provided for @owlHistoryButton.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get owlHistoryButton;
+
+  /// No description provided for @owlHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Owl AI History'**
+  String get owlHistoryTitle;
+
+  /// No description provided for @owlHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions yet. Ask Owl for recommendations to start your history.'**
+  String get owlHistoryEmpty;
+
+  /// No description provided for @owlHistorySessionBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Session from {date}'**
+  String owlHistorySessionBanner(String date);
+
+  /// No description provided for @owlHistoryDaysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =0{Today} =1{Yesterday} other{{days} days ago}}'**
+  String owlHistoryDaysAgo(int days);
+
+  /// No description provided for @owlHistoryContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Portfolio {portfolio} · Cash {cash}'**
+  String owlHistoryContext(String portfolio, String cash);
+
   /// No description provided for @owlAiCashAvailable.
   ///
   /// In en, this message translates to:

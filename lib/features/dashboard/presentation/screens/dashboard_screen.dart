@@ -952,6 +952,24 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                         ],
                       ),
                     ),
+                    // B29: session history — push keeps this sheet open underneath.
+                    Tooltip(
+                      message: l10n.owlHistoryButton,
+                      child: GestureDetector(
+                        onTap: () => context.push('/home/owl-history'),
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(Icons.history_rounded,
+                              color: theme.colorScheme.onSurfaceVariant, size: 16),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
                       child: Container(
