@@ -25,8 +25,8 @@
 |----|--------|-------|----------------|-------|------|
 | 01 | Home / Dashboard | `/home` | `dashboard/presentation/screens/dashboard_screen.dart` | `light_mode/01_home.png` | `dark_mode/01_home.png` |
 | 02 | Owl AI Sheet | `/home` → Owl AI button | `dashboard/presentation/screens/dashboard_screen.dart` (`_OwlAdvisorSheet`) | `light_mode/02_owl_ai.png` | `dark_mode/02_owl_ai.png` |
-| 02b | Owl History (list) | `/home/owl-history` | `dashboard/presentation/screens/owl_history_screen.dart` | `light_mode/02b_owl_history.png` | — |
-| 02c | Owl History detail (sheet) | `/home/owl-history` → tap session | `dashboard/presentation/screens/owl_history_screen.dart` (`_OwlHistoryDetailSheet`) | `light_mode/02c_owl_history_detail.png` | — |
+| 02b | Owl History (list) | `/home/owl-history` | `dashboard/presentation/screens/owl_history_screen.dart` | `light_mode/02b_owl_history.png` | `dark_mode/02b_owl_history.png` |
+| 02c | Owl History detail (sheet) | `/home/owl-history` → tap session | `dashboard/presentation/screens/owl_history_screen.dart` (`_OwlHistoryDetailSheet`) | `light_mode/02c_owl_history_detail.png` | `dark_mode/02c_owl_history_detail.png` |
 | 03 | Recent Activity | `/home/activity` | `dashboard/presentation/screens/dashboard_screen.dart` (activity list) | `light_mode/03_recent_activity.png` | `dark_mode/03_recent_activity.png` |
 | 04 | Buy Asset | `/home/buy-asset` | `dashboard/presentation/screens/buy_asset_screen.dart` | `light_mode/04_buy_asset.png` | `dark_mode/04_buy_asset.png` |
 | 05 | Sell Asset (list) | `/home/sell-asset` | `dashboard/presentation/screens/sell_asset_screen.dart` | `light_mode/05_sell_asset.png` | `dark_mode/05_sell_asset.png` |
@@ -42,7 +42,7 @@
 |----|--------|-------|----------------|-------|------|
 | 08 | Goals list | `/goals` | `goals/presentation/goals_screen.dart` | `light_mode/08_goals.png` | `dark_mode/08_goals.png` |
 | 09 | New Goal (sheet) | `/goals` → + button | `goals/presentation/widgets/create_goal_sheet.dart` | `light_mode/09_new_goal.png` | `dark_mode/09_new_goal.png` |
-| 08b | Goal Detail | `/goals/:goalId` | `goals/presentation/goal_detail_screen.dart` | — | — |
+| 08b | Goal Detail | `/goals/:goalId` | `goals/presentation/goal_detail_screen.dart` | `light_mode/08b_goal_detail.png` | `dark_mode/08b_goal_detail.png` |
 
 ---
 
