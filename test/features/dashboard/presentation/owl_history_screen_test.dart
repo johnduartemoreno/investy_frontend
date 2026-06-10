@@ -80,5 +80,20 @@ void main() {
       // Suggested amount: 50000 cents = $500.00
       expect(find.text('\$500.00'), findsOneWidget);
     });
+
+    testWidgets('detail sheet close button dismisses the sheet',
+        (tester) async {
+      await tester.pumpWidget(_buildSubject([_session]));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('VTI'));
+      await tester.pumpAndSettle();
+      expect(find.text('Broad diversification.'), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Broad diversification.'), findsNothing);
+    });
   });
 }

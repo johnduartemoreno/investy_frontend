@@ -170,6 +170,9 @@ void _showSessionDetail(BuildContext context, OwlSessionModel session) {
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (_) => DraggableScrollableSheet(
+      // expand: false — the sheet sizes itself, so the dimmed barrier above
+      // stays tappable to dismiss.
+      expand: false,
       initialChildSize: 0.8,
       minChildSize: 0.4,
       maxChildSize: 0.95,
@@ -221,14 +224,35 @@ class _OwlHistoryDetailSheet extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(
               horizontal: AppDimens.spacingL, vertical: AppDimens.spacingM),
-          child: LeftAccentBox(
-            child: Text(
-              l10n.owlHistorySessionBanner(DateFormat.yMMMd().format(local)),
-              style: theme.textTheme.titleSmall?.copyWith(
-                color: AppTheme.brandPurpleLight,
-                fontWeight: FontWeight.w600,
+          child: Row(
+            children: [
+              Expanded(
+                child: LeftAccentBox(
+                  child: Text(
+                    l10n.owlHistorySessionBanner(
+                        DateFormat.yMMMd().format(local)),
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: AppTheme.brandPurpleLight,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ),
-            ),
+              // Same close affordance as the live Owl sheet header.
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: cs.onSurface.withValues(alpha: 0.08),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.close,
+                      color: cs.onSurfaceVariant, size: 16),
+                ),
+              ),
+            ],
           ),
         ),
         Expanded(
