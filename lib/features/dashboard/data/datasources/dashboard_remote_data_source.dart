@@ -7,6 +7,7 @@ import '../models/asset_search_result_model.dart';
 import '../models/create_goal_request_model.dart';
 import '../models/dashboard_response_model.dart';
 import '../models/goal_response_model.dart';
+import '../models/owl_session_model.dart';
 import '../models/recommendation_model.dart';
 import '../models/transaction_request_model.dart';
 import '../../../../features/portfolio/data/models/portfolio_response_model.dart';
@@ -46,6 +47,13 @@ abstract class DashboardRemoteDataSource {
     String userId, {
     String language = 'en',
     bool forceRefresh = false,
+  });
+
+  /// Fetches persisted Owl AI recommendation sessions, newest first (B29).
+  Future<List<OwlSessionModel>> getRecommendationHistory(
+    String userId, {
+    int limit = 20,
+    int offset = 0,
   });
 }
 
@@ -128,6 +136,23 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
     final list = data['recommendations'] as List<dynamic>;
     return list
         .map((e) => RecommendationModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<List<OwlSessionModel>> getRecommendationHistory(
+    String userId, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final response = await _dio.get(
+      '/api/v1/users/$userId/recommendations/history',
+      queryParameters: {'limit': '$limit', 'offset': '$offset'},
+    );
+    final data = response.data as Map<String, dynamic>;
+    final list = data['sessions'] as List<dynamic>;
+    return list
+        .map((e) => OwlSessionModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
 }
