@@ -279,167 +279,183 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
       }
     });
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(
-        left: 24,
-        right: 24,
-        top: 24,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 32,
-      ),
+    return SizedBox(
+      // Tall fixed-height sheet (≈90% of screen) so it opens full and never
+      // "grows" upward as fields appear — matches the app's full-screen forms.
+      height: MediaQuery.of(context).size.height * 0.9,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                l10n.alertsCreateTitle,
-                style: theme.textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-
-          // Asset
-          Text(l10n.alertsAssetLabel,
-              style: theme.textTheme.labelLarge
-                  ?.copyWith(color: cs.onSurfaceVariant)),
-          const SizedBox(height: 8),
-          TextFormField(
-            controller: _searchController,
-            onChanged: _search,
-            decoration: InputDecoration(
-              hintText: l10n.alertsSearchHint,
-              prefixIcon: const Icon(Icons.search),
-              filled: true,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            ),
-          ),
-          if (_results.isNotEmpty)
-            Container(
-              margin: const EdgeInsets.only(top: 8),
-              constraints: const BoxConstraints(maxHeight: 220),
-              decoration: BoxDecoration(
-                color: cs.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                itemCount: _results.length,
-                itemBuilder: (_, i) {
-                  final a = _results[i];
-                  return ListTile(
-                    dense: true,
-                    title: Text(a.symbol,
-                        style: theme.textTheme.titleSmall
-                            ?.copyWith(fontWeight: FontWeight.w700)),
-                    subtitle: Text(a.name,
-                        maxLines: 1, overflow: TextOverflow.ellipsis),
-                    trailing: Text(
-                        CurrencyFormatter.format(a.currentPrice),
-                        style: theme.textTheme.bodySmall),
-                    onTap: () => _select(a),
-                  );
-                },
-              ),
-            ),
-
-          if (_selected != null) ...[
-            const SizedBox(height: 8),
-            Row(
+          // Header (fixed at top)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Icons.check_circle_outline, size: 14, color: cs.primary),
-                const SizedBox(width: 6),
                 Text(
-                  l10n.alertsCurrentPrice(
-                      CurrencyFormatter.format(_selected!.currentPrice)),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                      color: cs.primary, fontWeight: FontWeight.w600),
+                  l10n.alertsCreateTitle,
+                  style: theme.textTheme.headlineSmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-
-            // Condition
-            Text(l10n.alertsConditionLabel,
-                style: theme.textTheme.labelLarge
-                    ?.copyWith(color: cs.onSurfaceVariant)),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: _DirectionChip(
-                    label: l10n.alertsDirectionAbove,
-                    icon: Icons.trending_up_rounded,
-                    selected: _direction == 'above',
-                    onTap: () => setState(() => _direction = 'above'),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _DirectionChip(
-                    label: l10n.alertsDirectionBelow,
-                    icon: Icons.trending_down_rounded,
-                    selected: _direction == 'below',
-                    onTap: () => setState(() => _direction = 'below'),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-
-            // Target price
-            Text(l10n.alertsTargetPriceHint,
-                style: theme.textTheme.labelLarge
-                    ?.copyWith(color: cs.onSurfaceVariant)),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: _priceController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              style: theme.textTheme.headlineMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                prefixText: '\$ ',
-                prefixStyle: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: cs.onSurface,
-                ),
-                hintText: '0',
-                hintStyle: theme.textTheme.headlineMedium?.copyWith(
-                  color: cs.outline.withValues(alpha: 0.4),
-                ),
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 16),
+          ),
+          // Scrollable form body
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(
+                left: 24,
+                right: 24,
+                top: 16,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 24,
               ),
-              inputFormatters: [ThousandsSeparatorInputFormatter()],
-            ),
-            const SizedBox(height: 28),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Asset
+                  Text(l10n.alertsAssetLabel,
+                      style: theme.textTheme.labelLarge
+                          ?.copyWith(color: cs.onSurfaceVariant)),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _searchController,
+                    onChanged: _search,
+                    decoration: InputDecoration(
+                      hintText: l10n.alertsSearchHint,
+                      prefixIcon: const Icon(Icons.search),
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                    ),
+                  ),
+                  if (_results.isNotEmpty)
+                    Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      constraints: const BoxConstraints(maxHeight: 220),
+                      decoration: BoxDecoration(
+                        color: cs.surfaceContainerLow,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        itemCount: _results.length,
+                        itemBuilder: (_, i) {
+                          final a = _results[i];
+                          return ListTile(
+                            dense: true,
+                            title: Text(a.symbol,
+                                style: theme.textTheme.titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.w700)),
+                            subtitle: Text(a.name,
+                                maxLines: 1, overflow: TextOverflow.ellipsis),
+                            trailing: Text(
+                                CurrencyFormatter.format(a.currentPrice),
+                                style: theme.textTheme.bodySmall),
+                            onTap: () => _select(a),
+                          );
+                        },
+                      ),
+                    ),
 
-            PrimaryButton(
-              text: l10n.alertsCreateButton,
-              isLoading: formState is AsyncLoading,
-              onPressed: formState is AsyncLoading ? null : _submit,
+                  if (_selected != null) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(Icons.check_circle_outline,
+                            size: 14, color: cs.primary),
+                        const SizedBox(width: 6),
+                        Text(
+                          l10n.alertsCurrentPrice(CurrencyFormatter.format(
+                              _selected!.currentPrice)),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                              color: cs.primary, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Condition
+                    Text(l10n.alertsConditionLabel,
+                        style: theme.textTheme.labelLarge
+                            ?.copyWith(color: cs.onSurfaceVariant)),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _DirectionChip(
+                            label: l10n.alertsDirectionAbove,
+                            icon: Icons.trending_up_rounded,
+                            selected: _direction == 'above',
+                            onTap: () => setState(() => _direction = 'above'),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _DirectionChip(
+                            label: l10n.alertsDirectionBelow,
+                            icon: Icons.trending_down_rounded,
+                            selected: _direction == 'below',
+                            onTap: () => setState(() => _direction = 'below'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Target price
+                    Text(l10n.alertsTargetPriceHint,
+                        style: theme.textTheme.labelLarge
+                            ?.copyWith(color: cs.onSurfaceVariant)),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: _priceController,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      style: theme.textTheme.headlineMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        prefixText: '\$ ',
+                        prefixStyle: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: cs.onSurface,
+                        ),
+                        hintText: '0',
+                        hintStyle: theme.textTheme.headlineMedium?.copyWith(
+                          color: cs.outline.withValues(alpha: 0.4),
+                        ),
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      inputFormatters: [ThousandsSeparatorInputFormatter()],
+                    ),
+                    const SizedBox(height: 28),
+
+                    PrimaryButton(
+                      text: l10n.alertsCreateButton,
+                      isLoading: formState is AsyncLoading,
+                      onPressed: formState is AsyncLoading ? null : _submit,
+                    ),
+                  ],
+                ],
+              ),
             ),
-          ],
+          ),
         ],
       ),
     );
