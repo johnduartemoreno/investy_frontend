@@ -1165,6 +1165,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get alertsCreateTitle => 'Novo alerta de preço';
 
   @override
+  String get alertsAssetLabel => 'Ativo';
+
+  @override
+  String get alertsConditionLabel => 'Condição';
+
+  @override
   String get alertsSearchHint => 'Busque por símbolo ou nome';
 
   @override

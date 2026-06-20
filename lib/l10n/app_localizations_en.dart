@@ -1158,6 +1158,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get alertsCreateTitle => 'New price alert';
 
   @override
+  String get alertsAssetLabel => 'Asset';
+
+  @override
+  String get alertsConditionLabel => 'Condition';
+
+  @override
   String get alertsSearchHint => 'Search by symbol or name';
 
   @override

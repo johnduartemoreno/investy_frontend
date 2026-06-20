@@ -473,6 +473,8 @@
   "alertsEmpty": "You have no price alerts yet.",
   "alertsEmptyHint": "Create one to get notified when an asset hits your target price.",
   "alertsCreateTitle": "New price alert",
+  "alertsAssetLabel": "Asset",
+  "alertsConditionLabel": "Condition",
   "alertsSearchHint": "Search by symbol or name",
   "alertsSelectAssetFirst": "Select an asset first",
   "alertsCurrentPrice": "Current: {price}",

@@ -418,6 +418,8 @@
   "alertsEmpty": "Aún no tienes alertas de precio.",
   "alertsEmptyHint": "Crea una para recibir un aviso cuando un activo alcance tu precio objetivo.",
   "alertsCreateTitle": "Nueva alerta de precio",
+  "alertsAssetLabel": "Activo",
+  "alertsConditionLabel": "Condición",
   "alertsSearchHint": "Busca por símbolo o nombre",
   "alertsSelectAssetFirst": "Primero selecciona un activo",
   "alertsCurrentPrice": "Actual: {price}",

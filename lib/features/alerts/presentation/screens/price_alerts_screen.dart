@@ -277,181 +277,167 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
       }
     });
 
-    return Container(
-      decoration: BoxDecoration(
-        color: cs.surfaceContainer,
-        borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(AppDimens.radiusBottomSheet)),
-      ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(AppDimens.radiusBottomSheet)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _GradientSheetHeader(title: l10n.alertsCreateTitle),
-            Padding(
-              padding: EdgeInsets.only(
-                left: AppDimens.spacingL,
-                right: AppDimens.spacingL,
-                top: AppDimens.spacingL,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 32,
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Asset search
-                    TextFormField(
-                      controller: _searchController,
-                      onChanged: _search,
-                      decoration: InputDecoration(
-                        hintText: l10n.alertsSearchHint,
-                        prefixIcon: const Icon(Icons.search),
-                      ),
-                    ),
-                    if (_results.isNotEmpty)
-                      Container(
-                        margin: const EdgeInsets.only(top: AppDimens.spacingS),
-                        constraints: const BoxConstraints(maxHeight: 220),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: _results.length,
-                          itemBuilder: (_, i) {
-                            final a = _results[i];
-                            return ListTile(
-                              dense: true,
-                              title: Text(a.symbol,
-                                  style: theme.textTheme.titleSmall
-                                      ?.copyWith(fontWeight: FontWeight.w700)),
-                              subtitle: Text(a.name,
-                                  maxLines: 1, overflow: TextOverflow.ellipsis),
-                              trailing: Text(
-                                  CurrencyFormatter.format(a.currentPrice),
-                                  style: theme.textTheme.bodySmall),
-                              onTap: () => _select(a),
-                            );
-                          },
-                        ),
-                      ),
-
-                    if (_selected != null) ...[
-                      const SizedBox(height: AppDimens.spacingM),
-                      Text(
-                        l10n.alertsCurrentPrice(
-                            CurrencyFormatter.format(_selected!.currentPrice)),
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: cs.onSurfaceVariant),
-                      ),
-                      const SizedBox(height: AppDimens.spacingL),
-
-                      // Direction toggle
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _DirectionChip(
-                              label: l10n.alertsDirectionAbove,
-                              icon: Icons.trending_up_rounded,
-                              selected: _direction == 'above',
-                              onTap: () => setState(() => _direction = 'above'),
-                            ),
-                          ),
-                          const SizedBox(width: AppDimens.spacingS),
-                          Expanded(
-                            child: _DirectionChip(
-                              label: l10n.alertsDirectionBelow,
-                              icon: Icons.trending_down_rounded,
-                              selected: _direction == 'below',
-                              onTap: () => setState(() => _direction = 'below'),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: AppDimens.spacingL),
-
-                      // Target price
-                      TextFormField(
-                        controller: _priceController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        inputFormatters: [ThousandsSeparatorInputFormatter()],
-                        decoration: InputDecoration(
-                          prefixText: '\$ ',
-                          hintText: l10n.alertsTargetPriceHint,
-                        ),
-                      ),
-                      const SizedBox(height: AppDimens.spacingXL),
-
-                      PrimaryButton(
-                        text: l10n.alertsCreateButton,
-                        isLoading: formState is AsyncLoading,
-                        onPressed: _submit,
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Brand gradient header band for the create-alert sheet — anchors the sheet
-/// with the same visual language as the buy-asset and Owl AI flows.
-class _GradientSheetHeader extends StatelessWidget {
-  const _GradientSheetHeader({required this.title});
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(AppDimens.spacingL, AppDimens.spacingM,
-          AppDimens.spacingL, AppDimens.spacingL),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+    return SingleChildScrollView(
+      padding: EdgeInsets.only(
+        left: 24,
+        right: 24,
+        top: 24,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 32,
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Center(
-            child: Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
-          const SizedBox(height: AppDimens.spacingL),
+          // Header
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                padding: const EdgeInsets.all(AppDimens.spacingS),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.notifications_active_outlined,
-                    color: AppTheme.brandPurple, size: 20),
+              Text(
+                l10n.alertsCreateTitle,
+                style: theme.textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(width: AppDimens.spacingM),
-              Expanded(
-                child: Text(title,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                        color: Colors.white, fontWeight: FontWeight.w700)),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.of(context).pop(),
               ),
             ],
           ),
+          const SizedBox(height: 24),
+
+          // Asset
+          Text(l10n.alertsAssetLabel,
+              style: theme.textTheme.labelLarge
+                  ?.copyWith(color: cs.onSurfaceVariant)),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _searchController,
+            onChanged: _search,
+            decoration: InputDecoration(
+              hintText: l10n.alertsSearchHint,
+              prefixIcon: const Icon(Icons.search),
+              filled: true,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            ),
+          ),
+          if (_results.isNotEmpty)
+            Container(
+              margin: const EdgeInsets.only(top: 8),
+              constraints: const BoxConstraints(maxHeight: 220),
+              decoration: BoxDecoration(
+                color: cs.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                itemCount: _results.length,
+                itemBuilder: (_, i) {
+                  final a = _results[i];
+                  return ListTile(
+                    dense: true,
+                    title: Text(a.symbol,
+                        style: theme.textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w700)),
+                    subtitle: Text(a.name,
+                        maxLines: 1, overflow: TextOverflow.ellipsis),
+                    trailing: Text(
+                        CurrencyFormatter.format(a.currentPrice),
+                        style: theme.textTheme.bodySmall),
+                    onTap: () => _select(a),
+                  );
+                },
+              ),
+            ),
+
+          if (_selected != null) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(Icons.check_circle_outline, size: 14, color: cs.primary),
+                const SizedBox(width: 6),
+                Text(
+                  l10n.alertsCurrentPrice(
+                      CurrencyFormatter.format(_selected!.currentPrice)),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                      color: cs.primary, fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Condition
+            Text(l10n.alertsConditionLabel,
+                style: theme.textTheme.labelLarge
+                    ?.copyWith(color: cs.onSurfaceVariant)),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: _DirectionChip(
+                    label: l10n.alertsDirectionAbove,
+                    icon: Icons.trending_up_rounded,
+                    selected: _direction == 'above',
+                    onTap: () => setState(() => _direction = 'above'),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _DirectionChip(
+                    label: l10n.alertsDirectionBelow,
+                    icon: Icons.trending_down_rounded,
+                    selected: _direction == 'below',
+                    onTap: () => setState(() => _direction = 'below'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Target price
+            Text(l10n.alertsTargetPriceHint,
+                style: theme.textTheme.labelLarge
+                    ?.copyWith(color: cs.onSurfaceVariant)),
+            const SizedBox(height: 8),
+            TextFormField(
+              controller: _priceController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              style: theme.textTheme.headlineMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                prefixText: '\$ ',
+                prefixStyle: theme.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: cs.onSurface,
+                ),
+                hintText: '0',
+                hintStyle: theme.textTheme.headlineMedium?.copyWith(
+                  color: cs.outline.withValues(alpha: 0.4),
+                ),
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+              inputFormatters: [ThousandsSeparatorInputFormatter()],
+            ),
+            const SizedBox(height: 28),
+
+            PrimaryButton(
+              text: l10n.alertsCreateButton,
+              isLoading: formState is AsyncLoading,
+              onPressed: formState is AsyncLoading ? null : _submit,
+            ),
+          ],
         ],
       ),
     );
@@ -473,38 +459,30 @@ class _DirectionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return InkWell(
-      borderRadius: BorderRadius.circular(AppDimens.radiusPill),
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(
-            vertical: AppDimens.spacingM, horizontal: AppDimens.spacingS),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          color: selected
-              ? AppTheme.brandPurple.withValues(alpha: 0.12)
-              : cs.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(AppDimens.radiusPill),
-          border: Border.all(
-            color: selected
-                ? AppTheme.brandPurple
-                : cs.outline.withValues(alpha: 0.3),
-            width: selected ? 1.5 : 1,
-          ),
+          color: selected ? cs.primaryContainer : cs.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(20),
+          border: selected
+              ? Border.all(color: cs.primary, width: 1.5)
+              : Border.all(color: cs.outlineVariant, width: 1),
         ),
         child: Column(
           children: [
             Icon(icon,
-                size: 20,
-                color: selected ? AppTheme.brandPurple : cs.onSurfaceVariant),
+                size: 20, color: selected ? cs.primary : cs.onSurfaceVariant),
             const SizedBox(height: 4),
             Text(label,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color:
-                          selected ? AppTheme.brandPurple : cs.onSurfaceVariant,
-                      fontWeight: FontWeight.w600,
-                    )),
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: selected ? cs.primary : cs.onSurfaceVariant,
+                  fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                )),
           ],
         ),
       ),

@@ -2236,6 +2236,18 @@ abstract class AppLocalizations {
   /// **'New price alert'**
   String get alertsCreateTitle;
 
+  /// No description provided for @alertsAssetLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Asset'**
+  String get alertsAssetLabel;
+
+  /// No description provided for @alertsConditionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Condition'**
+  String get alertsConditionLabel;
+
   /// No description provided for @alertsSearchHint.
   ///
   /// In en, this message translates to:
