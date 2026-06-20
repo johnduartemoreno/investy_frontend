@@ -411,5 +411,43 @@
   "portfolioActive": "Portafolio activo",
   "greetingMorning": "Buenos días,",
   "greetingAfternoon": "Buenas tardes,",
-  "greetingEvening": "Buenas noches,"
+  "greetingEvening": "Buenas noches,",
+
+  "alertsTitle": "Alertas de precio",
+  "alertsSettingsLabel": "Alertas de precio",
+  "alertsEmpty": "Aún no tienes alertas de precio.",
+  "alertsEmptyHint": "Crea una para recibir un aviso cuando un activo alcance tu precio objetivo.",
+  "alertsCreateTitle": "Nueva alerta de precio",
+  "alertsSearchHint": "Busca por símbolo o nombre",
+  "alertsSelectAssetFirst": "Primero selecciona un activo",
+  "alertsCurrentPrice": "Actual: {price}",
+  "@alertsCurrentPrice": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "alertsDirectionAbove": "Sube hasta o por encima de",
+  "alertsDirectionBelow": "Baja hasta o por debajo de",
+  "alertsTargetPriceHint": "Precio objetivo (USD)",
+  "alertsCreateButton": "Crear alerta",
+  "alertsCreated": "Alerta creada",
+  "alertsDeleted": "Alerta eliminada",
+  "alertsStatusActive": "Activa",
+  "alertsStatusTriggered": "Disparada",
+  "alertsConditionAbove": "Por encima de {price}",
+  "@alertsConditionAbove": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "alertsConditionBelow": "Por debajo de {price}",
+  "@alertsConditionBelow": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "alertsErrorAlreadyMet": "El precio actual ya cumple este objetivo. Elige uno diferente.",
+  "alertsErrorLimit": "Alcanzaste el máximo de 20 alertas activas.",
+  "alertsErrorUnknownSymbol": "Activo desconocido.",
+  "alertsDeleteTooltip": "Eliminar alerta"
 }

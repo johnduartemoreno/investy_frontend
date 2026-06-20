@@ -2205,6 +2205,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Good evening,'**
   String get greetingEvening;
+
+  /// No description provided for @alertsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Price alerts'**
+  String get alertsTitle;
+
+  /// No description provided for @alertsSettingsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Price alerts'**
+  String get alertsSettingsLabel;
+
+  /// No description provided for @alertsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no price alerts yet.'**
+  String get alertsEmpty;
+
+  /// No description provided for @alertsEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Create one to get notified when an asset hits your target price.'**
+  String get alertsEmptyHint;
+
+  /// No description provided for @alertsCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New price alert'**
+  String get alertsCreateTitle;
+
+  /// No description provided for @alertsSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by symbol or name'**
+  String get alertsSearchHint;
+
+  /// No description provided for @alertsSelectAssetFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an asset first'**
+  String get alertsSelectAssetFirst;
+
+  /// No description provided for @alertsCurrentPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Current: {price}'**
+  String alertsCurrentPrice(String price);
+
+  /// No description provided for @alertsDirectionAbove.
+  ///
+  /// In en, this message translates to:
+  /// **'Rises to or above'**
+  String get alertsDirectionAbove;
+
+  /// No description provided for @alertsDirectionBelow.
+  ///
+  /// In en, this message translates to:
+  /// **'Falls to or below'**
+  String get alertsDirectionBelow;
+
+  /// No description provided for @alertsTargetPriceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Target price (USD)'**
+  String get alertsTargetPriceHint;
+
+  /// No description provided for @alertsCreateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create alert'**
+  String get alertsCreateButton;
+
+  /// No description provided for @alertsCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert created'**
+  String get alertsCreated;
+
+  /// No description provided for @alertsDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert deleted'**
+  String get alertsDeleted;
+
+  /// No description provided for @alertsStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get alertsStatusActive;
+
+  /// No description provided for @alertsStatusTriggered.
+  ///
+  /// In en, this message translates to:
+  /// **'Triggered'**
+  String get alertsStatusTriggered;
+
+  /// No description provided for @alertsConditionAbove.
+  ///
+  /// In en, this message translates to:
+  /// **'Above {price}'**
+  String alertsConditionAbove(String price);
+
+  /// No description provided for @alertsConditionBelow.
+  ///
+  /// In en, this message translates to:
+  /// **'Below {price}'**
+  String alertsConditionBelow(String price);
+
+  /// No description provided for @alertsErrorAlreadyMet.
+  ///
+  /// In en, this message translates to:
+  /// **'The current price already meets this target. Choose a different one.'**
+  String get alertsErrorAlreadyMet;
+
+  /// No description provided for @alertsErrorLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached the maximum of 20 active alerts.'**
+  String get alertsErrorLimit;
+
+  /// No description provided for @alertsErrorUnknownSymbol.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown asset.'**
+  String get alertsErrorUnknownSymbol;
+
+  /// No description provided for @alertsDeleteTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete alert'**
+  String get alertsDeleteTooltip;
 }
 
 class _AppLocalizationsDelegate

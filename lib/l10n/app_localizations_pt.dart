@@ -1147,4 +1147,78 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get greetingEvening => 'Boa noite,';
+
+  @override
+  String get alertsTitle => 'Alertas de preço';
+
+  @override
+  String get alertsSettingsLabel => 'Alertas de preço';
+
+  @override
+  String get alertsEmpty => 'Você ainda não tem alertas de preço.';
+
+  @override
+  String get alertsEmptyHint =>
+      'Crie um para ser avisado quando um ativo atingir seu preço-alvo.';
+
+  @override
+  String get alertsCreateTitle => 'Novo alerta de preço';
+
+  @override
+  String get alertsSearchHint => 'Busque por símbolo ou nome';
+
+  @override
+  String get alertsSelectAssetFirst => 'Selecione um ativo primeiro';
+
+  @override
+  String alertsCurrentPrice(String price) {
+    return 'Atual: $price';
+  }
+
+  @override
+  String get alertsDirectionAbove => 'Sobe até ou acima de';
+
+  @override
+  String get alertsDirectionBelow => 'Cai até ou abaixo de';
+
+  @override
+  String get alertsTargetPriceHint => 'Preço-alvo (USD)';
+
+  @override
+  String get alertsCreateButton => 'Criar alerta';
+
+  @override
+  String get alertsCreated => 'Alerta criado';
+
+  @override
+  String get alertsDeleted => 'Alerta excluído';
+
+  @override
+  String get alertsStatusActive => 'Ativo';
+
+  @override
+  String get alertsStatusTriggered => 'Disparado';
+
+  @override
+  String alertsConditionAbove(String price) {
+    return 'Acima de $price';
+  }
+
+  @override
+  String alertsConditionBelow(String price) {
+    return 'Abaixo de $price';
+  }
+
+  @override
+  String get alertsErrorAlreadyMet =>
+      'O preço atual já atende a este alvo. Escolha um diferente.';
+
+  @override
+  String get alertsErrorLimit => 'Você atingiu o máximo de 20 alertas ativos.';
+
+  @override
+  String get alertsErrorUnknownSymbol => 'Ativo desconhecido.';
+
+  @override
+  String get alertsDeleteTooltip => 'Excluir alerta';
 }

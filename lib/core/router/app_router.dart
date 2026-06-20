@@ -19,6 +19,7 @@ import '../../features/settings/presentation/about_screen.dart';
 import '../../features/settings/presentation/help_screen.dart';
 import '../../features/settings/presentation/notifications_screen.dart';
 import '../../features/settings/presentation/security_screen.dart';
+import '../../features/alerts/presentation/screens/price_alerts_screen.dart';
 import '../../features/kyc/presentation/screens/kyc_screen.dart';
 import '../../features/risk_profile/presentation/screens/risk_questionnaire_screen.dart';
 import '../../features/risk_profile/presentation/screens/risk_result_screen.dart';
@@ -194,6 +195,10 @@ GoRouter goRouter(Ref ref) {
                   GoRoute(
                     path: 'notifications',
                     builder: (context, state) => const NotificationsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'price-alerts',
+                    builder: (context, state) => const PriceAlertsScreen(),
                   ),
                   GoRoute(
                     path: 'security',
