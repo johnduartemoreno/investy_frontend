@@ -118,8 +118,7 @@ class _AlertTile extends ConsumerWidget {
           GradientIconBox(
             colors: const [AppTheme.brandPurple, AppTheme.brandPurpleLight],
             child: Text(
-              alert.symbol
-                  .substring(0, alert.symbol.length.clamp(0, 4)),
+              alert.symbol.substring(0, alert.symbol.length.clamp(0, 4)),
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 10,
@@ -161,7 +160,8 @@ class _AlertTile extends ConsumerWidget {
           ),
           IconButton(
             tooltip: l10n.alertsDeleteTooltip,
-            icon: Icon(Icons.delete_outline, size: 20, color: cs.onSurfaceVariant),
+            icon: Icon(Icons.delete_outline,
+                size: 20, color: cs.onSurfaceVariant),
             onPressed: () async {
               await ref
                   .read(alertFormControllerProvider.notifier)
@@ -208,7 +208,9 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
     final results = await ref
         .read(dashboardRemoteDataSourceProvider)
         .searchAssets(query.trim());
-    if (mounted) setState(() => _results = results);
+    if (mounted) {
+      setState(() => _results = results);
+    }
   }
 
   void _select(AssetSearchResultModel asset) {
@@ -229,8 +231,8 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
       );
       return;
     }
-    final dollars = ThousandsSeparatorInputFormatter.parseFormatted(
-        _priceController.text);
+    final dollars =
+        ThousandsSeparatorInputFormatter.parseFormatted(_priceController.text);
     if (dollars == null || dollars <= 0) return;
 
     await ref.read(alertFormControllerProvider.notifier).createAlert(
@@ -246,7 +248,9 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
       final bodyCode = err.response?.data is Map
           ? (err.response?.data as Map)['code']
           : null;
-      if (bodyCode == 'ERR_ASSET_NOT_FOUND') return l10n.alertsErrorUnknownSymbol;
+      if (bodyCode == 'ERR_ASSET_NOT_FOUND') {
+        return l10n.alertsErrorUnknownSymbol;
+      }
       if (code == 409) return l10n.alertsErrorLimit;
       if (code == 400) return l10n.alertsErrorAlreadyMet;
     }
@@ -279,110 +283,176 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
         borderRadius: const BorderRadius.vertical(
             top: Radius.circular(AppDimens.radiusBottomSheet)),
       ),
-      padding: EdgeInsets.only(
-        left: AppDimens.spacingL,
-        right: AppDimens.spacingL,
-        top: AppDimens.spacingL,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 32,
-      ),
-      child: SingleChildScrollView(
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(AppDimens.radiusBottomSheet)),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(l10n.alertsCreateTitle,
-                style: theme.textTheme.titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w700)),
-            const SizedBox(height: AppDimens.spacingL),
+            _GradientSheetHeader(title: l10n.alertsCreateTitle),
+            Padding(
+              padding: EdgeInsets.only(
+                left: AppDimens.spacingL,
+                right: AppDimens.spacingL,
+                top: AppDimens.spacingL,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 32,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Asset search
+                    TextFormField(
+                      controller: _searchController,
+                      onChanged: _search,
+                      decoration: InputDecoration(
+                        hintText: l10n.alertsSearchHint,
+                        prefixIcon: const Icon(Icons.search),
+                      ),
+                    ),
+                    if (_results.isNotEmpty)
+                      Container(
+                        margin: const EdgeInsets.only(top: AppDimens.spacingS),
+                        constraints: const BoxConstraints(maxHeight: 220),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _results.length,
+                          itemBuilder: (_, i) {
+                            final a = _results[i];
+                            return ListTile(
+                              dense: true,
+                              title: Text(a.symbol,
+                                  style: theme.textTheme.titleSmall
+                                      ?.copyWith(fontWeight: FontWeight.w700)),
+                              subtitle: Text(a.name,
+                                  maxLines: 1, overflow: TextOverflow.ellipsis),
+                              trailing: Text(
+                                  CurrencyFormatter.format(a.currentPrice),
+                                  style: theme.textTheme.bodySmall),
+                              onTap: () => _select(a),
+                            );
+                          },
+                        ),
+                      ),
 
-            // Asset search
-            TextFormField(
-              controller: _searchController,
-              onChanged: _search,
-              decoration: InputDecoration(
-                hintText: l10n.alertsSearchHint,
-                prefixIcon: const Icon(Icons.search),
+                    if (_selected != null) ...[
+                      const SizedBox(height: AppDimens.spacingM),
+                      Text(
+                        l10n.alertsCurrentPrice(
+                            CurrencyFormatter.format(_selected!.currentPrice)),
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: cs.onSurfaceVariant),
+                      ),
+                      const SizedBox(height: AppDimens.spacingL),
+
+                      // Direction toggle
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _DirectionChip(
+                              label: l10n.alertsDirectionAbove,
+                              icon: Icons.trending_up_rounded,
+                              selected: _direction == 'above',
+                              onTap: () => setState(() => _direction = 'above'),
+                            ),
+                          ),
+                          const SizedBox(width: AppDimens.spacingS),
+                          Expanded(
+                            child: _DirectionChip(
+                              label: l10n.alertsDirectionBelow,
+                              icon: Icons.trending_down_rounded,
+                              selected: _direction == 'below',
+                              onTap: () => setState(() => _direction = 'below'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppDimens.spacingL),
+
+                      // Target price
+                      TextFormField(
+                        controller: _priceController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        inputFormatters: [ThousandsSeparatorInputFormatter()],
+                        decoration: InputDecoration(
+                          prefixText: '\$ ',
+                          hintText: l10n.alertsTargetPriceHint,
+                        ),
+                      ),
+                      const SizedBox(height: AppDimens.spacingXL),
+
+                      PrimaryButton(
+                        text: l10n.alertsCreateButton,
+                        isLoading: formState is AsyncLoading,
+                        onPressed: _submit,
+                      ),
+                    ],
+                  ],
+                ),
               ),
             ),
-            if (_results.isNotEmpty)
-              Container(
-                margin: const EdgeInsets.only(top: AppDimens.spacingS),
-                constraints: const BoxConstraints(maxHeight: 220),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: _results.length,
-                  itemBuilder: (_, i) {
-                    final a = _results[i];
-                    return ListTile(
-                      dense: true,
-                      title: Text(a.symbol,
-                          style: theme.textTheme.titleSmall
-                              ?.copyWith(fontWeight: FontWeight.w700)),
-                      subtitle: Text(a.name,
-                          maxLines: 1, overflow: TextOverflow.ellipsis),
-                      trailing: Text(CurrencyFormatter.format(a.currentPrice),
-                          style: theme.textTheme.bodySmall),
-                      onTap: () => _select(a),
-                    );
-                  },
-                ),
-              ),
-
-            if (_selected != null) ...[
-              const SizedBox(height: AppDimens.spacingM),
-              Text(
-                l10n.alertsCurrentPrice(
-                    CurrencyFormatter.format(_selected!.currentPrice)),
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: cs.onSurfaceVariant),
-              ),
-              const SizedBox(height: AppDimens.spacingL),
-
-              // Direction toggle
-              Row(
-                children: [
-                  Expanded(
-                    child: _DirectionChip(
-                      label: l10n.alertsDirectionAbove,
-                      icon: Icons.trending_up_rounded,
-                      selected: _direction == 'above',
-                      onTap: () => setState(() => _direction = 'above'),
-                    ),
-                  ),
-                  const SizedBox(width: AppDimens.spacingS),
-                  Expanded(
-                    child: _DirectionChip(
-                      label: l10n.alertsDirectionBelow,
-                      icon: Icons.trending_down_rounded,
-                      selected: _direction == 'below',
-                      onTap: () => setState(() => _direction = 'below'),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppDimens.spacingL),
-
-              // Target price
-              TextFormField(
-                controller: _priceController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [ThousandsSeparatorInputFormatter()],
-                decoration: InputDecoration(
-                  prefixText: '\$ ',
-                  hintText: l10n.alertsTargetPriceHint,
-                ),
-              ),
-              const SizedBox(height: AppDimens.spacingXL),
-
-              PrimaryButton(
-                text: l10n.alertsCreateButton,
-                isLoading: formState is AsyncLoading,
-                onPressed: _submit,
-              ),
-            ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Brand gradient header band for the create-alert sheet — anchors the sheet
+/// with the same visual language as the buy-asset and Owl AI flows.
+class _GradientSheetHeader extends StatelessWidget {
+  const _GradientSheetHeader({required this.title});
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(AppDimens.spacingL, AppDimens.spacingM,
+          AppDimens.spacingL, AppDimens.spacingL),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Column(
+        children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: AppDimens.spacingL),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(AppDimens.spacingS),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.notifications_active_outlined,
+                    color: AppTheme.brandPurple, size: 20),
+              ),
+              const SizedBox(width: AppDimens.spacingM),
+              Expanded(
+                child: Text(title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                        color: Colors.white, fontWeight: FontWeight.w700)),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
