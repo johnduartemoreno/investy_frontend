@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,6 +14,7 @@ import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../dashboard/data/datasources/dashboard_remote_data_source.dart';
 import '../../../dashboard/data/models/asset_search_result_model.dart';
+import '../../data/datasources/alerts_remote_data_source.dart';
 import '../../data/models/price_alert_model.dart';
 import '../controllers/alert_form_controller.dart';
 import '../providers/alerts_provider.dart';
@@ -58,6 +60,7 @@ class PriceAlertsScreen extends ConsumerWidget {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -165,13 +168,24 @@ class _AlertTile extends ConsumerWidget {
             icon: Icon(Icons.delete_outline,
                 size: 20, color: cs.onSurfaceVariant),
             onPressed: () async {
-              await ref
-                  .read(alertFormControllerProvider.notifier)
-                  .deleteAlert(alert.id);
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(l10n.alertsDeleted)),
-                );
+              final userId = FirebaseAuth.instance.currentUser?.uid;
+              if (userId == null) return;
+              try {
+                await ref
+                    .read(alertsRemoteDataSourceProvider)
+                    .deleteAlert(userId, alert.id);
+                ref.invalidate(alertsProvider);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(l10n.alertsDeleted)),
+                  );
+                }
+              } catch (_) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(l10n.commonError)),
+                  );
+                }
               }
             },
           ),
@@ -279,164 +293,184 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
       }
     });
 
-    // Content-driven sheet (mirrors create_goal_sheet): all fields are visible
-    // from the start so the sheet opens tall and never grows upward.
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(
-        left: 24,
-        right: 24,
-        top: 24,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 32,
-      ),
+    // Tall sheet (≈92% of the safe area) with all fields visible from the start
+    // and the button pinned at the bottom — matches the height/feel of
+    // create_goal_sheet. useSafeArea on the modal keeps the title clear of the notch.
+    return FractionallySizedBox(
+      heightFactor: 0.92,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(l10n.alertsCreateTitle,
-                  style: theme.textTheme.headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.bold)),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-
-          // Asset
-          Text(l10n.alertsAssetLabel,
-              style: theme.textTheme.labelLarge
-                  ?.copyWith(color: cs.onSurfaceVariant)),
-          const SizedBox(height: 8),
-          TextFormField(
-            controller: _searchController,
-            onChanged: _search,
-            decoration: InputDecoration(
-              hintText: l10n.alertsSearchHint,
-              prefixIcon: const Icon(Icons.search),
-              filled: true,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            ),
-          ),
-          if (_results.isNotEmpty)
-            Container(
-              margin: const EdgeInsets.only(top: 8),
-              constraints: const BoxConstraints(maxHeight: 220),
-              decoration: BoxDecoration(
-                color: cs.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                itemCount: _results.length,
-                itemBuilder: (_, i) {
-                  final a = _results[i];
-                  return ListTile(
-                    dense: true,
-                    title: Text(a.symbol,
-                        style: theme.textTheme.titleSmall
-                            ?.copyWith(fontWeight: FontWeight.w700)),
-                    subtitle: Text(a.name,
-                        maxLines: 1, overflow: TextOverflow.ellipsis),
-                    trailing: Text(CurrencyFormatter.format(a.currentPrice),
-                        style: theme.textTheme.bodySmall),
-                    onTap: () => _select(a),
-                  );
-                },
-              ),
-            ),
-          // Current price — only once an asset is picked
-          if (_selected != null) ...[
-            const SizedBox(height: 8),
-            Row(
+          // Header (fixed)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Icons.check_circle_outline, size: 14, color: cs.primary),
-                const SizedBox(width: 6),
-                Text(
-                  l10n.alertsCurrentPrice(
-                      CurrencyFormatter.format(_selected!.currentPrice)),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                      color: cs.primary, fontWeight: FontWeight.w600),
+                Text(l10n.alertsCreateTitle,
+                    style: theme.textTheme.headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.bold)),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
             ),
-          ],
-          const SizedBox(height: 20),
-
-          // Condition
-          Text(l10n.alertsConditionLabel,
-              style: theme.textTheme.labelLarge
-                  ?.copyWith(color: cs.onSurfaceVariant)),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: _DirectionChip(
-                  label: l10n.alertsDirectionAbove,
-                  icon: Icons.trending_up_rounded,
-                  selected: _direction == 'above',
-                  onTap: () => setState(() => _direction = 'above'),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: _DirectionChip(
-                  label: l10n.alertsDirectionBelow,
-                  icon: Icons.trending_down_rounded,
-                  selected: _direction == 'below',
-                  onTap: () => setState(() => _direction = 'below'),
-                ),
-              ),
-            ],
           ),
-          const SizedBox(height: 20),
+          // Scrollable fields
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(
+                left: 24,
+                right: 24,
+                top: 16,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Asset
+                  Text(l10n.alertsAssetLabel,
+                      style: theme.textTheme.labelLarge
+                          ?.copyWith(color: cs.onSurfaceVariant)),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _searchController,
+                    onChanged: _search,
+                    decoration: InputDecoration(
+                      hintText: l10n.alertsSearchHint,
+                      prefixIcon: const Icon(Icons.search),
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                    ),
+                  ),
+                  if (_results.isNotEmpty)
+                    Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      constraints: const BoxConstraints(maxHeight: 220),
+                      decoration: BoxDecoration(
+                        color: cs.surfaceContainerLow,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        itemCount: _results.length,
+                        itemBuilder: (_, i) {
+                          final a = _results[i];
+                          return ListTile(
+                            dense: true,
+                            title: Text(a.symbol,
+                                style: theme.textTheme.titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.w700)),
+                            subtitle: Text(a.name,
+                                maxLines: 1, overflow: TextOverflow.ellipsis),
+                            trailing: Text(
+                                CurrencyFormatter.format(a.currentPrice),
+                                style: theme.textTheme.bodySmall),
+                            onTap: () => _select(a),
+                          );
+                        },
+                      ),
+                    ),
+                  // Current price — only once an asset is picked
+                  if (_selected != null) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(Icons.check_circle_outline,
+                            size: 14, color: cs.primary),
+                        const SizedBox(width: 6),
+                        Text(
+                          l10n.alertsCurrentPrice(CurrencyFormatter.format(
+                              _selected!.currentPrice)),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                              color: cs.primary, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                  ],
+                  const SizedBox(height: 20),
 
-          // Target price
-          Text(l10n.alertsTargetPriceHint,
-              style: theme.textTheme.labelLarge
-                  ?.copyWith(color: cs.onSurfaceVariant)),
-          const SizedBox(height: 8),
-          TextFormField(
-            controller: _priceController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            style: theme.textTheme.headlineMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-            decoration: InputDecoration(
-              prefixText: '\$ ',
-              prefixStyle: theme.textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: cs.onSurface,
+                  // Condition
+                  Text(l10n.alertsConditionLabel,
+                      style: theme.textTheme.labelLarge
+                          ?.copyWith(color: cs.onSurfaceVariant)),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _DirectionChip(
+                          label: l10n.alertsDirectionAbove,
+                          icon: Icons.trending_up_rounded,
+                          selected: _direction == 'above',
+                          onTap: () => setState(() => _direction = 'above'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _DirectionChip(
+                          label: l10n.alertsDirectionBelow,
+                          icon: Icons.trending_down_rounded,
+                          selected: _direction == 'below',
+                          onTap: () => setState(() => _direction = 'below'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Target price
+                  Text(l10n.alertsTargetPriceHint,
+                      style: theme.textTheme.labelLarge
+                          ?.copyWith(color: cs.onSurfaceVariant)),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _priceController,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    style: theme.textTheme.headlineMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      prefixText: '\$ ',
+                      prefixStyle: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: cs.onSurface,
+                      ),
+                      hintText: '0',
+                      hintStyle: theme.textTheme.headlineMedium?.copyWith(
+                        color: cs.outline.withValues(alpha: 0.4),
+                      ),
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    inputFormatters: [ThousandsSeparatorInputFormatter()],
+                  ),
+                  const SizedBox(height: 8),
+                ],
               ),
-              hintText: '0',
-              hintStyle: theme.textTheme.headlineMedium?.copyWith(
-                color: cs.outline.withValues(alpha: 0.4),
-              ),
-              filled: true,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            inputFormatters: [ThousandsSeparatorInputFormatter()],
           ),
-          const SizedBox(height: 28),
-
-          PrimaryButton(
-            text: l10n.alertsCreateButton,
-            isLoading: formState is AsyncLoading,
-            onPressed: formState is AsyncLoading ? null : _submit,
+          // Create button — pinned at the bottom
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+                24, 12, 24, MediaQuery.of(context).viewInsets.bottom + 16),
+            child: PrimaryButton(
+              text: l10n.alertsCreateButton,
+              isLoading: formState is AsyncLoading,
+              onPressed: formState is AsyncLoading ? null : _submit,
+            ),
           ),
         ],
       ),

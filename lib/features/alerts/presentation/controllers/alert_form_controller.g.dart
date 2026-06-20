@@ -7,10 +7,13 @@ part of 'alert_form_controller.dart';
 // **************************************************************************
 
 String _$alertFormControllerHash() =>
-    r'a3d91257ed05cebe6b56ed9bb06a4949457ddbaf';
+    r'abed2b3542be445ee54cd4be7be75bd30777fb78';
 
-/// Pattern D — mutation controller for creating and deleting price alerts (B12).
+/// Pattern D — mutation controller for creating a price alert (B12).
 /// Idle state is AsyncData(null). Invalidates [alertsProvider] only on success.
+/// Deletion is done inline in the list tile (a fire-and-forget datasource call +
+/// invalidate) — routing it through this autoDispose notifier from a `ref.read`
+/// context disposes it mid-await and throws "Future already completed".
 ///
 /// Copied from [AlertFormController].
 @ProviderFor(AlertFormController)
