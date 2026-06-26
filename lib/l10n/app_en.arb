@@ -505,6 +505,7 @@
   },
   "alertsErrorAlreadyMet": "The current price already meets this target. Choose a different one.",
   "alertsErrorLimit": "You've reached the maximum of 20 active alerts.",
+  "alertsErrorDuplicate": "You already have an identical alert for this asset.",
   "alertsErrorUnknownSymbol": "Unknown asset.",
   "alertsDeleteTooltip": "Delete alert"
 }

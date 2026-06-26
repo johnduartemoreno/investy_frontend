@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/providers/current_user_provider.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/gradient_icon_box.dart';
 import '../../../../core/presentation/widgets/primary_button.dart';
@@ -168,7 +168,7 @@ class _AlertTile extends ConsumerWidget {
             icon: Icon(Icons.delete_outline,
                 size: 20, color: cs.onSurfaceVariant),
             onPressed: () async {
-              final userId = FirebaseAuth.instance.currentUser?.uid;
+              final userId = ref.read(currentUserIdProvider);
               if (userId == null) return;
               try {
                 await ref
@@ -267,6 +267,9 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
       if (bodyCode == 'ERR_ASSET_NOT_FOUND') {
         return l10n.alertsErrorUnknownSymbol;
       }
+      if (bodyCode == 'ERR_DUPLICATE_ALERT') {
+        return l10n.alertsErrorDuplicate;
+      }
       if (code == 409) return l10n.alertsErrorLimit;
       if (code == 400) return l10n.alertsErrorAlreadyMet;
     }
@@ -282,6 +285,10 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
 
     ref.listen(alertFormControllerProvider, (prev, next) {
       if (next is AsyncData && prev is AsyncLoading) {
+        // Refresh the list BEFORE popping: this ref is still alive here, whereas
+        // the controller is disposed by the pop, so invalidating from there is
+        // dropped and the new alert never appears in the list.
+        ref.invalidate(alertsProvider);
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.alertsCreated)),

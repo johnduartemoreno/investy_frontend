@@ -450,6 +450,7 @@
   },
   "alertsErrorAlreadyMet": "O preço atual já atende a este alvo. Escolha um diferente.",
   "alertsErrorLimit": "Você atingiu o máximo de 20 alertas ativos.",
+  "alertsErrorDuplicate": "Você já tem um alerta idêntico para este ativo.",
   "alertsErrorUnknownSymbol": "Ativo desconhecido.",
   "alertsDeleteTooltip": "Excluir alerta"
 }

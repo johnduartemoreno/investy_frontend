@@ -1217,6 +1217,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'You\'ve reached the maximum of 20 active alerts.';
 
   @override
+  String get alertsErrorDuplicate =>
+      'You already have an identical alert for this asset.';
+
+  @override
   String get alertsErrorUnknownSymbol => 'Unknown asset.';
 
   @override

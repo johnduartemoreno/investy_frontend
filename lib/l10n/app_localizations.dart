@@ -2338,6 +2338,12 @@ abstract class AppLocalizations {
   /// **'You\'ve reached the maximum of 20 active alerts.'**
   String get alertsErrorLimit;
 
+  /// No description provided for @alertsErrorDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'You already have an identical alert for this asset.'**
+  String get alertsErrorDuplicate;
+
   /// No description provided for @alertsErrorUnknownSymbol.
   ///
   /// In en, this message translates to:

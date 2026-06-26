@@ -1222,6 +1222,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get alertsErrorLimit => 'Alcanzaste el máximo de 20 alertas activas.';
 
   @override
+  String get alertsErrorDuplicate =>
+      'Ya tienes una alerta idéntica para este activo.';
+
+  @override
   String get alertsErrorUnknownSymbol => 'Activo desconocido.';
 
   @override
