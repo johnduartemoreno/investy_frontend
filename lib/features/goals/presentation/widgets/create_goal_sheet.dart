@@ -28,11 +28,11 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
   double _amount = 0.0;
 
   static const _presets = [
-    (label: '6M',  months: 6),
-    (label: '1Y',  months: 12),
-    (label: '2Y',  months: 24),
-    (label: '3Y',  months: 36),
-    (label: '5Y',  months: 60),
+    (label: '6M', months: 6),
+    (label: '1Y', months: 12),
+    (label: '2Y', months: 24),
+    (label: '3Y', months: 36),
+    (label: '5Y', months: 60),
   ];
 
   void _selectPreset(int index) {
@@ -63,8 +63,8 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
   }
 
   Future<void> _pickCustomDeadline() async {
-    final initial = _selectedDeadline ??
-        DateTime.now().add(const Duration(days: 365));
+    final initial =
+        _selectedDeadline ?? DateTime.now().add(const Duration(days: 365));
     final picked = await showDatePicker(
       context: context,
       initialDate: initial,
@@ -167,8 +167,8 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 16),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               ),
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Enter a goal name' : null,
@@ -253,7 +253,8 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                         borderRadius: BorderRadius.circular(20),
                         border: isActive
                             ? Border.all(color: colorScheme.primary, width: 1.5)
-                            : Border.all(color: colorScheme.outlineVariant, width: 1),
+                            : Border.all(
+                                color: colorScheme.outlineVariant, width: 1),
                       ),
                       child: Text(
                         _presets[i].label,
@@ -261,9 +262,8 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                           color: isActive
                               ? colorScheme.primary
                               : colorScheme.onSurfaceVariant,
-                          fontWeight: isActive
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+                          fontWeight:
+                              isActive ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                     ),
@@ -274,16 +274,19 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                   onTap: _pickCustomDeadline,
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 150),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 9),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                     decoration: BoxDecoration(
-                      color: (_activePreset == null && _selectedDeadline != null)
-                          ? colorScheme.primaryContainer
-                          : colorScheme.surfaceContainerLow,
+                      color:
+                          (_activePreset == null && _selectedDeadline != null)
+                              ? colorScheme.primaryContainer
+                              : colorScheme.surfaceContainerLow,
                       borderRadius: BorderRadius.circular(20),
-                      border: (_activePreset == null && _selectedDeadline != null)
+                      border: (_activePreset == null &&
+                              _selectedDeadline != null)
                           ? Border.all(color: colorScheme.primary, width: 1.5)
-                          : Border.all(color: colorScheme.outlineVariant, width: 1),
+                          : Border.all(
+                              color: colorScheme.outlineVariant, width: 1),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -291,7 +294,8 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                         Icon(
                           Icons.calendar_today,
                           size: 14,
-                          color: (_activePreset == null && _selectedDeadline != null)
+                          color: (_activePreset == null &&
+                                  _selectedDeadline != null)
                               ? colorScheme.primary
                               : colorScheme.onSurfaceVariant,
                         ),
@@ -365,16 +369,15 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                 return GestureDetector(
                   onTap: () => setState(() => _selectedCategory = c.$1),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 9),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? colorScheme.primaryContainer
                           : colorScheme.surfaceContainerLow,
                       borderRadius: BorderRadius.circular(20),
                       border: isSelected
-                          ? Border.all(
-                              color: colorScheme.primary, width: 1.5)
+                          ? Border.all(color: colorScheme.primary, width: 1.5)
                           : null,
                     ),
                     child: Row(

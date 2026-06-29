@@ -17,8 +17,8 @@ class CurrencyFormatter {
   /// Falls back to USD formatting if the currency code is unknown.
   static String formatWithCurrency(double value, String currencyCode) {
     try {
-      final fmt = NumberFormat.simpleCurrency(
-          name: currencyCode, decimalDigits: 2);
+      final fmt =
+          NumberFormat.simpleCurrency(name: currencyCode, decimalDigits: 2);
       return fmt.format(value);
     } catch (_) {
       return _usdFmt.format(value);

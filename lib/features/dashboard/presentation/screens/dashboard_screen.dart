@@ -185,7 +185,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       case 'withdrawal':
         return l10n.activityWithdrawal;
       default:
-        return type.isEmpty ? l10n.activityUnknown : (type[0].toUpperCase() + type.substring(1));
+        return type.isEmpty
+            ? l10n.activityUnknown
+            : (type[0].toUpperCase() + type.substring(1));
     }
   }
 
@@ -249,14 +251,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   // --- Internal Widgets ---
 
-  Widget _buildHeader(
-      ThemeData theme, AppLocalizations l10n, AsyncValue<String> userNameAsync) {
+  Widget _buildHeader(ThemeData theme, AppLocalizations l10n,
+      AsyncValue<String> userNameAsync) {
     final rawName = userNameAsync.valueOrNull ?? '';
     final firstName = _firstName(rawName);
     final greeting = _greeting(l10n);
     final photoURL = FirebaseAuth.instance.currentUser?.photoURL;
-    final initial =
-        rawName.isNotEmpty ? rawName.trim()[0].toUpperCase() : '?';
+    final initial = rawName.isNotEmpty ? rawName.trim()[0].toUpperCase() : '?';
 
     return Row(
       children: [
@@ -589,11 +590,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         color: withdrawColor,
         bg: withdrawColor.withValues(alpha: 0.14),
         onTap: () => showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (context) => const WithdrawBottomSheet(),
-        ),
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) => const WithdrawBottomSheet(),
+            ),
       ),
     ];
 
@@ -631,9 +632,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildRecentActivitySection(ThemeData theme, AppLocalizations l10n,
+  Widget _buildRecentActivitySection(
+      ThemeData theme,
+      AppLocalizations l10n,
       AsyncValue<List<ActivityItem>> recentActivityAsync,
-      String currency, double fxRate) {
+      String currency,
+      double fxRate) {
     return Column(
       children: [
         Row(
@@ -669,8 +673,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 )
               : Column(
                   children: items
-                      .map((item) =>
-                          _buildActivityItem(theme, l10n, item, currency, fxRate))
+                      .map((item) => _buildActivityItem(
+                          theme, l10n, item, currency, fxRate))
                       .toList(),
                 ),
           loading: () => const Padding(
@@ -691,18 +695,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildActivityItem(
-      ThemeData theme, AppLocalizations l10n, ActivityItem item, String currency, double fxRate) {
+  Widget _buildActivityItem(ThemeData theme, AppLocalizations l10n,
+      ActivityItem item, String currency, double fxRate) {
     return switch (item) {
       ActivityItemTransaction(:final transaction) =>
-        _buildTransactionActivityItem(theme, l10n, transaction, currency, fxRate),
+        _buildTransactionActivityItem(
+            theme, l10n, transaction, currency, fxRate),
       ActivityItemContribution(:final contribution) =>
-        _buildContributionActivityItem(theme, l10n, contribution, currency, fxRate),
+        _buildContributionActivityItem(
+            theme, l10n, contribution, currency, fxRate),
     };
   }
 
-  Widget _buildTransactionActivityItem(
-      ThemeData theme, AppLocalizations l10n, Transaction transaction, String currency, double fxRate) {
+  Widget _buildTransactionActivityItem(ThemeData theme, AppLocalizations l10n,
+      Transaction transaction, String currency, double fxRate) {
     final isBuy = transaction.type.toLowerCase() == 'buy';
     final icon = isBuy ? Icons.trending_up : Icons.trending_down;
     final color = isBuy ? AppTheme.signalGreen : theme.colorScheme.error;
@@ -742,13 +748,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             color: isBuy ? theme.colorScheme.error : AppTheme.signalGreen,
           ),
         ),
-        onTap: () => _showActivityDetail(context, ActivityItemTransaction(transaction)),
+        onTap: () =>
+            _showActivityDetail(context, ActivityItemTransaction(transaction)),
       ),
     );
   }
 
-  Widget _buildContributionActivityItem(
-      ThemeData theme, AppLocalizations l10n, Contribution contribution, String currency, double fxRate) {
+  Widget _buildContributionActivityItem(ThemeData theme, AppLocalizations l10n,
+      Contribution contribution, String currency, double fxRate) {
     final type = contribution.type.toLowerCase();
     final isDebit = type == 'withdrawal' || type == 'buy';
     final icon = _getContributionIcon(type);
@@ -787,7 +794,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             color: isDebit ? theme.colorScheme.error : AppTheme.signalGreen,
           ),
         ),
-        onTap: () => _showActivityDetail(context, ActivityItemContribution(contribution)),
+        onTap: () => _showActivityDetail(
+            context, ActivityItemContribution(contribution)),
       ),
     );
   }
@@ -828,7 +836,10 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
 
   Future<void> _refresh() async {
     if (!mounted) return;
-    setState(() { _owlState = OwlState.thinking; _isRefreshing = true; });
+    setState(() {
+      _owlState = OwlState.thinking;
+      _isRefreshing = true;
+    });
     try {
       final userId = FirebaseAuth.instance.currentUser?.uid;
       final language = ref.read(localeNotifierProvider).languageCode;
@@ -858,7 +869,9 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
     });
     // Edge case: cached data already present on first build — listener never fires.
     // Only schedule when NOT in a manual refresh (which uses _isRefreshing to gate body).
-    if (!_isRefreshing && _owlState == OwlState.thinking && recsAsync is AsyncData) {
+    if (!_isRefreshing &&
+        _owlState == OwlState.thinking &&
+        recsAsync is AsyncData) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _owlState == OwlState.thinking) _onRecsLoaded();
       });
@@ -918,15 +931,20 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                               color: AppTheme.brandPurpleLight,
                             ),
                           ),
-                          if (recsAsync is AsyncData && _owlState != OwlState.thinking) ...[
+                          if (recsAsync is AsyncData &&
+                              _owlState != OwlState.thinking) ...[
                             const SizedBox(height: 8),
                             GestureDetector(
                               onTap: _refresh,
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 6),
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
-                                    colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
+                                    colors: [
+                                      AppTheme.brandPurple,
+                                      AppTheme.brandPurpleLight
+                                    ],
                                   ),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
@@ -961,11 +979,13 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                           width: 30,
                           height: 30,
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.08),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(Icons.history_rounded,
-                              color: theme.colorScheme.onSurfaceVariant, size: 16),
+                              color: theme.colorScheme.onSurfaceVariant,
+                              size: 16),
                         ),
                       ),
                     ),
@@ -976,11 +996,13 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                         width: 30,
                         height: 30,
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.08),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(Icons.close,
-                            color: theme.colorScheme.onSurfaceVariant, size: 16),
+                            color: theme.colorScheme.onSurfaceVariant,
+                            size: 16),
                       ),
                     ),
                   ],
@@ -998,8 +1020,10 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                     ? _buildThinking(theme, l10n)
                     : recsAsync.when(
                         loading: () => _buildThinking(theme, l10n),
-                        error: (e, _) => SingleChildScrollView(child: _buildError(theme, l10n, e)),
-                        data: (recs) => _buildRecList(theme, scrollController, recs),
+                        error: (e, _) => SingleChildScrollView(
+                            child: _buildError(theme, l10n, e)),
+                        data: (recs) =>
+                            _buildRecList(theme, scrollController, recs),
                       ),
               ),
             ],
@@ -1088,8 +1112,9 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
   }
 
   Widget _buildError(ThemeData theme, AppLocalizations l10n, Object error) {
-    final isNotConfigured = error.toString().contains('ERR_AI_NOT_CONFIGURED') ||
-        error.toString().contains('503');
+    final isNotConfigured =
+        error.toString().contains('ERR_AI_NOT_CONFIGURED') ||
+            error.toString().contains('503');
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -1100,9 +1125,7 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                 size: 48, color: theme.colorScheme.onSurfaceVariant),
             const SizedBox(height: 16),
             Text(
-              isNotConfigured
-                  ? l10n.owlAiUnavailable
-                  : l10n.owlAiErrorRetry,
+              isNotConfigured ? l10n.owlAiUnavailable : l10n.owlAiErrorRetry,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
@@ -1121,7 +1144,8 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
     );
   }
 
-  Widget _buildRecList(ThemeData theme, ScrollController ctrl, List<RecommendationModel> recs) {
+  Widget _buildRecList(
+      ThemeData theme, ScrollController ctrl, List<RecommendationModel> recs) {
     final bottomPad = MediaQuery.of(context).padding.bottom + 80;
     return ListView.builder(
       controller: ctrl,
@@ -1301,8 +1325,8 @@ class _RecCardState extends State<_RecCard>
                 children: [
                   RichText(
                     text: TextSpan(
-                      style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant),
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                       children: [
                         TextSpan(text: '${l10n.owlAiSuggested} '),
                         TextSpan(
@@ -1343,12 +1367,13 @@ class _RecCardState extends State<_RecCard>
   Widget _tickerIcon(String ticker) {
     const colorMap = {
       'AAPL': [Color(0xFF1d4ed8), Color(0xFF3b82f6)],
-      'VTI':  [Color(0xFF065f46), Color(0xFF10b981)],
-      'BTC':  [Color(0xFF78350f), Color(0xFFf59e0b)],
+      'VTI': [Color(0xFF065f46), Color(0xFF10b981)],
+      'BTC': [Color(0xFF78350f), Color(0xFFf59e0b)],
       'MSFT': [Color(0xFF4c1d95), Color(0xFF8b5cf6)],
-      'IAU':  [Color(0xFF881337), Color(0xFFf43f5e)],
+      'IAU': [Color(0xFF881337), Color(0xFFf43f5e)],
     };
-    final c = colorMap[ticker] ?? [AppTheme.brandPurple, AppTheme.brandPurpleLight];
+    final c =
+        colorMap[ticker] ?? [AppTheme.brandPurple, AppTheme.brandPurpleLight];
     final displayLabel = ticker.length > 4 ? ticker.substring(0, 4) : ticker;
 
     return GradientIconBox(
@@ -1418,10 +1443,10 @@ class _ActivityDetailSheet extends ConsumerWidget {
 
   static const _colorMap = {
     'AAPL': [Color(0xFF1d4ed8), Color(0xFF3b82f6)],
-    'VTI':  [Color(0xFF065f46), Color(0xFF10b981)],
-    'BTC':  [Color(0xFF78350f), Color(0xFFf59e0b)],
+    'VTI': [Color(0xFF065f46), Color(0xFF10b981)],
+    'BTC': [Color(0xFF78350f), Color(0xFFf59e0b)],
     'MSFT': [Color(0xFF4c1d95), Color(0xFF8b5cf6)],
-    'IAU':  [Color(0xFF881337), Color(0xFFf43f5e)],
+    'IAU': [Color(0xFF881337), Color(0xFFf43f5e)],
   };
 
   List<Color> _tickerColors(String ticker) =>
@@ -1473,9 +1498,11 @@ class _ActivityDetailSheet extends ConsumerWidget {
             ),
             switch (item) {
               ActivityItemTransaction(:final transaction) =>
-                _buildTransactionDetail(theme, cs, l10n, transaction, currency, fxRate),
+                _buildTransactionDetail(
+                    theme, cs, l10n, transaction, currency, fxRate),
               ActivityItemContribution(:final contribution) =>
-                _buildContributionDetail(theme, cs, l10n, contribution, currency, fxRate),
+                _buildContributionDetail(
+                    theme, cs, l10n, contribution, currency, fxRate),
             },
             const SizedBox(height: 8),
           ],
@@ -1499,7 +1526,8 @@ class _ActivityDetailSheet extends ConsumerWidget {
     final hasPnl = !isBuy && tx.realizedPnlCents != 0;
     final pnlIsGain = tx.realizedPnlCents > 0;
     final pnlColor = pnlIsGain ? AppTheme.signalGreen : cs.error;
-    final pnlLabel = pnlIsGain ? l10n.activityDetailGain : l10n.activityDetailLoss;
+    final pnlLabel =
+        pnlIsGain ? l10n.activityDetailGain : l10n.activityDetailLoss;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1513,7 +1541,9 @@ class _ActivityDetailSheet extends ConsumerWidget {
               child: Text(
                 tx.symbol.length > 4 ? tx.symbol.substring(0, 4) : tx.symbol,
                 style: const TextStyle(
-                    color: Colors.white, fontSize: 10, fontWeight: FontWeight.w800),
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w800),
               ),
             ),
             const SizedBox(width: AppDimens.spacingM),
@@ -1552,14 +1582,22 @@ class _ActivityDetailSheet extends ConsumerWidget {
               _detailRow(theme, cs, l10n.activityDetailQuantity,
                   _formatQuantity(tx.quantity)),
               _divider(cs),
-              _detailRow(theme, cs, l10n.activityDetailPricePerUnit,
-                  CurrencyFormatter.formatWithCurrency(tx.price * fxRate, currency)),
+              _detailRow(
+                  theme,
+                  cs,
+                  l10n.activityDetailPricePerUnit,
+                  CurrencyFormatter.formatWithCurrency(
+                      tx.price * fxRate, currency)),
               _divider(cs),
-              _detailRow(theme, cs, l10n.activityDetailTotal,
-                  CurrencyFormatter.formatWithCurrency(tx.totalBeforeFees * fxRate, currency)),
+              _detailRow(
+                  theme,
+                  cs,
+                  l10n.activityDetailTotal,
+                  CurrencyFormatter.formatWithCurrency(
+                      tx.totalBeforeFees * fxRate, currency)),
               _divider(cs),
-              _detailRow(theme, cs, l10n.activityDetailDate,
-                  _fullDate(tx.createdAt)),
+              _detailRow(
+                  theme, cs, l10n.activityDetailDate, _fullDate(tx.createdAt)),
               if (hasPnl) ...[
                 _divider(cs),
                 _pnlRow(theme, cs, l10n.activityDetailRealizedPnl,
@@ -1655,8 +1693,12 @@ class _ActivityDetailSheet extends ConsumerWidget {
               horizontal: AppDimens.spacingL, vertical: AppDimens.spacingM),
           child: Column(
             children: [
-              _detailRow(theme, cs, l10n.activityDetailAmount,
-                  CurrencyFormatter.formatWithCurrency(contribution.amount * fxRate, currency)),
+              _detailRow(
+                  theme,
+                  cs,
+                  l10n.activityDetailAmount,
+                  CurrencyFormatter.formatWithCurrency(
+                      contribution.amount * fxRate, currency)),
               _divider(cs),
               _detailRow(theme, cs, l10n.activityDetailDate,
                   _fullDate(contribution.createdAt)),
@@ -1667,7 +1709,8 @@ class _ActivityDetailSheet extends ConsumerWidget {
     );
   }
 
-  Widget _detailRow(ThemeData theme, ColorScheme cs, String label, String value) =>
+  Widget _detailRow(
+          ThemeData theme, ColorScheme cs, String label, String value) =>
       Padding(
         padding: const EdgeInsets.symmetric(vertical: AppDimens.spacingS),
         child: Row(
@@ -1691,25 +1734,34 @@ class _ActivityDetailSheet extends ConsumerWidget {
 
   String _getContributionLabel(AppLocalizations l10n, String type) {
     switch (type) {
-      case 'deposit': return l10n.activityDeposit;
-      case 'withdrawal': return l10n.activityWithdrawal;
-      default: return type;
+      case 'deposit':
+        return l10n.activityDeposit;
+      case 'withdrawal':
+        return l10n.activityWithdrawal;
+      default:
+        return type;
     }
   }
 
   IconData _getContributionIcon(String type) {
     switch (type) {
-      case 'deposit': return Icons.arrow_downward;
-      case 'withdrawal': return Icons.arrow_upward;
-      default: return Icons.swap_horiz;
+      case 'deposit':
+        return Icons.arrow_downward;
+      case 'withdrawal':
+        return Icons.arrow_upward;
+      default:
+        return Icons.swap_horiz;
     }
   }
 
   Color _getContributionColor(ColorScheme cs, String type) {
     switch (type) {
-      case 'deposit': return AppTheme.signalGreen;
-      case 'withdrawal': return cs.error;
-      default: return cs.onSurfaceVariant;
+      case 'deposit':
+        return AppTheme.signalGreen;
+      case 'withdrawal':
+        return cs.error;
+      default:
+        return cs.onSurfaceVariant;
     }
   }
 }

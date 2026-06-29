@@ -308,7 +308,9 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
                           ],
                         ),
                       ),
-                      Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      Icon(Icons.chevron_right,
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
                     ],
                   ),
                 ),

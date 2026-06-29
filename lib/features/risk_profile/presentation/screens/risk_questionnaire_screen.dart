@@ -120,8 +120,7 @@ class _RiskQuestionnaireScreenState
         leading: _currentQuestion > 0
             ? IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () =>
-                    setState(() => _currentQuestion--),
+                onPressed: () => setState(() => _currentQuestion--),
               )
             : null,
       ),
@@ -160,8 +159,7 @@ class _RiskQuestionnaireScreenState
               final optionValue = i + 1;
               final isSelected = selectedOption == optionValue;
               return Padding(
-                padding:
-                    const EdgeInsets.only(bottom: AppDimens.spacingM),
+                padding: const EdgeInsets.only(bottom: AppDimens.spacingM),
                 child: _OptionTile(
                   label: q.options[i],
                   isSelected: isSelected,
@@ -177,9 +175,7 @@ class _RiskQuestionnaireScreenState
               PrimaryButton(
                 text: l10n.riskProfileSubmit,
                 isLoading: _isLoading,
-                onPressed: selectedOption != null
-                    ? () => _submit(l10n)
-                    : null,
+                onPressed: selectedOption != null ? () => _submit(l10n) : null,
               ),
           ],
         ),
@@ -220,9 +216,7 @@ class _OptionTile extends StatelessWidget {
           vertical: AppDimens.spacingM,
         ),
         decoration: BoxDecoration(
-          color: isSelected
-              ? cs.primaryContainer
-              : cs.surfaceContainerLow,
+          color: isSelected ? cs.primaryContainer : cs.surfaceContainerLow,
           borderRadius: BorderRadius.circular(AppDimens.radius),
           border: Border.all(
             color: isSelected ? cs.primary : Colors.transparent,
@@ -235,8 +229,7 @@ class _OptionTile extends StatelessWidget {
               child: Text(
                 label,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight:
-                      isSelected ? FontWeight.w600 : FontWeight.w400,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                   color: isSelected ? cs.onPrimaryContainer : cs.onSurface,
                 ),
               ),

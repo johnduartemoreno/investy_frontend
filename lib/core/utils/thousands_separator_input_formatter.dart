@@ -29,9 +29,8 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
 
     if (raw.contains('.')) {
       final parts = raw.split('.');
-      final formattedInt = parts[0].isEmpty
-          ? ''
-          : _numberFormat.format(int.parse(parts[0]));
+      final formattedInt =
+          parts[0].isEmpty ? '' : _numberFormat.format(int.parse(parts[0]));
       final formatted = '$formattedInt.${parts[1]}';
       return TextEditingValue(
         text: formatted,

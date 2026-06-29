@@ -26,8 +26,8 @@ class HelpScreen extends StatelessWidget {
         padding: const EdgeInsets.all(AppDimens.spacingL),
         children: [
           Text(l10n.helpFaq,
-              style: textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w700)),
+              style:
+                  textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(height: 12),
           ...faqs.map(
             (faq) => Padding(
@@ -36,15 +36,16 @@ class HelpScreen extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 child: ExpansionTile(
                   tilePadding: const EdgeInsets.symmetric(
-                      horizontal: AppDimens.spacingL, vertical: AppDimens.spacingXS),
+                      horizontal: AppDimens.spacingL,
+                      vertical: AppDimens.spacingXS),
                   childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   title: Text(faq.$1,
                       style: textTheme.titleSmall
                           ?.copyWith(fontWeight: FontWeight.w700)),
                   children: [
                     Text(faq.$2,
-                        style: textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onSurfaceVariant)),
+                        style: textTheme.bodyMedium
+                            ?.copyWith(color: colorScheme.onSurfaceVariant)),
                   ],
                 ),
               ),

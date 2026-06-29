@@ -15,8 +15,7 @@ final kycStatusProvider =
 });
 
 /// Fetches a Sumsub SDK access token for the authenticated user.
-final kycAccessTokenProvider =
-    FutureProvider.autoDispose<String>((ref) async {
+final kycAccessTokenProvider = FutureProvider.autoDispose<String>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) throw Exception('Not authenticated');
   return ref.watch(kycRemoteDataSourceProvider).initFlow(userId);

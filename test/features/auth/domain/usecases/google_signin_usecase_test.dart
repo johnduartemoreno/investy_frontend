@@ -18,10 +18,8 @@ void main() {
     useCase = GoogleSignInUseCase(mockAuthRepository);
   });
 
-  const tUser = User(
-      id: 'google-uid-123',
-      email: 'user@gmail.com',
-      name: 'Google User');
+  const tUser =
+      User(id: 'google-uid-123', email: 'user@gmail.com', name: 'Google User');
 
   test('should return User when Google sign-in succeeds', () async {
     when(() => mockAuthRepository.signInWithGoogle())
@@ -35,8 +33,8 @@ void main() {
   });
 
   test('should return Left(Failure) when Google sign-in fails', () async {
-    when(() => mockAuthRepository.signInWithGoogle())
-        .thenAnswer((_) async => Left(ServerFailure('Google sign-in failed')));
+    when(() => mockAuthRepository.signInWithGoogle()).thenAnswer(
+        (_) async => const Left(ServerFailure('Google sign-in failed')));
 
     final result = await useCase(NoParams());
 
@@ -46,7 +44,7 @@ void main() {
 
   test('should return Left(Failure) when user cancels sign-in', () async {
     when(() => mockAuthRepository.signInWithGoogle()).thenAnswer(
-        (_) async => Left(ServerFailure('Google sign-in cancelled')));
+        (_) async => const Left(ServerFailure('Google sign-in cancelled')));
 
     final result = await useCase(NoParams());
 

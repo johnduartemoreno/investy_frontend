@@ -25,8 +25,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> signUp(
-      String name, String email, String password, String displayCurrency) async {
+  Future<Either<Failure, User>> signUp(String name, String email,
+      String password, String displayCurrency) async {
     try {
       final user =
           await remoteDataSource.signUp(name, email, password, displayCurrency);
@@ -93,7 +93,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteAccountEmail(String currentPassword) async {
+  Future<Either<Failure, void>> deleteAccountEmail(
+      String currentPassword) async {
     try {
       await remoteDataSource.deleteAccountEmail(currentPassword);
       return const Right(null);

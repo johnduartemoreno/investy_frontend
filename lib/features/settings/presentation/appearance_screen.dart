@@ -18,7 +18,11 @@ class AppearanceScreen extends ConsumerWidget {
     final currentLocale = ref.watch(localeNotifierProvider);
 
     final themeOptions = [
-      (ThemeMode.system, Icons.brightness_auto_outlined, l10n.appearanceThemeSystem),
+      (
+        ThemeMode.system,
+        Icons.brightness_auto_outlined,
+        l10n.appearanceThemeSystem
+      ),
       (ThemeMode.light, Icons.light_mode_outlined, l10n.appearanceThemeLight),
       (ThemeMode.dark, Icons.dark_mode_outlined, l10n.appearanceThemeDark),
     ];
@@ -68,7 +72,8 @@ class AppearanceScreen extends ConsumerWidget {
                     context: context,
                     icon: languageOptions[i].$2,
                     label: languageOptions[i].$3,
-                    selected: currentLocale.languageCode == languageOptions[i].$1,
+                    selected:
+                        currentLocale.languageCode == languageOptions[i].$1,
                     onTap: () => ref
                         .read(localeNotifierProvider.notifier)
                         .setLanguage(languageOptions[i].$1),

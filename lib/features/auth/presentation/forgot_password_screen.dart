@@ -38,9 +38,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     setState(() => _isLoading = true);
     try {
       final email = _emailController.text.trim();
-      await ref
-          .read(authNotifierProvider.notifier)
-          .forgotPassword(email);
+      await ref.read(authNotifierProvider.notifier).forgotPassword(email);
       if (mounted) {
         setState(() {
           _sentToEmail = email;

@@ -49,8 +49,8 @@ class AvatarUpload extends _$AvatarUpload {
       final backendDio = ref.read(dioProvider);
 
       // 1. Get presigned PUT URL from backend.
-      final urlResp = await backendDio
-          .get('/api/v1/users/$uid/avatar/upload-url');
+      final urlResp =
+          await backendDio.get('/api/v1/users/$uid/avatar/upload-url');
       final uploadUrl = urlResp.data['uploadUrl'] as String;
       final finalUrl = urlResp.data['finalUrl'] as String;
 

@@ -150,7 +150,8 @@ class _SessionCard extends StatelessWidget {
             const SizedBox(height: AppDimens.spacingM),
             Text(
               l10n.owlHistoryContext(
-                CurrencyFormatter.format(session.contextSnapshot.portfolioValue),
+                CurrencyFormatter.format(
+                    session.contextSnapshot.portfolioValue),
                 CurrencyFormatter.format(session.contextSnapshot.cashBalance),
               ),
               style: theme.textTheme.bodySmall
@@ -248,8 +249,8 @@ class _OwlHistoryDetailSheet extends StatelessWidget {
                     color: cs.onSurface.withValues(alpha: 0.08),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.close,
-                      color: cs.onSurfaceVariant, size: 16),
+                  child:
+                      Icon(Icons.close, color: cs.onSurfaceVariant, size: 16),
                 ),
               ),
             ],
@@ -258,8 +259,8 @@ class _OwlHistoryDetailSheet extends StatelessWidget {
         Expanded(
           child: ListView.separated(
             controller: scrollController,
-            padding: const EdgeInsets.fromLTRB(AppDimens.spacingL, 0,
-                AppDimens.spacingL, AppDimens.spacingXL),
+            padding: const EdgeInsets.fromLTRB(
+                AppDimens.spacingL, 0, AppDimens.spacingL, AppDimens.spacingXL),
             itemCount: session.recommendations.length,
             separatorBuilder: (_, __) =>
                 const SizedBox(height: AppDimens.spacingM),
@@ -320,8 +321,7 @@ class _RecCard extends StatelessWidget {
               SignalBadge(
                 label:
                     rec.strong ? l10n.owlAiStrongBuy : l10n.owlAiModerateSignal,
-                color:
-                    rec.strong ? AppTheme.signalGreen : AppTheme.signalAmber,
+                color: rec.strong ? AppTheme.signalGreen : AppTheme.signalAmber,
               ),
             ],
           ),

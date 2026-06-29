@@ -48,7 +48,8 @@ class _FakeAlertsDataSource implements AlertsRemoteDataSource {
 
 class _FakeDashboardDataSource implements DashboardRemoteDataSource {
   @override
-  Future<List<AssetSearchResultModel>> searchAssets(String query) async => const [
+  Future<List<AssetSearchResultModel>> searchAssets(String query) async =>
+      const [
         AssetSearchResultModel(
           symbol: 'AAPL',
           name: 'Apple Inc.',

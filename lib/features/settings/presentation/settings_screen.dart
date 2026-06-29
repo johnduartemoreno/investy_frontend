@@ -33,7 +33,6 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               _buildProfileSection(context, ref, l10n),
               const SizedBox(height: AppDimens.spacingXL),
-
               _buildSettingsSection(context, ref, l10n),
               const SizedBox(height: AppDimens.spacingXL),
               _buildAboutSection(context, l10n),
@@ -46,7 +45,8 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildProfileSection(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  Widget _buildProfileSection(
+      BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     final authState = ref.watch(authNotifierProvider);
     final user = authState.value;
     final avatarUrl = ref.watch(avatarUrlProvider);
@@ -73,9 +73,14 @@ class SettingsScreen extends ConsumerWidget {
                               user?.name.isNotEmpty == true
                                   ? user!.name[0].toUpperCase()
                                   : 'U',
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  color: Theme.of(context).colorScheme.onPrimary,
-                                  fontWeight: FontWeight.bold),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      fontWeight: FontWeight.bold),
                             )
                           : null,
                 ),
@@ -86,8 +91,7 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   padding: const EdgeInsets.all(2),
                   child: Icon(Icons.camera_alt,
-                      size: 12,
-                      color: Theme.of(context).colorScheme.onPrimary),
+                      size: 12, color: Theme.of(context).colorScheme.onPrimary),
                 ),
               ],
             ),
@@ -114,8 +118,10 @@ class SettingsScreen extends ConsumerWidget {
                 if (uploadState.status == AvatarUploadStatus.error)
                   Text(
                     uploadState.errorMessage ?? l10n.commonError,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.error),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Theme.of(context).colorScheme.error),
                   ),
               ],
             ),
@@ -125,8 +131,7 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _pickAndUploadAvatar(
-      BuildContext context, WidgetRef ref) async {
+  Future<void> _pickAndUploadAvatar(BuildContext context, WidgetRef ref) async {
     final picker = ImagePicker();
     final picked = await picker.pickImage(
       source: ImageSource.gallery,
@@ -135,12 +140,11 @@ class SettingsScreen extends ConsumerWidget {
       imageQuality: 85,
     );
     if (picked == null) return;
-    await ref
-        .read(avatarUploadProvider.notifier)
-        .upload(File(picked.path));
+    await ref.read(avatarUploadProvider.notifier).upload(File(picked.path));
   }
 
-  Widget _buildSettingsSection(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  Widget _buildSettingsSection(
+      BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     final displayCurrency = ref.watch(displayCurrencyProvider);
     final kycAsync = ref.watch(kycStatusProvider);
     final kycStatus = kycAsync.valueOrNull;
@@ -177,11 +181,16 @@ class SettingsScreen extends ConsumerWidget {
       padding: EdgeInsets.zero,
       child: Column(
         children: [
-          _buildListTile(context, Icons.currency_exchange, l10n.settingsCurrency, displayCurrency, onTap: () {}),
+          _buildListTile(context, Icons.currency_exchange,
+              l10n.settingsCurrency, displayCurrency,
+              onTap: () {}),
           const Divider(height: 1),
-          _buildListTile(context, Icons.badge_outlined, l10n.kycSettingsLabel, kycTrailing, onTap: () => context.push('/settings/kyc')),
+          _buildListTile(
+              context, Icons.badge_outlined, l10n.kycSettingsLabel, kycTrailing,
+              onTap: () => context.push('/settings/kyc')),
           const Divider(height: 1),
-          _buildListTile(context, Icons.account_balance_outlined, l10n.brokerSettingsLabel, brokerTrailing, onTap: () {
+          _buildListTile(context, Icons.account_balance_outlined,
+              l10n.brokerSettingsLabel, brokerTrailing, onTap: () {
             final msg = brokerStatus == null
                 ? l10n.brokerBannerNotActive
                 : brokerStatus.isActive
@@ -192,7 +201,8 @@ class SettingsScreen extends ConsumerWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(msg),
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                backgroundColor:
+                    Theme.of(context).colorScheme.surfaceContainerHighest,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppDimens.radiusCard),
@@ -201,15 +211,27 @@ class SettingsScreen extends ConsumerWidget {
             );
           }),
           const Divider(height: 1),
-          _buildListTile(context, Icons.psychology_outlined, l10n.riskProfileSettingsLabel, riskTrailing, onTap: () => context.push(riskProfile != null ? '/settings/risk-profile/result' : '/settings/risk-profile')),
+          _buildListTile(context, Icons.psychology_outlined,
+              l10n.riskProfileSettingsLabel, riskTrailing,
+              onTap: () => context.push(riskProfile != null
+                  ? '/settings/risk-profile/result'
+                  : '/settings/risk-profile')),
           const Divider(height: 1),
-          _buildListTile(context, Icons.notifications_outlined, l10n.settingsNotifications, '', onTap: () => context.push('/settings/notifications')),
+          _buildListTile(context, Icons.notifications_outlined,
+              l10n.settingsNotifications, '',
+              onTap: () => context.push('/settings/notifications')),
           const Divider(height: 1),
-          _buildListTile(context, Icons.notifications_active_outlined, l10n.alertsSettingsLabel, '', onTap: () => context.push('/settings/price-alerts')),
+          _buildListTile(context, Icons.notifications_active_outlined,
+              l10n.alertsSettingsLabel, '',
+              onTap: () => context.push('/settings/price-alerts')),
           const Divider(height: 1),
-          _buildListTile(context, Icons.security, l10n.settingsPrivacySecurity, '', onTap: () => context.push('/settings/security')),
+          _buildListTile(
+              context, Icons.security, l10n.settingsPrivacySecurity, '',
+              onTap: () => context.push('/settings/security')),
           const Divider(height: 1),
-          _buildListTile(context, Icons.palette_outlined, l10n.settingsAppearance, '', onTap: () => context.push('/settings/appearance')),
+          _buildListTile(
+              context, Icons.palette_outlined, l10n.settingsAppearance, '',
+              onTap: () => context.push('/settings/appearance')),
         ],
       ),
     );
@@ -220,9 +242,12 @@ class SettingsScreen extends ConsumerWidget {
       padding: EdgeInsets.zero,
       child: Column(
         children: [
-          _buildListTile(context, Icons.info_outline, l10n.settingsAbout, 'v1.0.0', onTap: () => context.push('/settings/about')),
+          _buildListTile(
+              context, Icons.info_outline, l10n.settingsAbout, 'v1.0.0',
+              onTap: () => context.push('/settings/about')),
           const Divider(height: 1),
-          _buildListTile(context, Icons.help_outline, l10n.settingsHelp, '', onTap: () => context.push('/settings/help')),
+          _buildListTile(context, Icons.help_outline, l10n.settingsHelp, '',
+              onTap: () => context.push('/settings/help')),
         ],
       ),
     );
@@ -242,8 +267,8 @@ class SettingsScreen extends ConsumerWidget {
         children: [
           if (trailing.isNotEmpty)
             Text(trailing,
-                style: textTheme.labelSmall?.copyWith(
-                    color: cs.onSurfaceVariant)),
+                style:
+                    textTheme.labelSmall?.copyWith(color: cs.onSurfaceVariant)),
           const SizedBox(width: 4),
           Icon(Icons.chevron_right, size: 18, color: cs.onSurfaceVariant),
         ],
@@ -252,7 +277,8 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLogoutButton(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  Widget _buildLogoutButton(
+      BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton.icon(
@@ -261,7 +287,8 @@ class SettingsScreen extends ConsumerWidget {
           context.go('/login');
         },
         icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
-        label: Text(l10n.commonLogOut, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+        label: Text(l10n.commonLogOut,
+            style: TextStyle(color: Theme.of(context).colorScheme.error)),
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.all(AppDimens.spacingL),
           side: BorderSide(color: Theme.of(context).colorScheme.error),

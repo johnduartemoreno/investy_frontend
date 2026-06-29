@@ -68,7 +68,11 @@ class PrimaryButton extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (icon != null) ...[
-                          Icon(icon, size: 20, color: isDisabled ? cs.onSurface.withValues(alpha: 0.38) : Colors.white),
+                          Icon(icon,
+                              size: 20,
+                              color: isDisabled
+                                  ? cs.onSurface.withValues(alpha: 0.38)
+                                  : Colors.white),
                           const SizedBox(width: AppDimens.spacingS),
                         ],
                         Text(

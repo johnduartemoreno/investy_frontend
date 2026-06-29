@@ -24,8 +24,7 @@ class KycRemoteDataSourceImpl implements KycRemoteDataSource {
 
   @override
   Future<String> initFlow(String userId) async {
-    final response =
-        await _dio.post('/api/v1/users/$userId/kyc/init');
+    final response = await _dio.post('/api/v1/users/$userId/kyc/init');
     final data = response.data as Map<String, dynamic>;
     final token = data['accessToken'] as String?;
     if (token == null || token.isEmpty) {

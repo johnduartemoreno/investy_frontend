@@ -59,8 +59,9 @@ class ActivityItemModel {
 
   Map<String, dynamic> toJson() => _$ActivityItemModelToJson(this);
 
-  DateTime get _parsedAt =>
-      timestamp.isEmpty ? DateTime.now().toUtc() : DateTime.parse(timestamp).toLocal();
+  DateTime get _parsedAt => timestamp.isEmpty
+      ? DateTime.now().toUtc()
+      : DateTime.parse(timestamp).toLocal();
 
   /// Maps integer cents → domain Contribution entity (double dollars).
   Contribution toDomain() {

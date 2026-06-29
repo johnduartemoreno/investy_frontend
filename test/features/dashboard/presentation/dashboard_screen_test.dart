@@ -49,10 +49,10 @@ void main() {
           // test does not hit FirebaseAuth/HTTP.
           restGoalsProvider.overrideWith((ref) async => []),
         ],
-        child: MaterialApp(
+        child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const DashboardScreen(),
+          home: DashboardScreen(),
         ),
       );
     }

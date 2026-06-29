@@ -41,10 +41,10 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
 
   static const _tickerColors = {
     'AAPL': [Color(0xFF1d4ed8), Color(0xFF3b82f6)],
-    'VTI':  [Color(0xFF065f46), Color(0xFF10b981)],
-    'BTC':  [Color(0xFF78350f), Color(0xFFf59e0b)],
+    'VTI': [Color(0xFF065f46), Color(0xFF10b981)],
+    'BTC': [Color(0xFF78350f), Color(0xFFf59e0b)],
     'MSFT': [Color(0xFF4c1d95), Color(0xFF8b5cf6)],
-    'IAU':  [Color(0xFF881337), Color(0xFFf43f5e)],
+    'IAU': [Color(0xFF881337), Color(0xFFf43f5e)],
   };
 
   @override
@@ -52,12 +52,14 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
     super.initState();
     _searchController.addListener(_onSearchChanged);
 
-    _selectedGoalId = widget.args?.goalId; // pre-assign goal when coming from goal detail
+    _selectedGoalId =
+        widget.args?.goalId; // pre-assign goal when coming from goal detail
 
     final preselect = widget.args?.symbol;
     if (preselect != null && preselect.isNotEmpty) {
       _searchController.text = preselect;
-      WidgetsBinding.instance.addPostFrameCallback((_) => _autoSelect(preselect));
+      WidgetsBinding.instance
+          .addPostFrameCallback((_) => _autoSelect(preselect));
     }
   }
 
@@ -158,7 +160,8 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
 
   /// Optional goal selector (S18). Lets the user assign this BUY to a goal.
   /// "No goal" is always available and selected by default.
-  Widget _buildGoalSelector(ThemeData theme, ColorScheme cs, AppLocalizations l10n) {
+  Widget _buildGoalSelector(
+      ThemeData theme, ColorScheme cs, AppLocalizations l10n) {
     final goalsAsync = ref.watch(restGoalsProvider);
     return goalsAsync.maybeWhen(
       data: (goals) {
@@ -187,8 +190,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                     ChoiceChip(
                       label: Text(g.name),
                       selected: _selectedGoalId == g.id,
-                      onSelected: (_) =>
-                          setState(() => _selectedGoalId = g.id),
+                      onSelected: (_) => setState(() => _selectedGoalId = g.id),
                     ),
                 ],
               ),
@@ -249,8 +251,8 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           l10n.buyAssetTitle,
-          style: theme.textTheme.titleMedium?.copyWith(
-              color: Colors.white, fontWeight: FontWeight.w700),
+          style: theme.textTheme.titleMedium
+              ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
         ),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -323,8 +325,8 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                             ? Padding(
                                 padding: const EdgeInsets.all(16),
                                 child: Text(l10n.assetSearchEmpty,
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                        color: cs.onSurfaceVariant)),
+                                    style: theme.textTheme.bodyMedium
+                                        ?.copyWith(color: cs.onSurfaceVariant)),
                               )
                             : ListView.builder(
                                 shrinkWrap: true,
@@ -371,13 +373,13 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                             children: [
                               Text(
                                 _selectedAsset!.symbol,
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w800),
+                                style: theme.textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.w800),
                               ),
                               Text(
                                 _selectedAsset!.name,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                    color: cs.onSurfaceVariant),
+                                style: theme.textTheme.bodySmall
+                                    ?.copyWith(color: cs.onSurfaceVariant),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -397,8 +399,8 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                             ),
                             Text(
                               l10n.buyPerShare,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                  color: cs.onSurfaceVariant),
+                              style: theme.textTheme.bodySmall
+                                  ?.copyWith(color: cs.onSurfaceVariant),
                             ),
                           ],
                         ),
@@ -434,8 +436,8 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                       TextFormField(
                         controller: _quantityController,
                         enabled: _selectedAsset != null,
-                        keyboardType:
-                            const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
                         style: theme.textTheme.headlineMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
@@ -455,14 +457,20 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                         inputFormatters: [ThousandsSeparatorInputFormatter()],
                         onChanged: (v) {
                           final parsed =
-                              ThousandsSeparatorInputFormatter.parseFormatted(v);
+                              ThousandsSeparatorInputFormatter.parseFormatted(
+                                  v);
                           setState(() => _quantity = parsed ?? 0.0);
                         },
                         validator: (v) {
-                          if (v == null || v.isEmpty) return l10n.buyEnterQuantity;
+                          if (v == null || v.isEmpty) {
+                            return l10n.buyEnterQuantity;
+                          }
                           final qty =
-                              ThousandsSeparatorInputFormatter.parseFormatted(v);
-                          if (qty == null || qty <= 0) return l10n.buyQuantityPositive;
+                              ThousandsSeparatorInputFormatter.parseFormatted(
+                                  v);
+                          if (qty == null || qty <= 0) {
+                            return l10n.buyQuantityPositive;
+                          }
                           return null;
                         },
                       ),

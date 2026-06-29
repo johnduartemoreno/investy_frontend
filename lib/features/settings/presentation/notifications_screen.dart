@@ -25,8 +25,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   }
 
   Future<void> _loadStatus() async {
-    final settings =
-        await FirebaseMessaging.instance.getNotificationSettings();
+    final settings = await FirebaseMessaging.instance.getNotificationSettings();
     if (mounted) {
       setState(() {
         _enabled =
@@ -66,7 +65,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context).notificationsTitle)),
+      appBar:
+          AppBar(title: Text(AppLocalizations.of(context).notificationsTitle)),
       body: _loading
           ? const Center(child: CircularProgressIndicator.adaptive())
           : ListView(
@@ -85,13 +85,14 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                       style: textTheme.bodySmall
                           ?.copyWith(color: colorScheme.onSurfaceVariant),
                     ),
-                    secondary:
-                        Icon(Icons.notifications_outlined, color: colorScheme.primary),
+                    secondary: Icon(Icons.notifications_outlined,
+                        color: colorScheme.primary),
                   ),
                 ),
                 const SizedBox(height: AppDimens.spacingL),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppDimens.spacingXS),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimens.spacingXS),
                   child: Text(
                     AppLocalizations.of(context).notificationsDescription,
                     style: textTheme.bodySmall
