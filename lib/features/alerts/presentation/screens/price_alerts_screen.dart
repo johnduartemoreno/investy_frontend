@@ -139,20 +139,32 @@ class _AlertTile extends ConsumerWidget {
                     style: theme.textTheme.titleMedium
                         ?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 2),
-                Row(
-                  children: [
-                    Icon(
-                      alert.isAbove
-                          ? Icons.trending_up_rounded
-                          : Icons.trending_down_rounded,
-                      size: 14,
-                      color: cs.onSurfaceVariant,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(condition,
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: cs.onSurfaceVariant)),
-                  ],
+                // Direction is conveyed by the arrow icon, so the row shows the
+                // price only — never truncating it. Full "above/below $X" text
+                // is kept as the semantics label for screen readers.
+                Semantics(
+                  label: condition,
+                  child: Row(
+                    children: [
+                      Icon(
+                        alert.isAbove
+                            ? Icons.trending_up_rounded
+                            : Icons.trending_down_rounded,
+                        size: 14,
+                        // Project convention: up/positive = signalGreen, down = cs.error
+                        color: alert.isAbove ? AppTheme.signalGreen : cs.error,
+                      ),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(price,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                                color: cs.onSurface,
+                                fontWeight: FontWeight.w600)),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
