@@ -60,6 +60,14 @@ dev_dependencies:
   hive_generator: ^2.0.1
   mocktail: ^1.0.4
 
+# Pin path_provider_foundation below 2.5.0: versions >=2.5.0 pull in the
+# `objective_c` Native Assets package, which the Flutter toolchain fails to
+# build for the iOS Simulator ("Target native_assets required define SdkRoot
+# but it was not provided") — crashes the app on launch. 2.4.x uses the classic
+# Swift plugin (no FFI) and works on both simulator and physical device.
+dependency_overrides:
+  path_provider_foundation: 2.4.4
+
 flutter:
   generate: true
   uses-material-design: true
