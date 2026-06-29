@@ -31,6 +31,7 @@ lib/
 │   ├── risk_profile/                   # 5-question questionnaire → Conservative/Moderate/Aggressive
 │   ├── kyc/                            # Sumsub WebSDK onboarding
 │   ├── transactions/                   # Top-up screen
+│   ├── alerts/                         # Price alerts (above/below) + create sheet (B12)
 │   └── settings/                       # Profile, appearance, security, language, about
 └── l10n/                               # ARB strings — EN / ES / PT
     ├── app_en.arb
@@ -74,6 +75,8 @@ Use `--dart-define=USE_STAGING=true` to force staging URL in debug builds.
 | `riskProfileProvider` | `GET /risk-profile` | Conservative / Moderate / Aggressive |
 | `recommendationsProvider` | `GET /recommendations` | AI picks (Claude API, cache 24h) |
 | `owlHistoryProvider` | `GET /recommendations/history` | Persisted Owl AI sessions (B29) |
+| `alertsProvider` | `GET /price-alerts` | User's price alerts list (B12) |
+| `AlertFormController` | `POST` / `DELETE /price-alerts` | Create / delete a price alert (B12) |
 | `BuyAssetController` | `POST /transactions` | BUY order |
 | `SellAssetController` | `POST /transactions` | SELL order |
 
