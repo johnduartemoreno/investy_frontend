@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../config/app_config.dart';
@@ -63,6 +63,21 @@ class NotificationService {
 
   Future<void> _registerToken(FirebaseMessaging messaging) async {
     try {
+      // iOS: getToken() throws `apns-token-not-set` if called before iOS has
+      // delivered the APNS token. Wait for it (short retry) first. On Android
+      // getAPNSToken() returns null and is irrelevant, so skip this gate.
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        var apnsToken = await messaging.getAPNSToken();
+        for (var i = 0; apnsToken == null && i < 5; i++) {
+          await Future.delayed(const Duration(seconds: 2));
+          apnsToken = await messaging.getAPNSToken();
+        }
+        if (apnsToken == null) {
+          // Still not ready — onTokenRefresh will register it once available.
+          debugPrint('[FCM] APNS token unavailable; deferring to onTokenRefresh');
+          return;
+        }
+      }
       final token = await messaging.getToken();
       if (token != null) {
         await _sendTokenToBackend(token);
