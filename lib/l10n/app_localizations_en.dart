@@ -1140,4 +1140,89 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get greetingEvening => 'Good evening,';
+
+  @override
+  String get alertsTitle => 'Price alerts';
+
+  @override
+  String get alertsSettingsLabel => 'Price alerts';
+
+  @override
+  String get alertsEmpty => 'You have no price alerts yet.';
+
+  @override
+  String get alertsEmptyHint =>
+      'Create one to get notified when an asset hits your target price.';
+
+  @override
+  String get alertsCreateTitle => 'New price alert';
+
+  @override
+  String get alertsAssetLabel => 'Asset';
+
+  @override
+  String get alertsConditionLabel => 'Condition';
+
+  @override
+  String get alertsSearchHint => 'Search by symbol or name';
+
+  @override
+  String get alertsSelectAssetFirst => 'Select an asset first';
+
+  @override
+  String alertsCurrentPrice(String price) {
+    return 'Current: $price';
+  }
+
+  @override
+  String get alertsDirectionAbove => 'Rises to or above';
+
+  @override
+  String get alertsDirectionBelow => 'Falls to or below';
+
+  @override
+  String get alertsTargetPriceHint => 'Target price (USD)';
+
+  @override
+  String get alertsCreateButton => 'Create alert';
+
+  @override
+  String get alertsCreated => 'Alert created';
+
+  @override
+  String get alertsDeleted => 'Alert deleted';
+
+  @override
+  String get alertsStatusActive => 'Active';
+
+  @override
+  String get alertsStatusTriggered => 'Triggered';
+
+  @override
+  String alertsConditionAbove(String price) {
+    return 'Above $price';
+  }
+
+  @override
+  String alertsConditionBelow(String price) {
+    return 'Below $price';
+  }
+
+  @override
+  String get alertsErrorAlreadyMet =>
+      'The current price already meets this target. Choose a different one.';
+
+  @override
+  String get alertsErrorLimit =>
+      'You\'ve reached the maximum of 20 active alerts.';
+
+  @override
+  String get alertsErrorDuplicate =>
+      'You already have an identical alert for this asset.';
+
+  @override
+  String get alertsErrorUnknownSymbol => 'Unknown asset.';
+
+  @override
+  String get alertsDeleteTooltip => 'Delete alert';
 }

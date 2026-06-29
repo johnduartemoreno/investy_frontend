@@ -466,5 +466,46 @@
   "portfolioActive": "Portfolio active",
   "greetingMorning": "Good morning,",
   "greetingAfternoon": "Good afternoon,",
-  "greetingEvening": "Good evening,"
+  "greetingEvening": "Good evening,",
+
+  "alertsTitle": "Price alerts",
+  "alertsSettingsLabel": "Price alerts",
+  "alertsEmpty": "You have no price alerts yet.",
+  "alertsEmptyHint": "Create one to get notified when an asset hits your target price.",
+  "alertsCreateTitle": "New price alert",
+  "alertsAssetLabel": "Asset",
+  "alertsConditionLabel": "Condition",
+  "alertsSearchHint": "Search by symbol or name",
+  "alertsSelectAssetFirst": "Select an asset first",
+  "alertsCurrentPrice": "Current: {price}",
+  "@alertsCurrentPrice": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "alertsDirectionAbove": "Rises to or above",
+  "alertsDirectionBelow": "Falls to or below",
+  "alertsTargetPriceHint": "Target price (USD)",
+  "alertsCreateButton": "Create alert",
+  "alertsCreated": "Alert created",
+  "alertsDeleted": "Alert deleted",
+  "alertsStatusActive": "Active",
+  "alertsStatusTriggered": "Triggered",
+  "alertsConditionAbove": "Above {price}",
+  "@alertsConditionAbove": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "alertsConditionBelow": "Below {price}",
+  "@alertsConditionBelow": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "alertsErrorAlreadyMet": "The current price already meets this target. Choose a different one.",
+  "alertsErrorLimit": "You've reached the maximum of 20 active alerts.",
+  "alertsErrorDuplicate": "You already have an identical alert for this asset.",
+  "alertsErrorUnknownSymbol": "Unknown asset.",
+  "alertsDeleteTooltip": "Delete alert"
 }

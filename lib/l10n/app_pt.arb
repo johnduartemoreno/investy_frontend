@@ -411,5 +411,46 @@
   "portfolioActive": "Carteira ativa",
   "greetingMorning": "Bom dia,",
   "greetingAfternoon": "Boa tarde,",
-  "greetingEvening": "Boa noite,"
+  "greetingEvening": "Boa noite,",
+
+  "alertsTitle": "Alertas de preço",
+  "alertsSettingsLabel": "Alertas de preço",
+  "alertsEmpty": "Você ainda não tem alertas de preço.",
+  "alertsEmptyHint": "Crie um para ser avisado quando um ativo atingir seu preço-alvo.",
+  "alertsCreateTitle": "Novo alerta de preço",
+  "alertsAssetLabel": "Ativo",
+  "alertsConditionLabel": "Condição",
+  "alertsSearchHint": "Busque por símbolo ou nome",
+  "alertsSelectAssetFirst": "Selecione um ativo primeiro",
+  "alertsCurrentPrice": "Atual: {price}",
+  "@alertsCurrentPrice": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "alertsDirectionAbove": "Sobe até ou acima de",
+  "alertsDirectionBelow": "Cai até ou abaixo de",
+  "alertsTargetPriceHint": "Preço-alvo (USD)",
+  "alertsCreateButton": "Criar alerta",
+  "alertsCreated": "Alerta criado",
+  "alertsDeleted": "Alerta excluído",
+  "alertsStatusActive": "Ativo",
+  "alertsStatusTriggered": "Disparado",
+  "alertsConditionAbove": "Acima de {price}",
+  "@alertsConditionAbove": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "alertsConditionBelow": "Abaixo de {price}",
+  "@alertsConditionBelow": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "alertsErrorAlreadyMet": "O preço atual já atende a este alvo. Escolha um diferente.",
+  "alertsErrorLimit": "Você atingiu o máximo de 20 alertas ativos.",
+  "alertsErrorDuplicate": "Você já tem um alerta idêntico para este ativo.",
+  "alertsErrorUnknownSymbol": "Ativo desconhecido.",
+  "alertsDeleteTooltip": "Excluir alerta"
 }
