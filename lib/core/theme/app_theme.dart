@@ -11,61 +11,85 @@ class AppTheme {
     final dmSans = GoogleFonts.dmSansTextTheme(base);
     return dmSans.copyWith(
       displayLarge: GoogleFonts.dmSans(
-        fontSize: 57, fontWeight: FontWeight.w700, letterSpacing: -0.25,
+        fontSize: 57,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.25,
       ),
       displayMedium: GoogleFonts.dmSans(
-        fontSize: 45, fontWeight: FontWeight.w700,
+        fontSize: 45,
+        fontWeight: FontWeight.w700,
       ),
       displaySmall: GoogleFonts.dmSans(
-        fontSize: 36, fontWeight: FontWeight.w600,
+        fontSize: 36,
+        fontWeight: FontWeight.w600,
       ),
       headlineLarge: GoogleFonts.dmSans(
-        fontSize: 32, fontWeight: FontWeight.w600,
+        fontSize: 32,
+        fontWeight: FontWeight.w600,
       ),
       headlineMedium: GoogleFonts.dmSans(
-        fontSize: 28, fontWeight: FontWeight.w700,
+        fontSize: 28,
+        fontWeight: FontWeight.w700,
       ),
       headlineSmall: GoogleFonts.dmSans(
-        fontSize: 24, fontWeight: FontWeight.w600,
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
       ),
       titleLarge: GoogleFonts.dmSans(
-        fontSize: 22, fontWeight: FontWeight.w600,
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
       ),
       titleMedium: GoogleFonts.dmSans(
-        fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.15,
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.15,
       ),
       titleSmall: GoogleFonts.dmSans(
-        fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1,
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.1,
       ),
       bodyLarge: GoogleFonts.dmSans(
-        fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.5,
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.5,
       ),
       bodyMedium: GoogleFonts.dmSans(
-        fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.25,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.25,
       ),
       bodySmall: GoogleFonts.dmSans(
-        fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 0.4,
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.4,
       ),
       labelLarge: GoogleFonts.dmSans(
-        fontSize: 14, fontWeight: FontWeight.w600, letterSpacing: 0.1,
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.1,
       ),
       labelMedium: GoogleFonts.dmSans(
-        fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 0.5,
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.5,
       ),
       labelSmall: GoogleFonts.dmSans(
-        fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5,
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.5,
       ),
     );
   }
 
   // Light palette — surfaces
-  static const lightSurface        = Color(0xFFF8F8FC); // scaffold
-  static const lightCard           = Color(0xFFEEEDF8); // surfaceContainerHigh (cards)
-  static const lightCardLow        = Color(0xFFF3F2FB); // surfaceContainerLow
-  static const lightContainer      = Color(0xFFE8E6F8); // surfaceContainer
-  static const lightOnSurface      = Color(0xFF1C1B1F);
-  static const lightOnSurfaceVar   = Color(0xFF605D6E);
-  static const lightOutline        = Color(0xFFC4C0D4);
+  static const lightSurface = Color(0xFFF8F8FC); // scaffold
+  static const lightCard = Color(0xFFEEEDF8); // surfaceContainerHigh (cards)
+  static const lightCardLow = Color(0xFFF3F2FB); // surfaceContainerLow
+  static const lightContainer = Color(0xFFE8E6F8); // surfaceContainer
+  static const lightOnSurface = Color(0xFF1C1B1F);
+  static const lightOnSurfaceVar = Color(0xFF605D6E);
+  static const lightOutline = Color(0xFFC4C0D4);
   static const lightOutlineVariant = Color(0xFFE2DFF0);
 
   static final lightTheme = ThemeData(
@@ -295,8 +319,7 @@ class AppTheme {
           return GoogleFonts.dmSans(
               color: brandPurple, fontWeight: FontWeight.w700, fontSize: 12);
         }
-        return GoogleFonts.dmSans(
-            color: const Color(0xFF9090A8), fontSize: 12);
+        return GoogleFonts.dmSans(color: const Color(0xFF9090A8), fontSize: 12);
       }),
     ),
   );

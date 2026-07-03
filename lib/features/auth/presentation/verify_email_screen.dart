@@ -34,7 +34,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context).emailVerificationNotVerified),
+            content:
+                Text(AppLocalizations.of(context).emailVerificationNotVerified),
             backgroundColor: AppTheme.signalAmber,
           ),
         );
@@ -131,7 +132,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                           ),
                         )
                       : const Icon(Icons.refresh),
-                  label: Text(_isRefreshing ? l10n.commonLoading : l10n.commonConfirm),
+                  label: Text(
+                      _isRefreshing ? l10n.commonLoading : l10n.commonConfirm),
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.all(AppDimens.spacingL),
                   ),
@@ -148,7 +150,9 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                           ),
                         )
                       : const Icon(Icons.email_outlined),
-                  label: Text(_isResending ? l10n.commonLoading : l10n.emailVerificationResend),
+                  label: Text(_isResending
+                      ? l10n.commonLoading
+                      : l10n.emailVerificationResend),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.all(AppDimens.spacingL),
                   ),

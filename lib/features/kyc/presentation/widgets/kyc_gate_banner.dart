@@ -63,8 +63,7 @@ class KycGateBanner extends ConsumerWidget {
             ),
             if (!isPending)
               Icon(Icons.arrow_forward_ios,
-                  size: 14,
-                  color: theme.colorScheme.onErrorContainer),
+                  size: 14, color: theme.colorScheme.onErrorContainer),
           ],
         ),
       ),

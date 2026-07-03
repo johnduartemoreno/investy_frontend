@@ -5,12 +5,12 @@
 ///   The backend converts quantity → quantity_units (×10^8) internally.
 ///   The frontend never handles the ×10^8 scale.
 class TransactionRequestModel {
-  final int? amount;      // DEPOSIT/WITHDRAWAL: total cents
-  final String type;      // BUY | SELL | DEPOSIT | WITHDRAWAL
-  final String? symbol;   // required for BUY/SELL
+  final int? amount; // DEPOSIT/WITHDRAWAL: total cents
+  final String type; // BUY | SELL | DEPOSIT | WITHDRAWAL
+  final String? symbol; // required for BUY/SELL
   final String? quantity; // BUY/SELL: decimal string e.g. "2.5"
-  final int? priceCents;  // BUY/SELL: price per unit in integer cents
-  final String? goalId;   // BUY: optional goal (UUID) to assign this purchase to
+  final int? priceCents; // BUY/SELL: price per unit in integer cents
+  final String? goalId; // BUY: optional goal (UUID) to assign this purchase to
 
   const TransactionRequestModel({
     this.amount,

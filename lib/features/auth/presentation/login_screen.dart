@@ -173,35 +173,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Material(
-                    elevation: 4.0,
-                    color: Colors.white,
-                    shape: const CircleBorder(),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeInOut,
-                      padding: EdgeInsets.all(isKeyboardOpen ? 12 : 20),
-                      child: Icon(
-                        Icons.savings_outlined,
-                        size: isKeyboardOpen ? 32 : 56,
-                        color: AppTheme.brandPurple,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Material(
+                      elevation: 4.0,
+                      color: Colors.white,
+                      shape: const CircleBorder(),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                        padding: EdgeInsets.all(isKeyboardOpen ? 12 : 20),
+                        child: Icon(
+                          Icons.savings_outlined,
+                          size: isKeyboardOpen ? 32 : 56,
+                          color: AppTheme.brandPurple,
+                        ),
                       ),
                     ),
-                  ),
-                  if (!isKeyboardOpen) ...[
-                    const SizedBox(height: AppDimens.spacingL),
-                    Text(
-                      'Investy',
-                      style: textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                    if (!isKeyboardOpen) ...[
+                      const SizedBox(height: AppDimens.spacingL),
+                      Text(
+                        'Investy',
+                        style: textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
+                    ],
                   ],
-                ],
-              ),
+                ),
               ),
             ),
           ),
@@ -215,7 +215,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Transform.translate(
                     offset: const Offset(0, -24),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppDimens.spacingXL),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: AppDimens.spacingXL),
                       child: CustomCard(
                         padding: const EdgeInsets.fromLTRB(
                           AppDimens.spacingXL,
@@ -224,187 +225,188 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           AppDimens.spacingXL,
                         ),
                         child: Form(
-                            key: _formKey,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                // ── Header block ──
-                                Text(
-                                  l10n.loginTitle,
-                                  style: textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.w700,
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              // ── Header block ──
+                              Text(
+                                l10n.loginTitle,
+                                style: textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: colorScheme.onSurface,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: AppDimens.spacingS),
+                              Text(
+                                l10n.loginSubtitle,
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: AppDimens.spacingM),
+                              Divider(color: colorScheme.outlineVariant),
+                              const SizedBox(height: AppDimens.spacingL),
+
+                              // ── Fields block ──
+                              TextFormField(
+                                controller: _emailController,
+                                decoration: InputDecoration(
+                                  hintText: l10n.loginEmailHint,
+                                  prefixIcon: const Icon(Icons.email_outlined),
+                                ),
+                                keyboardType: TextInputType.emailAddress,
+                                textInputAction: TextInputAction.next,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return l10n.errorRequiredField;
+                                  }
+                                  if (!_isValidEmail(value.trim())) {
+                                    return l10n.errorInvalidEmail;
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: AppDimens.spacingL),
+
+                              TextFormField(
+                                controller: _passwordController,
+                                decoration: InputDecoration(
+                                  hintText: l10n.loginPasswordHint,
+                                  prefixIcon: const Icon(Icons.lock_outlined),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _obscurePassword
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
+                                    ),
+                                    onPressed: () => setState(() =>
+                                        _obscurePassword = !_obscurePassword),
+                                  ),
+                                ),
+                                obscureText: _obscurePassword,
+                                textInputAction: TextInputAction.done,
+                                onFieldSubmitted: (_) => _login(),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return l10n.errorRequiredField;
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: AppDimens.spacingM),
+
+                              // ── Remember / Forgot ──
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    height: 24,
+                                    width: 24,
+                                    child: Checkbox(
+                                      value: _rememberEmail,
+                                      onChanged: (value) {
+                                        setState(() =>
+                                            _rememberEmail = value ?? false);
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Flexible(
+                                    child: Text(
+                                      l10n.loginRememberEmail,
+                                      style: textTheme.bodySmall?.copyWith(
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  TextButton(
+                                    onPressed: () =>
+                                        context.push('/forgot-password'),
+                                    style: TextButton.styleFrom(
+                                      padding: EdgeInsets.zero,
+                                      minimumSize: Size.zero,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    child: Text(
+                                      l10n.loginForgotPassword,
+                                      style: textTheme.bodySmall,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: AppDimens.spacingXL),
+
+                              // Sign In Button
+                              PrimaryButton(
+                                text: l10n.loginButton,
+                                isLoading: _isLoading,
+                                onPressed: _login,
+                              ),
+                              const SizedBox(height: 24),
+
+                              // Divider with "Or continue with"
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Divider(
+                                      color: colorScheme.outlineVariant,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: AppDimens.spacingL),
+                                    child: Text(
+                                      l10n.loginOrContinueWith,
+                                      style: textTheme.bodySmall?.copyWith(
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Divider(
+                                      color: colorScheme.outlineVariant,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 24),
+
+                              // Google Sign-In Button (full width)
+                              OutlinedButton.icon(
+                                onPressed: _isLoading
+                                    ? null
+                                    : () => ref
+                                        .read(authNotifierProvider.notifier)
+                                        .signInWithGoogle(),
+                                style: OutlinedButton.styleFrom(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        AppDimens.radiusInput),
+                                  ),
+                                  side: BorderSide(
+                                    color: colorScheme.outline,
+                                  ),
+                                ),
+                                icon: Icon(
+                                  Icons.g_mobiledata,
+                                  size: 28,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                                label: Text(
+                                  l10n.loginWithGoogle,
+                                  style: textTheme.labelLarge?.copyWith(
                                     color: colorScheme.onSurface,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
-                                const SizedBox(height: AppDimens.spacingS),
-                                Text(
-                                  l10n.loginSubtitle,
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: colorScheme.onSurfaceVariant,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: AppDimens.spacingM),
-                                Divider(color: colorScheme.outlineVariant),
-                                const SizedBox(height: AppDimens.spacingL),
-
-                                // ── Fields block ──
-                                TextFormField(
-                                  controller: _emailController,
-                                  decoration: InputDecoration(
-                                    hintText: l10n.loginEmailHint,
-                                    prefixIcon: const Icon(Icons.email_outlined),
-                                  ),
-                                  keyboardType: TextInputType.emailAddress,
-                                  textInputAction: TextInputAction.next,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return l10n.errorRequiredField;
-                                    }
-                                    if (!_isValidEmail(value.trim())) {
-                                      return l10n.errorInvalidEmail;
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                const SizedBox(height: AppDimens.spacingL),
-
-                                TextFormField(
-                                  controller: _passwordController,
-                                  decoration: InputDecoration(
-                                    hintText: l10n.loginPasswordHint,
-                                    prefixIcon: const Icon(Icons.lock_outlined),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        _obscurePassword
-                                            ? Icons.visibility_outlined
-                                            : Icons.visibility_off_outlined,
-                                      ),
-                                      onPressed: () => setState(() =>
-                                          _obscurePassword = !_obscurePassword),
-                                    ),
-                                  ),
-                                  obscureText: _obscurePassword,
-                                  textInputAction: TextInputAction.done,
-                                  onFieldSubmitted: (_) => _login(),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return l10n.errorRequiredField;
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                const SizedBox(height: AppDimens.spacingM),
-
-                                // ── Remember / Forgot ──
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: Checkbox(
-                                        value: _rememberEmail,
-                                        onChanged: (value) {
-                                          setState(() =>
-                                              _rememberEmail = value ?? false);
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Flexible(
-                                      child: Text(
-                                        l10n.loginRememberEmail,
-                                        style: textTheme.bodySmall?.copyWith(
-                                          color: colorScheme.onSurfaceVariant,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    TextButton(
-                                      onPressed: () =>
-                                          context.push('/forgot-password'),
-                                      style: TextButton.styleFrom(
-                                        padding: EdgeInsets.zero,
-                                        minimumSize: Size.zero,
-                                        tapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap,
-                                      ),
-                                      child: Text(
-                                        l10n.loginForgotPassword,
-                                        style: textTheme.bodySmall,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: AppDimens.spacingXL),
-
-                                // Sign In Button
-                                PrimaryButton(
-                                  text: l10n.loginButton,
-                                  isLoading: _isLoading,
-                                  onPressed: _login,
-                                ),
-                                const SizedBox(height: 24),
-
-                                // Divider with "Or continue with"
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Divider(
-                                        color: colorScheme.outlineVariant,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: AppDimens.spacingL),
-                                      child: Text(
-                                        l10n.loginOrContinueWith,
-                                        style: textTheme.bodySmall?.copyWith(
-                                          color: colorScheme.onSurfaceVariant,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Divider(
-                                        color: colorScheme.outlineVariant,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 24),
-
-                                // Google Sign-In Button (full width)
-                                OutlinedButton.icon(
-                                  onPressed: _isLoading
-                                      ? null
-                                      : () => ref
-                                          .read(authNotifierProvider.notifier)
-                                          .signInWithGoogle(),
-                                  style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 14),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(AppDimens.radiusInput),
-                                    ),
-                                    side: BorderSide(
-                                      color: colorScheme.outline,
-                                    ),
-                                  ),
-                                  icon: Icon(
-                                    Icons.g_mobiledata,
-                                    size: 28,
-                                    color: colorScheme.onSurfaceVariant,
-                                  ),
-                                  label: Text(
-                                    l10n.loginWithGoogle,
-                                    style: textTheme.labelLarge?.copyWith(
-                                      color: colorScheme.onSurface,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -412,12 +414,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                   // Sign Up Link
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(AppDimens.spacingXL, AppDimens.spacingS, AppDimens.spacingXL, 32),
+                    padding: const EdgeInsets.fromLTRB(AppDimens.spacingXL,
+                        AppDimens.spacingS, AppDimens.spacingXL, 32),
                     child: TextButton(
                       onPressed: () => context.push('/signup'),
                       child: RichText(
                         text: TextSpan(
-                          text: "${l10n.loginNoAccount} ",
+                          text: '${l10n.loginNoAccount} ',
                           style: textTheme.bodyMedium?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),

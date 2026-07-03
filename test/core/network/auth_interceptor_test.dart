@@ -20,7 +20,6 @@ void main() {
       required Future<String?> Function(bool forceRefresh) tokenSupplier,
       required List<int> statusCodes,
     }) {
-      int callIndex = 0;
       tokenFetchCount = 0;
       requestCount = 0;
 
@@ -60,7 +59,8 @@ void main() {
       );
 
       // Test HTTP adapter — returns status codes in sequence
-      testDio.httpClientAdapter = _SequentialAdapter(statusCodes, () => requestCount++);
+      testDio.httpClientAdapter =
+          _SequentialAdapter(statusCodes, () => requestCount++);
       return testDio;
     }
 
@@ -77,7 +77,8 @@ void main() {
       expect(requestCount, 1);
     });
 
-    test('401 then 200 — token force-refreshed, request retried successfully', () async {
+    test('401 then 200 — token force-refreshed, request retried successfully',
+        () async {
       int supplierCalls = 0;
       dio = buildDio(
         tokenSupplier: (forceRefresh) async {

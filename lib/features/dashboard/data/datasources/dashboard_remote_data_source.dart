@@ -112,7 +112,8 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
 
   @override
   Future<List<AssetSearchResultModel>> searchAssets(String query) async {
-    final response = await _dio.get('/api/v1/assets', queryParameters: {'q': query});
+    final response =
+        await _dio.get('/api/v1/assets', queryParameters: {'q': query});
     final list = response.data as List<dynamic>;
     return list
         .map((e) => AssetSearchResultModel.fromJson(e as Map<String, dynamic>))

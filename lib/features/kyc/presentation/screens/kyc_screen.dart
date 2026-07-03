@@ -44,9 +44,8 @@ class _KycScreenState extends ConsumerState<KycScreen> {
         MaterialPageRoute(
           builder: (_) => _SumsubWebViewScreen(
             accessToken: token,
-            onTokenRefresh: () => ref
-                .read(kycRemoteDataSourceProvider)
-                .initFlow(userId),
+            onTokenRefresh: () =>
+                ref.read(kycRemoteDataSourceProvider).initFlow(userId),
             onCompleted: () {
               ref.invalidate(kycStatusProvider);
               if (mounted) setState(() {});
@@ -93,7 +92,9 @@ class _KycScreenState extends ConsumerState<KycScreen> {
     if (kyc.isSubmitted) return _buildPendingState(context, theme, l10n);
     if (kyc.isRejected) {
       return _buildActionState(
-        context, theme, l10n,
+        context,
+        theme,
+        l10n,
         icon: Icons.error_outline,
         iconColor: theme.colorScheme.error,
         title: l10n.kycRejectedTitle,
@@ -102,7 +103,9 @@ class _KycScreenState extends ConsumerState<KycScreen> {
       );
     }
     return _buildActionState(
-      context, theme, l10n,
+      context,
+      theme,
+      l10n,
       icon: Icons.badge_outlined,
       iconColor: theme.colorScheme.primary,
       title: l10n.kycTitle,
@@ -128,8 +131,7 @@ class _KycScreenState extends ConsumerState<KycScreen> {
                     ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: AppDimens.spacingM),
             Text(l10n.kycApprovedBody,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium),
+                textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
           ],
         ),
       ),
@@ -152,8 +154,7 @@ class _KycScreenState extends ConsumerState<KycScreen> {
                     ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: AppDimens.spacingM),
             Text(l10n.kycPendingBody,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium),
+                textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
           ],
         ),
       ),
@@ -184,8 +185,7 @@ class _KycScreenState extends ConsumerState<KycScreen> {
                   ?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: AppDimens.spacingM),
           Text(body,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium),
+              textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
           if (showRequirements) ...[
             const SizedBox(height: AppDimens.spacingXL),
             _buildRequirementsList(theme, l10n),

@@ -36,25 +36,26 @@ class SellAssetScreen extends ConsumerWidget {
             const BrokerGateBanner(),
             Expanded(
               child: portfolioAsync.when(
-          loading: () =>
-              const Center(child: CircularProgressIndicator.adaptive()),
-          error: (error, _) => Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Text(
-                'Error loading holdings: $error',
-                style: theme.textTheme.bodyLarge?.copyWith(color: colors.error),
-                textAlign: TextAlign.center,
+                loading: () =>
+                    const Center(child: CircularProgressIndicator.adaptive()),
+                error: (error, _) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Text(
+                      'Error loading holdings: $error',
+                      style: theme.textTheme.bodyLarge
+                          ?.copyWith(color: colors.error),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                data: (portfolio) {
+                  if (portfolio.holdings.isEmpty) {
+                    return _buildEmptyState(context, theme, colors);
+                  }
+                  return _buildHoldingsList(context, portfolio.holdings);
+                },
               ),
-            ),
-          ),
-          data: (portfolio) {
-            if (portfolio.holdings.isEmpty) {
-              return _buildEmptyState(context, theme, colors);
-            }
-            return _buildHoldingsList(context, portfolio.holdings);
-          },
-        ),
             ),
           ],
         ),
@@ -338,8 +339,11 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
             backgroundColor: AppTheme.signalGreen,
           ),
         );
-        if (context.canPop()) context.pop();
-        else context.go('/home');
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/home');
+        }
       }
     });
 
@@ -391,7 +395,8 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        AppLocalizations.of(context).sellSharesOwned(_holding.quantity.toString()),
+                        AppLocalizations.of(context)
+                            .sellSharesOwned(_holding.quantity.toString()),
                         style: theme.textTheme.bodySmall
                             ?.copyWith(color: colors.onSurfaceVariant),
                       ),
@@ -411,15 +416,14 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   hintText: '0',
-                  hintStyle: theme.textTheme.headlineMedium?.copyWith(
-                      color: colors.outline.withValues(alpha: 0.4)),
+                  hintStyle: theme.textTheme.headlineMedium
+                      ?.copyWith(color: colors.outline.withValues(alpha: 0.4)),
                   filled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 16),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 inputFormatters: [ThousandsSeparatorInputFormatter()],
                 onChanged: (v) {
@@ -434,7 +438,8 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                       ThousandsSeparatorInputFormatter.parseFormatted(v);
                   if (qty == null || qty <= 0) return l10n.sellQuantityPositive;
                   if (qty > _holding.quantity) {
-                    return l10n.sellQuantityExceeds(_holding.quantity.toString());
+                    return l10n
+                        .sellQuantityExceeds(_holding.quantity.toString());
                   }
                   return null;
                 },
@@ -458,15 +463,12 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: isActive
-                                ? colors.onPrimary
-                                : colors.primary,
+                            color: isActive ? colors.onPrimary : colors.primary,
                           ),
                         ),
                         backgroundColor: isActive
                             ? colors.primary
-                            : colors.primaryContainer
-                                .withValues(alpha: 0.4),
+                            : colors.primaryContainer.withValues(alpha: 0.4),
                         side: BorderSide.none,
                         onPressed: () => _onChipTapped(index),
                       ),
@@ -486,16 +488,15 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   hintText: '0.00',
-                  hintStyle: theme.textTheme.headlineMedium?.copyWith(
-                      color: colors.outline.withValues(alpha: 0.4)),
+                  hintStyle: theme.textTheme.headlineMedium
+                      ?.copyWith(color: colors.outline.withValues(alpha: 0.4)),
                   prefixText: '\$ ',
                   filled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 16),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 16),
                   helperText: AppLocalizations.of(context).sellPricePerShare,
                 ),
                 inputFormatters: [ThousandsSeparatorInputFormatter()],
@@ -504,7 +505,9 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                   if (v == null || v.trim().isEmpty) return l10n.sellEnterPrice;
                   final price =
                       ThousandsSeparatorInputFormatter.parseFormatted(v);
-                  if (price == null || price <= 0) return l10n.sellQuantityPositive;
+                  if (price == null || price <= 0) {
+                    return l10n.sellQuantityPositive;
+                  }
                   return null;
                 },
               ),
@@ -542,9 +545,8 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
               PrimaryButton(
                 text: AppLocalizations.of(context).sellConfirm,
                 isLoading: isSubmitting,
-                onPressed: (_quantity > 0 && _pricePerUnit > 0)
-                    ? _submit
-                    : null,
+                onPressed:
+                    (_quantity > 0 && _pricePerUnit > 0) ? _submit : null,
               ),
             ],
           ),

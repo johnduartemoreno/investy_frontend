@@ -74,7 +74,8 @@ class NotificationService {
         }
         if (apnsToken == null) {
           // Still not ready — onTokenRefresh will register it once available.
-          debugPrint('[FCM] APNS token unavailable; deferring to onTokenRefresh');
+          debugPrint(
+              '[FCM] APNS token unavailable; deferring to onTokenRefresh');
           return;
         }
       }

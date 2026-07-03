@@ -32,9 +32,8 @@ Dio dio(Ref ref) {
         try {
           final user = FirebaseAuth.instance.currentUser;
           if (user != null) {
-            final token = await user
-                .getIdToken()
-                .timeout(const Duration(seconds: 5));
+            final token =
+                await user.getIdToken().timeout(const Duration(seconds: 5));
             options.headers['Authorization'] = 'Bearer $token';
           }
         } catch (_) {

@@ -127,120 +127,132 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-          // Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                AppLocalizations.of(context).withdrawCash,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => context.pop(),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-
-          // Available Balance
-          Text(
-            AppLocalizations.of(context).withdrawAvailableTo,
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: cs.outline,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          isLoadingData
-              ? const Center(child: CircularProgressIndicator.adaptive())
-              : Text(
-                  CurrencyFormatter.formatWithCurrency(maxAvailableDisplay, currency),
-                  style: theme.textTheme.displaySmall?.copyWith(
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  AppLocalizations.of(context).withdrawCash,
+                  style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: cs.primary,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-          const SizedBox(height: 32),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => context.pop(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
 
-          // Input
-          Form(
-            key: _formKey,
-            child: TextFormField(
-              controller: _amountController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              style: theme.textTheme.displayMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+            // Available Balance
+            Text(
+              AppLocalizations.of(context).withdrawAvailableTo,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: cs.outline,
               ),
               textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                prefixText: '${CurrencyFormatter.symbolFor(currency)} ',
-                hintText: '0',
-                border: InputBorder.none,
-                hintStyle: theme.textTheme.displayMedium?.copyWith(
-                  color: cs.outline.withValues(alpha: 0.5),
-                ),
-              ),
-              inputFormatters: [
-                ThousandsSeparatorInputFormatter(),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _amount = ThousandsSeparatorInputFormatter.parseFormatted(value) ?? 0.0;
-                });
-              },
-              validator: (value) {
-                final l10n = AppLocalizations.of(context);
-                if (value == null || value.isEmpty) return l10n.withdrawEnterAmount;
-                final val = ThousandsSeparatorInputFormatter.parseFormatted(value);
-                if (val == null || val <= 0) return l10n.withdrawAmountPositive;
-                if (val > maxAvailableDisplay) return l10n.withdrawInsufficientFunds;
-                return null;
-              },
             ),
-          ),
-          const SizedBox(height: 24),
+            const SizedBox(height: 8),
+            isLoadingData
+                ? const Center(child: CircularProgressIndicator.adaptive())
+                : Text(
+                    CurrencyFormatter.formatWithCurrency(
+                        maxAvailableDisplay, currency),
+                    style: theme.textTheme.displaySmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: cs.primary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+            const SizedBox(height: 32),
 
-          // Quick Actions
-          Row(
-            children: [
-              Expanded(
-                child: _QuickActionChip(
-                  label: '25%',
-                  onTap: () => _updateAmount(maxAvailableDisplay * 0.25),
+            // Input
+            Form(
+              key: _formKey,
+              child: TextFormField(
+                controller: _amountController,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                style: theme.textTheme.displayMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: _QuickActionChip(
-                  label: '50%',
-                  onTap: () => _updateAmount(maxAvailableDisplay * 0.50),
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  prefixText: '${CurrencyFormatter.symbolFor(currency)} ',
+                  hintText: '0',
+                  border: InputBorder.none,
+                  hintStyle: theme.textTheme.displayMedium?.copyWith(
+                    color: cs.outline.withValues(alpha: 0.5),
+                  ),
                 ),
+                inputFormatters: [
+                  ThousandsSeparatorInputFormatter(),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _amount = ThousandsSeparatorInputFormatter.parseFormatted(
+                            value) ??
+                        0.0;
+                  });
+                },
+                validator: (value) {
+                  final l10n = AppLocalizations.of(context);
+                  if (value == null || value.isEmpty) {
+                    return l10n.withdrawEnterAmount;
+                  }
+                  final val =
+                      ThousandsSeparatorInputFormatter.parseFormatted(value);
+                  if (val == null || val <= 0) {
+                    return l10n.withdrawAmountPositive;
+                  }
+                  if (val > maxAvailableDisplay) {
+                    return l10n.withdrawInsufficientFunds;
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: _QuickActionChip(
-                  label: 'MAX',
-                  onTap: () => _updateAmount(maxAvailableDisplay),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
+            ),
+            const SizedBox(height: 24),
 
-          // Action Button
-          PrimaryButton(
-            text: AppLocalizations.of(context).withdrawConfirmButton,
-            isLoading: _isLoading,
-            onPressed: _isLoading ? null : () => _handleWithdraw(maxAvailableDisplay),
-          ),
-        ],
+            // Quick Actions
+            Row(
+              children: [
+                Expanded(
+                  child: _QuickActionChip(
+                    label: '25%',
+                    onTap: () => _updateAmount(maxAvailableDisplay * 0.25),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _QuickActionChip(
+                    label: '50%',
+                    onTap: () => _updateAmount(maxAvailableDisplay * 0.50),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _QuickActionChip(
+                    label: 'MAX',
+                    onTap: () => _updateAmount(maxAvailableDisplay),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // Action Button
+            PrimaryButton(
+              text: AppLocalizations.of(context).withdrawConfirmButton,
+              isLoading: _isLoading,
+              onPressed: _isLoading
+                  ? null
+                  : () => _handleWithdraw(maxAvailableDisplay),
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 }

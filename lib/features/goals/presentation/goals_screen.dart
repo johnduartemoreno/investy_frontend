@@ -45,7 +45,8 @@ class GoalsScreen extends ConsumerWidget {
         ),
         loading: () =>
             const Center(child: CircularProgressIndicator.adaptive()),
-        error: (err, stack) => Center(child: Text(AppLocalizations.of(context).commonError)),
+        error: (err, stack) =>
+            Center(child: Text(AppLocalizations.of(context).commonError)),
       ),
       floatingActionButton: GradientPillButton(
         label: AppLocalizations.of(context).goalsAddButton,
@@ -105,27 +106,41 @@ class _GoalCardState extends State<_GoalCard>
 
   IconData _categoryIcon(String category) {
     switch (category.toLowerCase()) {
-      case 'car': return Icons.directions_car;
-      case 'home': return Icons.home;
+      case 'car':
+        return Icons.directions_car;
+      case 'home':
+        return Icons.home;
       case 'vacation':
-      case 'travel': return Icons.flight;
-      case 'education': return Icons.school;
-      case 'emergency': return Icons.shield;
-      case 'health': return Icons.favorite;
-      default: return Icons.flag;
+      case 'travel':
+        return Icons.flight;
+      case 'education':
+        return Icons.school;
+      case 'emergency':
+        return Icons.shield;
+      case 'health':
+        return Icons.favorite;
+      default:
+        return Icons.flag;
     }
   }
 
   List<Color> _categoryGradient(String category) {
     switch (category.toLowerCase()) {
-      case 'car': return [const Color(0xFF1d4ed8), const Color(0xFF3b82f6)];
-      case 'home': return [const Color(0xFF065f46), const Color(0xFF10b981)];
+      case 'car':
+        return [const Color(0xFF1d4ed8), const Color(0xFF3b82f6)];
+      case 'home':
+        return [const Color(0xFF065f46), const Color(0xFF10b981)];
       case 'vacation':
-      case 'travel': return [const Color(0xFF0369a1), const Color(0xFF38bdf8)];
-      case 'education': return [AppTheme.brandPurple, AppTheme.brandPurpleLight];
-      case 'emergency': return [const Color(0xFF991b1b), const Color(0xFFf87171)];
-      case 'health': return [const Color(0xFF9d174d), const Color(0xFFf472b6)];
-      default: return [const Color(0xFF78350f), const Color(0xFFf59e0b)];
+      case 'travel':
+        return [const Color(0xFF0369a1), const Color(0xFF38bdf8)];
+      case 'education':
+        return [AppTheme.brandPurple, AppTheme.brandPurpleLight];
+      case 'emergency':
+        return [const Color(0xFF991b1b), const Color(0xFFf87171)];
+      case 'health':
+        return [const Color(0xFF9d174d), const Color(0xFFf472b6)];
+      default:
+        return [const Color(0xFF78350f), const Color(0xFFf59e0b)];
     }
   }
 
@@ -145,104 +160,106 @@ class _GoalCardState extends State<_GoalCard>
     return GestureDetector(
       onTap: () => context.push('/goals/${widget.goal.id}', extra: widget.goal),
       child: CustomCard(
-      padding: const EdgeInsets.all(14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header — icon + name + progress badge
-          Row(
-            children: [
-              GradientIconBox(
-                colors: gradient,
-                circle: true,
-                child: Icon(_categoryIcon(widget.goal.category),
-                    size: 20, color: Colors.white),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  widget.goal.name,
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w700),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(width: 8),
-              SignalBadge(
-                label: '${(progress * 100).toStringAsFixed(1)}%',
-                color: cs.primary,
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          // Progress bar + amounts with left accent
-          LeftAccentBox(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header — icon + name + progress badge
+            Row(
               children: [
-                AnimatedBuilder(
-                  animation: _progressAnim,
-                  builder: (_, __) => LinearProgressIndicator(
-                    value: _progressAnim.value * progress,
-                    backgroundColor: cs.surfaceContainerHighest,
-                    minHeight: 6,
-                    borderRadius: BorderRadius.circular(4),
+                GradientIconBox(
+                  colors: gradient,
+                  circle: true,
+                  child: Icon(_categoryIcon(widget.goal.category),
+                      size: 20, color: Colors.white),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    widget.goal.name,
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w700),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _AmountLabel(
-                      label: l10n.goalSaved,
-                      value: CurrencyFormatter.formatWithCurrency(
-                          widget.goal.currentAmount * widget.fxRate, widget.currency),
-                      theme: theme,
-                    ),
-                    _AmountLabel(
-                      label: l10n.goalTarget,
-                      value: CurrencyFormatter.formatWithCurrency(
-                          widget.goal.targetAmount * widget.fxRate, widget.currency),
-                      theme: theme,
-                      alignEnd: true,
-                    ),
-                  ],
+                const SizedBox(width: 8),
+                SignalBadge(
+                  label: '${(progress * 100).toStringAsFixed(1)}%',
+                  color: cs.primary,
                 ),
-                // Breakdown — only when holdings are assigned to this goal.
-                if (widget.goal.hasInvestments) ...[
+              ],
+            ),
+            const SizedBox(height: 10),
+            // Progress bar + amounts with left accent
+            LeftAccentBox(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnimatedBuilder(
+                    animation: _progressAnim,
+                    builder: (_, __) => LinearProgressIndicator(
+                      value: _progressAnim.value * progress,
+                      backgroundColor: cs.surfaceContainerHighest,
+                      minHeight: 6,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _AmountLabel(
-                        label: l10n.goalCash,
+                        label: l10n.goalSaved,
                         value: CurrencyFormatter.formatWithCurrency(
-                            widget.goal.cashContributed * widget.fxRate,
+                            widget.goal.currentAmount * widget.fxRate,
                             widget.currency),
                         theme: theme,
                       ),
                       _AmountLabel(
-                        label: l10n.goalInvested,
+                        label: l10n.goalTarget,
                         value: CurrencyFormatter.formatWithCurrency(
-                            widget.goal.investedValue * widget.fxRate,
+                            widget.goal.targetAmount * widget.fxRate,
                             widget.currency),
                         theme: theme,
                         alignEnd: true,
                       ),
                     ],
                   ),
+                  // Breakdown — only when holdings are assigned to this goal.
+                  if (widget.goal.hasInvestments) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _AmountLabel(
+                          label: l10n.goalCash,
+                          value: CurrencyFormatter.formatWithCurrency(
+                              widget.goal.cashContributed * widget.fxRate,
+                              widget.currency),
+                          theme: theme,
+                        ),
+                        _AmountLabel(
+                          label: l10n.goalInvested,
+                          value: CurrencyFormatter.formatWithCurrency(
+                              widget.goal.investedValue * widget.fxRate,
+                              widget.currency),
+                          theme: theme,
+                          alignEnd: true,
+                        ),
+                      ],
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '${l10n.goalDeadline}: ${_formatDate(widget.goal.deadlineDate)}',
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: cs.onSurfaceVariant),
-          ),
-        ],
-      ),
+            const SizedBox(height: 8),
+            Text(
+              '${l10n.goalDeadline}: ${_formatDate(widget.goal.deadlineDate)}',
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: cs.onSurfaceVariant),
+            ),
+          ],
+        ),
       ),
     );
   }

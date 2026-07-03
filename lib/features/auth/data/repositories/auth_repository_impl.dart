@@ -17,7 +17,6 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> login(String email, String password) async {
     try {
       final user = await remoteDataSource.login(email, password);
-      // TODO: Save token to local storage
       return Right(user);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
@@ -25,8 +24,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> signUp(
-      String name, String email, String password, String displayCurrency) async {
+  Future<Either<Failure, User>> signUp(String name, String email,
+      String password, String displayCurrency) async {
     try {
       final user =
           await remoteDataSource.signUp(name, email, password, displayCurrency);
@@ -67,12 +66,6 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> getCurrentUser() async {
-    // TODO: implement check local storage
-    return const Left(CacheFailure('No user found'));
-  }
-
-  @override
   Future<Either<Failure, void>> forgotPassword(String email) async {
     try {
       await remoteDataSource.forgotPassword(email);
@@ -93,7 +86,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteAccountEmail(String currentPassword) async {
+  Future<Either<Failure, void>> deleteAccountEmail(
+      String currentPassword) async {
     try {
       await remoteDataSource.deleteAccountEmail(currentPassword);
       return const Right(null);

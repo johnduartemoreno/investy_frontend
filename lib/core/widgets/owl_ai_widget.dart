@@ -62,10 +62,8 @@ class _OwlAiWidgetState extends State<OwlAiWidget>
       duration: const Duration(milliseconds: 160),
     );
     _blinkAnim = TweenSequence<double>([
-      TweenSequenceItem(
-          tween: Tween(begin: 1.0, end: 0.08), weight: 40),
-      TweenSequenceItem(
-          tween: Tween(begin: 0.08, end: 1.0), weight: 60),
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.08), weight: 40),
+      TweenSequenceItem(tween: Tween(begin: 0.08, end: 1.0), weight: 60),
     ]).animate(_blinkCtrl);
     _scheduleBlink();
 
@@ -393,11 +391,18 @@ class _OwlPainter extends CustomPainter {
       Offset(50 * s, 10 * s),
     ];
     final radii = [2.0, 1.5, 1.2, 1.8, 1.0, 1.4];
-    final colors = [_brandLight, _brand, _brandLight, _brand, _brandLight, _brand];
+    final colors = [
+      _brandLight,
+      _brand,
+      _brandLight,
+      _brand,
+      _brandLight,
+      _brand
+    ];
 
     for (var i = 0; i < positions.length; i++) {
-      final alpha = (math.sin(t * math.pi) * (i.isEven ? 1.0 : 0.7))
-          .clamp(0.0, 1.0);
+      final alpha =
+          (math.sin(t * math.pi) * (i.isEven ? 1.0 : 0.7)).clamp(0.0, 1.0);
       paint.color = colors[i].withValues(alpha: alpha);
       final radius = radii[i] * s * (0.5 + t * 0.8);
       canvas.drawCircle(positions[i], radius, paint);

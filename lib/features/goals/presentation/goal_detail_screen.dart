@@ -207,8 +207,7 @@ class _GoalDetailBody extends ConsumerWidget {
                     const GradientIconBox(
                       colors: [Color(0xFF065f46), Color(0xFF10b981)],
                       circle: true,
-                      child:
-                          Icon(Icons.savings, size: 20, color: Colors.white),
+                      child: Icon(Icons.savings, size: 20, color: Colors.white),
                     ),
                     const SizedBox(width: AppDimens.spacingM),
                     Expanded(

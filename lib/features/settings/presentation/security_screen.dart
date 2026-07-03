@@ -91,7 +91,8 @@ class SecurityScreen extends ConsumerWidget {
     final cs = Theme.of(context).colorScheme;
     return ListTile(
       enabled: enabled,
-      leading: Icon(icon, color: enabled ? (iconColor ?? cs.primary) : cs.onSurfaceVariant),
+      leading: Icon(icon,
+          color: enabled ? (iconColor ?? cs.primary) : cs.onSurfaceVariant),
       title: Text(
         title,
         style: TextStyle(
@@ -256,7 +257,8 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
                 controller: _currentCtrl,
                 label: _l10n.changePasswordCurrent,
                 obscure: _obscureCurrent,
-                onToggle: () => setState(() => _obscureCurrent = !_obscureCurrent),
+                onToggle: () =>
+                    setState(() => _obscureCurrent = !_obscureCurrent),
                 validator: (v) =>
                     (v == null || v.isEmpty) ? _l10n.errorRequiredField : null,
               ),
@@ -277,7 +279,8 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
                 controller: _confirmCtrl,
                 label: _l10n.changePasswordConfirm,
                 obscure: _obscureConfirm,
-                onToggle: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                onToggle: () =>
+                    setState(() => _obscureConfirm = !_obscureConfirm),
                 validator: (v) {
                   if (v == null || v.isEmpty) return _l10n.errorRequiredField;
                   if (v != _newCtrl.text) return _l10n.errorPasswordMismatch;
@@ -491,7 +494,9 @@ class _PasswordField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         suffixIcon: IconButton(
-          icon: Icon(obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+          icon: Icon(obscure
+              ? Icons.visibility_outlined
+              : Icons.visibility_off_outlined),
           onPressed: onToggle,
         ),
         border: OutlineInputBorder(
@@ -504,7 +509,8 @@ class _PasswordField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppDimens.radius),
-          borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary),
+          borderSide: BorderSide(
+              width: 2, color: Theme.of(context).colorScheme.primary),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppDimens.radius),
@@ -512,7 +518,8 @@ class _PasswordField extends StatelessWidget {
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppDimens.radius),
-          borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary),
+          borderSide: BorderSide(
+              width: 2, color: Theme.of(context).colorScheme.primary),
         ),
         filled: true,
         contentPadding: const EdgeInsets.all(AppDimens.spacingL),

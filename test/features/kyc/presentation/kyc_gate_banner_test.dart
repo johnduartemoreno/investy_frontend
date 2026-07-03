@@ -19,7 +19,8 @@ Widget _wrap(Widget child, Override override) {
 }
 
 void main() {
-  testWidgets('KycGateBanner is invisible when KYC is approved', (tester) async {
+  testWidgets('KycGateBanner is invisible when KYC is approved',
+      (tester) async {
     await tester.pumpWidget(_wrap(
       const KycGateBanner(),
       kycStatusProvider.overrideWith(
@@ -30,7 +31,8 @@ void main() {
     expect(find.byType(GestureDetector), findsNothing);
   });
 
-  testWidgets('KycGateBanner shows required banner when not_started', (tester) async {
+  testWidgets('KycGateBanner shows required banner when not_started',
+      (tester) async {
     await tester.pumpWidget(_wrap(
       const KycGateBanner(),
       kycStatusProvider.overrideWith(
@@ -41,7 +43,8 @@ void main() {
     expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
   });
 
-  testWidgets('KycGateBanner shows pending banner when submitted', (tester) async {
+  testWidgets('KycGateBanner shows pending banner when submitted',
+      (tester) async {
     await tester.pumpWidget(_wrap(
       const KycGateBanner(),
       kycStatusProvider.overrideWith(

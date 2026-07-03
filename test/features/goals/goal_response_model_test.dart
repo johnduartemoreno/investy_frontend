@@ -51,15 +51,18 @@ void main() {
     });
 
     test('null when already reached', () {
-      expect(_goal(target: 1000, current: 1000).projectedCompletionDate, isNull);
+      expect(
+          _goal(target: 1000, current: 1000).projectedCompletionDate, isNull);
     });
 
     test('null when created less than a day ago (rate not meaningful)', () {
-      final g = _goal(current: 500000, createdAt: DateTime.now().toIso8601String());
+      final g =
+          _goal(current: 500000, createdAt: DateTime.now().toIso8601String());
       expect(g.projectedCompletionDate, isNull);
     });
 
-    test('null when projection exceeds ~100 years (tiny rate vs huge target)', () {
+    test('null when projection exceeds ~100 years (tiny rate vs huge target)',
+        () {
       // €160 saved over 100 days toward a €10M target → projection ~ year 12000.
       final created = DateTime.now().subtract(const Duration(days: 100));
       final g = _goal(

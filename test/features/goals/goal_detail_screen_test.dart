@@ -55,7 +55,7 @@ void main() {
     await tester.pumpWidget(buildSubject(_goal(invested: 0)));
     await tester.pumpAndSettle();
 
-    expect(find.text('No investments assigned to this goal yet.'),
-        findsOneWidget);
+    expect(
+        find.text('No investments assigned to this goal yet.'), findsOneWidget);
   });
 }

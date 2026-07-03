@@ -97,8 +97,8 @@ class _ProfileContent extends StatelessWidget {
           const SizedBox(height: AppDimens.spacingL),
           Text(
             desc,
-            style: theme.textTheme.bodyLarge
-                ?.copyWith(color: cs.onSurfaceVariant),
+            style:
+                theme.textTheme.bodyLarge?.copyWith(color: cs.onSurfaceVariant),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppDimens.spacingXL),

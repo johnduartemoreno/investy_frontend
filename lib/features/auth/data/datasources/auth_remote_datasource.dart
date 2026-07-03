@@ -80,8 +80,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<UserModel> signUp(
-      String name, String email, String password, String displayCurrency) async {
+  Future<UserModel> signUp(String name, String email, String password,
+      String displayCurrency) async {
     try {
       debugPrint('🔥 [AuthRemoteDataSource] Creating account for $email...');
 
@@ -108,9 +108,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           '/api/v1/users/${firebaseUser.uid}/onboard',
           data: {'displayCurrency': displayCurrency},
         );
-        debugPrint('🔥 [AuthRemoteDataSource] Backend user registered with currency $displayCurrency');
+        debugPrint(
+            '🔥 [AuthRemoteDataSource] Backend user registered with currency $displayCurrency');
       } catch (e) {
-        debugPrint('🔥 [AuthRemoteDataSource] onboard call failed (non-fatal): $e');
+        debugPrint(
+            '🔥 [AuthRemoteDataSource] onboard call failed (non-fatal): $e');
       }
 
       debugPrint(
@@ -251,7 +253,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return UserModel(
         id: firebaseUser.uid,
         email: firebaseUser.email ?? '',
-        name: firebaseUser.displayName ?? firebaseUser.email?.split('@')[0] ?? '',
+        name:
+            firebaseUser.displayName ?? firebaseUser.email?.split('@')[0] ?? '',
       );
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
@@ -325,7 +328,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       await dio.delete('/api/v1/users/$uid');
     } catch (e) {
-      debugPrint('🔥 [AuthRemoteDataSource] Backend delete failed (continuing): $e');
+      debugPrint(
+          '🔥 [AuthRemoteDataSource] Backend delete failed (continuing): $e');
     }
   }
 }

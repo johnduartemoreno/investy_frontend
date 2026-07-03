@@ -18,7 +18,8 @@ void main() {
 
   const tEmail = 'test@example.com';
 
-  test('should call repository.forgotPassword with email and return Right(null)',
+  test(
+      'should call repository.forgotPassword with email and return Right(null)',
       () async {
     when(() => mockAuthRepository.forgotPassword(any()))
         .thenAnswer((_) async => const Right(null));
@@ -32,7 +33,7 @@ void main() {
 
   test('should return Left(Failure) when repository returns failure', () async {
     when(() => mockAuthRepository.forgotPassword(any()))
-        .thenAnswer((_) async => Left(ServerFailure('Network error')));
+        .thenAnswer((_) async => const Left(ServerFailure('Network error')));
 
     final result = await useCase(ForgotPasswordParams(email: tEmail));
 

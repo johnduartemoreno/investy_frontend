@@ -31,9 +31,8 @@ class PortfolioScreen extends ConsumerWidget {
       ),
       body: portfolioAsync.when(
         data: (portfolio) {
-          final active = portfolio.holdings
-              .where((h) => h.quantityUnits > 0)
-              .toList();
+          final active =
+              portfolio.holdings.where((h) => h.quantityUnits > 0).toList();
           if (active.isEmpty) {
             return _buildEmptyState(context);
           }
@@ -120,21 +119,23 @@ class PortfolioScreen extends ConsumerWidget {
                       decoration:
                           BoxDecoration(color: color, shape: BoxShape.circle)),
                   const SizedBox(width: 16),
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Container(
-                        width: 80,
-                        height: 16,
-                        decoration: BoxDecoration(
-                            color: color,
-                            borderRadius: BorderRadius.circular(4))),
-                    const SizedBox(height: 8),
-                    Container(
-                        width: 40,
-                        height: 12,
-                        decoration: BoxDecoration(
-                            color: color,
-                            borderRadius: BorderRadius.circular(4))),
-                  ]),
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            width: 80,
+                            height: 16,
+                            decoration: BoxDecoration(
+                                color: color,
+                                borderRadius: BorderRadius.circular(4))),
+                        const SizedBox(height: 8),
+                        Container(
+                            width: 40,
+                            height: 12,
+                            decoration: BoxDecoration(
+                                color: color,
+                                borderRadius: BorderRadius.circular(4))),
+                      ]),
                 ]),
                 Container(
                     width: 60,

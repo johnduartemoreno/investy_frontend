@@ -18,15 +18,13 @@ class BrokerRemoteDataSourceImpl implements BrokerRemoteDataSource {
 
   @override
   Future<BrokerAccountModel> getAccount(String userId) async {
-    final response =
-        await _dio.get('/api/v1/users/$userId/broker-account');
+    final response = await _dio.get('/api/v1/users/$userId/broker-account');
     return BrokerAccountModel.fromJson(response.data as Map<String, dynamic>);
   }
 
   @override
   Future<BrokerAccountModel> openAccount(String userId) async {
-    final response =
-        await _dio.post('/api/v1/users/$userId/broker-account');
+    final response = await _dio.post('/api/v1/users/$userId/broker-account');
     return BrokerAccountModel.fromJson(response.data as Map<String, dynamic>);
   }
 }
