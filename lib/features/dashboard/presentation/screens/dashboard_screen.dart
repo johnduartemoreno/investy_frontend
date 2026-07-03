@@ -22,6 +22,7 @@ import '../../data/models/dashboard_response_model.dart';
 import '../../data/models/recommendation_model.dart';
 import '../providers/recommendation_provider.dart';
 import '../../../goals/presentation/providers/rest_goals_provider.dart';
+import '../../../settings/presentation/providers/avatar_upload_provider.dart';
 import '../widgets/withdraw_bottom_sheet.dart';
 import '../../domain/entities/contribution.dart';
 import '../../domain/entities/transaction.dart';
@@ -256,7 +257,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final rawName = userNameAsync.valueOrNull ?? '';
     final firstName = _firstName(rawName);
     final greeting = _greeting(l10n);
-    final photoURL = FirebaseAuth.instance.currentUser?.photoURL;
+    // B39 F2 (B34): watch avatarUrlProvider instead of reading
+    // FirebaseAuth.instance synchronously — testable via override, and the
+    // header refreshes when a new avatar is uploaded in Settings.
+    final photoURL = ref.watch(avatarUrlProvider);
     final initial = rawName.isNotEmpty ? rawName.trim()[0].toUpperCase() : '?';
 
     return Row(
