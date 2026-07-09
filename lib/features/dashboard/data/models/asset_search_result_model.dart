@@ -22,7 +22,9 @@ class AssetSearchResultModel {
       symbol: json['symbol'] as String? ?? '',
       name: json['name'] as String? ?? '',
       assetClass: json['assetClass'] as String? ?? 'stock',
-      currentPriceCents: (json['currentPriceCents'] as num?)?.toInt() ?? 0,
+      // No default — this price feeds the BUY flow; a fake $0.00 here
+      // would let the user submit a zero-priced order (B40-F7).
+      currentPriceCents: (json['currentPriceCents'] as num).toInt(),
       logoUrl: json['logoUrl'] as String? ?? '',
     );
   }
