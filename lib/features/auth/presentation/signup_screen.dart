@@ -66,7 +66,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimens.radiusBottomSheet)),
       ),
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setModalState) => Padding(
@@ -380,7 +380,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                               // Display currency selector
                               InkWell(
                                 onTap: () => _pickCurrency(context),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                                 child: InputDecorator(
                                   decoration: InputDecoration(
                                     hintText: l10n.signupCurrencyLabel,

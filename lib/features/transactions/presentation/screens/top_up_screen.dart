@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../dashboard/data/datasources/dashboard_remote_data_source.dart';
@@ -271,10 +272,10 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
 
                 // ── Funding Source (Mock) ──
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(AppDimens.spacingL),
                   decoration: BoxDecoration(
                     color: colorScheme.surfaceContainerLow,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                   ),
                   child: Row(
                     children: [
@@ -326,7 +327,7 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                     ),
                   ),
                   child: topUpState.status == TopUpStatus.loading
@@ -373,12 +374,12 @@ class _QuickAmountChip extends StatelessWidget {
     return Expanded(
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimens.radiusPill),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             border: Border.all(color: theme.colorScheme.outlineVariant),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppDimens.radiusPill),
           ),
           child: Text(
             label,

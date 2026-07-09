@@ -132,7 +132,7 @@ class SellAssetScreen extends ConsumerWidget {
       isScrollControlled: true,
       useSafeArea: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimens.radiusBottomSheet)),
       ),
       builder: (_) => _SellBottomSheet(holding: holding),
     );
@@ -170,10 +170,10 @@ class _HoldingListTile extends StatelessWidget {
     return Card(
       elevation: 0,
       color: colors.surfaceContainerLow,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Row(
@@ -420,7 +420,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                       ?.copyWith(color: colors.outline.withValues(alpha: 0.4)),
                   filled: true,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                     borderSide: BorderSide.none,
                   ),
                   contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -493,7 +493,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                   prefixText: '\$ ',
                   filled: true,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                     borderSide: BorderSide.none,
                   ),
                   contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -519,7 +519,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                   padding: const EdgeInsets.all(AppDimens.spacingL),
                   decoration: BoxDecoration(
                     color: colors.surfaceContainerLow,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

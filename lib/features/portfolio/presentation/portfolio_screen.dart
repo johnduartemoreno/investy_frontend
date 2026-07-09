@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/asset_gradients.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/gradient_icon_box.dart';
 import '../../../../core/presentation/widgets/gradient_pill_button.dart';
@@ -106,7 +107,7 @@ class PortfolioScreen extends ConsumerWidget {
     final color = Theme.of(context).colorScheme.surfaceContainerHighest;
     return CustomCard(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimens.spacingL),
         child: Column(
           children: [
             Row(
@@ -204,16 +205,7 @@ class _HoldingCard extends StatelessWidget {
     required this.fxRate,
   });
 
-  List<Color> _assetGradient() {
-    switch (holding.assetClass) {
-      case 'crypto':
-        return [const Color(0xFF78350f), const Color(0xFFf59e0b)];
-      case 'etf':
-        return [AppTheme.brandPurple, AppTheme.brandPurpleLight];
-      default:
-        return [const Color(0xFF1d4ed8), const Color(0xFF3b82f6)];
-    }
-  }
+  List<Color> _assetGradient() => AssetGradients.assetClass(holding.assetClass);
 
   String _assetClassLabel(AppLocalizations l10n) {
     switch (holding.assetClass) {

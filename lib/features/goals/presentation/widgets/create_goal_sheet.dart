@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/presentation/widgets/primary_button.dart';
+import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../features/dashboard/data/datasources/dashboard_remote_data_source.dart';
 import '../../../../features/dashboard/data/models/create_goal_request_model.dart';
@@ -163,7 +164,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                 hintText: 'Goal name',
                 prefixIcon: const Icon(Icons.flag_outlined),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
@@ -203,7 +204,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                 ),
                 filled: true,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                   borderSide: BorderSide.none,
                 ),
                 contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -250,7 +251,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                         color: isActive
                             ? colorScheme.primaryContainer
                             : colorScheme.surfaceContainerLow,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusPill),
                         border: isActive
                             ? Border.all(color: colorScheme.primary, width: 1.5)
                             : Border.all(
@@ -281,7 +282,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                           (_activePreset == null && _selectedDeadline != null)
                               ? colorScheme.primaryContainer
                               : colorScheme.surfaceContainerLow,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusPill),
                       border: (_activePreset == null &&
                               _selectedDeadline != null)
                           ? Border.all(color: colorScheme.primary, width: 1.5)
@@ -375,7 +376,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                       color: isSelected
                           ? colorScheme.primaryContainer
                           : colorScheme.surfaceContainerLow,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusPill),
                       border: isSelected
                           ? Border.all(color: colorScheme.primary, width: 1.5)
                           : null,

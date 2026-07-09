@@ -113,7 +113,7 @@ class SecurityScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimens.radiusBottomSheet)),
       ),
       builder: (_) => const _ChangePasswordSheet(),
     );
@@ -151,7 +151,7 @@ class SecurityScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimens.radiusBottomSheet)),
       ),
       builder: (_) => _DeleteAccountSheet(isGoogle: isGoogle, ref: ref),
     );

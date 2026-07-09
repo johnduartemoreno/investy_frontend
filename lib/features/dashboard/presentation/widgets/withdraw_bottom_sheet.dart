@@ -271,12 +271,12 @@ class _QuickActionChip extends StatelessWidget {
     final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(AppDimens.radiusPill),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           border: Border.all(color: theme.colorScheme.outlineVariant),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppDimens.radiusPill),
         ),
         child: Text(
           label,

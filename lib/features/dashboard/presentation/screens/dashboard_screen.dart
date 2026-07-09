@@ -12,6 +12,7 @@ import '../../../../core/presentation/widgets/signal_badge.dart';
 import '../../../../core/providers/locale_provider.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/asset_gradients.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/widgets/owl_ai_widget.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -345,7 +346,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppDimens.radiusBottomSheet),
         gradient: const LinearGradient(
           colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
           begin: Alignment.topLeft,
@@ -452,7 +453,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 width: 6,
                 height: 6,
                 decoration: const BoxDecoration(
-                  color: Color(0xFF4ade80),
+                  color: AppTheme.signalGreen,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -476,7 +477,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       onTap: () => _openOwlSheet(),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppDimens.radiusPill),
           color: theme.colorScheme.surfaceContainerHigh,
           border: Border.all(
             color: AppTheme.brandPurple.withValues(alpha: 0.35),
@@ -489,7 +490,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ),
           ],
         ),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimens.spacingL),
         child: Row(
           children: [
             const OwlAiWidget(size: 52, state: OwlState.idle),
@@ -521,7 +522,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 gradient: const LinearGradient(
                   colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
                 ),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(AppDimens.radiusPill),
               ),
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
@@ -561,10 +562,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Widget _buildQuickActions(ThemeData theme, AppLocalizations l10n) {
-    const buyColor = Color(0xFF4ade80);
-    const sellColor = Color(0xFFf87171);
+    const buyColor = AppTheme.signalGreen;
+    const sellColor = AppTheme.signalRed;
     const topUpColor = AppTheme.brandPurpleLight;
-    const withdrawColor = Color(0xFFfbbf24);
+    const withdrawColor = AppTheme.signalYellow;
 
     final actions = [
       (
@@ -726,7 +727,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       color: theme.colorScheme.surfaceContainerLow,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
         side: BorderSide(color: theme.colorScheme.outlineVariant),
       ),
       child: ListTile(
@@ -772,7 +773,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       color: theme.colorScheme.surfaceContainerLow,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
         side: BorderSide(color: theme.colorScheme.outlineVariant),
       ),
       child: ListTile(
@@ -889,9 +890,12 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
         return Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surfaceContainer,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-            border: const Border(
-              top: BorderSide(color: Color(0x596C63FF), width: 1),
+            borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(AppDimens.radiusBottomSheet)),
+            border: Border(
+              top: BorderSide(
+                  color: AppTheme.brandPurple.withValues(alpha: 0.35),
+                  width: 1),
             ),
           ),
           child: Column(
@@ -950,7 +954,7 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                                       AppTheme.brandPurpleLight
                                     ],
                                   ),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(AppDimens.radiusPill),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -1061,7 +1065,7 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: AppTheme.brandPurple.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusPill),
                     border: Border.all(
                         color: AppTheme.brandPurple.withValues(alpha: 0.4)),
                   ),
@@ -1168,7 +1172,7 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
         border: Border.all(
           color: AppTheme.brandPurple.withValues(alpha: 0.25),
         ),
@@ -1278,7 +1282,7 @@ class _RecCardState extends State<_RecCard>
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppDimens.radiusCard),
             border: Border.all(
               color: AppTheme.brandPurple.withValues(alpha: 0.35),
             ),
@@ -1369,15 +1373,7 @@ class _RecCardState extends State<_RecCard>
   }
 
   Widget _tickerIcon(String ticker) {
-    const colorMap = {
-      'AAPL': [Color(0xFF1d4ed8), Color(0xFF3b82f6)],
-      'VTI': [Color(0xFF065f46), Color(0xFF10b981)],
-      'BTC': [Color(0xFF78350f), Color(0xFFf59e0b)],
-      'MSFT': [Color(0xFF4c1d95), Color(0xFF8b5cf6)],
-      'IAU': [Color(0xFF881337), Color(0xFFf43f5e)],
-    };
-    final c =
-        colorMap[ticker] ?? [AppTheme.brandPurple, AppTheme.brandPurpleLight];
+    final c = AssetGradients.ticker(ticker);
     final displayLabel = ticker.length > 4 ? ticker.substring(0, 4) : ticker;
 
     return GradientIconBox(
@@ -1445,16 +1441,7 @@ class _ActivityDetailSheet extends ConsumerWidget {
   final ActivityItem item;
   const _ActivityDetailSheet({required this.item});
 
-  static const _colorMap = {
-    'AAPL': [Color(0xFF1d4ed8), Color(0xFF3b82f6)],
-    'VTI': [Color(0xFF065f46), Color(0xFF10b981)],
-    'BTC': [Color(0xFF78350f), Color(0xFFf59e0b)],
-    'MSFT': [Color(0xFF4c1d95), Color(0xFF8b5cf6)],
-    'IAU': [Color(0xFF881337), Color(0xFFf43f5e)],
-  };
-
-  List<Color> _tickerColors(String ticker) =>
-      _colorMap[ticker] ?? [AppTheme.brandPurple, AppTheme.brandPurpleLight];
+  List<Color> _tickerColors(String ticker) => AssetGradients.ticker(ticker);
 
   String _formatQuantity(double qty) {
     if (qty == qty.truncateToDouble()) return qty.toStringAsFixed(0);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_dimens.dart';
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/asset_gradients.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/gradient_icon_box.dart';
 import '../../../../core/presentation/widgets/gradient_pill_button.dart';
@@ -55,7 +55,7 @@ class GoalsScreen extends ConsumerWidget {
           context: context,
           isScrollControlled: true,
           shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimens.radiusBottomSheet)),
           ),
           builder: (_) => const CreateGoalSheet(),
         ),
@@ -124,25 +124,8 @@ class _GoalCardState extends State<_GoalCard>
     }
   }
 
-  List<Color> _categoryGradient(String category) {
-    switch (category.toLowerCase()) {
-      case 'car':
-        return [const Color(0xFF1d4ed8), const Color(0xFF3b82f6)];
-      case 'home':
-        return [const Color(0xFF065f46), const Color(0xFF10b981)];
-      case 'vacation':
-      case 'travel':
-        return [const Color(0xFF0369a1), const Color(0xFF38bdf8)];
-      case 'education':
-        return [AppTheme.brandPurple, AppTheme.brandPurpleLight];
-      case 'emergency':
-        return [const Color(0xFF991b1b), const Color(0xFFf87171)];
-      case 'health':
-        return [const Color(0xFF9d174d), const Color(0xFFf472b6)];
-      default:
-        return [const Color(0xFF78350f), const Color(0xFFf59e0b)];
-    }
-  }
+  List<Color> _categoryGradient(String category) =>
+      AssetGradients.goalCategory(category);
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
