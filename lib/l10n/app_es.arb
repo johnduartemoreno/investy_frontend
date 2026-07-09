@@ -1,13 +1,10 @@
 {
   "@@locale": "es",
-
   "appName": "Investy",
-
   "navHome": "Inicio",
   "navGoals": "Metas",
   "navPortfolio": "Portafolio",
   "navSettings": "Ajustes",
-
   "commonSave": "Guardar",
   "commonDone": "Listo",
   "commonCancel": "Cancelar",
@@ -20,13 +17,11 @@
   "commonName": "Nombre",
   "commonError": "Algo salió mal. Inténtalo de nuevo.",
   "commonLogOut": "Cerrar sesión",
-
   "errorRequiredField": "Este campo es obligatorio",
   "errorInvalidEmail": "Ingresa un correo válido",
   "errorPasswordTooShort": "La contraseña debe tener al menos 6 caracteres",
   "errorPasswordMismatch": "Las contraseñas no coinciden",
   "errorNetwork": "Error de red. Revisa tu conexión.",
-
   "loginTitle": "¡Bienvenido de nuevo!",
   "loginSubtitle": "Accede a tus inversiones de forma segura.",
   "loginRememberEmail": "Recordar correo",
@@ -38,7 +33,6 @@
   "loginNoAccount": "¿No tienes cuenta?",
   "loginSignUp": "Regístrate",
   "loginWithGoogle": "Continuar con Google",
-
   "signupTitle": "Crear cuenta",
   "signupSubtitle": "Empieza a invertir hoy",
   "signupNameHint": "Nombre completo",
@@ -57,7 +51,6 @@
   "signupPasswordMismatch": "Las contraseñas no coinciden",
   "signupShowPassword": "Mostrar contraseña",
   "signupHidePassword": "Ocultar contraseña",
-
   "forgotPasswordTitle": "Restablecer contraseña",
   "forgotPasswordSubtitle": "Ingresa tu correo y te enviaremos un enlace de restablecimiento",
   "forgotPasswordEmailHint": "Correo",
@@ -67,18 +60,18 @@
   "forgotPasswordSentMessage": "Enviamos un enlace a {email}. Revisa tu bandeja de entrada y sigue las instrucciones.",
   "@forgotPasswordSentMessage": {
     "placeholders": {
-      "email": { "type": "String" }
+      "email": {
+        "type": "String"
+      }
     }
   },
   "forgotPasswordBackToSignIn": "Volver al inicio de sesión",
-
   "emailVerificationTitle": "Verifica tu correo",
   "emailVerificationSubtitle": "Enviamos un enlace de verificación a {email}. Revisa tu bandeja.",
   "emailVerificationResend": "Reenviar correo",
   "emailVerificationLogout": "Usar otra cuenta",
   "emailVerificationNotVerified": "Por favor verifica tu correo primero",
   "emailVerificationSent": "Correo de verificación enviado. Revisa tu bandeja.",
-
   "dashboardGreeting": "Hola, {name}",
   "dashboardWelcomeBack": "Bienvenido de vuelta,",
   "dashboardTotalBalance": "Balance total",
@@ -108,7 +101,6 @@
   "activityDetailRealizedPnl": "P&L realizado",
   "activityDetailGain": "Ganancia",
   "activityDetailLoss": "Pérdida",
-
   "portfolioTitle": "Portafolio",
   "portfolioNoHoldings": "Sin posiciones aún.\nCompra tu primer activo para empezar.",
   "portfolioTotalInvested": "Total invertido",
@@ -120,7 +112,6 @@
   "portfolioAssetCrypto": "Cripto",
   "portfolioAssetEtf": "ETF",
   "portfolioShares": "acciones",
-
   "goalsTitle": "Metas",
   "goalsNoGoals": "Sin metas aún.\nCrea una para empezar a ahorrar.",
   "goalsAddButton": "Agregar meta",
@@ -137,31 +128,25 @@
   "goalDetailProjection": "A este ritmo, la alcanzarás cerca de {date}",
   "@goalDetailProjection": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "goalDetailProjectionUnknown": "Agrega fondos para ver una fecha estimada.",
   "goalInvestButton": "Invertir hacia esta meta",
   "buyAssignGoalLabel": "¿Asignar a una meta? (opcional)",
   "buyNoGoalOption": "Sin meta",
-
   "goalFormTitle": "Nueva meta",
   "goalFormNameHint": "Nombre de la meta",
-  "goalFormTargetHint": "Monto objetivo",
-  "goalFormDeadlineLabel": "Fecha límite",
   "goalFormCategoryLabel": "Categoría",
-  "goalFormSaveButton": "Guardar meta",
-  "goalFormSelectDate": "Seleccionar fecha",
-
   "categoryCar": "Automóvil",
   "categoryHome": "Hogar",
   "categoryVacation": "Vacaciones",
-  "categoryTravel": "Viaje",
   "categoryEducation": "Educación",
   "categoryEmergency": "Emergencia",
   "categoryHealth": "Salud",
   "categoryOther": "Otro",
-
   "buyAssetTitle": "Comprar activo",
   "buySelectAsset": "Selecciona un activo",
   "buyPerShare": "por acción",
@@ -176,7 +161,6 @@
   "buyTotalLabel": "Total",
   "buyButton": "Comprar",
   "buySuccess": "Compra exitosa",
-
   "sellAssetTitle": "Vender activo",
   "sellNoAssets": "Aún no tienes activos",
   "sellNoAssetsSubtitle": "Compra tu primer activo para empezar a construir tu portafolio.",
@@ -194,7 +178,6 @@
   "sellButton": "Vender",
   "sellSuccess": "Venta exitosa",
   "sellMaxQuantity": "Máx: {quantity}",
-
   "topUpTitle": "Depositar",
   "topUpEnterAmount": "Ingresar monto",
   "topUpAmountRequired": "Por favor ingresa un monto",
@@ -203,7 +186,6 @@
   "topUpAmountHint": "Monto",
   "topUpButton": "Agregar fondos",
   "topUpSuccess": "Fondos agregados exitosamente",
-
   "withdrawTitle": "Retirar",
   "withdrawCash": "Retirar efectivo",
   "withdrawAvailableTo": "Disponible para retirar",
@@ -214,10 +196,8 @@
   "withdrawButton": "Retirar",
   "withdrawSuccess": "Retiro exitoso",
   "withdrawInsufficientFunds": "Fondos insuficientes",
-
   "assetSearchHint": "Buscar activos (ej. AAPL, BTC)",
   "assetSearchEmpty": "No se encontraron activos",
-
   "settingsTitle": "Ajustes",
   "settingsCurrency": "Moneda",
   "settingsNotifications": "Notificaciones",
@@ -225,7 +205,6 @@
   "settingsAppearance": "Apariencia",
   "settingsAbout": "Acerca de Investy",
   "settingsHelp": "Ayuda y soporte",
-
   "securityTitle": "Privacidad y seguridad",
   "securityAccountSection": "Seguridad de cuenta",
   "securityDangerSection": "Zona de peligro",
@@ -234,7 +213,6 @@
   "securityManagedByGoogle": "Administrado por Google",
   "securityDeleteAccount": "Eliminar cuenta",
   "securityDeleteAccountSubtitle": "Elimina permanentemente tu cuenta y todos tus datos",
-
   "changePasswordTitle": "Cambiar contraseña",
   "changePasswordErrorWrongPassword": "La contraseña actual es incorrecta.",
   "changePasswordErrorRecentLogin": "Por favor cierra sesión y vuelve a iniciarla antes de cambiar tu contraseña.",
@@ -244,7 +222,6 @@
   "changePasswordConfirm": "Confirmar nueva contraseña",
   "changePasswordButton": "Actualizar contraseña",
   "changePasswordSuccess": "Contraseña actualizada exitosamente",
-
   "deleteAccountTitle": "Eliminar cuenta",
   "deleteAccountConfirmTitle": "Confirmar eliminación",
   "deleteAccountConfirmEmailText": "Escribe tu correo para confirmar la eliminación.",
@@ -256,7 +233,6 @@
   "deleteAccountConfirmEmail": "Escribe tu correo para confirmar",
   "deleteAccountYourEmail": "Tu correo: {email}",
   "deleteAccountButton": "Eliminar mi cuenta",
-
   "notificationsTitle": "Notificaciones",
   "notificationsPush": "Notificaciones push",
   "notificationsPushSubtitle": "Recibe alertas de metas y transacciones",
@@ -264,24 +240,20 @@
   "notificationsGoalRemindersSubtitle": "Recordatorios semanales de progreso de tus metas",
   "notificationsEnable": "Activar notificaciones",
   "notificationsDescription": "Recibirás notificaciones cuando:\n• Se procesa un depósito o retiro\n• Se confirma una orden de compra o venta\n• La fecha límite de una meta financiera se acerca (30 días)",
-
   "appearanceTitle": "Apariencia",
   "appearanceTheme": "Tema",
   "appearanceThemeSystem": "Sistema",
   "appearanceThemeLight": "Claro",
   "appearanceThemeDark": "Oscuro",
   "appearanceLanguage": "Idioma",
-
   "languageEn": "Inglés",
   "languageEs": "Español",
   "languagePt": "Portugués (BR)",
-
   "aboutTitle": "Acerca de Investy",
   "aboutVersion": "Versión",
   "aboutDescription": "Investy te ayuda a planificar y rastrear tus inversiones hacia tus metas.",
   "aboutTerms": "Términos de servicio",
   "aboutPrivacy": "Política de privacidad",
-
   "helpTitle": "Ayuda y soporte",
   "helpFaq": "Preguntas frecuentes",
   "helpContact": "Contactar soporte",
@@ -297,7 +269,6 @@
   "helpFaq4A": "Sí. Toca \"Retirar\" en la pantalla de inicio e ingresa el monto. Los retiros se procesan desde tu saldo de efectivo disponible.",
   "helpFaq5Q": "¿Qué pasa si olvido mi contraseña?",
   "helpFaq5A": "En la pantalla de inicio de sesión, toca \"¿Olvidaste tu contraseña?\" e ingresa tu correo. Te enviaremos un enlace de restablecimiento en pocos minutos.",
-
   "kycTitle": "Verificación de identidad",
   "kycIntroBody": "Para comenzar a invertir, necesitamos verificar tu identidad. Es requerido por regulaciones financieras y toma aproximadamente 5 minutos.",
   "kycStartButton": "Iniciar verificación",
@@ -330,8 +301,12 @@
   "riskProfileQuestionOf": "{current} de {total}",
   "@riskProfileQuestionOf": {
     "placeholders": {
-      "current": {"type": "int"},
-      "total": {"type": "int"}
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "riskProfileQ1": "¿Cuál es tu horizonte de inversión?",
@@ -370,7 +345,6 @@
   "riskProfileRetake": "Repetir cuestionario",
   "riskProfileNotCompleted": "No completado",
   "riskProfileLoadError": "No se pudo cargar el perfil de riesgo.",
-
   "owlAiName": "Owl AI",
   "owlAiTagline": "Recomendaciones de inversión para ti",
   "owlAiPoweredAdvisor": "Asesor con inteligencia artificial",
@@ -391,20 +365,28 @@
   "owlHistorySessionBanner": "Sesión del {date}",
   "@owlHistorySessionBanner": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "owlHistoryDaysAgo": "{days, plural, =0{Hoy} =1{Ayer} other{Hace {days} días}}",
   "@owlHistoryDaysAgo": {
     "placeholders": {
-      "days": { "type": "int" }
+      "days": {
+        "type": "int"
+      }
     }
   },
   "owlHistoryContext": "Portafolio {portfolio} · Efectivo {cash}",
   "@owlHistoryContext": {
     "placeholders": {
-      "portfolio": { "type": "String" },
-      "cash": { "type": "String" }
+      "portfolio": {
+        "type": "String"
+      },
+      "cash": {
+        "type": "String"
+      }
     }
   },
   "owlAiCashAvailable": "Disponible para invertir",
@@ -412,7 +394,6 @@
   "greetingMorning": "Buenos días,",
   "greetingAfternoon": "Buenas tardes,",
   "greetingEvening": "Buenas noches,",
-
   "alertsTitle": "Alertas de precio",
   "alertsSettingsLabel": "Alertas de precio",
   "alertsEmpty": "Aún no tienes alertas de precio.",
@@ -425,7 +406,9 @@
   "alertsCurrentPrice": "Actual: {price}",
   "@alertsCurrentPrice": {
     "placeholders": {
-      "price": { "type": "String" }
+      "price": {
+        "type": "String"
+      }
     }
   },
   "alertsDirectionAbove": "Sube hasta o por encima de",
@@ -439,18 +422,80 @@
   "alertsConditionAbove": "Por encima de {price}",
   "@alertsConditionAbove": {
     "placeholders": {
-      "price": { "type": "String" }
+      "price": {
+        "type": "String"
+      }
     }
   },
   "alertsConditionBelow": "Por debajo de {price}",
   "@alertsConditionBelow": {
     "placeholders": {
-      "price": { "type": "String" }
+      "price": {
+        "type": "String"
+      }
     }
   },
   "alertsErrorAlreadyMet": "El precio actual ya cumple este objetivo. Elige uno diferente.",
   "alertsErrorLimit": "Alcanzaste el máximo de 20 alertas activas.",
   "alertsErrorDuplicate": "Ya tienes una alerta idéntica para este activo.",
   "alertsErrorUnknownSymbol": "Activo desconocido.",
-  "alertsDeleteTooltip": "Eliminar alerta"
+  "alertsDeleteTooltip": "Eliminar alerta",
+  "loginSessionTerminated": "Tu sesión fue cerrada. Inicia sesión de nuevo.",
+  "authErrorUserNotFound": "No existe una cuenta con este correo",
+  "authErrorInvalidCredentials": "Correo o contraseña inválidos",
+  "authErrorInvalidEmail": "Formato de correo inválido",
+  "authErrorUserDisabled": "Esta cuenta ha sido deshabilitada",
+  "authErrorTooManyRequests": "Demasiados intentos fallidos. Inténtalo más tarde",
+  "authErrorNetwork": "Error de red. Verifica tu conexión",
+  "authErrorEmailInUse": "Ya existe una cuenta con este correo",
+  "authErrorWeakPassword": "La contraseña es muy débil. Usa al menos 6 caracteres",
+  "authErrorOperationNotAllowed": "Las cuentas de correo/contraseña no están habilitadas",
+  "authErrorAccountExistsDifferentMethod": "Ya existe una cuenta con este correo usando otro método de inicio de sesión",
+  "authErrorGoogleCancelled": "Inicio de sesión con Google cancelado",
+  "authErrorWrongPassword": "La contraseña es incorrecta",
+  "authErrorRequiresRecentLogin": "Cierra sesión y vuelve a iniciarla primero",
+  "authErrorNoUser": "No hay ningún usuario con sesión activa",
+  "authErrorVerificationEmailFailed": "No se pudo enviar el correo de verificación. Inténtalo de nuevo",
+  "authErrorRefreshFailed": "No se pudo actualizar el estado. Inténtalo de nuevo",
+  "authErrorDeletionFailed": "No se pudo eliminar la cuenta. Inténtalo de nuevo",
+  "authErrorUnexpected": "Ocurrió un error inesperado. Inténtalo de nuevo",
+  "goalFormTargetLabel": "Monto objetivo",
+  "goalFormDateLabel": "Fecha objetivo",
+  "goalFormCreateButton": "Crear meta",
+  "goalFormNameRequired": "Ingresa un nombre para la meta",
+  "goalFormTargetRequired": "Ingresa un monto objetivo",
+  "goalFormTargetInvalid": "El monto debe ser mayor que cero",
+  "goalFormDateRequired": "Selecciona una fecha objetivo",
+  "goalFormCustomDate": "Personalizada",
+  "goalFormCreateFailed": "No se pudo crear la meta. Inténtalo de nuevo.",
+  "goalPresetMonths": "{months}M",
+  "@goalPresetMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "goalPresetYears": "{years}A",
+  "@goalPresetYears": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "withdrawMaxChip": "MAX",
+  "currencyUSD": "Dólar estadounidense",
+  "currencyEUR": "Euro",
+  "currencyGBP": "Libra esterlina",
+  "currencyCOP": "Peso colombiano",
+  "currencyBRL": "Real brasileño",
+  "currencyMXN": "Peso mexicano",
+  "currencyCAD": "Dólar canadiense",
+  "currencyARS": "Peso argentino",
+  "currencyCLP": "Peso chileno",
+  "currencyPEN": "Sol peruano",
+  "currencyCHF": "Franco suizo",
+  "currencyJPY": "Yen japonés",
+  "currencyAUD": "Dólar australiano"
 }

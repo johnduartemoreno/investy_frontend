@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'auth_error_localizer.dart';
 import 'providers/auth_provider.dart';
 import '../../../core/presentation/widgets/primary_button.dart';
 import '../../../core/theme/app_dimens.dart';
@@ -49,7 +50,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString().replaceFirst('Exception: ', '')),
+            content: Text(localizeAuthError(AppLocalizations.of(context), e)),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );

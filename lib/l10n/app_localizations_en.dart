@@ -403,19 +403,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get goalFormNameHint => 'Goal name';
 
   @override
-  String get goalFormTargetHint => 'Target amount';
-
-  @override
-  String get goalFormDeadlineLabel => 'Deadline';
-
-  @override
   String get goalFormCategoryLabel => 'Category';
-
-  @override
-  String get goalFormSaveButton => 'Save Goal';
-
-  @override
-  String get goalFormSelectDate => 'Select date';
 
   @override
   String get categoryCar => 'Car';
@@ -425,9 +413,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get categoryVacation => 'Vacation';
-
-  @override
-  String get categoryTravel => 'Travel';
 
   @override
   String get categoryEducation => 'Education';
@@ -1225,4 +1210,151 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alertsDeleteTooltip => 'Delete alert';
+
+  @override
+  String get loginSessionTerminated =>
+      'Your session was terminated. Please sign in again.';
+
+  @override
+  String get authErrorUserNotFound => 'No account found with this email';
+
+  @override
+  String get authErrorInvalidCredentials => 'Invalid email or password';
+
+  @override
+  String get authErrorInvalidEmail => 'Invalid email format';
+
+  @override
+  String get authErrorUserDisabled => 'This account has been disabled';
+
+  @override
+  String get authErrorTooManyRequests =>
+      'Too many failed attempts. Please try again later';
+
+  @override
+  String get authErrorNetwork => 'Network error. Please check your connection';
+
+  @override
+  String get authErrorEmailInUse => 'An account with this email already exists';
+
+  @override
+  String get authErrorWeakPassword =>
+      'Password is too weak. Use at least 6 characters';
+
+  @override
+  String get authErrorOperationNotAllowed =>
+      'Email/password accounts are not enabled';
+
+  @override
+  String get authErrorAccountExistsDifferentMethod =>
+      'An account already exists with this email using a different sign-in method';
+
+  @override
+  String get authErrorGoogleCancelled => 'Google sign-in was cancelled';
+
+  @override
+  String get authErrorWrongPassword => 'Password is incorrect';
+
+  @override
+  String get authErrorRequiresRecentLogin =>
+      'Please sign out and sign back in first';
+
+  @override
+  String get authErrorNoUser => 'No user is logged in';
+
+  @override
+  String get authErrorVerificationEmailFailed =>
+      'Failed to send verification email. Please try again';
+
+  @override
+  String get authErrorRefreshFailed =>
+      'Failed to refresh status. Please try again';
+
+  @override
+  String get authErrorDeletionFailed =>
+      'Account deletion failed. Please try again';
+
+  @override
+  String get authErrorUnexpected =>
+      'An unexpected error occurred. Please try again';
+
+  @override
+  String get goalFormTargetLabel => 'Target Amount';
+
+  @override
+  String get goalFormDateLabel => 'Target Date';
+
+  @override
+  String get goalFormCreateButton => 'Create Goal';
+
+  @override
+  String get goalFormNameRequired => 'Enter a goal name';
+
+  @override
+  String get goalFormTargetRequired => 'Enter a target amount';
+
+  @override
+  String get goalFormTargetInvalid => 'Amount must be greater than zero';
+
+  @override
+  String get goalFormDateRequired => 'Select a target date';
+
+  @override
+  String get goalFormCustomDate => 'Custom';
+
+  @override
+  String get goalFormCreateFailed =>
+      'Could not create the goal. Please try again.';
+
+  @override
+  String goalPresetMonths(int months) {
+    return '${months}M';
+  }
+
+  @override
+  String goalPresetYears(int years) {
+    return '${years}Y';
+  }
+
+  @override
+  String get withdrawMaxChip => 'MAX';
+
+  @override
+  String get currencyUSD => 'US Dollar';
+
+  @override
+  String get currencyEUR => 'Euro';
+
+  @override
+  String get currencyGBP => 'British Pound';
+
+  @override
+  String get currencyCOP => 'Colombian Peso';
+
+  @override
+  String get currencyBRL => 'Brazilian Real';
+
+  @override
+  String get currencyMXN => 'Mexican Peso';
+
+  @override
+  String get currencyCAD => 'Canadian Dollar';
+
+  @override
+  String get currencyARS => 'Argentine Peso';
+
+  @override
+  String get currencyCLP => 'Chilean Peso';
+
+  @override
+  String get currencyPEN => 'Peruvian Sol';
+
+  @override
+  String get currencyCHF => 'Swiss Franc';
+
+  @override
+  String get currencyJPY => 'Japanese Yen';
+
+  @override
+  String get currencyAUD => 'Australian Dollar';
 }

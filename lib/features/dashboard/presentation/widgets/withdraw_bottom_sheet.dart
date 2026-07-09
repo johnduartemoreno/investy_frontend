@@ -87,7 +87,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text(AppLocalizations.of(context).commonError),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -234,7 +234,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: _QuickActionChip(
-                    label: 'MAX',
+                    label: AppLocalizations.of(context).withdrawMaxChip,
                     onTap: () => _updateAmount(maxAvailableDisplay),
                   ),
                 ),

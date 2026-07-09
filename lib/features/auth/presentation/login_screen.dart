@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'auth_error_localizer.dart';
 import 'providers/auth_provider.dart';
 import '../../../core/presentation/widgets/custom_card.dart';
 import '../../../core/presentation/widgets/primary_button.dart';
@@ -106,8 +107,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text(
-                'Your session was terminated. Please sign in again.'),
+            content: Text(AppLocalizations.of(context).loginSessionTerminated),
             backgroundColor: colorScheme.error,
             duration: const Duration(seconds: 5),
           ),
@@ -129,7 +129,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           _lastShownError = null;
           context.go('/home');
         } else if (next.hasError && !next.isLoading) {
-          final errorMessage = next.error.toString();
+          final errorMessage =
+              localizeAuthError(AppLocalizations.of(context), next.error);
 
           // Only show error if it's different from the last one shown
           if (_lastShownError != errorMessage) {
