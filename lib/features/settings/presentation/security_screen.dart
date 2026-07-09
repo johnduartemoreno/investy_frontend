@@ -495,7 +495,7 @@ class _PasswordField extends StatelessWidget {
       obscureText: obscure,
       validator: validator,
       decoration: InputDecoration(
-        labelText: label,
+        hintText: label,
         suffixIcon: IconButton(
           icon: Icon(obscure
               ? Icons.visibility_outlined

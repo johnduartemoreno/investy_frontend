@@ -6,7 +6,7 @@ part of 'recommendation_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$recommendationsHash() => r'65ebb452502dfccc47336773f9bdea09886fdead';
+String _$recommendationsHash() => r'827e5548067e807153b5a7361de23167374ff166';
 
 /// Fetches AI recommendations for the current user.
 /// Reasons are returned in the user's current app language (en/es/pt).

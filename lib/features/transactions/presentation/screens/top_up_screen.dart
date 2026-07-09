@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,93 +5,11 @@ import 'package:intl/intl.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
-import '../../../dashboard/data/datasources/dashboard_remote_data_source.dart';
-import '../../../dashboard/data/models/transaction_request_model.dart';
+import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../dashboard/presentation/screens/dashboard_screen.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../l10n/app_localizations.dart';
-
-// ==========================================
-// Form State Provider
-// ==========================================
-
-/// State for the top-up form submission
-enum TopUpStatus { initial, loading, success, error }
-
-class TopUpState {
-  final double? amount;
-  final TopUpStatus status;
-  final String? errorMessage;
-
-  const TopUpState({
-    this.amount,
-    this.status = TopUpStatus.initial,
-    this.errorMessage,
-  });
-
-  TopUpState copyWith({
-    double? amount,
-    TopUpStatus? status,
-    String? errorMessage,
-  }) {
-    return TopUpState(
-      amount: amount ?? this.amount,
-      status: status ?? this.status,
-      errorMessage: errorMessage ?? this.errorMessage,
-    );
-  }
-}
-
-class TopUpNotifier extends StateNotifier<TopUpState> {
-  final Ref _ref;
-
-  TopUpNotifier(this._ref) : super(const TopUpState());
-
-  void setAmount(double? amount) {
-    state = state.copyWith(amount: amount, status: TopUpStatus.initial);
-  }
-
-  Future<bool> submit() async {
-    if (state.amount == null || state.amount! <= 0) {
-      state = state.copyWith(
-        status: TopUpStatus.error,
-        errorMessage: 'Please enter a valid amount',
-      );
-      return false;
-    }
-
-    state = state.copyWith(status: TopUpStatus.loading);
-
-    try {
-      final userId = FirebaseAuth.instance.currentUser?.uid;
-      if (userId == null) throw Exception('User not authenticated');
-
-      await _ref.read(dashboardRemoteDataSourceProvider).createTransaction(
-            userId,
-            TransactionRequestModel.forCash(state.amount!, 'DEPOSIT'),
-          );
-
-      _ref.invalidate(restDashboardProvider);
-      state = state.copyWith(status: TopUpStatus.success);
-      return true;
-    } catch (e) {
-      state = state.copyWith(
-        status: TopUpStatus.error,
-        errorMessage: e.toString(),
-      );
-      return false;
-    }
-  }
-
-  void reset() {
-    state = const TopUpState();
-  }
-}
-
-final topUpProvider =
-    StateNotifierProvider.autoDispose<TopUpNotifier, TopUpState>(
-  (ref) => TopUpNotifier(ref),
-);
+import '../controllers/top_up_controller.dart';
 
 // ==========================================
 // Top Up Screen
@@ -122,19 +39,18 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
       final formatter = NumberFormat('#,##0.##', 'en_US');
       _amountController.text = formatter.format(value);
     });
-    ref.read(topUpProvider.notifier).setAmount(value);
   }
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final success = await ref.read(topUpProvider.notifier).submit();
+    await ref.read(topUpControllerProvider.notifier).deposit(_amount);
 
-    if (success && mounted) {
+    if (!mounted) return;
+    if (ref.read(topUpControllerProvider) is AsyncData) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-              'Successfully deposited ${CurrencyFormatter.format(_amount)}'),
+          content: Text(AppLocalizations.of(context).topUpSuccess),
           backgroundColor: AppTheme.signalGreen,
         ),
       );
@@ -146,17 +62,17 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final topUpState = ref.watch(topUpProvider);
+    final topUpAsync = ref.watch(topUpControllerProvider);
     final displayCurrency = ref.watch(displayCurrencyProvider);
     final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
     final showEquivalent = displayCurrency != 'USD' && _amount > 0;
 
     // Listen for errors
-    ref.listen<TopUpState>(topUpProvider, (previous, next) {
-      if (next.status == TopUpStatus.error && next.errorMessage != null) {
+    ref.listen(topUpControllerProvider, (previous, next) {
+      if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(next.errorMessage!),
+            content: Text(AppLocalizations.of(context).commonError),
             backgroundColor: colorScheme.error,
           ),
         );
@@ -216,7 +132,6 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
                     final parsed =
                         ThousandsSeparatorInputFormatter.parseFormatted(value);
                     setState(() => _amount = parsed ?? 0.0);
-                    ref.read(topUpProvider.notifier).setAmount(parsed);
                   },
                   validator: (value) {
                     final l10n = AppLocalizations.of(context);
@@ -319,31 +234,11 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
                 const Spacer(),
 
                 // ── Confirm Button ──
-                FilledButton(
+                PrimaryButton(
+                  text: AppLocalizations.of(context).topUpConfirmButton,
+                  isLoading: topUpAsync.isLoading,
                   onPressed:
-                      (_amount > 0 && topUpState.status != TopUpStatus.loading)
-                          ? _submit
-                          : null,
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                    ),
-                  ),
-                  child: topUpState.status == TopUpStatus.loading
-                      ? SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: colorScheme.onPrimary,
-                          ),
-                        )
-                      : Text(
-                          AppLocalizations.of(context).topUpConfirmButton,
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
+                      (_amount > 0 && !topUpAsync.isLoading) ? _submit : null,
                 ),
                 const SizedBox(height: 24),
               ],

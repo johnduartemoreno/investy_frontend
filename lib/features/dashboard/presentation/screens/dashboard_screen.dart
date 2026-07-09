@@ -684,7 +684,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
           loading: () => const Padding(
             padding: EdgeInsets.symmetric(vertical: 24.0),
-            child: Center(child: CircularProgressIndicator()),
+            child: Center(child: CircularProgressIndicator.adaptive()),
           ),
           error: (error, _) => Padding(
             padding: const EdgeInsets.symmetric(vertical: 24.0),
