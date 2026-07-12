@@ -187,7 +187,7 @@
   "topUpButton": "Adicionar fundos",
   "topUpSuccess": "Fundos adicionados com sucesso",
   "withdrawTitle": "Sacar",
-  "withdrawCash": "Retirar dinheiro",
+  "withdrawCash": "Sacar dinheiro",
   "withdrawAvailableTo": "Disponível para saque",
   "withdrawConfirmButton": "Confirmar saque",
   "withdrawEnterAmount": "Insira um valor",
