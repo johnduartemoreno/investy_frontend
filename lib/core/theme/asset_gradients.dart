@@ -35,6 +35,21 @@ abstract final class AssetGradients {
     }
   }
 
+  /// Single solid color per asset class for the allocation donut (segments +
+  /// legend). Sourced from the ticker/class hues — the set
+  /// {stock, crypto, etf, cash} passes the dataviz CVD validator (worst
+  /// adjacent ΔE 86 deutan); the low-contrast pair vs surface is resolved by
+  /// direct legend labels, never color alone.
+  static const Map<String, Color> _allocationSolid = {
+    'stock': Color(0xFF3b82f6),
+    'crypto': Color(0xFFf59e0b),
+    'etf': Color(0xFF8b5cf6),
+    'cash': Color(0xFF10b981),
+  };
+
+  static Color allocationColor(String assetClass) =>
+      _allocationSolid[assetClass] ?? fallback[0];
+
   static List<Color> goalCategory(String category) {
     switch (category.toLowerCase()) {
       case 'car':

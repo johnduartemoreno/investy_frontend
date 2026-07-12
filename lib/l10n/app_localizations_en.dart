@@ -313,6 +313,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get portfolioTotalInvested => 'Total Invested';
 
   @override
+  String get portfolioTotalLabel => 'Total';
+
+  @override
   String get portfolioReturn => 'Return';
 
   @override
@@ -326,6 +329,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get portfolioAssetStock => 'Stock';
+
+  @override
+  String get portfolioAssetCash => 'Cash';
+
+  @override
+  String get portfolioAllocationTitle => 'Allocation';
 
   @override
   String get portfolioAssetCrypto => 'Crypto';

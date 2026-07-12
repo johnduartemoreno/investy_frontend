@@ -316,6 +316,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get portfolioTotalInvested => 'Total investido';
 
   @override
+  String get portfolioTotalLabel => 'Total';
+
+  @override
   String get portfolioReturn => 'Retorno';
 
   @override
@@ -329,6 +332,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get portfolioAssetStock => 'Ação';
+
+  @override
+  String get portfolioAssetCash => 'Dinheiro';
+
+  @override
+  String get portfolioAllocationTitle => 'Alocação';
 
   @override
   String get portfolioAssetCrypto => 'Cripto';
@@ -563,7 +572,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get withdrawTitle => 'Sacar';
 
   @override
-  String get withdrawCash => 'Retirar dinheiro';
+  String get withdrawCash => 'Sacar dinheiro';
 
   @override
   String get withdrawAvailableTo => 'Disponível para saque';

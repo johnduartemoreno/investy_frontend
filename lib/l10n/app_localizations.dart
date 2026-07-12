@@ -682,6 +682,12 @@ abstract class AppLocalizations {
   /// **'Total Invested'**
   String get portfolioTotalInvested;
 
+  /// No description provided for @portfolioTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get portfolioTotalLabel;
+
   /// No description provided for @portfolioReturn.
   ///
   /// In en, this message translates to:
@@ -711,6 +717,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stock'**
   String get portfolioAssetStock;
+
+  /// No description provided for @portfolioAssetCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get portfolioAssetCash;
+
+  /// No description provided for @portfolioAllocationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Allocation'**
+  String get portfolioAllocationTitle;
 
   /// No description provided for @portfolioAssetCrypto.
   ///
