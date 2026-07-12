@@ -8,6 +8,7 @@ import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../core/presentation/widgets/custom_text_field.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../auth/presentation/auth_error_localizer.dart';
 import '../../auth/presentation/providers/auth_provider.dart';
 
 class SecurityScreen extends ConsumerWidget {
@@ -113,7 +114,8 @@ class SecurityScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppDimens.radiusBottomSheet)),
       ),
       builder: (_) => const _ChangePasswordSheet(),
     );
@@ -151,7 +153,8 @@ class SecurityScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppDimens.radiusBottomSheet)),
       ),
       builder: (_) => _DeleteAccountSheet(isGoogle: isGoogle, ref: ref),
     );
@@ -371,7 +374,7 @@ class _DeleteAccountSheetState extends State<_DeleteAccountSheet> {
       }
     } catch (e) {
       setState(() {
-        _error = e.toString().replaceAll('Exception: ', '').trim();
+        _error = localizeAuthError(_l10n, e);
         _loading = false;
       });
     }
@@ -492,7 +495,7 @@ class _PasswordField extends StatelessWidget {
       obscureText: obscure,
       validator: validator,
       decoration: InputDecoration(
-        labelText: label,
+        hintText: label,
         suffixIcon: IconButton(
           icon: Icon(obscure
               ? Icons.visibility_outlined

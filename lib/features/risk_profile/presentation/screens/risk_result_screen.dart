@@ -133,7 +133,7 @@ class _ScoreChip extends StatelessWidget {
             horizontal: AppDimens.spacingL, vertical: AppDimens.spacingS),
         decoration: BoxDecoration(
           color: color.withAlpha(20),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppDimens.radiusPill),
           border: Border.all(color: color.withAlpha(80)),
         ),
         child: Text(

@@ -87,7 +87,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text(AppLocalizations.of(context).commonError),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -234,7 +234,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: _QuickActionChip(
-                    label: 'MAX',
+                    label: AppLocalizations.of(context).withdrawMaxChip,
                     onTap: () => _updateAmount(maxAvailableDisplay),
                   ),
                 ),
@@ -271,12 +271,12 @@ class _QuickActionChip extends StatelessWidget {
     final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(AppDimens.radiusPill),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           border: Border.all(color: theme.colorScheme.outlineVariant),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppDimens.radiusPill),
         ),
         child: Text(
           label,

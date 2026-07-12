@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/presentation/widgets/primary_button.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../features/dashboard/data/datasources/dashboard_remote_data_source.dart';
 import '../../../../features/dashboard/data/models/create_goal_request_model.dart';
@@ -27,16 +29,14 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
   bool _deadlineError = false;
   double _amount = 0.0;
 
-  static const _presets = [
-    (label: '6M', months: 6),
-    (label: '1Y', months: 12),
-    (label: '2Y', months: 24),
-    (label: '3Y', months: 36),
-    (label: '5Y', months: 60),
-  ];
+  static const _presetMonths = [6, 12, 24, 36, 60];
+
+  String _presetLabel(AppLocalizations l10n, int months) => months < 12
+      ? l10n.goalPresetMonths(months)
+      : l10n.goalPresetYears(months ~/ 12);
 
   void _selectPreset(int index) {
-    final months = _presets[index].months;
+    final months = _presetMonths[index];
     final now = DateTime.now();
     setState(() {
       _activePreset = index;
@@ -46,14 +46,33 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
   }
 
   static const _categories = [
-    ('car', 'Car', Icons.directions_car),
-    ('home', 'Home', Icons.home),
-    ('vacation', 'Vacation', Icons.flight),
-    ('education', 'Education', Icons.school),
-    ('emergency', 'Emergency', Icons.shield),
-    ('health', 'Health', Icons.favorite),
-    ('other', 'Other', Icons.flag),
+    ('car', Icons.directions_car),
+    ('home', Icons.home),
+    ('vacation', Icons.flight),
+    ('education', Icons.school),
+    ('emergency', Icons.shield),
+    ('health', Icons.favorite),
+    ('other', Icons.flag),
   ];
+
+  String _categoryLabel(AppLocalizations l10n, String id) {
+    switch (id) {
+      case 'car':
+        return l10n.categoryCar;
+      case 'home':
+        return l10n.categoryHome;
+      case 'vacation':
+        return l10n.categoryVacation;
+      case 'education':
+        return l10n.categoryEducation;
+      case 'emergency':
+        return l10n.categoryEmergency;
+      case 'health':
+        return l10n.categoryHealth;
+      default:
+        return l10n.categoryOther;
+    }
+  }
 
   @override
   void dispose() {
@@ -111,7 +130,8 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create goal: $e')),
+          SnackBar(
+              content: Text(AppLocalizations.of(context).goalFormCreateFailed)),
         );
       }
     } finally {
@@ -123,6 +143,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
 
     return SingleChildScrollView(
       // Ensures the sheet scrolls when keyboard appears
@@ -143,7 +164,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'New Goal',
+                  l10n.goalFormTitle,
                   style: theme.textTheme.headlineSmall
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
@@ -160,24 +181,25 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
               controller: _nameController,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
-                hintText: 'Goal name',
+                hintText: l10n.goalFormNameHint,
                 prefixIcon: const Icon(Icons.flag_outlined),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Enter a goal name' : null,
+              validator: (v) => (v == null || v.trim().isEmpty)
+                  ? l10n.goalFormNameRequired
+                  : null,
             ),
             const SizedBox(height: 20),
 
             // Target amount label
             Text(
-              'Target Amount',
+              l10n.goalFormTargetLabel,
               style: theme.textTheme.labelLarge
                   ?.copyWith(color: colorScheme.onSurfaceVariant),
             ),
@@ -203,7 +225,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                 ),
                 filled: true,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                   borderSide: BorderSide.none,
                 ),
                 contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -215,11 +237,11 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                 setState(() => _amount = parsed ?? 0.0);
               },
               validator: (v) {
-                if (v == null || v.isEmpty) return 'Enter a target amount';
+                if (v == null || v.isEmpty) return l10n.goalFormTargetRequired;
                 final parsed =
                     ThousandsSeparatorInputFormatter.parseFormatted(v);
                 if (parsed == null || parsed <= 0) {
-                  return 'Amount must be greater than zero';
+                  return l10n.goalFormTargetInvalid;
                 }
                 return null;
               },
@@ -228,7 +250,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
 
             // Deadline — preset time horizons + Custom escape hatch
             Text(
-              'Target Date',
+              l10n.goalFormDateLabel,
               style: theme.textTheme.labelLarge
                   ?.copyWith(color: colorScheme.onSurfaceVariant),
             ),
@@ -238,7 +260,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
               runSpacing: 6,
               children: [
                 // Preset chips
-                ...List.generate(_presets.length, (i) {
+                ...List.generate(_presetMonths.length, (i) {
                   final isActive = _activePreset == i;
                   return GestureDetector(
                     onTap: () => _selectPreset(i),
@@ -250,14 +272,15 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                         color: isActive
                             ? colorScheme.primaryContainer
                             : colorScheme.surfaceContainerLow,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius:
+                            BorderRadius.circular(AppDimens.radiusPill),
                         border: isActive
                             ? Border.all(color: colorScheme.primary, width: 1.5)
                             : Border.all(
                                 color: colorScheme.outlineVariant, width: 1),
                       ),
                       child: Text(
-                        _presets[i].label,
+                        _presetLabel(l10n, _presetMonths[i]),
                         style: theme.textTheme.labelLarge?.copyWith(
                           color: isActive
                               ? colorScheme.primary
@@ -281,7 +304,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                           (_activePreset == null && _selectedDeadline != null)
                               ? colorScheme.primaryContainer
                               : colorScheme.surfaceContainerLow,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusPill),
                       border: (_activePreset == null &&
                               _selectedDeadline != null)
                           ? Border.all(color: colorScheme.primary, width: 1.5)
@@ -301,7 +324,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'Custom',
+                          l10n.goalFormCustomDate,
                           style: theme.textTheme.labelLarge?.copyWith(
                             color: (_activePreset == null &&
                                     _selectedDeadline != null)
@@ -325,7 +348,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
               Padding(
                 padding: const EdgeInsets.only(left: 4),
                 child: Text(
-                  'Select a target date',
+                  l10n.goalFormDateRequired,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: colorScheme.error,
                   ),
@@ -375,7 +398,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                       color: isSelected
                           ? colorScheme.primaryContainer
                           : colorScheme.surfaceContainerLow,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusPill),
                       border: isSelected
                           ? Border.all(color: colorScheme.primary, width: 1.5)
                           : null,
@@ -383,14 +406,14 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(c.$3,
+                        Icon(c.$2,
                             size: 16,
                             color: isSelected
                                 ? colorScheme.primary
                                 : colorScheme.onSurfaceVariant),
                         const SizedBox(width: 6),
                         Text(
-                          c.$2,
+                          _categoryLabel(l10n, c.$1),
                           style: theme.textTheme.labelLarge?.copyWith(
                             color: isSelected
                                 ? colorScheme.primary
@@ -410,7 +433,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
 
             // Full-width confirm button (crossAxisAlignment.stretch handles width)
             PrimaryButton(
-              text: 'Create Goal',
+              text: l10n.goalFormCreateButton,
               isLoading: _isLoading,
               onPressed: _isLoading ? null : _submit,
             ),

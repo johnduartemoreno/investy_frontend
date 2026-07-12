@@ -205,6 +205,8 @@ class AppTheme {
   static const signalGreenContainer = Color(0xFF0F2A1A);
   static const signalAmber = Color(0xFFD97706);
   static const signalAmberContainer = Color(0xFF2A1A00);
+  static const signalRed = Color(0xFFf87171);
+  static const signalYellow = Color(0xFFfbbf24);
 
   // Layered dark surfaces
   static const darkBase = Color(0xFF0F0F13);

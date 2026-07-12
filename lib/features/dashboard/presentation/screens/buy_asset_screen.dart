@@ -9,6 +9,7 @@ import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../core/presentation/widgets/signal_badge.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/asset_gradients.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -38,14 +39,6 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
   bool _isSearching = false;
   double _quantity = 0.0;
   String? _selectedGoalId; // optional goal assignment (S18)
-
-  static const _tickerColors = {
-    'AAPL': [Color(0xFF1d4ed8), Color(0xFF3b82f6)],
-    'VTI': [Color(0xFF065f46), Color(0xFF10b981)],
-    'BTC': [Color(0xFF78350f), Color(0xFFf59e0b)],
-    'MSFT': [Color(0xFF4c1d95), Color(0xFF8b5cf6)],
-    'IAU': [Color(0xFF881337), Color(0xFFf43f5e)],
-  };
 
   @override
   void initState() {
@@ -140,10 +133,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
   double get _estimatedTotal =>
       _quantity * (_selectedAsset?.currentPrice ?? 0.0);
 
-  List<Color> _colorsForTicker(String ticker) {
-    return _tickerColors[ticker] ??
-        [AppTheme.brandPurple, AppTheme.brandPurpleLight];
-  }
+  List<Color> _colorsForTicker(String ticker) => AssetGradients.ticker(ticker);
 
   Widget _assetIcon(String ticker) {
     final label = ticker.length > 4 ? ticker.substring(0, 4) : ticker;
@@ -298,7 +288,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                         : null,
                     filled: true,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -313,17 +303,17 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                     constraints: const BoxConstraints(maxHeight: 220),
                     decoration: BoxDecoration(
                       color: cs.surfaceContainerLow,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                     ),
                     child: _isSearching
                         ? const Padding(
-                            padding: EdgeInsets.all(16),
+                            padding: EdgeInsets.all(AppDimens.spacingL),
                             child: Center(
                                 child: CircularProgressIndicator.adaptive()),
                           )
                         : _searchResults.isEmpty
                             ? Padding(
-                                padding: const EdgeInsets.all(16),
+                                padding: const EdgeInsets.all(AppDimens.spacingL),
                                 child: Text(l10n.assetSearchEmpty,
                                     style: theme.textTheme.bodyMedium
                                         ?.copyWith(color: cs.onSurfaceVariant)),

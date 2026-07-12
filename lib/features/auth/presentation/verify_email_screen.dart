@@ -126,9 +126,9 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                       ? const SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(
+                          child: CircularProgressIndicator.adaptive(
                             strokeWidth: 2,
-                            color: Colors.white,
+                            backgroundColor: Colors.white,
                           ),
                         )
                       : const Icon(Icons.refresh),
@@ -145,7 +145,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                       ? const SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(
+                          child: CircularProgressIndicator.adaptive(
                             strokeWidth: 2,
                           ),
                         )

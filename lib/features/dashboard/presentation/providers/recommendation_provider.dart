@@ -16,7 +16,7 @@ Future<List<RecommendationModel>> recommendations(Ref ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) throw Exception('ERR_UNAUTHENTICATED');
   final language = ref.watch(localeNotifierProvider).languageCode;
-  return ref.read(dashboardRemoteDataSourceProvider).getRecommendations(
+  return ref.watch(dashboardRemoteDataSourceProvider).getRecommendations(
         userId,
         language: language,
       );

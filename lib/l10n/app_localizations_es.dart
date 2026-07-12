@@ -407,19 +407,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get goalFormNameHint => 'Nombre de la meta';
 
   @override
-  String get goalFormTargetHint => 'Monto objetivo';
-
-  @override
-  String get goalFormDeadlineLabel => 'Fecha límite';
-
-  @override
   String get goalFormCategoryLabel => 'Categoría';
-
-  @override
-  String get goalFormSaveButton => 'Guardar meta';
-
-  @override
-  String get goalFormSelectDate => 'Seleccionar fecha';
 
   @override
   String get categoryCar => 'Automóvil';
@@ -429,9 +417,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get categoryVacation => 'Vacaciones';
-
-  @override
-  String get categoryTravel => 'Viaje';
 
   @override
   String get categoryEducation => 'Educación';
@@ -1230,4 +1215,152 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get alertsDeleteTooltip => 'Eliminar alerta';
+
+  @override
+  String get loginSessionTerminated =>
+      'Tu sesión fue cerrada. Inicia sesión de nuevo.';
+
+  @override
+  String get authErrorUserNotFound => 'No existe una cuenta con este correo';
+
+  @override
+  String get authErrorInvalidCredentials => 'Correo o contraseña inválidos';
+
+  @override
+  String get authErrorInvalidEmail => 'Formato de correo inválido';
+
+  @override
+  String get authErrorUserDisabled => 'Esta cuenta ha sido deshabilitada';
+
+  @override
+  String get authErrorTooManyRequests =>
+      'Demasiados intentos fallidos. Inténtalo más tarde';
+
+  @override
+  String get authErrorNetwork => 'Error de red. Verifica tu conexión';
+
+  @override
+  String get authErrorEmailInUse => 'Ya existe una cuenta con este correo';
+
+  @override
+  String get authErrorWeakPassword =>
+      'La contraseña es muy débil. Usa al menos 6 caracteres';
+
+  @override
+  String get authErrorOperationNotAllowed =>
+      'Las cuentas de correo/contraseña no están habilitadas';
+
+  @override
+  String get authErrorAccountExistsDifferentMethod =>
+      'Ya existe una cuenta con este correo usando otro método de inicio de sesión';
+
+  @override
+  String get authErrorGoogleCancelled =>
+      'Inicio de sesión con Google cancelado';
+
+  @override
+  String get authErrorWrongPassword => 'La contraseña es incorrecta';
+
+  @override
+  String get authErrorRequiresRecentLogin =>
+      'Cierra sesión y vuelve a iniciarla primero';
+
+  @override
+  String get authErrorNoUser => 'No hay ningún usuario con sesión activa';
+
+  @override
+  String get authErrorVerificationEmailFailed =>
+      'No se pudo enviar el correo de verificación. Inténtalo de nuevo';
+
+  @override
+  String get authErrorRefreshFailed =>
+      'No se pudo actualizar el estado. Inténtalo de nuevo';
+
+  @override
+  String get authErrorDeletionFailed =>
+      'No se pudo eliminar la cuenta. Inténtalo de nuevo';
+
+  @override
+  String get authErrorUnexpected =>
+      'Ocurrió un error inesperado. Inténtalo de nuevo';
+
+  @override
+  String get goalFormTargetLabel => 'Monto objetivo';
+
+  @override
+  String get goalFormDateLabel => 'Fecha objetivo';
+
+  @override
+  String get goalFormCreateButton => 'Crear meta';
+
+  @override
+  String get goalFormNameRequired => 'Ingresa un nombre para la meta';
+
+  @override
+  String get goalFormTargetRequired => 'Ingresa un monto objetivo';
+
+  @override
+  String get goalFormTargetInvalid => 'El monto debe ser mayor que cero';
+
+  @override
+  String get goalFormDateRequired => 'Selecciona una fecha objetivo';
+
+  @override
+  String get goalFormCustomDate => 'Personalizada';
+
+  @override
+  String get goalFormCreateFailed =>
+      'No se pudo crear la meta. Inténtalo de nuevo.';
+
+  @override
+  String goalPresetMonths(int months) {
+    return '${months}M';
+  }
+
+  @override
+  String goalPresetYears(int years) {
+    return '${years}A';
+  }
+
+  @override
+  String get withdrawMaxChip => 'MAX';
+
+  @override
+  String get currencyUSD => 'Dólar estadounidense';
+
+  @override
+  String get currencyEUR => 'Euro';
+
+  @override
+  String get currencyGBP => 'Libra esterlina';
+
+  @override
+  String get currencyCOP => 'Peso colombiano';
+
+  @override
+  String get currencyBRL => 'Real brasileño';
+
+  @override
+  String get currencyMXN => 'Peso mexicano';
+
+  @override
+  String get currencyCAD => 'Dólar canadiense';
+
+  @override
+  String get currencyARS => 'Peso argentino';
+
+  @override
+  String get currencyCLP => 'Peso chileno';
+
+  @override
+  String get currencyPEN => 'Sol peruano';
+
+  @override
+  String get currencyCHF => 'Franco suizo';
+
+  @override
+  String get currencyJPY => 'Yen japonés';
+
+  @override
+  String get currencyAUD => 'Dólar australiano';
 }

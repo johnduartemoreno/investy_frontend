@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/network/dio_client.dart';
+import '../../domain/auth_exception.dart';
 import '../models/user_model.dart';
 
 part 'auth_remote_datasource.g.dart';
@@ -39,7 +40,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       final firebaseUser = credential.user;
       if (firebaseUser == null) {
-        throw Exception('Login succeeded but user is null');
+        throw const AuthException(AuthErrorCode.unexpected);
       }
 
       debugPrint(
@@ -57,25 +58,25 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // Map Firebase error codes to user-friendly messages
       switch (e.code) {
         case 'user-not-found':
-          throw Exception('No account found with this email');
+          throw const AuthException(AuthErrorCode.userNotFound);
         case 'wrong-password':
         case 'invalid-credential':
-          throw Exception('Invalid email or password');
+          throw const AuthException(AuthErrorCode.invalidCredentials);
         case 'invalid-email':
-          throw Exception('Invalid email format');
+          throw const AuthException(AuthErrorCode.invalidEmail);
         case 'user-disabled':
-          throw Exception('This account has been disabled');
+          throw const AuthException(AuthErrorCode.userDisabled);
         case 'too-many-requests':
-          throw Exception('Too many failed attempts. Please try again later');
+          throw const AuthException(AuthErrorCode.tooManyRequests);
         case 'network-request-failed':
         case 'channel-error':
-          throw Exception('Network error. Please check your connection');
+          throw const AuthException(AuthErrorCode.network);
         default:
-          throw Exception(e.message ?? 'Authentication failed');
+          throw const AuthException(AuthErrorCode.unexpected);
       }
     } catch (e) {
       debugPrint('🔥 [AuthRemoteDataSource] Unexpected error: $e');
-      throw Exception('An unexpected error occurred. Please try again');
+      throw const AuthException(AuthErrorCode.unexpected);
     }
   }
 
@@ -93,7 +94,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       final firebaseUser = credential.user;
       if (firebaseUser == null) {
-        throw Exception('Sign up succeeded but user is null');
+        throw const AuthException(AuthErrorCode.unexpected);
       }
 
       await firebaseUser.updateDisplayName(name);
@@ -131,19 +132,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       switch (e.code) {
         case 'email-already-in-use':
-          throw Exception('An account with this email already exists');
+          throw const AuthException(AuthErrorCode.emailInUse);
         case 'invalid-email':
-          throw Exception('Invalid email format');
+          throw const AuthException(AuthErrorCode.invalidEmail);
         case 'weak-password':
-          throw Exception('Password is too weak. Use at least 6 characters');
+          throw const AuthException(AuthErrorCode.weakPassword);
         case 'operation-not-allowed':
-          throw Exception('Email/password accounts are not enabled');
+          throw const AuthException(AuthErrorCode.operationNotAllowed);
         default:
-          throw Exception(e.message ?? 'Sign up failed');
+          throw const AuthException(AuthErrorCode.unexpected);
       }
     } catch (e) {
       debugPrint('🔥 [AuthRemoteDataSource] Unexpected error: $e');
-      throw Exception('An unexpected error occurred. Please try again');
+      throw const AuthException(AuthErrorCode.unexpected);
     }
   }
 
@@ -152,7 +153,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        throw Exception('No user logged in');
+        throw const AuthException(AuthErrorCode.noUserLoggedIn);
       }
 
       debugPrint(
@@ -162,7 +163,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } catch (e) {
       debugPrint(
           '🔥 [AuthRemoteDataSource] Error sending verification email: $e');
-      throw Exception('Failed to send verification email. Please try again');
+      throw const AuthException(AuthErrorCode.verificationEmailFailed);
     }
   }
 
@@ -171,7 +172,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        throw Exception('No user logged in');
+        throw const AuthException(AuthErrorCode.noUserLoggedIn);
       }
 
       debugPrint('🔥 [AuthRemoteDataSource] Reloading user data...');
@@ -182,7 +183,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           '🔥 [AuthRemoteDataSource] User reloaded. Email verified: ${reloadedUser?.emailVerified}');
     } catch (e) {
       debugPrint('🔥 [AuthRemoteDataSource] Error reloading user: $e');
-      throw Exception('Failed to refresh status. Please try again');
+      throw const AuthException(AuthErrorCode.refreshFailed);
     }
   }
 
@@ -209,14 +210,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               '🔥 [AuthRemoteDataSource] User not found, but returning success silently.');
           return;
         case 'invalid-email':
-          throw Exception('Invalid email format');
+          throw const AuthException(AuthErrorCode.invalidEmail);
         case 'network-request-failed':
-          throw Exception('Network error. Please check your connection');
+          throw const AuthException(AuthErrorCode.network);
         default:
-          throw Exception(e.message ?? 'Failed to send reset email');
+          throw const AuthException(AuthErrorCode.unexpected);
       }
     } catch (e) {
-      throw Exception('An unexpected error occurred. Please try again');
+      throw const AuthException(AuthErrorCode.unexpected);
     }
   }
 
@@ -230,7 +231,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       if (googleUser == null) {
         // User cancelled the sign-in dialog
-        throw Exception('Google sign-in cancelled');
+        throw const AuthException(AuthErrorCode.googleCancelled);
       }
 
       final googleAuth = await googleUser.authentication;
@@ -244,7 +245,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final firebaseUser = userCredential.user;
 
       if (firebaseUser == null) {
-        throw Exception('Google sign-in succeeded but user is null');
+        throw const AuthException(AuthErrorCode.unexpected);
       }
 
       debugPrint(
@@ -259,24 +260,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'account-exists-with-different-credential':
-          throw Exception(
-              'An account already exists with this email using a different sign-in method');
+          throw const AuthException(
+              AuthErrorCode.accountExistsWithDifferentCredential);
         case 'network-request-failed':
-          throw Exception('Network error. Please check your connection');
+          throw const AuthException(AuthErrorCode.network);
         default:
-          throw Exception(e.message ?? 'Google sign-in failed');
+          throw const AuthException(AuthErrorCode.unexpected);
       }
     } catch (e) {
-      if (e.toString().contains('cancelled')) rethrow;
+      if (e is AuthException) rethrow;
       debugPrint('🔥 [AuthRemoteDataSource] Google Sign-In error: $e');
-      throw Exception('Google sign-in failed. Please try again');
+      throw const AuthException(AuthErrorCode.unexpected);
     }
   }
 
   @override
   Future<void> deleteAccountEmail(String currentPassword) async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) throw Exception('No user logged in');
+    if (user == null) throw const AuthException(AuthErrorCode.noUserLoggedIn);
     try {
       final cred = EmailAuthProvider.credential(
         email: user.email!,
@@ -290,11 +291,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       switch (e.code) {
         case 'wrong-password':
         case 'invalid-credential':
-          throw Exception('Password is incorrect.');
+          throw const AuthException(AuthErrorCode.wrongPassword);
         case 'requires-recent-login':
-          throw Exception('Please sign out and sign back in first.');
+          throw const AuthException(AuthErrorCode.requiresRecentLogin);
         default:
-          throw Exception(e.message ?? 'Account deletion failed.');
+          throw const AuthException(AuthErrorCode.deletionFailed);
       }
     }
   }
@@ -302,10 +303,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> deleteAccountGoogle() async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) throw Exception('No user logged in');
+    if (user == null) throw const AuthException(AuthErrorCode.noUserLoggedIn);
     try {
       final googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) throw Exception('Google sign-in cancelled');
+      if (googleUser == null) {
+        throw const AuthException(AuthErrorCode.googleCancelled);
+      }
       final googleAuth = await googleUser.authentication;
       final cred = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -316,11 +319,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await user.delete();
       await FirebaseAuth.instance.signOut();
       await GoogleSignIn().signOut();
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.message ?? 'Account deletion failed.');
+    } on FirebaseAuthException {
+      throw const AuthException(AuthErrorCode.deletionFailed);
     } catch (e) {
-      if (e.toString().contains('cancelled')) rethrow;
-      throw Exception('Account deletion failed. Please try again.');
+      if (e is AuthException) rethrow;
+      throw const AuthException(AuthErrorCode.deletionFailed);
     }
   }
 

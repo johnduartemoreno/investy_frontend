@@ -8,23 +8,12 @@ import '../../../../core/presentation/widgets/left_accent_box.dart';
 import '../../../../core/presentation/widgets/signal_badge.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/asset_gradients.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/owl_session_model.dart';
 import '../../data/models/recommendation_model.dart';
 import '../providers/owl_history_provider.dart';
-
-/// Semantic gradient pairs per ticker (mirrors dashboard rec cards).
-const Map<String, List<Color>> _tickerColors = {
-  'AAPL': [Color(0xFF1d4ed8), Color(0xFF3b82f6)],
-  'VTI': [Color(0xFF065f46), Color(0xFF10b981)],
-  'BTC': [Color(0xFF78350f), Color(0xFFf59e0b)],
-  'MSFT': [AppTheme.brandPurple, AppTheme.brandPurpleLight],
-  'IAU': [Color(0xFF881337), Color(0xFFf43f5e)],
-};
-
-List<Color> _tickerGradient(String ticker) =>
-    _tickerColors[ticker] ?? [AppTheme.brandPurple, AppTheme.brandPurpleLight];
 
 /// Owl AI recommendation session history (B29).
 class OwlHistoryScreen extends ConsumerWidget {
@@ -292,7 +281,7 @@ class _RecCard extends StatelessWidget {
           Row(
             children: [
               GradientIconBox(
-                colors: _tickerGradient(rec.ticker),
+                colors: AssetGradients.ticker(rec.ticker),
                 child: Text(
                   rec.ticker.substring(0, rec.ticker.length.clamp(0, 4)),
                   style: const TextStyle(

@@ -14,7 +14,7 @@ class ActivityItemModel {
   final String id;
 
   /// Amount in integer cents. $1.00 = 100. Never a double.
-  @JsonKey(defaultValue: 0)
+  /// No default — missing money data must fail loudly (B40-F7).
   final int amount;
 
   /// Transaction type as returned by the API: "BUY", "SELL", "DEPOSIT", "WITHDRAWAL".
@@ -30,17 +30,14 @@ class ActivityItemModel {
   final String symbol;
 
   /// Quantity in units × 10^8. Non-zero for BUY/SELL items only.
-  @JsonKey(defaultValue: 0)
   final int quantityUnits;
 
   /// Price per unit in integer cents. Non-zero for BUY/SELL items only.
-  @JsonKey(defaultValue: 0)
   final int priceCents;
 
   /// Net realized P&L in cents for SELL transactions.
   /// Formula: (sell_price - avg_cost_at_sell) * qty / 1e8 - fee_cents.
   /// Zero means: BUY, DEPOSIT, WITHDRAWAL, or pre-migration SELL (avg cost unknown).
-  @JsonKey(defaultValue: 0)
   final int realizedPnlCents;
 
   const ActivityItemModel({

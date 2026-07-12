@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/theme/app_dimens.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../kyc/presentation/providers/kyc_provider.dart';
 import '../providers/broker_provider.dart';
@@ -39,10 +40,10 @@ class BrokerGateBanner extends ConsumerWidget {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppDimens.spacingM),
       decoration: BoxDecoration(
         color: cs.primaryContainer,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimens.radiusInput),
       ),
       child: Row(
         children: [

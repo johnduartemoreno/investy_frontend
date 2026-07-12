@@ -16,12 +16,13 @@ class DashboardResponseModel {
   final String userName;
 
   /// Total wallet balance in integer cents. $1.00 = 100. Never a double.
-  @JsonKey(defaultValue: 0)
+  /// No default — a missing/null value from the backend must fail loudly
+  /// (B40-F7 strict data governance), never render as a fake $0 balance.
   final int totalBalance;
 
   /// Total market value of all holdings in integer cents. $1.00 = 100.
   /// Calculated server-side: SUM(QuantityUnits * CurrentPriceCents / 10^8).
-  @JsonKey(defaultValue: 0)
+  /// No default — see totalBalance.
   final int investedValue;
 
   /// ISO 4217 currency code (e.g. "USD").

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'auth_error_localizer.dart';
 import 'providers/auth_provider.dart';
 import '../../../core/presentation/widgets/custom_card.dart';
 import '../../../core/presentation/widgets/primary_button.dart';
@@ -16,20 +17,9 @@ class SignUpScreen extends ConsumerStatefulWidget {
 }
 
 // Supported display currencies — must match backend CHECK constraint.
-const _kCurrencies = [
-  ('USD', 'US Dollar'),
-  ('EUR', 'Euro'),
-  ('GBP', 'British Pound'),
-  ('COP', 'Colombian Peso'),
-  ('BRL', 'Brazilian Real'),
-  ('MXN', 'Mexican Peso'),
-  ('CAD', 'Canadian Dollar'),
-  ('ARS', 'Argentine Peso'),
-  ('CLP', 'Chilean Peso'),
-  ('PEN', 'Peruvian Sol'),
-  ('CHF', 'Swiss Franc'),
-  ('JPY', 'Japanese Yen'),
-  ('AUD', 'Australian Dollar'),
+const _kCurrencyCodes = [
+  'USD', 'EUR', 'GBP', 'COP', 'BRL', 'MXN', 'CAD',
+  'ARS', 'CLP', 'PEN', 'CHF', 'JPY', 'AUD', //
 ];
 
 class _SignUpScreenState extends ConsumerState<SignUpScreen> {
@@ -54,9 +44,38 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     super.dispose();
   }
 
-  String _currencyLabel(String code) => _kCurrencies
-      .firstWhere((c) => c.$1 == code, orElse: () => (code, code))
-      .$2;
+  String _currencyLabel(AppLocalizations l10n, String code) {
+    switch (code) {
+      case 'USD':
+        return l10n.currencyUSD;
+      case 'EUR':
+        return l10n.currencyEUR;
+      case 'GBP':
+        return l10n.currencyGBP;
+      case 'COP':
+        return l10n.currencyCOP;
+      case 'BRL':
+        return l10n.currencyBRL;
+      case 'MXN':
+        return l10n.currencyMXN;
+      case 'CAD':
+        return l10n.currencyCAD;
+      case 'ARS':
+        return l10n.currencyARS;
+      case 'CLP':
+        return l10n.currencyCLP;
+      case 'PEN':
+        return l10n.currencyPEN;
+      case 'CHF':
+        return l10n.currencyCHF;
+      case 'JPY':
+        return l10n.currencyJPY;
+      case 'AUD':
+        return l10n.currencyAUD;
+      default:
+        return code;
+    }
+  }
 
   Future<void> _pickCurrency(BuildContext context) async {
     final l10n = AppLocalizations.of(context);
@@ -66,7 +85,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppDimens.radiusBottomSheet)),
       ),
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setModalState) => Padding(
@@ -96,13 +116,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           ?.copyWith(fontWeight: FontWeight.w600)),
                 ),
                 const SizedBox(height: 8),
-                ..._kCurrencies.map((c) => ListTile(
-                      title: Text('${c.$1} — ${c.$2}'),
-                      trailing: _displayCurrency == c.$1
+                ..._kCurrencyCodes.map((code) => ListTile(
+                      title: Text('$code — ${_currencyLabel(l10n, code)}'),
+                      trailing: _displayCurrency == code
                           ? Icon(Icons.check, color: colorScheme.primary)
                           : null,
                       onTap: () {
-                        setState(() => _displayCurrency = c.$1);
+                        setState(() => _displayCurrency = code);
                         Navigator.pop(ctx);
                       },
                     )),
@@ -156,7 +176,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           _lastShownError = null;
           context.go('/verify-email');
         } else if (next.hasError && !next.isLoading) {
-          final errorMessage = next.error.toString();
+          final errorMessage =
+              localizeAuthError(AppLocalizations.of(context), next.error);
           if (_lastShownError != errorMessage) {
             _lastShownError = errorMessage;
             ScaffoldMessenger.of(context).clearSnackBars();
@@ -380,7 +401,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                               // Display currency selector
                               InkWell(
                                 onTap: () => _pickCurrency(context),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(
+                                    AppDimens.radiusInput),
                                 child: InputDecorator(
                                   decoration: InputDecoration(
                                     hintText: l10n.signupCurrencyLabel,
@@ -390,7 +412,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                         const Icon(Icons.arrow_drop_down),
                                   ),
                                   child: Text(
-                                    '$_displayCurrency — ${_currencyLabel(_displayCurrency)}',
+                                    '$_displayCurrency — ${_currencyLabel(l10n, _displayCurrency)}',
                                   ),
                                 ),
                               ),

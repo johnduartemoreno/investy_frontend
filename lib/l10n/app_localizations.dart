@@ -850,35 +850,11 @@ abstract class AppLocalizations {
   /// **'Goal name'**
   String get goalFormNameHint;
 
-  /// No description provided for @goalFormTargetHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Target amount'**
-  String get goalFormTargetHint;
-
-  /// No description provided for @goalFormDeadlineLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Deadline'**
-  String get goalFormDeadlineLabel;
-
   /// No description provided for @goalFormCategoryLabel.
   ///
   /// In en, this message translates to:
   /// **'Category'**
   String get goalFormCategoryLabel;
-
-  /// No description provided for @goalFormSaveButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Save Goal'**
-  String get goalFormSaveButton;
-
-  /// No description provided for @goalFormSelectDate.
-  ///
-  /// In en, this message translates to:
-  /// **'Select date'**
-  String get goalFormSelectDate;
 
   /// No description provided for @categoryCar.
   ///
@@ -897,12 +873,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Vacation'**
   String get categoryVacation;
-
-  /// No description provided for @categoryTravel.
-  ///
-  /// In en, this message translates to:
-  /// **'Travel'**
-  String get categoryTravel;
 
   /// No description provided for @categoryEducation.
   ///
@@ -2355,6 +2325,270 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete alert'**
   String get alertsDeleteTooltip;
+
+  /// No description provided for @loginSessionTerminated.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session was terminated. Please sign in again.'**
+  String get loginSessionTerminated;
+
+  /// No description provided for @authErrorUserNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No account found with this email'**
+  String get authErrorUserNotFound;
+
+  /// No description provided for @authErrorInvalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password'**
+  String get authErrorInvalidCredentials;
+
+  /// No description provided for @authErrorInvalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email format'**
+  String get authErrorInvalidEmail;
+
+  /// No description provided for @authErrorUserDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'This account has been disabled'**
+  String get authErrorUserDisabled;
+
+  /// No description provided for @authErrorTooManyRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many failed attempts. Please try again later'**
+  String get authErrorTooManyRequests;
+
+  /// No description provided for @authErrorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Network error. Please check your connection'**
+  String get authErrorNetwork;
+
+  /// No description provided for @authErrorEmailInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'An account with this email already exists'**
+  String get authErrorEmailInUse;
+
+  /// No description provided for @authErrorWeakPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is too weak. Use at least 6 characters'**
+  String get authErrorWeakPassword;
+
+  /// No description provided for @authErrorOperationNotAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Email/password accounts are not enabled'**
+  String get authErrorOperationNotAllowed;
+
+  /// No description provided for @authErrorAccountExistsDifferentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'An account already exists with this email using a different sign-in method'**
+  String get authErrorAccountExistsDifferentMethod;
+
+  /// No description provided for @authErrorGoogleCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in was cancelled'**
+  String get authErrorGoogleCancelled;
+
+  /// No description provided for @authErrorWrongPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is incorrect'**
+  String get authErrorWrongPassword;
+
+  /// No description provided for @authErrorRequiresRecentLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign out and sign back in first'**
+  String get authErrorRequiresRecentLogin;
+
+  /// No description provided for @authErrorNoUser.
+  ///
+  /// In en, this message translates to:
+  /// **'No user is logged in'**
+  String get authErrorNoUser;
+
+  /// No description provided for @authErrorVerificationEmailFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send verification email. Please try again'**
+  String get authErrorVerificationEmailFailed;
+
+  /// No description provided for @authErrorRefreshFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to refresh status. Please try again'**
+  String get authErrorRefreshFailed;
+
+  /// No description provided for @authErrorDeletionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion failed. Please try again'**
+  String get authErrorDeletionFailed;
+
+  /// No description provided for @authErrorUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred. Please try again'**
+  String get authErrorUnexpected;
+
+  /// No description provided for @goalFormTargetLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Amount'**
+  String get goalFormTargetLabel;
+
+  /// No description provided for @goalFormDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Date'**
+  String get goalFormDateLabel;
+
+  /// No description provided for @goalFormCreateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Goal'**
+  String get goalFormCreateButton;
+
+  /// No description provided for @goalFormNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a goal name'**
+  String get goalFormNameRequired;
+
+  /// No description provided for @goalFormTargetRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a target amount'**
+  String get goalFormTargetRequired;
+
+  /// No description provided for @goalFormTargetInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount must be greater than zero'**
+  String get goalFormTargetInvalid;
+
+  /// No description provided for @goalFormDateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a target date'**
+  String get goalFormDateRequired;
+
+  /// No description provided for @goalFormCustomDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get goalFormCustomDate;
+
+  /// No description provided for @goalFormCreateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not create the goal. Please try again.'**
+  String get goalFormCreateFailed;
+
+  /// No description provided for @goalPresetMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{months}M'**
+  String goalPresetMonths(int months);
+
+  /// No description provided for @goalPresetYears.
+  ///
+  /// In en, this message translates to:
+  /// **'{years}Y'**
+  String goalPresetYears(int years);
+
+  /// No description provided for @withdrawMaxChip.
+  ///
+  /// In en, this message translates to:
+  /// **'MAX'**
+  String get withdrawMaxChip;
+
+  /// No description provided for @currencyUSD.
+  ///
+  /// In en, this message translates to:
+  /// **'US Dollar'**
+  String get currencyUSD;
+
+  /// No description provided for @currencyEUR.
+  ///
+  /// In en, this message translates to:
+  /// **'Euro'**
+  String get currencyEUR;
+
+  /// No description provided for @currencyGBP.
+  ///
+  /// In en, this message translates to:
+  /// **'British Pound'**
+  String get currencyGBP;
+
+  /// No description provided for @currencyCOP.
+  ///
+  /// In en, this message translates to:
+  /// **'Colombian Peso'**
+  String get currencyCOP;
+
+  /// No description provided for @currencyBRL.
+  ///
+  /// In en, this message translates to:
+  /// **'Brazilian Real'**
+  String get currencyBRL;
+
+  /// No description provided for @currencyMXN.
+  ///
+  /// In en, this message translates to:
+  /// **'Mexican Peso'**
+  String get currencyMXN;
+
+  /// No description provided for @currencyCAD.
+  ///
+  /// In en, this message translates to:
+  /// **'Canadian Dollar'**
+  String get currencyCAD;
+
+  /// No description provided for @currencyARS.
+  ///
+  /// In en, this message translates to:
+  /// **'Argentine Peso'**
+  String get currencyARS;
+
+  /// No description provided for @currencyCLP.
+  ///
+  /// In en, this message translates to:
+  /// **'Chilean Peso'**
+  String get currencyCLP;
+
+  /// No description provided for @currencyPEN.
+  ///
+  /// In en, this message translates to:
+  /// **'Peruvian Sol'**
+  String get currencyPEN;
+
+  /// No description provided for @currencyCHF.
+  ///
+  /// In en, this message translates to:
+  /// **'Swiss Franc'**
+  String get currencyCHF;
+
+  /// No description provided for @currencyJPY.
+  ///
+  /// In en, this message translates to:
+  /// **'Japanese Yen'**
+  String get currencyJPY;
+
+  /// No description provided for @currencyAUD.
+  ///
+  /// In en, this message translates to:
+  /// **'Australian Dollar'**
+  String get currencyAUD;
 }
 
 class _AppLocalizationsDelegate

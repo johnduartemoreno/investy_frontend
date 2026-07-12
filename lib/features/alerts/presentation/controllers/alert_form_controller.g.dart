@@ -7,13 +7,17 @@ part of 'alert_form_controller.dart';
 // **************************************************************************
 
 String _$alertFormControllerHash() =>
-    r'abed2b3542be445ee54cd4be7be75bd30777fb78';
+    r'60e3a9c8037812e0a2f21d6ebc3877b418540766';
 
 /// Pattern D — mutation controller for creating a price alert (B12).
-/// Idle state is AsyncData(null). Invalidates [alertsProvider] only on success.
-/// Deletion is done inline in the list tile (a fire-and-forget datasource call +
-/// invalidate) — routing it through this autoDispose notifier from a `ref.read`
-/// context disposes it mid-await and throws "Future already completed".
+/// Idle state is AsyncData(null).
+///
+/// The list refresh ([alertsProvider] invalidation) is NOT done here: the
+/// sheet's success listener pops the modal, which disposes this autoDispose
+/// notifier mid-flight — an `ref.invalidate` issued from this method right
+/// after the await is dropped, so the new alert never shows in the list. The
+/// sheet invalidates instead, from a ref that is still alive when it fires.
+/// Same reason deletion is done inline in the list tile.
 ///
 /// Copied from [AlertFormController].
 @ProviderFor(AlertFormController)

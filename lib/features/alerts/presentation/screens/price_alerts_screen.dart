@@ -62,7 +62,7 @@ class PriceAlertsScreen extends ConsumerWidget {
       isScrollControlled: true,
       useSafeArea: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimens.radiusBottomSheet)),
       ),
       builder: (_) => const _CreateAlertSheet(),
     );
@@ -362,7 +362,7 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
                       prefixIcon: const Icon(Icons.search),
                       filled: true,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                         borderSide: BorderSide.none,
                       ),
                       contentPadding: const EdgeInsets.symmetric(
@@ -375,7 +375,7 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
                       constraints: const BoxConstraints(maxHeight: 220),
                       decoration: BoxDecoration(
                         color: cs.surfaceContainerLow,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                       ),
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -469,7 +469,7 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
                       ),
                       filled: true,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                         borderSide: BorderSide.none,
                       ),
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -520,7 +520,7 @@ class _DirectionChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
           color: selected ? cs.primaryContainer : cs.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppDimens.radiusPill),
           border: selected
               ? Border.all(color: cs.primary, width: 1.5)
               : Border.all(color: cs.outlineVariant, width: 1),

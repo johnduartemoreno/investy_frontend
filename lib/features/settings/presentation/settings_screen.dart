@@ -117,7 +117,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 if (uploadState.status == AvatarUploadStatus.error)
                   Text(
-                    uploadState.errorMessage ?? l10n.commonError,
+                    l10n.commonError,
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall

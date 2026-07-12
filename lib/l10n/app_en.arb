@@ -1,13 +1,10 @@
 {
   "@@locale": "en",
-
   "appName": "Investy",
-
   "navHome": "Home",
   "navGoals": "Goals",
   "navPortfolio": "Portfolio",
   "navSettings": "Settings",
-
   "commonSave": "Save",
   "commonDone": "Done",
   "commonCancel": "Cancel",
@@ -20,13 +17,11 @@
   "commonName": "Name",
   "commonError": "Something went wrong. Please try again.",
   "commonLogOut": "Log Out",
-
   "errorRequiredField": "This field is required",
   "errorInvalidEmail": "Enter a valid email address",
   "errorPasswordTooShort": "Password must be at least 6 characters",
   "errorPasswordMismatch": "Passwords do not match",
   "errorNetwork": "Network error. Check your connection.",
-
   "loginTitle": "Welcome Back!",
   "loginSubtitle": "Securely access your investments.",
   "loginRememberEmail": "Remember email",
@@ -38,7 +33,6 @@
   "loginNoAccount": "Don't have an account?",
   "loginSignUp": "Sign up",
   "loginWithGoogle": "Continue with Google",
-
   "signupTitle": "Create account",
   "signupSubtitle": "Start investing today",
   "signupNameHint": "Full name",
@@ -57,7 +51,6 @@
   "signupPasswordMismatch": "Passwords do not match",
   "signupShowPassword": "Show password",
   "signupHidePassword": "Hide password",
-
   "forgotPasswordTitle": "Reset password",
   "forgotPasswordSubtitle": "Enter your email and we'll send you a reset link",
   "forgotPasswordEmailHint": "Email",
@@ -67,27 +60,31 @@
   "forgotPasswordSentMessage": "We sent a reset link to {email}. Check your inbox and follow the instructions.",
   "@forgotPasswordSentMessage": {
     "placeholders": {
-      "email": { "type": "String" }
+      "email": {
+        "type": "String"
+      }
     }
   },
   "forgotPasswordBackToSignIn": "Back to Sign In",
-
   "emailVerificationTitle": "Verify your email",
   "emailVerificationSubtitle": "We sent a verification link to {email}. Check your inbox.",
   "@emailVerificationSubtitle": {
     "placeholders": {
-      "email": { "type": "String" }
+      "email": {
+        "type": "String"
+      }
     }
   },
   "emailVerificationResend": "Resend email",
   "emailVerificationLogout": "Use a different account",
   "emailVerificationNotVerified": "Please verify your email first",
   "emailVerificationSent": "Verification email sent! Check your inbox",
-
   "dashboardGreeting": "Hello, {name}",
   "@dashboardGreeting": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
   "dashboardWelcomeBack": "Welcome back,",
@@ -108,13 +105,17 @@
   "activityBought": "Bought {symbol}",
   "@activityBought": {
     "placeholders": {
-      "symbol": { "type": "String" }
+      "symbol": {
+        "type": "String"
+      }
     }
   },
   "activitySold": "Sold {symbol}",
   "@activitySold": {
     "placeholders": {
-      "symbol": { "type": "String" }
+      "symbol": {
+        "type": "String"
+      }
     }
   },
   "activityDeposit": "Deposit",
@@ -128,7 +129,6 @@
   "activityDetailRealizedPnl": "Realized P&L",
   "activityDetailGain": "Gain",
   "activityDetailLoss": "Loss",
-
   "portfolioTitle": "Portfolio",
   "portfolioNoHoldings": "No holdings yet.\nBuy your first asset to get started.",
   "portfolioTotalInvested": "Total Invested",
@@ -140,14 +140,15 @@
   "portfolioAssetCrypto": "Crypto",
   "portfolioAssetEtf": "ETF",
   "portfolioShares": "shares",
-
   "goalsTitle": "Goals",
   "goalsNoGoals": "No goals yet.\nCreate one to start saving.",
   "goalsAddButton": "Add Goal",
   "goalProgress": "{percent}% funded",
   "@goalProgress": {
     "placeholders": {
-      "percent": { "type": "int" }
+      "percent": {
+        "type": "int"
+      }
     }
   },
   "goalTarget": "Target",
@@ -162,31 +163,25 @@
   "goalDetailProjection": "At this pace, you'll reach it around {date}",
   "@goalDetailProjection": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "goalDetailProjectionUnknown": "Add funds to see an estimated completion date.",
   "goalInvestButton": "Invest toward this goal",
   "buyAssignGoalLabel": "Assign to a goal? (optional)",
   "buyNoGoalOption": "No goal",
-
   "goalFormTitle": "New Goal",
   "goalFormNameHint": "Goal name",
-  "goalFormTargetHint": "Target amount",
-  "goalFormDeadlineLabel": "Deadline",
   "goalFormCategoryLabel": "Category",
-  "goalFormSaveButton": "Save Goal",
-  "goalFormSelectDate": "Select date",
-
   "categoryCar": "Car",
   "categoryHome": "Home",
   "categoryVacation": "Vacation",
-  "categoryTravel": "Travel",
   "categoryEducation": "Education",
   "categoryEmergency": "Emergency",
   "categoryHealth": "Health",
   "categoryOther": "Other",
-
   "buyAssetTitle": "Buy Asset",
   "buySelectAsset": "Select an asset",
   "buyPerShare": "per share",
@@ -197,7 +192,9 @@
   "buyTitle": "Buy {symbol}",
   "@buyTitle": {
     "placeholders": {
-      "symbol": { "type": "String" }
+      "symbol": {
+        "type": "String"
+      }
     }
   },
   "buyInsufficientFunds": "Insufficient funds. Top up your account to continue.",
@@ -206,7 +203,6 @@
   "buyTotalLabel": "Total",
   "buyButton": "Buy",
   "buySuccess": "Purchase successful",
-
   "sellAssetTitle": "Sell Asset",
   "sellNoAssets": "You don't have any assets yet",
   "sellNoAssetsSubtitle": "Buy your first asset to start building your portfolio.",
@@ -214,14 +210,18 @@
   "sellTitle": "Sell {symbol}",
   "@sellTitle": {
     "placeholders": {
-      "symbol": { "type": "String" }
+      "symbol": {
+        "type": "String"
+      }
     }
   },
   "sellQuantityLabel": "Quantity",
   "sellSharesOwned": "{quantity} shares owned",
   "@sellSharesOwned": {
     "placeholders": {
-      "quantity": { "type": "String" }
+      "quantity": {
+        "type": "String"
+      }
     }
   },
   "sellPricePerShare": "Price per share (pre-filled from market)",
@@ -231,7 +231,9 @@
   "sellQuantityExceeds": "You only own {quantity} shares",
   "@sellQuantityExceeds": {
     "placeholders": {
-      "quantity": { "type": "String" }
+      "quantity": {
+        "type": "String"
+      }
     }
   },
   "sellEnterPrice": "Enter sell price",
@@ -241,10 +243,11 @@
   "sellMaxQuantity": "Max: {quantity}",
   "@sellMaxQuantity": {
     "placeholders": {
-      "quantity": { "type": "String" }
+      "quantity": {
+        "type": "String"
+      }
     }
   },
-
   "topUpTitle": "Top Up",
   "topUpEnterAmount": "Enter Amount",
   "topUpAmountRequired": "Please enter an amount",
@@ -253,7 +256,6 @@
   "topUpAmountHint": "Amount",
   "topUpButton": "Add funds",
   "topUpSuccess": "Funds added successfully",
-
   "withdrawTitle": "Withdraw",
   "withdrawCash": "Withdraw Cash",
   "withdrawAvailableTo": "Available to Withdraw",
@@ -264,10 +266,8 @@
   "withdrawButton": "Withdraw",
   "withdrawSuccess": "Withdrawal successful",
   "withdrawInsufficientFunds": "Insufficient funds",
-
   "assetSearchHint": "Search assets (e.g. AAPL, BTC)",
   "assetSearchEmpty": "No assets found",
-
   "settingsTitle": "Settings",
   "settingsCurrency": "Currency",
   "settingsNotifications": "Notifications",
@@ -275,7 +275,6 @@
   "settingsAppearance": "Appearance",
   "settingsAbout": "About Investy",
   "settingsHelp": "Help & Support",
-
   "securityTitle": "Privacy & Security",
   "securityAccountSection": "Account Security",
   "securityDangerSection": "Danger Zone",
@@ -284,7 +283,6 @@
   "securityManagedByGoogle": "Managed by Google",
   "securityDeleteAccount": "Delete Account",
   "securityDeleteAccountSubtitle": "Permanently remove your account and all data",
-
   "changePasswordTitle": "Change Password",
   "changePasswordCurrent": "Current password",
   "changePasswordNew": "New password",
@@ -294,7 +292,6 @@
   "changePasswordErrorWrongPassword": "Current password is incorrect.",
   "changePasswordErrorRecentLogin": "Please sign out and sign back in before changing your password.",
   "changePasswordErrorFailed": "Failed to change password. Please try again.",
-
   "deleteAccountTitle": "Delete Account",
   "deleteAccountWarning": "This action is permanent and cannot be undone. All your data will be deleted.",
   "deleteAccountConfirmTitle": "Confirm Deletion",
@@ -307,11 +304,12 @@
   "deleteAccountYourEmail": "Your email: {email}",
   "@deleteAccountYourEmail": {
     "placeholders": {
-      "email": { "type": "String" }
+      "email": {
+        "type": "String"
+      }
     }
   },
   "deleteAccountButton": "Delete my account",
-
   "notificationsTitle": "Notifications",
   "notificationsPush": "Push Notifications",
   "notificationsPushSubtitle": "Receive alerts for goals and transactions",
@@ -319,24 +317,20 @@
   "notificationsGoalRemindersSubtitle": "Weekly progress reminders for your goals",
   "notificationsEnable": "Enable notifications",
   "notificationsDescription": "You will be notified when:\n• A deposit or withdrawal is processed\n• A buy or sell order is confirmed\n• A financial goal deadline is approaching (30 days)",
-
   "appearanceTitle": "Appearance",
   "appearanceTheme": "Theme",
   "appearanceThemeSystem": "System",
   "appearanceThemeLight": "Light",
   "appearanceThemeDark": "Dark",
   "appearanceLanguage": "Language",
-
   "languageEn": "English",
   "languageEs": "Spanish",
   "languagePt": "Portuguese (BR)",
-
   "aboutTitle": "About Investy",
   "aboutVersion": "Version",
   "aboutDescription": "Investy helps you plan and track your investments toward your goals.",
   "aboutTerms": "Terms of Service",
   "aboutPrivacy": "Privacy Policy",
-
   "helpTitle": "Help & Support",
   "helpFaq": "Frequently Asked Questions",
   "helpContact": "Contact Support",
@@ -352,7 +346,6 @@
   "helpFaq4A": "Yes. Tap \"Withdraw\" on the home screen and enter the amount. Withdrawals are processed from your available cash balance.",
   "helpFaq5Q": "What happens if I forget my password?",
   "helpFaq5A": "On the login screen, tap \"Forgot password?\" and enter your email. We will send you a reset link within a few minutes.",
-
   "kycTitle": "Identity Verification",
   "kycIntroBody": "To start investing, we need to verify your identity. This is required by financial regulations and takes about 5 minutes.",
   "kycStartButton": "Start Verification",
@@ -385,8 +378,12 @@
   "riskProfileQuestionOf": "{current} of {total}",
   "@riskProfileQuestionOf": {
     "placeholders": {
-      "current": {"type": "int"},
-      "total": {"type": "int"}
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "riskProfileQ1": "What is your investment time horizon?",
@@ -425,7 +422,6 @@
   "riskProfileRetake": "Retake Questionnaire",
   "riskProfileNotCompleted": "Not completed",
   "riskProfileLoadError": "Could not load risk profile.",
-
   "owlAiName": "Owl AI",
   "owlAiTagline": "Investment picks made for you",
   "owlAiPoweredAdvisor": "AI-powered advisor",
@@ -446,20 +442,28 @@
   "owlHistorySessionBanner": "Session from {date}",
   "@owlHistorySessionBanner": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "owlHistoryDaysAgo": "{days, plural, =0{Today} =1{Yesterday} other{{days} days ago}}",
   "@owlHistoryDaysAgo": {
     "placeholders": {
-      "days": { "type": "int" }
+      "days": {
+        "type": "int"
+      }
     }
   },
   "owlHistoryContext": "Portfolio {portfolio} · Cash {cash}",
   "@owlHistoryContext": {
     "placeholders": {
-      "portfolio": { "type": "String" },
-      "cash": { "type": "String" }
+      "portfolio": {
+        "type": "String"
+      },
+      "cash": {
+        "type": "String"
+      }
     }
   },
   "owlAiCashAvailable": "Available to invest",
@@ -467,7 +471,6 @@
   "greetingMorning": "Good morning,",
   "greetingAfternoon": "Good afternoon,",
   "greetingEvening": "Good evening,",
-
   "alertsTitle": "Price alerts",
   "alertsSettingsLabel": "Price alerts",
   "alertsEmpty": "You have no price alerts yet.",
@@ -480,7 +483,9 @@
   "alertsCurrentPrice": "Current: {price}",
   "@alertsCurrentPrice": {
     "placeholders": {
-      "price": { "type": "String" }
+      "price": {
+        "type": "String"
+      }
     }
   },
   "alertsDirectionAbove": "Rises to or above",
@@ -494,18 +499,80 @@
   "alertsConditionAbove": "Above {price}",
   "@alertsConditionAbove": {
     "placeholders": {
-      "price": { "type": "String" }
+      "price": {
+        "type": "String"
+      }
     }
   },
   "alertsConditionBelow": "Below {price}",
   "@alertsConditionBelow": {
     "placeholders": {
-      "price": { "type": "String" }
+      "price": {
+        "type": "String"
+      }
     }
   },
   "alertsErrorAlreadyMet": "The current price already meets this target. Choose a different one.",
   "alertsErrorLimit": "You've reached the maximum of 20 active alerts.",
   "alertsErrorDuplicate": "You already have an identical alert for this asset.",
   "alertsErrorUnknownSymbol": "Unknown asset.",
-  "alertsDeleteTooltip": "Delete alert"
+  "alertsDeleteTooltip": "Delete alert",
+  "loginSessionTerminated": "Your session was terminated. Please sign in again.",
+  "authErrorUserNotFound": "No account found with this email",
+  "authErrorInvalidCredentials": "Invalid email or password",
+  "authErrorInvalidEmail": "Invalid email format",
+  "authErrorUserDisabled": "This account has been disabled",
+  "authErrorTooManyRequests": "Too many failed attempts. Please try again later",
+  "authErrorNetwork": "Network error. Please check your connection",
+  "authErrorEmailInUse": "An account with this email already exists",
+  "authErrorWeakPassword": "Password is too weak. Use at least 6 characters",
+  "authErrorOperationNotAllowed": "Email/password accounts are not enabled",
+  "authErrorAccountExistsDifferentMethod": "An account already exists with this email using a different sign-in method",
+  "authErrorGoogleCancelled": "Google sign-in was cancelled",
+  "authErrorWrongPassword": "Password is incorrect",
+  "authErrorRequiresRecentLogin": "Please sign out and sign back in first",
+  "authErrorNoUser": "No user is logged in",
+  "authErrorVerificationEmailFailed": "Failed to send verification email. Please try again",
+  "authErrorRefreshFailed": "Failed to refresh status. Please try again",
+  "authErrorDeletionFailed": "Account deletion failed. Please try again",
+  "authErrorUnexpected": "An unexpected error occurred. Please try again",
+  "goalFormTargetLabel": "Target Amount",
+  "goalFormDateLabel": "Target Date",
+  "goalFormCreateButton": "Create Goal",
+  "goalFormNameRequired": "Enter a goal name",
+  "goalFormTargetRequired": "Enter a target amount",
+  "goalFormTargetInvalid": "Amount must be greater than zero",
+  "goalFormDateRequired": "Select a target date",
+  "goalFormCustomDate": "Custom",
+  "goalFormCreateFailed": "Could not create the goal. Please try again.",
+  "goalPresetMonths": "{months}M",
+  "@goalPresetMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "goalPresetYears": "{years}Y",
+  "@goalPresetYears": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "withdrawMaxChip": "MAX",
+  "currencyUSD": "US Dollar",
+  "currencyEUR": "Euro",
+  "currencyGBP": "British Pound",
+  "currencyCOP": "Colombian Peso",
+  "currencyBRL": "Brazilian Real",
+  "currencyMXN": "Mexican Peso",
+  "currencyCAD": "Canadian Dollar",
+  "currencyARS": "Argentine Peso",
+  "currencyCLP": "Chilean Peso",
+  "currencyPEN": "Peruvian Sol",
+  "currencyCHF": "Swiss Franc",
+  "currencyJPY": "Japanese Yen",
+  "currencyAUD": "Australian Dollar"
 }

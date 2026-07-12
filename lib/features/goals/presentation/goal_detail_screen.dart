@@ -9,6 +9,7 @@ import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../core/presentation/widgets/signal_badge.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/asset_gradients.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../dashboard/data/models/buy_asset_args.dart';
@@ -205,7 +206,7 @@ class _GoalDetailBody extends ConsumerWidget {
                 child: Row(
                   children: [
                     const GradientIconBox(
-                      colors: [Color(0xFF065f46), Color(0xFF10b981)],
+                      colors: AssetGradients.cash,
                       circle: true,
                       child: Icon(Icons.savings, size: 20, color: Colors.white),
                     ),

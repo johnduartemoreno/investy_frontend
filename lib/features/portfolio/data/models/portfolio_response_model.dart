@@ -23,7 +23,8 @@ class PortfolioResponseModel {
       holdings: rawList
           .map((e) => PortfolioHoldingModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      totalInvestedCents: (json['totalInvestedCents'] as num?)?.toInt() ?? 0,
+      // Money fields have no defaults — fail loudly on contract drift (B40-F7).
+      totalInvestedCents: (json['totalInvestedCents'] as num).toInt(),
       currency: json['currency'] as String? ?? 'USD',
     );
   }
@@ -82,9 +83,9 @@ class PortfolioHoldingModel {
       symbol: json['symbol'] as String? ?? '',
       name: json['name'] as String? ?? '',
       assetClass: json['assetClass'] as String? ?? 'stock',
-      quantityUnits: (json['quantityUnits'] as num?)?.toInt() ?? 0,
-      avgCostCents: (json['avgCostCents'] as num?)?.toInt() ?? 0,
-      currentPriceCents: (json['currentPriceCents'] as num?)?.toInt() ?? 0,
+      quantityUnits: (json['quantityUnits'] as num).toInt(),
+      avgCostCents: (json['avgCostCents'] as num).toInt(),
+      currentPriceCents: (json['currentPriceCents'] as num).toInt(),
       logoUrl: json['logoUrl'] as String? ?? '',
     );
   }

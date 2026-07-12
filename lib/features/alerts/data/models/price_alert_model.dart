@@ -34,7 +34,8 @@ class PriceAlertModel {
       id: json['id'] as String? ?? '',
       symbol: json['symbol'] as String? ?? '',
       direction: json['direction'] as String? ?? 'above',
-      targetPriceCents: (json['targetPriceCents'] as num?)?.toInt() ?? 0,
+      // No default — a null target price must fail loudly (B40-F7).
+      targetPriceCents: (json['targetPriceCents'] as num).toInt(),
       status: json['status'] as String? ?? 'active',
       createdAt: json['createdAt'] as String? ?? '',
       triggeredAt: json['triggeredAt'] as String? ?? '',

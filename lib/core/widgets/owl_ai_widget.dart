@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
+
 enum OwlState { idle, thinking, celebrating }
 
 /// Animated Owl AI mascot — pure Flutter, zero external deps.
@@ -188,10 +190,11 @@ class _OwlPainter extends CustomPainter {
   final double celebrateValue;
   final bool isThinking;
 
-  static const _brand = Color(0xFF6C63FF);
-  static const _brandLight = Color(0xFFa78bfa);
+  static const _brand = AppTheme.brandPurple;
+  static const _brandLight = AppTheme.brandPurpleLight;
+  // Mascot plumage — unique to the Owl artwork, not a theme surface token.
   static const _dark = Color(0xFF1E1B2E);
-  static const _beak = Color(0xFFfbbf24);
+  static const _beak = AppTheme.signalYellow;
 
   const _OwlPainter({
     required this.breathScale,
