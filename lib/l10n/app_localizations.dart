@@ -730,6 +730,48 @@ abstract class AppLocalizations {
   /// **'Allocation'**
   String get portfolioAllocationTitle;
 
+  /// No description provided for @chartPortfolioValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Portfolio value'**
+  String get chartPortfolioValue;
+
+  /// No description provided for @chartNotEnoughData.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough data yet to draw a chart.'**
+  String get chartNotEnoughData;
+
+  /// No description provided for @chartRange1W.
+  ///
+  /// In en, this message translates to:
+  /// **'1W'**
+  String get chartRange1W;
+
+  /// No description provided for @chartRange1M.
+  ///
+  /// In en, this message translates to:
+  /// **'1M'**
+  String get chartRange1M;
+
+  /// No description provided for @chartRange3M.
+  ///
+  /// In en, this message translates to:
+  /// **'3M'**
+  String get chartRange3M;
+
+  /// No description provided for @chartRange1Y.
+  ///
+  /// In en, this message translates to:
+  /// **'1Y'**
+  String get chartRange1Y;
+
+  /// No description provided for @chartRangeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'ALL'**
+  String get chartRangeAll;
+
   /// No description provided for @portfolioAssetCrypto.
   ///
   /// In en, this message translates to:

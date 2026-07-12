@@ -337,6 +337,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get portfolioAllocationTitle => 'Allocation';
 
   @override
+  String get chartPortfolioValue => 'Portfolio value';
+
+  @override
+  String get chartNotEnoughData => 'Not enough data yet to draw a chart.';
+
+  @override
+  String get chartRange1W => '1W';
+
+  @override
+  String get chartRange1M => '1M';
+
+  @override
+  String get chartRange3M => '3M';
+
+  @override
+  String get chartRange1Y => '1Y';
+
+  @override
+  String get chartRangeAll => 'ALL';
+
+  @override
   String get portfolioAssetCrypto => 'Crypto';
 
   @override

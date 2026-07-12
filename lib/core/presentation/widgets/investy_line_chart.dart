@@ -1,0 +1,93 @@
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+
+import '../../theme/app_theme.dart';
+
+/// Themed single-series line/area chart (change-over-time) built on fl_chart.
+/// Single series → no legend (the caller's title names it, per dataviz). Brand
+/// gradient area fill, thin 2px line, recessive grid, touch crosshair+tooltip.
+class InvestyLineChart extends StatelessWidget {
+  final List<double> values;
+
+  /// Formats the y value for the touch tooltip (e.g. currency).
+  final String Function(double) tooltipFormat;
+  final double height;
+
+  const InvestyLineChart({
+    super.key,
+    required this.values,
+    required this.tooltipFormat,
+    this.height = 180,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    final minV = values.reduce((a, b) => a < b ? a : b);
+    final maxV = values.reduce((a, b) => a > b ? a : b);
+    final pad = (maxV - minV) == 0 ? (maxV.abs() * 0.05 + 1) : (maxV - minV) * 0.12;
+
+    return SizedBox(
+      height: height,
+      child: LineChart(
+        LineChartData(
+          minX: 0,
+          maxX: (values.length - 1).toDouble(),
+          minY: minV - pad,
+          maxY: maxV + pad,
+          gridData: FlGridData(
+            show: true,
+            drawVerticalLine: false,
+            horizontalInterval: (maxV - minV) == 0 ? null : (maxV - minV) / 3,
+            getDrawingHorizontalLine: (_) => FlLine(
+              color: cs.onSurfaceVariant.withValues(alpha: 0.12),
+              strokeWidth: 1,
+            ),
+          ),
+          titlesData: const FlTitlesData(show: false),
+          borderData: FlBorderData(show: false),
+          lineTouchData: LineTouchData(
+            touchTooltipData: LineTouchTooltipData(
+              getTooltipColor: (_) => cs.surfaceContainerHighest,
+              getTooltipItems: (spots) => spots
+                  .map((s) => LineTooltipItem(
+                        tooltipFormat(s.y),
+                        TextStyle(
+                          color: cs.onSurface,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
+          lineBarsData: [
+            LineChartBarData(
+              spots: [
+                for (var i = 0; i < values.length; i++)
+                  FlSpot(i.toDouble(), values[i]),
+              ],
+              isCurved: true,
+              preventCurveOverShooting: true,
+              color: AppTheme.brandPurple,
+              barWidth: 2,
+              dotData: const FlDotData(show: false),
+              belowBarData: BarAreaData(
+                show: true,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppTheme.brandPurple.withValues(alpha: 0.28),
+                    AppTheme.brandPurple.withValues(alpha: 0.0),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

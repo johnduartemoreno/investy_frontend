@@ -15,6 +15,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../data/models/portfolio_response_model.dart';
 import 'providers/rest_portfolio_provider.dart';
 import 'widgets/allocation_card.dart';
+import 'widgets/portfolio_chart_card.dart';
 import '../../dashboard/presentation/screens/dashboard_screen.dart'
     show displayCurrencyProvider, fxRateProvider;
 
@@ -40,11 +41,14 @@ class PortfolioScreen extends ConsumerWidget {
           }
           return ListView.separated(
             padding: const EdgeInsets.all(AppDimens.spacingL),
-            itemCount: active.length + 1, // +1 = allocation donut header
+            itemCount: active.length + 2, // +2 = value chart + allocation donut
             separatorBuilder: (_, __) =>
                 const SizedBox(height: AppDimens.spacingM),
             itemBuilder: (context, index) {
               if (index == 0) {
+                return const PortfolioChartCard();
+              }
+              if (index == 1) {
                 return AllocationCard(
                   holdings: active,
                   currency: currency,
@@ -52,7 +56,7 @@ class PortfolioScreen extends ConsumerWidget {
                 );
               }
               return _HoldingCard(
-                holding: active[index - 1],
+                holding: active[index - 2],
                 currency: currency,
                 fxRate: fxRate,
               );

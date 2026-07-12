@@ -340,6 +340,28 @@ class AppLocalizationsPt extends AppLocalizations {
   String get portfolioAllocationTitle => 'Alocação';
 
   @override
+  String get chartPortfolioValue => 'Valor da carteira';
+
+  @override
+  String get chartNotEnoughData =>
+      'Ainda não há dados suficientes para o gráfico.';
+
+  @override
+  String get chartRange1W => '1S';
+
+  @override
+  String get chartRange1M => '1M';
+
+  @override
+  String get chartRange3M => '3M';
+
+  @override
+  String get chartRange1Y => '1A';
+
+  @override
+  String get chartRangeAll => 'TUDO';
+
+  @override
   String get portfolioAssetCrypto => 'Cripto';
 
   @override
