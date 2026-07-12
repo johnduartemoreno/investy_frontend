@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/presentation/widgets/gradient_icon_box.dart';
 import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/asset_gradients.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../features/portfolio/data/models/portfolio_response_model.dart';
@@ -140,6 +142,29 @@ class SellAssetScreen extends ConsumerWidget {
 }
 
 // ═══════════════════════════════════════════════════════════════════
+// SHARED — ticker gradient box (parity with portfolio_screen)
+// ═══════════════════════════════════════════════════════════════════
+
+/// Gradient ticker square matching the portfolio list — single visual
+/// language for a holding everywhere (list tile + sell sheet header).
+Widget _tickerBox(PortfolioHoldingModel holding) {
+  final label = holding.symbol.length > 4
+      ? holding.symbol.substring(0, 4)
+      : holding.symbol;
+  return GradientIconBox(
+    colors: AssetGradients.assetClass(holding.assetClass),
+    child: Text(
+      label,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 10,
+        fontWeight: FontWeight.w800,
+      ),
+    ),
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // HOLDING LIST TILE
 // ═══════════════════════════════════════════════════════════════════
 
@@ -148,19 +173,6 @@ class _HoldingListTile extends StatelessWidget {
   final VoidCallback onTap;
 
   const _HoldingListTile({required this.holding, required this.onTap});
-
-  IconData _assetIcon(String assetClass) {
-    switch (assetClass.toLowerCase()) {
-      case 'crypto':
-        return Icons.currency_bitcoin;
-      case 'etf':
-        return Icons.pie_chart_outline;
-      case 'bond':
-        return Icons.account_balance;
-      default:
-        return Icons.show_chart;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,14 +190,7 @@ class _HoldingListTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Row(
             children: [
-              CircleAvatar(
-                backgroundColor: colors.primaryContainer,
-                child: Icon(
-                  _assetIcon(holding.assetClass),
-                  size: 20,
-                  color: colors.primary,
-                ),
-              ),
+              _tickerBox(holding),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
@@ -305,19 +310,6 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
         );
   }
 
-  IconData _assetIcon(String assetClass) {
-    switch (assetClass.toLowerCase()) {
-      case 'crypto':
-        return Icons.currency_bitcoin;
-      case 'etf':
-        return Icons.pie_chart_outline;
-      case 'bond':
-        return Icons.account_balance;
-      default:
-        return Icons.show_chart;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -377,14 +369,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
               // ── Asset Header ──
               Row(
                 children: [
-                  CircleAvatar(
-                    backgroundColor: colors.primaryContainer,
-                    child: Icon(
-                      _assetIcon(_holding.assetClass),
-                      size: 20,
-                      color: colors.primary,
-                    ),
-                  ),
+                  _tickerBox(_holding),
                   const SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
