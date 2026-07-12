@@ -89,6 +89,7 @@
   },
   "dashboardWelcomeBack": "Welcome back,",
   "dashboardTotalBalance": "Total Balance",
+  "dashboardToday": "today",
   "dashboardInvestedPortfolio": "Invested Portfolio",
   "dashboardCashToInvest": "Cash to Invest",
   "dashboardInvestedValue": "Invested",

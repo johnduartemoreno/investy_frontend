@@ -29,3 +29,17 @@ Future<PortfolioHistoryModel> portfolioHistory(Ref ref) async {
       .watch(dashboardRemoteDataSourceProvider)
       .getPortfolioHistory(userId, range);
 }
+
+/// Today's change (Pattern C — derived): the latest snapshot vs the previous
+/// one, in USD dollars + percent. Range-independent (last two daily points are
+/// always yesterday/today). Null until at least two points exist.
+final todaysChangeProvider =
+    Provider.autoDispose<({double amount, double pct})?>((ref) {
+  final history = ref.watch(portfolioHistoryProvider).valueOrNull;
+  if (history == null || history.points.length < 2) return null;
+  final last = history.points[history.points.length - 1].totalAmount;
+  final prev = history.points[history.points.length - 2].totalAmount;
+  final amount = last - prev;
+  final pct = prev == 0 ? 0.0 : (amount / prev * 100);
+  return (amount: amount, pct: pct);
+});

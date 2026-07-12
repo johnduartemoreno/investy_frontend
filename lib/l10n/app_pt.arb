@@ -75,6 +75,7 @@
   "dashboardGreeting": "Olá, {name}",
   "dashboardWelcomeBack": "Bem-vindo de volta,",
   "dashboardTotalBalance": "Saldo total",
+  "dashboardToday": "hoje",
   "dashboardInvestedPortfolio": "Portfólio investido",
   "dashboardCashToInvest": "Dinheiro para investir",
   "dashboardInvestedValue": "Investido",

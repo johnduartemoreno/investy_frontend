@@ -225,6 +225,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get dashboardTotalBalance => 'Balance total';
 
   @override
+  String get dashboardToday => 'hoy';
+
+  @override
   String get dashboardInvestedPortfolio => 'Portafolio invertido';
 
   @override

@@ -508,6 +508,12 @@ abstract class AppLocalizations {
   /// **'Total Balance'**
   String get dashboardTotalBalance;
 
+  /// No description provided for @dashboardToday.
+  ///
+  /// In en, this message translates to:
+  /// **'today'**
+  String get dashboardToday;
+
   /// No description provided for @dashboardInvestedPortfolio.
   ///
   /// In en, this message translates to:

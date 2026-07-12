@@ -15,7 +15,11 @@ import '../providers/portfolio_history_provider.dart';
 /// Values come as USD cents from the history endpoint; converted to the display
 /// currency at render (ADR-03).
 class PortfolioChartCard extends ConsumerWidget {
-  const PortfolioChartCard({super.key});
+  /// Compact = no title and no big value line (the caller already shows the
+  /// value, e.g. the Home balance card). Just chart + range chips.
+  final bool compact;
+
+  const PortfolioChartCard({super.key, this.compact = false});
 
   static const List<String> _ranges = ['1W', '1M', '3M', '1Y', 'ALL'];
 
@@ -48,12 +52,14 @@ class PortfolioChartCard extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            l10n.chartPortfolioValue,
-            style:
-                theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: AppDimens.spacingM),
+          if (!compact) ...[
+            Text(
+              l10n.chartPortfolioValue,
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: AppDimens.spacingM),
+          ],
           historyAsync.when(
             loading: () => const SizedBox(
               height: 200,
@@ -82,14 +88,17 @@ class PortfolioChartCard extends ConsumerWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    CurrencyFormatter.formatWithCurrency(values.last, currency),
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.brandPurpleLight,
+                  if (!compact) ...[
+                    Text(
+                      CurrencyFormatter.formatWithCurrency(
+                          values.last, currency),
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.brandPurpleLight,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: AppDimens.spacingM),
+                    const SizedBox(height: AppDimens.spacingM),
+                  ],
                   InvestyLineChart(
                     values: values,
                     tooltipFormat: (v) =>
