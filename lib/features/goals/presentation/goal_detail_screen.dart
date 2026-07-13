@@ -34,24 +34,29 @@ class GoalDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    // Always watch the list provider so the detail refreshes when it is
+    // invalidated (e.g. after investing toward this goal). The passed `goal`
+    // is only a first-paint snapshot to avoid a loading flash — never the
+    // source of truth (that would stay stale after a buy).
+    final goalsAsync = ref.watch(restGoalsProvider);
 
-    if (goal != null) {
-      return _GoalDetailBody(goal: goal!);
+    GoalResponseModel? effective = goal;
+    final freshList = goalsAsync.valueOrNull;
+    if (freshList != null) {
+      final match = freshList.where((g) => g.id == goalId).toList();
+      effective = match.isEmpty ? goal : match.first;
     }
 
-    // Deep-link fallback: resolve the goal from the list provider by id.
-    final goalsAsync = ref.watch(restGoalsProvider);
+    if (effective != null) {
+      return _GoalDetailBody(goal: effective);
+    }
+
+    // No snapshot and the provider isn't ready with data yet.
     return goalsAsync.when(
-      data: (goals) {
-        final match = goals.where((g) => g.id == goalId).toList();
-        if (match.isEmpty) {
-          return Scaffold(
-            appBar: AppBar(),
-            body: Center(child: Text(l10n.commonError)),
-          );
-        }
-        return _GoalDetailBody(goal: match.first);
-      },
+      data: (_) => Scaffold(
+        appBar: AppBar(),
+        body: Center(child: Text(l10n.commonError)),
+      ),
       loading: () => const Scaffold(
         body: Center(child: CircularProgressIndicator.adaptive()),
       ),
