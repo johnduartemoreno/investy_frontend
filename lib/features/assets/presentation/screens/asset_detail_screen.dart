@@ -84,7 +84,16 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
         : holding.symbol;
 
     return Scaffold(
-      appBar: AppBar(title: Text(holding.symbol.toUpperCase())),
+      appBar: AppBar(
+        title: Text(holding.symbol.toUpperCase()),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add_alert_outlined),
+            tooltip: l10n.alertsCreateButton,
+            onPressed: () => context.push('/settings/price-alerts'),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(AppDimens.spacingL),
@@ -259,11 +268,6 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
               ),
               const SizedBox(height: AppDimens.spacingL),
 
-              // ── Secondary action (Buy/Sell live in the fixed bottom bar) ──
-              OutlinedButton(
-                onPressed: () => context.push('/settings/price-alerts'),
-                child: Text(l10n.alertsCreateButton),
-              ),
               const SizedBox(height: AppDimens.spacingM),
             ],
           ),
