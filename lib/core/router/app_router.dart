@@ -12,6 +12,8 @@ import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/goals/presentation/goals_screen.dart';
 import '../../features/goals/presentation/goal_detail_screen.dart';
 import '../../features/dashboard/data/models/goal_response_model.dart';
+import '../../features/assets/presentation/screens/asset_detail_screen.dart';
+import '../../features/portfolio/data/models/portfolio_response_model.dart';
 import '../../features/portfolio/presentation/portfolio_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/settings/presentation/appearance_screen.dart';
@@ -169,6 +171,14 @@ GoRouter goRouter(Ref ref) {
               GoRoute(
                 path: '/portfolio',
                 builder: (context, state) => const PortfolioScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'asset',
+                    builder: (context, state) => AssetDetailScreen(
+                      holding: state.extra as PortfolioHoldingModel?,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

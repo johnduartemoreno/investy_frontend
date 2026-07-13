@@ -55,7 +55,8 @@ class GoalsScreen extends ConsumerWidget {
           context: context,
           isScrollControlled: true,
           shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimens.radiusBottomSheet)),
+            borderRadius: BorderRadius.vertical(
+                top: Radius.circular(AppDimens.radiusBottomSheet)),
           ),
           builder: (_) => const CreateGoalSheet(),
         ),
@@ -208,30 +209,6 @@ class _GoalCardState extends State<_GoalCard>
                       ),
                     ],
                   ),
-                  // Breakdown — only when holdings are assigned to this goal.
-                  if (widget.goal.hasInvestments) ...[
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _AmountLabel(
-                          label: l10n.goalCash,
-                          value: CurrencyFormatter.formatWithCurrency(
-                              widget.goal.cashContributed * widget.fxRate,
-                              widget.currency),
-                          theme: theme,
-                        ),
-                        _AmountLabel(
-                          label: l10n.goalInvested,
-                          value: CurrencyFormatter.formatWithCurrency(
-                              widget.goal.investedValue * widget.fxRate,
-                              widget.currency),
-                          theme: theme,
-                          alignEnd: true,
-                        ),
-                      ],
-                    ),
-                  ],
                 ],
               ),
             ),

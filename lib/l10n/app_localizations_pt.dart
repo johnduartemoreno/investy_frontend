@@ -224,6 +224,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get dashboardTotalBalance => 'Saldo total';
 
   @override
+  String get dashboardToday => 'hoje';
+
+  @override
   String get dashboardInvestedPortfolio => 'Portfólio investido';
 
   @override
@@ -316,7 +319,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String get portfolioTotalInvested => 'Total investido';
 
   @override
+  String get portfolioTotalLabel => 'Total';
+
+  @override
   String get portfolioReturn => 'Retorno';
+
+  @override
+  String get assetDetailPosition => 'Sua posição';
+
+  @override
+  String get assetDetailMarketValue => 'Valor de mercado';
+
+  @override
+  String get assetDetailShowAvgCost => 'Meu custo médio';
 
   @override
   String get portfolioQuantity => 'Qtd';
@@ -329,6 +344,34 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get portfolioAssetStock => 'Ação';
+
+  @override
+  String get portfolioAssetCash => 'Dinheiro';
+
+  @override
+  String get portfolioAllocationTitle => 'Alocação';
+
+  @override
+  String get chartPortfolioValue => 'Valor da carteira';
+
+  @override
+  String get chartNotEnoughData =>
+      'Ainda não há dados suficientes para o gráfico.';
+
+  @override
+  String get chartRange1W => '1S';
+
+  @override
+  String get chartRange1M => '1M';
+
+  @override
+  String get chartRange3M => '3M';
+
+  @override
+  String get chartRange1Y => '1A';
+
+  @override
+  String get chartRangeAll => 'TUDO';
 
   @override
   String get portfolioAssetCrypto => 'Cripto';
@@ -390,6 +433,15 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get goalDetailProjectionUnknown =>
       'Adicione fundos para ver uma data estimada.';
+
+  @override
+  String get goalProjectionTitle => 'Projeção';
+
+  @override
+  String get goalOnTrack => 'No caminho';
+
+  @override
+  String get goalBehind => 'Atrasado';
 
   @override
   String get goalInvestButton => 'Investir para esta meta';
@@ -563,7 +615,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get withdrawTitle => 'Sacar';
 
   @override
-  String get withdrawCash => 'Retirar dinheiro';
+  String get withdrawCash => 'Sacar dinheiro';
 
   @override
   String get withdrawAvailableTo => 'Disponível para saque';

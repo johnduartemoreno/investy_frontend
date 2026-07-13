@@ -508,6 +508,12 @@ abstract class AppLocalizations {
   /// **'Total Balance'**
   String get dashboardTotalBalance;
 
+  /// No description provided for @dashboardToday.
+  ///
+  /// In en, this message translates to:
+  /// **'today'**
+  String get dashboardToday;
+
   /// No description provided for @dashboardInvestedPortfolio.
   ///
   /// In en, this message translates to:
@@ -682,11 +688,35 @@ abstract class AppLocalizations {
   /// **'Total Invested'**
   String get portfolioTotalInvested;
 
+  /// No description provided for @portfolioTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get portfolioTotalLabel;
+
   /// No description provided for @portfolioReturn.
   ///
   /// In en, this message translates to:
   /// **'Return'**
   String get portfolioReturn;
+
+  /// No description provided for @assetDetailPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Your position'**
+  String get assetDetailPosition;
+
+  /// No description provided for @assetDetailMarketValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Market value'**
+  String get assetDetailMarketValue;
+
+  /// No description provided for @assetDetailShowAvgCost.
+  ///
+  /// In en, this message translates to:
+  /// **'My avg cost'**
+  String get assetDetailShowAvgCost;
 
   /// No description provided for @portfolioQuantity.
   ///
@@ -711,6 +741,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stock'**
   String get portfolioAssetStock;
+
+  /// No description provided for @portfolioAssetCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get portfolioAssetCash;
+
+  /// No description provided for @portfolioAllocationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Allocation'**
+  String get portfolioAllocationTitle;
+
+  /// No description provided for @chartPortfolioValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Portfolio value'**
+  String get chartPortfolioValue;
+
+  /// No description provided for @chartNotEnoughData.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough data yet to draw a chart.'**
+  String get chartNotEnoughData;
+
+  /// No description provided for @chartRange1W.
+  ///
+  /// In en, this message translates to:
+  /// **'1W'**
+  String get chartRange1W;
+
+  /// No description provided for @chartRange1M.
+  ///
+  /// In en, this message translates to:
+  /// **'1M'**
+  String get chartRange1M;
+
+  /// No description provided for @chartRange3M.
+  ///
+  /// In en, this message translates to:
+  /// **'3M'**
+  String get chartRange3M;
+
+  /// No description provided for @chartRange1Y.
+  ///
+  /// In en, this message translates to:
+  /// **'1Y'**
+  String get chartRange1Y;
+
+  /// No description provided for @chartRangeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'ALL'**
+  String get chartRangeAll;
 
   /// No description provided for @portfolioAssetCrypto.
   ///
@@ -819,6 +903,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add funds to see an estimated completion date.'**
   String get goalDetailProjectionUnknown;
+
+  /// No description provided for @goalProjectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Projection'**
+  String get goalProjectionTitle;
+
+  /// No description provided for @goalOnTrack.
+  ///
+  /// In en, this message translates to:
+  /// **'On track'**
+  String get goalOnTrack;
+
+  /// No description provided for @goalBehind.
+  ///
+  /// In en, this message translates to:
+  /// **'Behind'**
+  String get goalBehind;
 
   /// No description provided for @goalInvestButton.
   ///

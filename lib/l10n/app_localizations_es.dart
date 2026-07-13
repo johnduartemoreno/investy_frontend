@@ -225,6 +225,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get dashboardTotalBalance => 'Balance total';
 
   @override
+  String get dashboardToday => 'hoy';
+
+  @override
   String get dashboardInvestedPortfolio => 'Portafolio invertido';
 
   @override
@@ -317,7 +320,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get portfolioTotalInvested => 'Total invertido';
 
   @override
+  String get portfolioTotalLabel => 'Total';
+
+  @override
   String get portfolioReturn => 'Rendimiento';
+
+  @override
+  String get assetDetailPosition => 'Tu posición';
+
+  @override
+  String get assetDetailMarketValue => 'Valor de mercado';
+
+  @override
+  String get assetDetailShowAvgCost => 'Mi costo promedio';
 
   @override
   String get portfolioQuantity => 'Cant.';
@@ -330,6 +345,34 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get portfolioAssetStock => 'Acción';
+
+  @override
+  String get portfolioAssetCash => 'Efectivo';
+
+  @override
+  String get portfolioAllocationTitle => 'Asignación';
+
+  @override
+  String get chartPortfolioValue => 'Valor del portafolio';
+
+  @override
+  String get chartNotEnoughData =>
+      'Aún no hay datos suficientes para el gráfico.';
+
+  @override
+  String get chartRange1W => '1S';
+
+  @override
+  String get chartRange1M => '1M';
+
+  @override
+  String get chartRange3M => '3M';
+
+  @override
+  String get chartRange1Y => '1A';
+
+  @override
+  String get chartRangeAll => 'TODO';
 
   @override
   String get portfolioAssetCrypto => 'Cripto';
@@ -390,6 +433,15 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get goalDetailProjectionUnknown =>
       'Agrega fondos para ver una fecha estimada.';
+
+  @override
+  String get goalProjectionTitle => 'Proyección';
+
+  @override
+  String get goalOnTrack => 'En camino';
+
+  @override
+  String get goalBehind => 'Atrasado';
 
   @override
   String get goalInvestButton => 'Invertir hacia esta meta';

@@ -23,6 +23,8 @@ import '../../data/models/dashboard_response_model.dart';
 import '../../data/models/recommendation_model.dart';
 import '../providers/recommendation_provider.dart';
 import '../../../goals/presentation/providers/rest_goals_provider.dart';
+import '../../../portfolio/presentation/providers/portfolio_history_provider.dart';
+import '../../../portfolio/presentation/widgets/portfolio_chart_card.dart';
 import '../../../settings/presentation/providers/avatar_upload_provider.dart';
 import '../widgets/withdraw_bottom_sheet.dart';
 import '../../domain/entities/contribution.dart';
@@ -223,6 +225,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final currencyAsync = ref.watch(restCurrencyProvider);
     final currency = ref.watch(displayCurrencyProvider);
     final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
+    final todaysChange = ref.watch(todaysChangeProvider);
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -235,7 +238,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               _buildHeader(theme, l10n, userNameAsync),
               const SizedBox(height: 20),
               _buildBalanceCard(theme, l10n, netWorthAsync, availableCashAsync,
-                  currencyAsync.valueOrNull ?? 'USD', fxRate),
+                  currencyAsync.valueOrNull ?? 'USD', fxRate, todaysChange),
+              const SizedBox(height: 16),
+              const PortfolioChartCard(compact: true),
               const SizedBox(height: 16),
               _buildOwlAdvisorCard(theme, l10n),
               const SizedBox(height: 24),
@@ -331,13 +336,36 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return part[0].toUpperCase() + part.substring(1).toLowerCase();
   }
 
+  Widget _buildTodaysChange(ThemeData theme, AppLocalizations l10n,
+      ({double amount, double pct}) change, String currency, double fxRate) {
+    final up = change.amount >= 0;
+    final color = up ? AppTheme.signalGreen : AppTheme.signalRed;
+    final sign = up ? '+' : '−';
+    final amount = CurrencyFormatter.formatWithCurrency(
+        change.amount.abs() * fxRate, currency);
+    final pct = change.pct.abs().toStringAsFixed(2);
+    return Row(
+      children: [
+        Icon(up ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
+            size: 15, color: color),
+        const SizedBox(width: 4),
+        Text(
+          '$sign$amount ($sign$pct%) ${l10n.dashboardToday}',
+          style: theme.textTheme.bodySmall
+              ?.copyWith(color: color, fontWeight: FontWeight.w700),
+        ),
+      ],
+    );
+  }
+
   Widget _buildBalanceCard(
       ThemeData theme,
       AppLocalizations l10n,
       AsyncValue<double> netWorthAsync,
       AsyncValue<double> availableCashAsync,
       String currency,
-      double fxRate) {
+      double fxRate,
+      ({double amount, double pct})? todaysChange) {
     final investedVal = netWorthAsync.valueOrNull;
     final cashVal = availableCashAsync.valueOrNull;
     final totalVal = (investedVal != null && cashVal != null)
@@ -385,6 +413,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   : Text('--',
                       style: theme.textTheme.displaySmall
                           ?.copyWith(color: Colors.white)),
+          if (todaysChange != null) ...[
+            const SizedBox(height: 6),
+            _buildTodaysChange(theme, l10n, todaysChange, currency, fxRate),
+          ],
           const SizedBox(height: 16),
           Container(
             height: 1,
@@ -954,7 +986,8 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                                       AppTheme.brandPurpleLight
                                     ],
                                   ),
-                                  borderRadius: BorderRadius.circular(AppDimens.radiusPill),
+                                  borderRadius: BorderRadius.circular(
+                                      AppDimens.radiusPill),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
