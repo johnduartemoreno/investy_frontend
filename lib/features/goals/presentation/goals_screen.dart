@@ -208,30 +208,6 @@ class _GoalCardState extends State<_GoalCard>
                       ),
                     ],
                   ),
-                  // Breakdown — only when holdings are assigned to this goal.
-                  if (widget.goal.hasInvestments) ...[
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _AmountLabel(
-                          label: l10n.goalCash,
-                          value: CurrencyFormatter.formatWithCurrency(
-                              widget.goal.cashContributed * widget.fxRate,
-                              widget.currency),
-                          theme: theme,
-                        ),
-                        _AmountLabel(
-                          label: l10n.goalInvested,
-                          value: CurrencyFormatter.formatWithCurrency(
-                              widget.goal.investedValue * widget.fxRate,
-                              widget.currency),
-                          theme: theme,
-                          alignEnd: true,
-                        ),
-                      ],
-                    ),
-                  ],
                 ],
               ),
             ),

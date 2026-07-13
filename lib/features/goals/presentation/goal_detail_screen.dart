@@ -10,7 +10,6 @@ import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../core/presentation/widgets/signal_badge.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/theme/asset_gradients.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../dashboard/data/models/buy_asset_args.dart';
@@ -211,28 +210,6 @@ class _GoalDetailBody extends ConsumerWidget {
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: AppDimens.spacingL),
-
-              // ── Cash saved ────────────────────────────────────────────
-              CustomCard(
-                child: Row(
-                  children: [
-                    const GradientIconBox(
-                      colors: AssetGradients.cash,
-                      circle: true,
-                      child: Icon(Icons.savings, size: 20, color: Colors.white),
-                    ),
-                    const SizedBox(width: AppDimens.spacingM),
-                    Expanded(
-                      child: Text(l10n.goalDetailCashTitle,
-                          style: theme.textTheme.titleSmall),
-                    ),
-                    Text(money(goal.cashContributed),
-                        style: theme.textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w700)),
                   ],
                 ),
               ),
