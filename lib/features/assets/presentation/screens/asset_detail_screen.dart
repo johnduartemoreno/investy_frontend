@@ -259,35 +259,43 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
               ),
               const SizedBox(height: AppDimens.spacingL),
 
-              // ── Actions: Buy & Sell equal weight (asset is owned) ──
-              Row(
-                children: [
-                  Expanded(
-                    child: PrimaryButton(
-                      text: l10n.dashboardBuy,
-                      onPressed: () => context.push('/home/buy-asset',
-                          extra: BuyAssetArgs(
-                            symbol: holding.symbol,
-                            name: holding.name,
-                            priceCents: holding.currentPriceCents,
-                          )),
-                    ),
-                  ),
-                  const SizedBox(width: AppDimens.spacingM),
-                  Expanded(
-                    child: PrimaryButton(
-                      text: l10n.dashboardSell,
-                      onPressed: () => context.push('/home/sell-asset'),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppDimens.spacingS),
+              // ── Secondary action (Buy/Sell live in the fixed bottom bar) ──
               OutlinedButton(
                 onPressed: () => context.push('/settings/price-alerts'),
                 child: Text(l10n.alertsCreateButton),
               ),
-              const SizedBox(height: AppDimens.spacingXL),
+              const SizedBox(height: AppDimens.spacingM),
+            ],
+          ),
+        ),
+      ),
+      // Buy & Sell always visible above the tab bar (never cut off).
+      bottomNavigationBar: Container(
+        color: cs.surface,
+        child: SafeArea(
+          top: false,
+          minimum: const EdgeInsets.fromLTRB(AppDimens.spacingL,
+              AppDimens.spacingS, AppDimens.spacingL, AppDimens.spacingS),
+          child: Row(
+            children: [
+              Expanded(
+                child: PrimaryButton(
+                  text: l10n.dashboardBuy,
+                  onPressed: () => context.push('/home/buy-asset',
+                      extra: BuyAssetArgs(
+                        symbol: holding.symbol,
+                        name: holding.name,
+                        priceCents: holding.currentPriceCents,
+                      )),
+                ),
+              ),
+              const SizedBox(width: AppDimens.spacingM),
+              Expanded(
+                child: PrimaryButton(
+                  text: l10n.dashboardSell,
+                  onPressed: () => context.push('/home/sell-asset'),
+                ),
+              ),
             ],
           ),
         ),
