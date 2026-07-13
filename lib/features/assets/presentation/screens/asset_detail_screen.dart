@@ -287,6 +287,7 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
                 onPressed: () => context.push('/settings/price-alerts'),
                 child: Text(l10n.alertsCreateButton),
               ),
+              const SizedBox(height: AppDimens.spacingXL),
             ],
           ),
         ),

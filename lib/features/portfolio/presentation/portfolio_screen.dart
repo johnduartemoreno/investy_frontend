@@ -7,7 +7,6 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/asset_gradients.dart';
 import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/gradient_icon_box.dart';
-import '../../../../core/presentation/widgets/gradient_pill_button.dart';
 import '../../../../core/presentation/widgets/left_accent_box.dart';
 import '../../../../core/presentation/widgets/signal_badge.dart';
 import '../../../../core/utils/currency_formatter.dart';
@@ -322,10 +321,8 @@ class _HoldingCard extends StatelessWidget {
                   ],
                 ),
               ),
-              GradientPillButton(
-                label: l10n.dashboardSell,
-                onTap: () => context.push('/home/sell-asset'),
-              ),
+              Icon(Icons.chevron_right_rounded,
+                  color: cs.onSurfaceVariant.withValues(alpha: 0.6)),
             ],
           ),
         ],
