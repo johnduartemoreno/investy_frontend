@@ -13,19 +13,30 @@ class InvestyLineChart extends StatelessWidget {
   final String Function(double) tooltipFormat;
   final double height;
 
+  /// Optional dashed horizontal reference line (e.g. your average cost).
+  final double? referenceValue;
+  final Color? referenceColor;
+
   const InvestyLineChart({
     super.key,
     required this.values,
     required this.tooltipFormat,
     this.height = 180,
+    this.referenceValue,
+    this.referenceColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    final minV = values.reduce((a, b) => a < b ? a : b);
-    final maxV = values.reduce((a, b) => a > b ? a : b);
+    var minV = values.reduce((a, b) => a < b ? a : b);
+    var maxV = values.reduce((a, b) => a > b ? a : b);
+    // Keep the reference line (avg cost) inside the visible range.
+    if (referenceValue != null) {
+      if (referenceValue! < minV) minV = referenceValue!;
+      if (referenceValue! > maxV) maxV = referenceValue!;
+    }
     final pad = (maxV - minV) == 0 ? (maxV.abs() * 0.05 + 1) : (maxV - minV) * 0.12;
 
     return SizedBox(
@@ -47,6 +58,16 @@ class InvestyLineChart extends StatelessWidget {
           ),
           titlesData: const FlTitlesData(show: false),
           borderData: FlBorderData(show: false),
+          extraLinesData: referenceValue == null
+              ? const ExtraLinesData()
+              : ExtraLinesData(horizontalLines: [
+                  HorizontalLine(
+                    y: referenceValue!,
+                    color: referenceColor ?? cs.onSurfaceVariant,
+                    strokeWidth: 1.5,
+                    dashArray: const [6, 4],
+                  ),
+                ]),
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
               getTooltipColor: (_) => cs.surfaceContainerHighest,

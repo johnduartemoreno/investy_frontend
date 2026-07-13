@@ -331,6 +331,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get assetDetailMarketValue => 'Valor de mercado';
 
   @override
+  String get assetDetailShowAvgCost => 'Meu custo médio';
+
+  @override
   String get portfolioQuantity => 'Qtd';
 
   @override

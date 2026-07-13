@@ -31,6 +31,7 @@ class AssetDetailScreen extends ConsumerStatefulWidget {
 class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
   static const List<String> _ranges = ['1W', '1M', '3M', '1Y', 'ALL'];
   String _range = '1M';
+  bool _showAvgCost = true;
 
   String _rangeLabel(AppLocalizations l10n, String r) {
     switch (r) {
@@ -161,6 +162,9 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
                           values: values,
                           tooltipFormat: (v) =>
                               CurrencyFormatter.formatWithCurrency(v, currency),
+                          referenceValue:
+                              _showAvgCost ? holding.avgCost * fxRate : null,
+                          referenceColor: AppTheme.signalAmber,
                         );
                       },
                     ),
@@ -180,6 +184,43 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
                             ),
                           ),
                       ],
+                    ),
+                    // Toggle: overlay your average cost as a reference line.
+                    InkWell(
+                      onTap: () =>
+                          setState(() => _showAvgCost = !_showAvgCost),
+                      borderRadius:
+                          BorderRadius.circular(AppDimens.radiusInput),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: Checkbox(
+                                value: _showAvgCost,
+                                onChanged: (v) => setState(
+                                    () => _showAvgCost = v ?? false),
+                                visualDensity: VisualDensity.compact,
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                              ),
+                            ),
+                            const SizedBox(width: AppDimens.spacingS),
+                            Container(
+                              width: 14,
+                              height: 2,
+                              color: AppTheme.signalAmber,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(l10n.assetDetailShowAvgCost,
+                                style: theme.textTheme.bodySmall
+                                    ?.copyWith(color: cs.onSurfaceVariant)),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -218,33 +259,33 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
               ),
               const SizedBox(height: AppDimens.spacingL),
 
-              // ── Actions ──
-              PrimaryButton(
-                text: l10n.dashboardBuy,
-                onPressed: () => context.push('/home/buy-asset',
-                    extra: BuyAssetArgs(
-                      symbol: holding.symbol,
-                      name: holding.name,
-                      priceCents: holding.currentPriceCents,
-                    )),
-              ),
-              const SizedBox(height: AppDimens.spacingS),
+              // ── Actions: Buy & Sell equal weight (asset is owned) ──
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => context.push('/home/sell-asset'),
-                      child: Text(l10n.dashboardSell),
+                    child: PrimaryButton(
+                      text: l10n.dashboardBuy,
+                      onPressed: () => context.push('/home/buy-asset',
+                          extra: BuyAssetArgs(
+                            symbol: holding.symbol,
+                            name: holding.name,
+                            priceCents: holding.currentPriceCents,
+                          )),
                     ),
                   ),
                   const SizedBox(width: AppDimens.spacingM),
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => context.push('/settings/price-alerts'),
-                      child: Text(l10n.alertsTitle),
+                    child: PrimaryButton(
+                      text: l10n.dashboardSell,
+                      onPressed: () => context.push('/home/sell-asset'),
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: AppDimens.spacingS),
+              OutlinedButton(
+                onPressed: () => context.push('/settings/price-alerts'),
+                child: Text(l10n.alertsCreateButton),
               ),
             ],
           ),

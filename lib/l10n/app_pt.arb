@@ -109,6 +109,7 @@
   "portfolioReturn": "Retorno",
   "assetDetailPosition": "Sua posição",
   "assetDetailMarketValue": "Valor de mercado",
+  "assetDetailShowAvgCost": "Meu custo médio",
   "portfolioQuantity": "Qtd",
   "portfolioAvgCost": "Custo médio",
   "portfolioCurrentPrice": "Preço atual",

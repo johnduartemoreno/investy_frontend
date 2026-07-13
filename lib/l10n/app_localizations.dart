@@ -712,6 +712,12 @@ abstract class AppLocalizations {
   /// **'Market value'**
   String get assetDetailMarketValue;
 
+  /// No description provided for @assetDetailShowAvgCost.
+  ///
+  /// In en, this message translates to:
+  /// **'My avg cost'**
+  String get assetDetailShowAvgCost;
+
   /// No description provided for @portfolioQuantity.
   ///
   /// In en, this message translates to:

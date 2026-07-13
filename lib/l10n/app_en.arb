@@ -137,6 +137,7 @@
   "portfolioReturn": "Return",
   "assetDetailPosition": "Your position",
   "assetDetailMarketValue": "Market value",
+  "assetDetailShowAvgCost": "My avg cost",
   "portfolioQuantity": "Qty",
   "portfolioAvgCost": "Avg cost",
   "portfolioCurrentPrice": "Current price",
