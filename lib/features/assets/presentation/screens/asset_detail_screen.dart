@@ -1,0 +1,305 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/presentation/widgets/custom_card.dart';
+import '../../../../core/presentation/widgets/gradient_icon_box.dart';
+import '../../../../core/presentation/widgets/investy_line_chart.dart';
+import '../../../../core/presentation/widgets/primary_button.dart';
+import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/asset_gradients.dart';
+import '../../../../core/utils/currency_formatter.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../dashboard/data/models/buy_asset_args.dart';
+import '../../../dashboard/presentation/screens/dashboard_screen.dart'
+    show displayCurrencyProvider, fxRateProvider;
+import '../../../portfolio/data/models/portfolio_response_model.dart';
+import '../providers/asset_history_provider.dart';
+
+/// Asset detail: price chart (range selector) + your position + Buy/Sell/Alert.
+/// Reached by tapping a holding in Portfolio (B43-F5).
+class AssetDetailScreen extends ConsumerStatefulWidget {
+  final PortfolioHoldingModel? holding;
+
+  const AssetDetailScreen({super.key, required this.holding});
+
+  @override
+  ConsumerState<AssetDetailScreen> createState() => _AssetDetailScreenState();
+}
+
+class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
+  static const List<String> _ranges = ['1W', '1M', '3M', '1Y', 'ALL'];
+  String _range = '1M';
+
+  String _rangeLabel(AppLocalizations l10n, String r) {
+    switch (r) {
+      case '1W':
+        return l10n.chartRange1W;
+      case '3M':
+        return l10n.chartRange3M;
+      case '1Y':
+        return l10n.chartRange1Y;
+      case 'ALL':
+        return l10n.chartRangeAll;
+      default:
+        return l10n.chartRange1M;
+    }
+  }
+
+  String _assetClassLabel(AppLocalizations l10n, String assetClass) {
+    switch (assetClass) {
+      case 'crypto':
+        return l10n.portfolioAssetCrypto;
+      case 'etf':
+        return l10n.portfolioAssetEtf;
+      default:
+        return l10n.portfolioAssetStock;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
+    final holding = widget.holding;
+
+    if (holding == null) {
+      return Scaffold(
+        appBar: AppBar(),
+        body: Center(child: Text(l10n.commonError)),
+      );
+    }
+
+    final currency = ref.watch(displayCurrencyProvider);
+    final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
+    final historyAsync = ref.watch(assetHistoryProvider(holding.symbol, _range));
+
+    final isPositive = holding.returnPct >= 0;
+    final returnColor = isPositive ? AppTheme.signalGreen : cs.error;
+    final tickerLabel = holding.symbol.length > 4
+        ? holding.symbol.substring(0, 4)
+        : holding.symbol;
+
+    return Scaffold(
+      appBar: AppBar(title: Text(holding.symbol.toUpperCase())),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppDimens.spacingL),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // ── Header: ticker + name + current price ──
+              Row(
+                children: [
+                  GradientIconBox(
+                    size: 48,
+                    colors: AssetGradients.assetClass(holding.assetClass),
+                    child: Text(tickerLabel,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800)),
+                  ),
+                  const SizedBox(width: AppDimens.spacingM),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(holding.name,
+                            style: theme.textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w700)),
+                        Text(_assetClassLabel(l10n, holding.assetClass),
+                            style: theme.textTheme.bodySmall
+                                ?.copyWith(color: cs.onSurfaceVariant)),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    CurrencyFormatter.formatWithCurrency(
+                        holding.currentPrice * fxRate, currency),
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.brandPurpleLight,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppDimens.spacingL),
+
+              // ── Price chart + range selector ──
+              CustomCard(
+                child: Column(
+                  children: [
+                    historyAsync.when(
+                      loading: () => const SizedBox(
+                        height: 200,
+                        child:
+                            Center(child: CircularProgressIndicator.adaptive()),
+                      ),
+                      error: (_, __) => SizedBox(
+                        height: 200,
+                        child: Center(child: Text(l10n.commonError)),
+                      ),
+                      data: (history) {
+                        if (history.points.length < 2) {
+                          return SizedBox(
+                            height: 200,
+                            child: Center(
+                              child: Text(l10n.chartNotEnoughData,
+                                  textAlign: TextAlign.center,
+                                  style: theme.textTheme.bodySmall
+                                      ?.copyWith(color: cs.onSurfaceVariant)),
+                            ),
+                          );
+                        }
+                        final values = history.points
+                            .map((p) => p.price * fxRate)
+                            .toList();
+                        return InvestyLineChart(
+                          values: values,
+                          tooltipFormat: (v) =>
+                              CurrencyFormatter.formatWithCurrency(v, currency),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: AppDimens.spacingM),
+                    Row(
+                      children: [
+                        for (final r in _ranges)
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2),
+                              child: _RangeChip(
+                                label: _rangeLabel(l10n, r),
+                                active: r == _range,
+                                onTap: () => setState(() => _range = r),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppDimens.spacingL),
+
+              // ── Your position ──
+              CustomCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.assetDetailPosition,
+                        style: theme.textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w700)),
+                    const SizedBox(height: AppDimens.spacingM),
+                    _row(theme, l10n.portfolioShares,
+                        holding.quantity.toString()),
+                    _row(
+                        theme,
+                        l10n.portfolioAvgCost,
+                        CurrencyFormatter.formatWithCurrency(
+                            holding.avgCost * fxRate, currency)),
+                    _row(
+                        theme,
+                        l10n.assetDetailMarketValue,
+                        CurrencyFormatter.formatWithCurrency(
+                            holding.marketValue * fxRate, currency)),
+                    _row(
+                      theme,
+                      l10n.portfolioReturn,
+                      '${isPositive ? '+' : ''}${holding.returnPct.toStringAsFixed(2)}%',
+                      valueColor: returnColor,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppDimens.spacingL),
+
+              // ── Actions ──
+              PrimaryButton(
+                text: l10n.dashboardBuy,
+                onPressed: () => context.push('/home/buy-asset',
+                    extra: BuyAssetArgs(
+                      symbol: holding.symbol,
+                      name: holding.name,
+                      priceCents: holding.currentPriceCents,
+                    )),
+              ),
+              const SizedBox(height: AppDimens.spacingS),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => context.push('/home/sell-asset'),
+                      child: Text(l10n.dashboardSell),
+                    ),
+                  ),
+                  const SizedBox(width: AppDimens.spacingM),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => context.push('/settings/price-alerts'),
+                      child: Text(l10n.alertsTitle),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _row(ThemeData theme, String label, String value, {Color? valueColor}) {
+    final cs = theme.colorScheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label,
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(color: cs.onSurfaceVariant)),
+          Text(value,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w700, color: valueColor)),
+        ],
+      ),
+    );
+  }
+}
+
+class _RangeChip extends StatelessWidget {
+  final String label;
+  final bool active;
+  final VoidCallback onTap;
+
+  const _RangeChip(
+      {required this.label, required this.active, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppDimens.radiusPill),
+      child: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          color:
+              active ? cs.primary : cs.primaryContainer.withValues(alpha: 0.4),
+          borderRadius: BorderRadius.circular(AppDimens.radiusPill),
+        ),
+        child: Text(label,
+            style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: active ? cs.onPrimary : cs.primary)),
+      ),
+    );
+  }
+}

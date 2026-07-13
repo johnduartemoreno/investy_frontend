@@ -700,6 +700,18 @@ abstract class AppLocalizations {
   /// **'Return'**
   String get portfolioReturn;
 
+  /// No description provided for @assetDetailPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Your position'**
+  String get assetDetailPosition;
+
+  /// No description provided for @assetDetailMarketValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Market value'**
+  String get assetDetailMarketValue;
+
   /// No description provided for @portfolioQuantity.
   ///
   /// In en, this message translates to:

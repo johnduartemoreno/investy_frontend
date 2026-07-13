@@ -10,6 +10,7 @@ import '../models/goal_response_model.dart';
 import '../models/owl_session_model.dart';
 import '../models/recommendation_model.dart';
 import '../models/transaction_request_model.dart';
+import '../../../../features/assets/data/models/asset_history_model.dart';
 import '../../../../features/portfolio/data/models/portfolio_history_model.dart';
 import '../../../../features/portfolio/data/models/portfolio_response_model.dart';
 
@@ -40,6 +41,9 @@ abstract class DashboardRemoteDataSource {
 
   /// Daily portfolio-value series for the given range (1W|1M|3M|1Y|ALL).
   Future<PortfolioHistoryModel> getPortfolioHistory(String userId, String range);
+
+  /// Daily closing-price series for an asset (1W|1M|3M|1Y|ALL).
+  Future<AssetHistoryModel> getAssetHistory(String symbol, String range);
 
   /// Searches assets by symbol or name prefix. Returns up to 10 results.
   Future<List<AssetSearchResultModel>> searchAssets(String query);
@@ -122,6 +126,15 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
       queryParameters: {'range': range},
     );
     return PortfolioHistoryModel.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<AssetHistoryModel> getAssetHistory(String symbol, String range) async {
+    final response = await _dio.get(
+      '/api/v1/assets/$symbol/history',
+      queryParameters: {'range': range},
+    );
+    return AssetHistoryModel.fromJson(response.data as Map<String, dynamic>);
   }
 
   @override

@@ -107,6 +107,8 @@
   "portfolioTotalInvested": "Total invertido",
   "portfolioTotalLabel": "Total",
   "portfolioReturn": "Rendimiento",
+  "assetDetailPosition": "Tu posición",
+  "assetDetailMarketValue": "Valor de mercado",
   "portfolioQuantity": "Cant.",
   "portfolioAvgCost": "Costo prom.",
   "portfolioCurrentPrice": "Precio actual",

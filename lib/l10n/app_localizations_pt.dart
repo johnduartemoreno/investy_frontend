@@ -325,6 +325,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get portfolioReturn => 'Retorno';
 
   @override
+  String get assetDetailPosition => 'Sua posição';
+
+  @override
+  String get assetDetailMarketValue => 'Valor de mercado';
+
+  @override
   String get portfolioQuantity => 'Qtd';
 
   @override

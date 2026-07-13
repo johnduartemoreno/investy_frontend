@@ -51,10 +51,16 @@ class PortfolioScreen extends ConsumerWidget {
                   fxRate: fxRate,
                 );
               }
-              return _HoldingCard(
-                holding: active[index - 1],
-                currency: currency,
-                fxRate: fxRate,
+              final holding = active[index - 1];
+              return InkWell(
+                borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+                onTap: () =>
+                    context.push('/portfolio/asset', extra: holding),
+                child: _HoldingCard(
+                  holding: holding,
+                  currency: currency,
+                  fxRate: fxRate,
+                ),
               );
             },
           );
