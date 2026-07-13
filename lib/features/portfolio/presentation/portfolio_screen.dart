@@ -54,8 +54,7 @@ class PortfolioScreen extends ConsumerWidget {
               final holding = active[index - 1];
               return InkWell(
                 borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                onTap: () =>
-                    context.push('/portfolio/asset', extra: holding),
+                onTap: () => context.push('/portfolio/asset', extra: holding),
                 child: _HoldingCard(
                   holding: holding,
                   currency: currency,

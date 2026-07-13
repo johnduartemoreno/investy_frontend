@@ -40,7 +40,8 @@ abstract class DashboardRemoteDataSource {
   Future<PortfolioResponseModel> getPortfolio(String userId);
 
   /// Daily portfolio-value series for the given range (1W|1M|3M|1Y|ALL).
-  Future<PortfolioHistoryModel> getPortfolioHistory(String userId, String range);
+  Future<PortfolioHistoryModel> getPortfolioHistory(
+      String userId, String range);
 
   /// Daily closing-price series for an asset (1W|1M|3M|1Y|ALL).
   Future<AssetHistoryModel> getAssetHistory(String symbol, String range);
@@ -125,7 +126,8 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
       '/api/v1/users/$userId/portfolio/history',
       queryParameters: {'range': range},
     );
-    return PortfolioHistoryModel.fromJson(response.data as Map<String, dynamic>);
+    return PortfolioHistoryModel.fromJson(
+        response.data as Map<String, dynamic>);
   }
 
   @override

@@ -105,7 +105,8 @@ class _GoalDetailBody extends ConsumerWidget {
     final progress = goal.progress;
     final projection = goal.projectedCompletionDate;
     // On track = projected completion is on or before the goal's deadline.
-    final onTrack = projection != null && !projection.isAfter(goal.deadlineDate);
+    final onTrack =
+        projection != null && !projection.isAfter(goal.deadlineDate);
 
     String money(double dollars) =>
         CurrencyFormatter.formatWithCurrency(dollars * fxRate, currency);

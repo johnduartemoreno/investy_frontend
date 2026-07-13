@@ -75,7 +75,8 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
 
     final currency = ref.watch(displayCurrencyProvider);
     final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
-    final historyAsync = ref.watch(assetHistoryProvider(holding.symbol, _range));
+    final historyAsync =
+        ref.watch(assetHistoryProvider(holding.symbol, _range));
 
     final isPositive = holding.returnPct >= 0;
     final returnColor = isPositive ? AppTheme.signalGreen : cs.error;
@@ -196,8 +197,7 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
                     ),
                     // Toggle: overlay your average cost as a reference line.
                     InkWell(
-                      onTap: () =>
-                          setState(() => _showAvgCost = !_showAvgCost),
+                      onTap: () => setState(() => _showAvgCost = !_showAvgCost),
                       borderRadius:
                           BorderRadius.circular(AppDimens.radiusInput),
                       child: Padding(
@@ -210,8 +210,8 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
                               height: 22,
                               child: Checkbox(
                                 value: _showAvgCost,
-                                onChanged: (v) => setState(
-                                    () => _showAvgCost = v ?? false),
+                                onChanged: (v) =>
+                                    setState(() => _showAvgCost = v ?? false),
                                 visualDensity: VisualDensity.compact,
                                 materialTapTargetSize:
                                     MaterialTapTargetSize.shrinkWrap,
@@ -310,7 +310,8 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
     );
   }
 
-  Widget _row(ThemeData theme, String label, String value, {Color? valueColor}) {
+  Widget _row(ThemeData theme, String label, String value,
+      {Color? valueColor}) {
     final cs = theme.colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -321,8 +322,8 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
               style: theme.textTheme.bodyMedium
                   ?.copyWith(color: cs.onSurfaceVariant)),
           Text(value,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700, color: valueColor)),
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w700, color: valueColor)),
         ],
       ),
     );

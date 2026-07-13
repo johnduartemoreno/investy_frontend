@@ -986,7 +986,8 @@ class _OwlAdvisorSheetState extends ConsumerState<_OwlAdvisorSheet> {
                                       AppTheme.brandPurpleLight
                                     ],
                                   ),
-                                  borderRadius: BorderRadius.circular(AppDimens.radiusPill),
+                                  borderRadius: BorderRadius.circular(
+                                      AppDimens.radiusPill),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,

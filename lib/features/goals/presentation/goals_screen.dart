@@ -55,7 +55,8 @@ class GoalsScreen extends ConsumerWidget {
           context: context,
           isScrollControlled: true,
           shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimens.radiusBottomSheet)),
+            borderRadius: BorderRadius.vertical(
+                top: Radius.circular(AppDimens.radiusBottomSheet)),
           ),
           builder: (_) => const CreateGoalSheet(),
         ),

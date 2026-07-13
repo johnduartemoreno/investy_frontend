@@ -153,7 +153,8 @@ class _RangeChip extends StatelessWidget {
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: active ? cs.primary : cs.primaryContainer.withValues(alpha: 0.4),
+          color:
+              active ? cs.primary : cs.primaryContainer.withValues(alpha: 0.4),
           borderRadius: BorderRadius.circular(AppDimens.radiusPill),
         ),
         child: Text(

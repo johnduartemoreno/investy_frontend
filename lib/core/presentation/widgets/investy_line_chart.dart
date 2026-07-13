@@ -34,7 +34,8 @@ class InvestyLineChart extends StatelessWidget {
     // (a far-off avg cost would otherwise flatten the price curve).
     final minV = values.reduce((a, b) => a < b ? a : b);
     final maxV = values.reduce((a, b) => a > b ? a : b);
-    final pad = (maxV - minV) == 0 ? (maxV.abs() * 0.05 + 1) : (maxV - minV) * 0.12;
+    final pad =
+        (maxV - minV) == 0 ? (maxV.abs() * 0.05 + 1) : (maxV - minV) * 0.12;
     final minY = minV - pad;
     final maxY = maxV + pad;
 
