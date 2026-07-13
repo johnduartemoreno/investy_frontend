@@ -435,6 +435,15 @@ class AppLocalizationsPt extends AppLocalizations {
       'Adicione fundos para ver uma data estimada.';
 
   @override
+  String get goalProjectionTitle => 'Projeção';
+
+  @override
+  String get goalOnTrack => 'No caminho';
+
+  @override
+  String get goalBehind => 'Atrasado';
+
+  @override
   String get goalInvestButton => 'Investir para esta meta';
 
   @override

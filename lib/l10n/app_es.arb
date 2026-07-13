@@ -148,6 +148,9 @@
     }
   },
   "goalDetailProjectionUnknown": "Agrega fondos para ver una fecha estimada.",
+  "goalProjectionTitle": "Proyección",
+  "goalOnTrack": "En camino",
+  "goalBehind": "Atrasado",
   "goalInvestButton": "Invertir hacia esta meta",
   "buyAssignGoalLabel": "¿Asignar a una meta? (opcional)",
   "buyNoGoalOption": "Sin meta",

@@ -435,6 +435,15 @@ class AppLocalizationsEs extends AppLocalizations {
       'Agrega fondos para ver una fecha estimada.';
 
   @override
+  String get goalProjectionTitle => 'Proyección';
+
+  @override
+  String get goalOnTrack => 'En camino';
+
+  @override
+  String get goalBehind => 'Atrasado';
+
+  @override
   String get goalInvestButton => 'Invertir hacia esta meta';
 
   @override

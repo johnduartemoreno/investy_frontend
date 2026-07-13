@@ -904,6 +904,24 @@ abstract class AppLocalizations {
   /// **'Add funds to see an estimated completion date.'**
   String get goalDetailProjectionUnknown;
 
+  /// No description provided for @goalProjectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Projection'**
+  String get goalProjectionTitle;
+
+  /// No description provided for @goalOnTrack.
+  ///
+  /// In en, this message translates to:
+  /// **'On track'**
+  String get goalOnTrack;
+
+  /// No description provided for @goalBehind.
+  ///
+  /// In en, this message translates to:
+  /// **'Behind'**
+  String get goalBehind;
+
   /// No description provided for @goalInvestButton.
   ///
   /// In en, this message translates to:

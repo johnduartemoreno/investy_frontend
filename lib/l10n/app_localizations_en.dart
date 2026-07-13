@@ -430,6 +430,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add funds to see an estimated completion date.';
 
   @override
+  String get goalProjectionTitle => 'Projection';
+
+  @override
+  String get goalOnTrack => 'On track';
+
+  @override
+  String get goalBehind => 'Behind';
+
+  @override
   String get goalInvestButton => 'Invest toward this goal';
 
   @override

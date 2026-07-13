@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/gradient_icon_box.dart';
+import '../../../../core/presentation/widgets/investy_line_chart.dart';
 import '../../../../core/presentation/widgets/left_accent_box.dart';
 import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../core/presentation/widgets/signal_badge.dart';
@@ -99,9 +100,18 @@ class _GoalDetailBody extends ConsumerWidget {
 
     final progress = goal.progress;
     final projection = goal.projectedCompletionDate;
+    // On track = projected completion is on or before the goal's deadline.
+    final onTrack = projection != null && !projection.isAfter(goal.deadlineDate);
 
     String money(double dollars) =>
         CurrencyFormatter.formatWithCurrency(dollars * fxRate, currency);
+
+    // Projected trajectory (linear rate) from current value up to the target.
+    final target = goal.targetAmount * fxRate;
+    final current = goal.currentAmount * fxRate;
+    final rampValues = target > current
+        ? [for (var i = 0; i <= 12; i++) current + (target - current) * i / 12]
+        : <double>[];
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -265,14 +275,47 @@ class _GoalDetailBody extends ConsumerWidget {
               const SizedBox(height: AppDimens.spacingL),
 
               // ── Projection ────────────────────────────────────────────
-              LeftAccentBox(
-                child: Text(
-                  projection != null
-                      ? l10n.goalDetailProjection(_formatDate(projection))
-                      : l10n.goalDetailProjectionUnknown,
-                  style: theme.textTheme.bodyMedium,
+              if (projection != null && rampValues.length >= 2)
+                CustomCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(l10n.goalProjectionTitle,
+                                style: theme.textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.w700)),
+                          ),
+                          SignalBadge(
+                            label: onTrack ? l10n.goalOnTrack : l10n.goalBehind,
+                            color: onTrack
+                                ? AppTheme.signalGreen
+                                : AppTheme.signalRed,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppDimens.spacingM),
+                      InvestyLineChart(
+                        height: 140,
+                        values: rampValues,
+                        tooltipFormat: money,
+                        referenceValue: target,
+                        referenceColor: onTrack
+                            ? AppTheme.signalGreen
+                            : AppTheme.signalAmber,
+                      ),
+                      const SizedBox(height: AppDimens.spacingM),
+                      Text(l10n.goalDetailProjection(_formatDate(projection)),
+                          style: theme.textTheme.bodyMedium),
+                    ],
+                  ),
+                )
+              else
+                LeftAccentBox(
+                  child: Text(l10n.goalDetailProjectionUnknown,
+                      style: theme.textTheme.bodyMedium),
                 ),
-              ),
               const SizedBox(height: AppDimens.spacingXL),
 
               // ── Invest toward this goal ───────────────────────────────

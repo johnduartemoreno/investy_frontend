@@ -183,6 +183,9 @@
     }
   },
   "goalDetailProjectionUnknown": "Add funds to see an estimated completion date.",
+  "goalProjectionTitle": "Projection",
+  "goalOnTrack": "On track",
+  "goalBehind": "Behind",
   "goalInvestButton": "Invest toward this goal",
   "buyAssignGoalLabel": "Assign to a goal? (optional)",
   "buyNoGoalOption": "No goal",
