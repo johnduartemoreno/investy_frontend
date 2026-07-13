@@ -30,14 +30,13 @@ class InvestyLineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    var minV = values.reduce((a, b) => a < b ? a : b);
-    var maxV = values.reduce((a, b) => a > b ? a : b);
-    // Keep the reference line (avg cost) inside the visible range.
-    if (referenceValue != null) {
-      if (referenceValue! < minV) minV = referenceValue!;
-      if (referenceValue! > maxV) maxV = referenceValue!;
-    }
+    // Y-axis is driven by the PRICE only — the reference line never rescales it
+    // (a far-off avg cost would otherwise flatten the price curve).
+    final minV = values.reduce((a, b) => a < b ? a : b);
+    final maxV = values.reduce((a, b) => a > b ? a : b);
     final pad = (maxV - minV) == 0 ? (maxV.abs() * 0.05 + 1) : (maxV - minV) * 0.12;
+    final minY = minV - pad;
+    final maxY = maxV + pad;
 
     return SizedBox(
       height: height,
@@ -45,8 +44,8 @@ class InvestyLineChart extends StatelessWidget {
         LineChartData(
           minX: 0,
           maxX: (values.length - 1).toDouble(),
-          minY: minV - pad,
-          maxY: maxV + pad,
+          minY: minY,
+          maxY: maxY,
           gridData: FlGridData(
             show: true,
             drawVerticalLine: false,
@@ -62,10 +61,23 @@ class InvestyLineChart extends StatelessWidget {
               ? const ExtraLinesData()
               : ExtraLinesData(horizontalLines: [
                   HorizontalLine(
-                    y: referenceValue!,
+                    // Clamp to the visible range so a far-off cost pins to the
+                    // edge (labeled with its real value) instead of rescaling.
+                    y: referenceValue!.clamp(minY, maxY),
                     color: referenceColor ?? cs.onSurfaceVariant,
                     strokeWidth: 1.5,
                     dashArray: const [6, 4],
+                    label: HorizontalLineLabel(
+                      show: true,
+                      alignment: Alignment.topRight,
+                      padding: const EdgeInsets.only(right: 4, bottom: 2),
+                      labelResolver: (_) => tooltipFormat(referenceValue!),
+                      style: TextStyle(
+                        color: referenceColor ?? cs.onSurfaceVariant,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                 ]),
           lineTouchData: LineTouchData(
