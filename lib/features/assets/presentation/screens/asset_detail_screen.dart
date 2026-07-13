@@ -276,27 +276,30 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
           top: false,
           minimum: const EdgeInsets.fromLTRB(AppDimens.spacingL,
               AppDimens.spacingS, AppDimens.spacingL, AppDimens.spacingS),
-          child: Row(
-            children: [
-              Expanded(
-                child: PrimaryButton(
-                  text: l10n.dashboardBuy,
-                  onPressed: () => context.push('/home/buy-asset',
-                      extra: BuyAssetArgs(
-                        symbol: holding.symbol,
-                        name: holding.name,
-                        priceCents: holding.currentPriceCents,
-                      )),
+          child: SizedBox(
+            height: 56, // bound the height — PrimaryButton has no intrinsic one
+            child: Row(
+              children: [
+                Expanded(
+                  child: PrimaryButton(
+                    text: l10n.dashboardBuy,
+                    onPressed: () => context.push('/home/buy-asset',
+                        extra: BuyAssetArgs(
+                          symbol: holding.symbol,
+                          name: holding.name,
+                          priceCents: holding.currentPriceCents,
+                        )),
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppDimens.spacingM),
-              Expanded(
-                child: PrimaryButton(
-                  text: l10n.dashboardSell,
-                  onPressed: () => context.push('/home/sell-asset'),
+                const SizedBox(width: AppDimens.spacingM),
+                Expanded(
+                  child: PrimaryButton(
+                    text: l10n.dashboardSell,
+                    onPressed: () => context.push('/home/sell-asset'),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
