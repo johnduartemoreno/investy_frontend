@@ -71,6 +71,9 @@ Use `--dart-define=USE_STAGING=true` to force staging URL in debug builds.
 |----------|----------|-------------|
 | `restDashboardProvider` | `GET /dashboard` | Balance, invested value, activity |
 | `restPortfolioProvider` | `GET /portfolio` | Holdings + asset metadata |
+| `portfolioHistoryProvider` | `GET /portfolio/history` | Portfolio value curve, range-reactive (B43) |
+| `todaysChangeProvider` | _(derived)_ | Today's +/− €/% from portfolio history (B43) |
+| `assetHistoryProvider` | `GET /assets/{symbol}/history` | Price history for asset detail screen (B43) |
 | `restGoalsProvider` | `GET /goals` | Goals with progress |
 | `riskProfileProvider` | `GET /risk-profile` | Conservative / Moderate / Aggressive |
 | `recommendationsProvider` | `GET /recommendations` | AI picks (Claude API, cache 24h) |
