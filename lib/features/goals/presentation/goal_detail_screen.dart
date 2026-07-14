@@ -112,8 +112,11 @@ class _GoalDetailBody extends ConsumerWidget {
         CurrencyFormatter.formatWithCurrency(dollars * fxRate, currency);
 
     // Projected trajectory (linear rate) from current value up to the target.
-    final target = goal.targetAmount * fxRate;
-    final current = goal.currentAmount * fxRate;
+    // Feed the chart RAW dollar values — the `money` formatter applies FX once
+    // (values in display currency here would double-convert the reference label
+    // and every tooltip: e.g. €8,753.50 → €7,662.38).
+    final target = goal.targetAmount;
+    final current = goal.currentAmount;
     final rampValues = target > current
         ? [for (var i = 0; i <= 12; i++) current + (target - current) * i / 12]
         : <double>[];
