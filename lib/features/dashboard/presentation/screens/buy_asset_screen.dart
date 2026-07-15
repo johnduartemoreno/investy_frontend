@@ -45,6 +45,12 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
   double _quantity = 0.0;
   String? _selectedGoalId; // optional goal assignment (S18)
 
+  /// Server order floor in dollars, refreshed from build(). Cached because the
+  /// validator is a callback: ref.watch is only legal inside build.
+  /// Null until /trading/config answers — then the pre-check simply sits out and
+  /// the server does the rejecting, which it does anyway.
+  double? _minBuyNotional;
+
   @override
   void initState() {
     super.initState();
@@ -143,11 +149,21 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
 
   bool get _isCrypto => _selectedAsset?.assetClass == 'crypto';
 
+  /// True once the order is big enough to be worth pricing. Below the floor the
+  /// server will refuse it, so quoting it — and drawing a tidy cost breakdown for
+  /// it — would just be theatre.
+  bool get _meetsMinimum {
+    final minDollars = _minBuyNotional;
+    // Config not in yet: block nothing and let the server answer.
+    if (minDollars == null) return true;
+    return (_estimatedTotal * 100).round() >= (minDollars * 100).round();
+  }
+
   /// Debounced so a quote is requested when the user pauses, not per keystroke.
   void _refreshQuote() {
     _quoteDebounce?.cancel();
     final asset = _selectedAsset;
-    if (asset == null || _quantity <= 0) {
+    if (asset == null || _quantity <= 0 || !_meetsMinimum) {
       ref.read(tradingQuoteControllerProvider.notifier).clear();
       return;
     }
@@ -286,6 +302,11 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
+
+    final minCentsAsync = ref.watch(tradingConfigProvider).valueOrNull;
+    _minBuyNotional = minCentsAsync == null
+        ? null
+        : minCentsAsync.minBuyNotionalCents / 100.0;
 
     ref.listen(buyAssetControllerProvider, (_, next) {
       if (next is AsyncError) {
@@ -556,10 +577,35 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                           if (qty == null || qty <= 0) {
                             return l10n.buyQuantityPositive;
                           }
+                          // Mirror of the server floor, for instant feedback as the
+                          // user types — the alternative is drawing a full cost
+                          // breakdown and an enabled button for an order that is
+                          // certain to be rejected. NOT the authority: the server
+                          // re-checks every order and wins any disagreement.
+                          //
+                          // Compared in whole cents, rounded. The server floors the
+                          // notional (integer division), so rounding here makes this
+                          // check marginally LOOSER than the real one — deliberately.
+                          // The failure directions are not symmetric: blocking an
+                          // order the server would accept traps the user in a field
+                          // error they cannot clear, while letting a borderline one
+                          // through just earns a snackbar from the authority.
+                          final minDollars = _minBuyNotional;
+                          if (minDollars != null &&
+                              _selectedAsset != null &&
+                              (_estimatedTotal * 100).round() <
+                                  (minDollars * 100).round()) {
+                            return l10n.tradingOrderTooSmall(
+                                CurrencyFormatter.format(minDollars));
+                          }
                           return null;
                         },
                       ),
-                      if (_selectedAsset != null && _quantity > 0) ...[
+                      // No breakdown for an order the server will refuse — the
+                      // validator already says why.
+                      if (_selectedAsset != null &&
+                          _quantity > 0 &&
+                          _meetsMinimum) ...[
                         const Divider(height: AppDimens.spacingXL),
                         _buildCostSection(theme, cs, l10n),
                       ],
