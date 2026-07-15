@@ -779,7 +779,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),
         trailing: Text(
-          '${isBuy ? '-' : '+'} ${CurrencyFormatter.formatWithCurrency(transaction.totalBeforeFees * fxRate, currency)}',
+          // What moved, fees included — pre-B41 receipts have no fee, so their
+          // totalBeforeFees IS what moved.
+          '${isBuy ? '-' : '+'} ${CurrencyFormatter.formatWithCurrency((transaction.feeCents > 0 ? transaction.total : transaction.totalBeforeFees) * fxRate, currency)}',
           style: theme.textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: isBuy ? theme.colorScheme.error : AppTheme.signalGreen,
@@ -1588,7 +1590,7 @@ class _ActivityDetailSheet extends ConsumerWidget {
             ),
             const Spacer(),
             Text(
-              '$signPrefix ${CurrencyFormatter.formatWithCurrency(tx.totalBeforeFees * fxRate, currency)}',
+              '$signPrefix ${CurrencyFormatter.formatWithCurrency((tx.feeCents > 0 ? tx.total : tx.totalBeforeFees) * fxRate, currency)}',
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
                 color: amountColor,
@@ -1613,12 +1615,36 @@ class _ActivityDetailSheet extends ConsumerWidget {
                   CurrencyFormatter.formatWithCurrency(
                       tx.price * fxRate, currency)),
               _divider(cs),
+              // Subtotal + commission + total. Before B41 this showed a single
+              // "Total" holding the notional — which stopped being what the user
+              // paid the moment commissions went live. A receipt that omits the fee
+              // understates the charge, so the breakdown is shown whenever there is
+              // one (pre-B41 receipts have feeCents == 0 and keep the old shape).
+              if (tx.feeCents > 0) ...[
+                _divider(cs),
+                _detailRow(
+                    theme,
+                    cs,
+                    l10n.tradingSubtotal,
+                    CurrencyFormatter.formatWithCurrency(
+                        tx.totalBeforeFees * fxRate, currency)),
+                _divider(cs),
+                _detailRow(
+                    theme,
+                    cs,
+                    l10n.tradingCommission,
+                    CurrencyFormatter.formatWithCurrency(
+                        tx.feeCents / 100.0 * fxRate, currency)),
+              ],
+              _divider(cs),
               _detailRow(
                   theme,
                   cs,
                   l10n.activityDetailTotal,
                   CurrencyFormatter.formatWithCurrency(
-                      tx.totalBeforeFees * fxRate, currency)),
+                      (tx.feeCents > 0 ? tx.total : tx.totalBeforeFees) *
+                          fxRate,
+                      currency)),
               _divider(cs),
               _detailRow(
                   theme, cs, l10n.activityDetailDate, _fullDate(tx.createdAt)),
