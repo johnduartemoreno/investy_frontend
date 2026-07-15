@@ -1036,12 +1036,6 @@ abstract class AppLocalizations {
   /// **'Confirm Purchase'**
   String get buyConfirmButton;
 
-  /// No description provided for @buyEstimatedTotal.
-  ///
-  /// In en, this message translates to:
-  /// **'Estimated Total'**
-  String get buyEstimatedTotal;
-
   /// No description provided for @buyTitle.
   ///
   /// In en, this message translates to:
@@ -1131,12 +1125,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Price per share (pre-filled from market)'**
   String get sellPricePerShare;
-
-  /// No description provided for @sellEstimatedValue.
-  ///
-  /// In en, this message translates to:
-  /// **'Estimated Value'**
-  String get sellEstimatedValue;
 
   /// No description provided for @sellEnterQuantity.
   ///

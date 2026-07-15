@@ -205,7 +205,6 @@
   "buyEnterQuantity": "Enter quantity",
   "buyQuantityPositive": "Must be greater than 0",
   "buyConfirmButton": "Confirm Purchase",
-  "buyEstimatedTotal": "Estimated Total",
   "buyTitle": "Buy {symbol}",
   "@buyTitle": {
     "placeholders": {
@@ -242,7 +241,6 @@
     }
   },
   "sellPricePerShare": "Price per share (pre-filled from market)",
-  "sellEstimatedValue": "Estimated Value",
   "sellEnterQuantity": "Enter quantity",
   "sellQuantityPositive": "Must be greater than zero",
   "sellQuantityExceeds": "You only own {quantity} shares",

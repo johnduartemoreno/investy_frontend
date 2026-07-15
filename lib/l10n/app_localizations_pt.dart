@@ -501,9 +501,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get buyConfirmButton => 'Confirmar compra';
 
   @override
-  String get buyEstimatedTotal => 'Total estimado';
-
-  @override
   String buyTitle(String symbol) {
     return 'Comprar $symbol';
   }
@@ -555,9 +552,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sellPricePerShare => 'Preço por ação (preço de mercado)';
-
-  @override
-  String get sellEstimatedValue => 'Valor estimado';
 
   @override
   String get sellEnterQuantity => 'Insira a quantidade';
