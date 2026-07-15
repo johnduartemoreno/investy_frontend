@@ -514,5 +514,23 @@
   "currencyPEN": "Sol peruano",
   "currencyCHF": "Franco suíço",
   "currencyJPY": "Iene japonês",
-  "currencyAUD": "Dólar australiano"
+  "currencyAUD": "Dólar australiano",
+  "tradingSubtotal": "Subtotal",
+  "tradingCommission": "Comissão Investy",
+  "tradingFeeSec31": "Taxa SEC",
+  "tradingFeeFinraTaf": "Taxa de atividade FINRA",
+  "tradingFeeFinraCat": "Taxa CAT da FINRA",
+  "tradingFeeBrokerSpread": "Comissão da corretora",
+  "tradingTotalToPay": "Total a pagar",
+  "tradingYouReceive": "Você recebe",
+  "tradingQuoteUnavailable": "Não foi possível calcular o custo. Tente novamente.",
+  "tradingOrderTooSmall": "O pedido mínimo é {min}",
+  "@tradingOrderTooSmall": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      }
+    }
+  },
+  "tradingSellTooSmall": "Esta venda não cobre suas taxas. Venda um pouco mais."
 }

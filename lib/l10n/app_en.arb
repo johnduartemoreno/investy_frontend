@@ -591,5 +591,23 @@
   "currencyPEN": "Peruvian Sol",
   "currencyCHF": "Swiss Franc",
   "currencyJPY": "Japanese Yen",
-  "currencyAUD": "Australian Dollar"
+  "currencyAUD": "Australian Dollar",
+  "tradingSubtotal": "Subtotal",
+  "tradingCommission": "Investy commission",
+  "tradingFeeSec31": "SEC fee",
+  "tradingFeeFinraTaf": "FINRA activity fee",
+  "tradingFeeFinraCat": "FINRA CAT fee",
+  "tradingFeeBrokerSpread": "Broker fee",
+  "tradingTotalToPay": "Total to pay",
+  "tradingYouReceive": "You receive",
+  "tradingQuoteUnavailable": "Couldn't calculate the cost. Try again.",
+  "tradingOrderTooSmall": "The minimum order is {min}",
+  "@tradingOrderTooSmall": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      }
+    }
+  },
+  "tradingSellTooSmall": "This sale doesn't cover its fees. Sell a bit more."
 }

@@ -9,6 +9,7 @@ import '../models/dashboard_response_model.dart';
 import '../models/goal_response_model.dart';
 import '../models/owl_session_model.dart';
 import '../models/recommendation_model.dart';
+import '../models/trading_quote_model.dart';
 import '../models/transaction_request_model.dart';
 import '../../../../features/assets/data/models/asset_history_model.dart';
 import '../../../../features/portfolio/data/models/portfolio_history_model.dart';
@@ -48,6 +49,18 @@ abstract class DashboardRemoteDataSource {
 
   /// Searches assets by symbol or name prefix. Returns up to 10 results.
   Future<List<AssetSearchResultModel>> searchAssets(String query);
+
+  /// Prices an order without placing it, through the same engine that executes it —
+  /// so the cost shown to the user IS the cost charged (B41).
+  Future<TradingQuoteModel> getTradingQuote({
+    required String symbol,
+    required String side,
+    required double quantity,
+    required int priceCents,
+  });
+
+  /// Static trading rules (order floor). Changes on the order of regulatory events.
+  Future<TradingConfigModel> getTradingConfig();
 
   /// Fetches AI-generated investment recommendations for [userId].
   /// [language] sets the language of AI-generated reasons (en/es/pt).
@@ -137,6 +150,33 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
       queryParameters: {'range': range},
     );
     return AssetHistoryModel.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<TradingQuoteModel> getTradingQuote({
+    required String symbol,
+    required String side,
+    required double quantity,
+    required int priceCents,
+  }) async {
+    final response = await _dio.get(
+      '/api/v1/trading/quote',
+      queryParameters: {
+        'symbol': symbol,
+        'side': side,
+        // Sent as a string so the full crypto precision survives — a double in a
+        // query map can round-trip through exponent notation.
+        'quantity': quantity.toString(),
+        'priceCents': priceCents,
+      },
+    );
+    return TradingQuoteModel.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<TradingConfigModel> getTradingConfig() async {
+    final response = await _dio.get('/api/v1/trading/config');
+    return TradingConfigModel.fromJson(response.data as Map<String, dynamic>);
   }
 
   @override

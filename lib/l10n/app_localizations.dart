@@ -2691,6 +2691,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Australian Dollar'**
   String get currencyAUD;
+
+  /// No description provided for @tradingSubtotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get tradingSubtotal;
+
+  /// No description provided for @tradingCommission.
+  ///
+  /// In en, this message translates to:
+  /// **'Investy commission'**
+  String get tradingCommission;
+
+  /// No description provided for @tradingFeeSec31.
+  ///
+  /// In en, this message translates to:
+  /// **'SEC fee'**
+  String get tradingFeeSec31;
+
+  /// No description provided for @tradingFeeFinraTaf.
+  ///
+  /// In en, this message translates to:
+  /// **'FINRA activity fee'**
+  String get tradingFeeFinraTaf;
+
+  /// No description provided for @tradingFeeFinraCat.
+  ///
+  /// In en, this message translates to:
+  /// **'FINRA CAT fee'**
+  String get tradingFeeFinraCat;
+
+  /// No description provided for @tradingFeeBrokerSpread.
+  ///
+  /// In en, this message translates to:
+  /// **'Broker fee'**
+  String get tradingFeeBrokerSpread;
+
+  /// No description provided for @tradingTotalToPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Total to pay'**
+  String get tradingTotalToPay;
+
+  /// No description provided for @tradingYouReceive.
+  ///
+  /// In en, this message translates to:
+  /// **'You receive'**
+  String get tradingYouReceive;
+
+  /// No description provided for @tradingQuoteUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t calculate the cost. Try again.'**
+  String get tradingQuoteUnavailable;
+
+  /// No description provided for @tradingOrderTooSmall.
+  ///
+  /// In en, this message translates to:
+  /// **'The minimum order is {min}'**
+  String tradingOrderTooSmall(String min);
+
+  /// No description provided for @tradingSellTooSmall.
+  ///
+  /// In en, this message translates to:
+  /// **'This sale doesn\'t cover its fees. Sell a bit more.'**
+  String get tradingSellTooSmall;
 }
 
 class _AppLocalizationsDelegate

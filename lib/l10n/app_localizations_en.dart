@@ -1408,4 +1408,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get currencyAUD => 'Australian Dollar';
+
+  @override
+  String get tradingSubtotal => 'Subtotal';
+
+  @override
+  String get tradingCommission => 'Investy commission';
+
+  @override
+  String get tradingFeeSec31 => 'SEC fee';
+
+  @override
+  String get tradingFeeFinraTaf => 'FINRA activity fee';
+
+  @override
+  String get tradingFeeFinraCat => 'FINRA CAT fee';
+
+  @override
+  String get tradingFeeBrokerSpread => 'Broker fee';
+
+  @override
+  String get tradingTotalToPay => 'Total to pay';
+
+  @override
+  String get tradingYouReceive => 'You receive';
+
+  @override
+  String get tradingQuoteUnavailable =>
+      'Couldn\'t calculate the cost. Try again.';
+
+  @override
+  String tradingOrderTooSmall(String min) {
+    return 'The minimum order is $min';
+  }
+
+  @override
+  String get tradingSellTooSmall =>
+      'This sale doesn\'t cover its fees. Sell a bit more.';
 }
