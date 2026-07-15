@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +20,7 @@ import '../../data/models/asset_search_result_model.dart';
 import '../../data/models/buy_asset_args.dart';
 import '../controllers/buy_asset_controller.dart';
 import '../controllers/trading_quote_controller.dart';
+import '../trading_error_localizer.dart';
 import '../widgets/order_cost_breakdown.dart';
 import '../../../goals/presentation/providers/rest_goals_provider.dart';
 
@@ -289,15 +289,16 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
 
     ref.listen(buyAssetControllerProvider, (_, next) {
       if (next is AsyncError) {
-        final err = next.error;
-        final isInsufficientFunds = err is DioException &&
-            err.response?.data is Map &&
-            (err.response?.data as Map)['code'] == 'ERR_INSUFFICIENT_FUNDS';
+        // The backend speaks error codes; the copy lives here. Falling back to the
+        // real floor from /trading/config keeps the message honest if the server
+        // ever moves it (a $1 minimum is policy, not a constant).
+        final minCents =
+            ref.read(tradingConfigProvider).valueOrNull?.minBuyNotionalCents ??
+                100;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(isInsufficientFunds
-                ? l10n.buyInsufficientFunds
-                : l10n.commonError),
+            content: Text(localizeTradingError(l10n, next.error,
+                minBuyNotionalCents: minCents)),
           ),
         );
       } else if (next is AsyncData && !next.isLoading) {

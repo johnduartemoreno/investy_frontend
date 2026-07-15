@@ -19,6 +19,7 @@ import '../../../broker/presentation/widgets/broker_gate_banner.dart';
 import '../../../kyc/presentation/widgets/kyc_gate_banner.dart';
 import '../controllers/sell_asset_controller.dart';
 import '../controllers/trading_quote_controller.dart';
+import '../trading_error_localizer.dart';
 import '../widgets/order_cost_breakdown.dart';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -415,7 +416,12 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
       if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context).commonError),
+            // isSell matters: ERR_ORDER_TOO_SMALL on a sell is not "under the $1
+            // minimum" (sells have none) — it means the fees would swallow the
+            // proceeds, which is a different thing to tell the user.
+            content: Text(localizeTradingError(
+                AppLocalizations.of(context), next.error,
+                isSell: true)),
             backgroundColor: colors.error,
           ),
         );
