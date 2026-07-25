@@ -170,7 +170,6 @@
   "buyEnterQuantity": "Insira a quantidade",
   "buyQuantityPositive": "Deve ser maior que 0",
   "buyConfirmButton": "Confirmar compra",
-  "buyEstimatedTotal": "Total estimado",
   "buyTitle": "Comprar {symbol}",
   "buyInsufficientFunds": "Saldo insuficiente. Deposite fundos para continuar.",
   "buyQuantityLabel": "Quantidade",
@@ -186,7 +185,6 @@
   "sellQuantityLabel": "Quantidade",
   "sellSharesOwned": "{quantity} ações em sua posse",
   "sellPricePerShare": "Preço por ação (preço de mercado)",
-  "sellEstimatedValue": "Valor estimado",
   "sellEnterQuantity": "Insira a quantidade",
   "sellQuantityPositive": "Deve ser maior que zero",
   "sellQuantityExceeds": "Você só tem {quantity} ações",
@@ -514,5 +512,23 @@
   "currencyPEN": "Sol peruano",
   "currencyCHF": "Franco suíço",
   "currencyJPY": "Iene japonês",
-  "currencyAUD": "Dólar australiano"
+  "currencyAUD": "Dólar australiano",
+  "tradingSubtotal": "Subtotal",
+  "tradingCommission": "Comissão Investy",
+  "tradingFeeSec31": "Taxa SEC",
+  "tradingFeeFinraTaf": "Taxa de atividade FINRA",
+  "tradingFeeFinraCat": "Taxa CAT da FINRA",
+  "tradingFeeBrokerSpread": "Comissão da corretora",
+  "tradingTotalToPay": "Total a pagar",
+  "tradingYouReceive": "Você recebe",
+  "tradingQuoteUnavailable": "Não foi possível calcular o custo. Tente novamente.",
+  "tradingOrderTooSmall": "O pedido mínimo é {min}",
+  "@tradingOrderTooSmall": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      }
+    }
+  },
+  "tradingSellTooSmall": "Esta venda não cobre suas taxas. Venda um pouco mais."
 }

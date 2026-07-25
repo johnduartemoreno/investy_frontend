@@ -501,9 +501,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get buyConfirmButton => 'Confirmar compra';
 
   @override
-  String get buyEstimatedTotal => 'Total estimado';
-
-  @override
   String buyTitle(String symbol) {
     return 'Comprar $symbol';
   }
@@ -555,9 +552,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sellPricePerShare => 'Precio por acción (precio de mercado)';
-
-  @override
-  String get sellEstimatedValue => 'Valor estimado';
 
   @override
   String get sellEnterQuantity => 'Ingresa la cantidad';
@@ -1415,4 +1409,41 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get currencyAUD => 'Dólar australiano';
+
+  @override
+  String get tradingSubtotal => 'Subtotal';
+
+  @override
+  String get tradingCommission => 'Comisión Investy';
+
+  @override
+  String get tradingFeeSec31 => 'Tasa SEC';
+
+  @override
+  String get tradingFeeFinraTaf => 'Tasa de actividad FINRA';
+
+  @override
+  String get tradingFeeFinraCat => 'Tasa CAT de FINRA';
+
+  @override
+  String get tradingFeeBrokerSpread => 'Comisión del bróker';
+
+  @override
+  String get tradingTotalToPay => 'Total a pagar';
+
+  @override
+  String get tradingYouReceive => 'Recibís';
+
+  @override
+  String get tradingQuoteUnavailable =>
+      'No pudimos calcular el costo. Intentá de nuevo.';
+
+  @override
+  String tradingOrderTooSmall(String min) {
+    return 'La orden mínima es $min';
+  }
+
+  @override
+  String get tradingSellTooSmall =>
+      'Esta venta no cubre sus comisiones. Vendé un poco más.';
 }

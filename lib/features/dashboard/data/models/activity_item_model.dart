@@ -13,9 +13,18 @@ class ActivityItemModel {
   @JsonKey(defaultValue: '')
   final String id;
 
-  /// Amount in integer cents. $1.00 = 100. Never a double.
+  /// What actually MOVED in the wallet, in integer cents, fees included:
+  /// notional + fee on a buy, notional − fee on a sell. Never a double.
   /// No default — missing money data must fail loudly (B40-F7).
   final int amount;
+
+  /// Order value before fees, in cents. Non-zero for BUY/SELL only.
+  /// Together with [feeCents] this explains why [amount] differs from qty × price.
+  final int totalBeforeFeesCents;
+
+  /// Commission charged, in cents. Non-zero for BUY/SELL placed after B41.
+  /// Zero on pre-B41 receipts, which genuinely paid no fee — not a missing value.
+  final int feeCents;
 
   /// Transaction type as returned by the API: "BUY", "SELL", "DEPOSIT", "WITHDRAWAL".
   @JsonKey(defaultValue: 'UNKNOWN')
@@ -48,6 +57,8 @@ class ActivityItemModel {
     this.symbol = '',
     this.quantityUnits = 0,
     this.priceCents = 0,
+    this.totalBeforeFeesCents = 0,
+    this.feeCents = 0,
     this.realizedPnlCents = 0,
   });
 
@@ -79,7 +90,12 @@ class ActivityItemModel {
       type: type.toLowerCase(),
       quantity: quantityUnits / 1e8,
       price: priceCents / 100.0,
-      totalBeforeFees: amount / 100.0,
+      // Pre-B41 receipts carry no breakdown: fall back to the moved amount, which
+      // for them IS the notional (they paid no fee).
+      totalBeforeFees:
+          (totalBeforeFeesCents == 0 ? amount : totalBeforeFeesCents) / 100.0,
+      feeCents: feeCents,
+      total: amount / 100.0,
       realizedPnlCents: realizedPnlCents,
       createdAt: _parsedAt,
     );

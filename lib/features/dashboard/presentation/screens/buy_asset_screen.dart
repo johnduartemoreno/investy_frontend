@@ -1,4 +1,5 @@
-import 'package:dio/dio.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,13 +12,16 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/asset_gradients.dart';
 import '../../../../core/utils/currency_formatter.dart';
-import '../../../../core/utils/thousands_separator_input_formatter.dart';
+import '../../../../core/utils/quantity_input_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../broker/presentation/widgets/broker_gate_banner.dart';
 import '../../../kyc/presentation/widgets/kyc_gate_banner.dart';
 import '../../data/models/asset_search_result_model.dart';
 import '../../data/models/buy_asset_args.dart';
 import '../controllers/buy_asset_controller.dart';
+import '../controllers/trading_quote_controller.dart';
+import '../trading_error_localizer.dart';
+import '../widgets/order_cost_breakdown.dart';
 import '../../../goals/presentation/providers/rest_goals_provider.dart';
 
 class BuyAssetScreen extends ConsumerStatefulWidget {
@@ -35,10 +39,17 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
   final _quantityController = TextEditingController();
 
   AssetSearchResultModel? _selectedAsset;
+  Timer? _quoteDebounce;
   List<AssetSearchResultModel> _searchResults = [];
   bool _isSearching = false;
   double _quantity = 0.0;
   String? _selectedGoalId; // optional goal assignment (S18)
+
+  /// Server order floor in dollars, refreshed from build(). Cached because the
+  /// validator is a callback: ref.watch is only legal inside build.
+  /// Null until /trading/config answers — then the pre-check simply sits out and
+  /// the server does the rejecting, which it does anyway.
+  double? _minBuyNotional;
 
   @override
   void initState() {
@@ -71,6 +82,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
 
   @override
   void dispose() {
+    _quoteDebounce?.cancel();
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     _quantityController.dispose();
@@ -116,6 +128,8 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
       _isSearching = false;
     });
     FocusScope.of(context).unfocus();
+    // The asset changed, so the fee may have too (rules can key off asset class).
+    _refreshQuote();
   }
 
   void _submit() {
@@ -132,6 +146,97 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
 
   double get _estimatedTotal =>
       _quantity * (_selectedAsset?.currentPrice ?? 0.0);
+
+  bool get _isCrypto => _selectedAsset?.assetClass == 'crypto';
+
+  /// True once the order is big enough to be worth pricing. Below the floor the
+  /// server will refuse it, so quoting it — and drawing a tidy cost breakdown for
+  /// it — would just be theatre.
+  bool get _meetsMinimum {
+    final minDollars = _minBuyNotional;
+    // Config not in yet: block nothing and let the server answer.
+    if (minDollars == null) return true;
+    return (_estimatedTotal * 100).round() >= (minDollars * 100).round();
+  }
+
+  /// Debounced so a quote is requested when the user pauses, not per keystroke.
+  void _refreshQuote() {
+    _quoteDebounce?.cancel();
+    final asset = _selectedAsset;
+    if (asset == null || _quantity <= 0 || !_meetsMinimum) {
+      ref.read(tradingQuoteControllerProvider.notifier).clear();
+      return;
+    }
+    _quoteDebounce = Timer(const Duration(milliseconds: 350), () {
+      if (!mounted) return;
+      ref.read(tradingQuoteControllerProvider.notifier).fetch(
+            symbol: asset.symbol,
+            side: 'buy',
+            quantity: _quantity,
+            priceCents: (asset.currentPrice * 100).round(),
+          );
+    });
+  }
+
+  /// The cost section. While a quote is in flight or failed we show the subtotal
+  /// only — never a total that omits fees, which would understate the cost.
+  Widget _buildCostSection(
+      ThemeData theme, ColorScheme cs, AppLocalizations l10n) {
+    final quoteAsync = ref.watch(tradingQuoteControllerProvider);
+
+    return quoteAsync.when(
+      data: (quote) {
+        if (quote == null) return _subtotalOnlyRow(theme, cs, l10n);
+        return OrderCostBreakdown(quote: quote, isBuy: true);
+      },
+      loading: () => _subtotalOnlyRow(theme, cs, l10n, showSpinner: true),
+      error: (_, __) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _subtotalOnlyRow(theme, cs, l10n),
+          const SizedBox(height: AppDimens.spacingS),
+          Text(
+            l10n.tradingQuoteUnavailable,
+            style: theme.textTheme.bodySmall?.copyWith(color: cs.error),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _subtotalOnlyRow(
+      ThemeData theme, ColorScheme cs, AppLocalizations l10n,
+      {bool showSpinner = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          l10n.tradingSubtotal,
+          style:
+              theme.textTheme.bodyLarge?.copyWith(color: cs.onSurfaceVariant),
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (showSpinner) ...[
+              const SizedBox(
+                width: 12,
+                height: 12,
+                child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+              ),
+              const SizedBox(width: AppDimens.spacingS),
+            ],
+            Text(
+              CurrencyFormatter.format(_estimatedTotal),
+              style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: AppTheme.brandPurpleLight),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
   List<Color> _colorsForTicker(String ticker) => AssetGradients.ticker(ticker);
 
@@ -198,17 +303,23 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
     final cs = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
 
+    final minCentsAsync = ref.watch(tradingConfigProvider).valueOrNull;
+    _minBuyNotional = minCentsAsync == null
+        ? null
+        : minCentsAsync.minBuyNotionalCents / 100.0;
+
     ref.listen(buyAssetControllerProvider, (_, next) {
       if (next is AsyncError) {
-        final err = next.error;
-        final isInsufficientFunds = err is DioException &&
-            err.response?.data is Map &&
-            (err.response?.data as Map)['code'] == 'ERR_INSUFFICIENT_FUNDS';
+        // The backend speaks error codes; the copy lives here. Falling back to the
+        // real floor from /trading/config keeps the message honest if the server
+        // ever moves it (a $1 minimum is policy, not a constant).
+        final minCents =
+            ref.read(tradingConfigProvider).valueOrNull?.minBuyNotionalCents ??
+                100;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(isInsufficientFunds
-                ? l10n.buyInsufficientFunds
-                : l10n.commonError),
+            content: Text(localizeTradingError(l10n, next.error,
+                minBuyNotionalCents: minCents)),
           ),
         );
       } else if (next is AsyncData && !next.isLoading) {
@@ -288,7 +399,8 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                         : null,
                     filled: true,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppDimens.radiusInput),
+                      borderRadius:
+                          BorderRadius.circular(AppDimens.radiusInput),
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -303,7 +415,8 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                     constraints: const BoxConstraints(maxHeight: 220),
                     decoration: BoxDecoration(
                       color: cs.surfaceContainerLow,
-                      borderRadius: BorderRadius.circular(AppDimens.radiusInput),
+                      borderRadius:
+                          BorderRadius.circular(AppDimens.radiusInput),
                     ),
                     child: _isSearching
                         ? const Padding(
@@ -313,7 +426,8 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                           )
                         : _searchResults.isEmpty
                             ? Padding(
-                                padding: const EdgeInsets.all(AppDimens.spacingL),
+                                padding:
+                                    const EdgeInsets.all(AppDimens.spacingL),
                                 child: Text(l10n.assetSearchEmpty,
                                     style: theme.textTheme.bodyMedium
                                         ?.copyWith(color: cs.onSurfaceVariant)),
@@ -444,44 +558,56 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                           contentPadding:
                               const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        inputFormatters: [ThousandsSeparatorInputFormatter()],
+                        // A quantity is not money: 2 decimals is the wrong cap for an
+                        // asset — it made 0.001 BTC untypeable.
+                        inputFormatters: [
+                          QuantityInputFormatter(isCrypto: _isCrypto),
+                        ],
                         onChanged: (v) {
                           final parsed =
-                              ThousandsSeparatorInputFormatter.parseFormatted(
-                                  v);
+                              QuantityInputFormatter.parseFormatted(v);
                           setState(() => _quantity = parsed ?? 0.0);
+                          _refreshQuote();
                         },
                         validator: (v) {
                           if (v == null || v.isEmpty) {
                             return l10n.buyEnterQuantity;
                           }
-                          final qty =
-                              ThousandsSeparatorInputFormatter.parseFormatted(
-                                  v);
+                          final qty = QuantityInputFormatter.parseFormatted(v);
                           if (qty == null || qty <= 0) {
                             return l10n.buyQuantityPositive;
+                          }
+                          // Mirror of the server floor, for instant feedback as the
+                          // user types — the alternative is drawing a full cost
+                          // breakdown and an enabled button for an order that is
+                          // certain to be rejected. NOT the authority: the server
+                          // re-checks every order and wins any disagreement.
+                          //
+                          // Compared in whole cents, rounded. The server floors the
+                          // notional (integer division), so rounding here makes this
+                          // check marginally LOOSER than the real one — deliberately.
+                          // The failure directions are not symmetric: blocking an
+                          // order the server would accept traps the user in a field
+                          // error they cannot clear, while letting a borderline one
+                          // through just earns a snackbar from the authority.
+                          final minDollars = _minBuyNotional;
+                          if (minDollars != null &&
+                              _selectedAsset != null &&
+                              (_estimatedTotal * 100).round() <
+                                  (minDollars * 100).round()) {
+                            return l10n.tradingOrderTooSmall(
+                                CurrencyFormatter.format(minDollars));
                           }
                           return null;
                         },
                       ),
-                      if (_selectedAsset != null && _quantity > 0) ...[
+                      // No breakdown for an order the server will refuse — the
+                      // validator already says why.
+                      if (_selectedAsset != null &&
+                          _quantity > 0 &&
+                          _meetsMinimum) ...[
                         const Divider(height: AppDimens.spacingXL),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              l10n.buyEstimatedTotal,
-                              style: theme.textTheme.bodyLarge
-                                  ?.copyWith(color: cs.onSurfaceVariant),
-                            ),
-                            Text(
-                              CurrencyFormatter.format(_estimatedTotal),
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: AppTheme.brandPurpleLight),
-                            ),
-                          ],
-                        ),
+                        _buildCostSection(theme, cs, l10n),
                       ],
                     ],
                   ),

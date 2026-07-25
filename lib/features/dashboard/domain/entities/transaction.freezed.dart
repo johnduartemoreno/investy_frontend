@@ -30,6 +30,13 @@ mixin _$Transaction {
   @JsonKey(name: 'total_before_fees')
   double get totalBeforeFees => throw _privateConstructorUsedError;
 
+  /// What actually moved: notional + fee on a buy, notional − fee on a sell.
+  /// This is the number a receipt must lead with — it is what hit the wallet.
+  double get total => throw _privateConstructorUsedError;
+
+  /// Commission in integer cents. 0 on pre-B41 receipts (no fee was charged).
+  int get feeCents => throw _privateConstructorUsedError;
+
   /// Net realized P&L in integer cents for SELL transactions.
   /// 0 means BUY, DEPOSIT, WITHDRAWAL, or pre-migration SELL (avg cost unknown).
   int get realizedPnlCents => throw _privateConstructorUsedError;
@@ -57,6 +64,8 @@ abstract class $TransactionCopyWith<$Res> {
       double quantity,
       double price,
       @JsonKey(name: 'total_before_fees') double totalBeforeFees,
+      double total,
+      int feeCents,
       int realizedPnlCents,
       @JsonKey(name: 'created_at') DateTime createdAt});
 }
@@ -80,6 +89,8 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
     Object? quantity = null,
     Object? price = null,
     Object? totalBeforeFees = null,
+    Object? total = null,
+    Object? feeCents = null,
     Object? realizedPnlCents = null,
     Object? createdAt = null,
   }) {
@@ -108,6 +119,14 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
           ? _value.totalBeforeFees
           : totalBeforeFees // ignore: cast_nullable_to_non_nullable
               as double,
+      total: null == total
+          ? _value.total
+          : total // ignore: cast_nullable_to_non_nullable
+              as double,
+      feeCents: null == feeCents
+          ? _value.feeCents
+          : feeCents // ignore: cast_nullable_to_non_nullable
+              as int,
       realizedPnlCents: null == realizedPnlCents
           ? _value.realizedPnlCents
           : realizedPnlCents // ignore: cast_nullable_to_non_nullable
@@ -135,6 +154,8 @@ abstract class _$$TransactionImplCopyWith<$Res>
       double quantity,
       double price,
       @JsonKey(name: 'total_before_fees') double totalBeforeFees,
+      double total,
+      int feeCents,
       int realizedPnlCents,
       @JsonKey(name: 'created_at') DateTime createdAt});
 }
@@ -156,6 +177,8 @@ class __$$TransactionImplCopyWithImpl<$Res>
     Object? quantity = null,
     Object? price = null,
     Object? totalBeforeFees = null,
+    Object? total = null,
+    Object? feeCents = null,
     Object? realizedPnlCents = null,
     Object? createdAt = null,
   }) {
@@ -184,6 +207,14 @@ class __$$TransactionImplCopyWithImpl<$Res>
           ? _value.totalBeforeFees
           : totalBeforeFees // ignore: cast_nullable_to_non_nullable
               as double,
+      total: null == total
+          ? _value.total
+          : total // ignore: cast_nullable_to_non_nullable
+              as double,
+      feeCents: null == feeCents
+          ? _value.feeCents
+          : feeCents // ignore: cast_nullable_to_non_nullable
+              as int,
       realizedPnlCents: null == realizedPnlCents
           ? _value.realizedPnlCents
           : realizedPnlCents // ignore: cast_nullable_to_non_nullable
@@ -206,6 +237,8 @@ class _$TransactionImpl implements _Transaction {
       required this.quantity,
       required this.price,
       @JsonKey(name: 'total_before_fees') required this.totalBeforeFees,
+      this.total = 0.0,
+      this.feeCents = 0,
       this.realizedPnlCents = 0,
       @JsonKey(name: 'created_at') required this.createdAt});
 
@@ -228,6 +261,17 @@ class _$TransactionImpl implements _Transaction {
   @JsonKey(name: 'total_before_fees')
   final double totalBeforeFees;
 
+  /// What actually moved: notional + fee on a buy, notional − fee on a sell.
+  /// This is the number a receipt must lead with — it is what hit the wallet.
+  @override
+  @JsonKey()
+  final double total;
+
+  /// Commission in integer cents. 0 on pre-B41 receipts (no fee was charged).
+  @override
+  @JsonKey()
+  final int feeCents;
+
   /// Net realized P&L in integer cents for SELL transactions.
   /// 0 means BUY, DEPOSIT, WITHDRAWAL, or pre-migration SELL (avg cost unknown).
   @override
@@ -241,7 +285,7 @@ class _$TransactionImpl implements _Transaction {
 
   @override
   String toString() {
-    return 'Transaction(id: $id, symbol: $symbol, type: $type, quantity: $quantity, price: $price, totalBeforeFees: $totalBeforeFees, realizedPnlCents: $realizedPnlCents, createdAt: $createdAt)';
+    return 'Transaction(id: $id, symbol: $symbol, type: $type, quantity: $quantity, price: $price, totalBeforeFees: $totalBeforeFees, total: $total, feeCents: $feeCents, realizedPnlCents: $realizedPnlCents, createdAt: $createdAt)';
   }
 
   @override
@@ -257,6 +301,9 @@ class _$TransactionImpl implements _Transaction {
             (identical(other.price, price) || other.price == price) &&
             (identical(other.totalBeforeFees, totalBeforeFees) ||
                 other.totalBeforeFees == totalBeforeFees) &&
+            (identical(other.total, total) || other.total == total) &&
+            (identical(other.feeCents, feeCents) ||
+                other.feeCents == feeCents) &&
             (identical(other.realizedPnlCents, realizedPnlCents) ||
                 other.realizedPnlCents == realizedPnlCents) &&
             (identical(other.createdAt, createdAt) ||
@@ -266,7 +313,7 @@ class _$TransactionImpl implements _Transaction {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, symbol, type, quantity,
-      price, totalBeforeFees, realizedPnlCents, createdAt);
+      price, totalBeforeFees, total, feeCents, realizedPnlCents, createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -290,6 +337,8 @@ abstract class _Transaction implements Transaction {
       required final double quantity,
       required final double price,
       @JsonKey(name: 'total_before_fees') required final double totalBeforeFees,
+      final double total,
+      final int feeCents,
       final int realizedPnlCents,
       @JsonKey(name: 'created_at')
       required final DateTime createdAt}) = _$TransactionImpl;
@@ -312,6 +361,15 @@ abstract class _Transaction implements Transaction {
   @override
   @JsonKey(name: 'total_before_fees')
   double get totalBeforeFees;
+  @override
+
+  /// What actually moved: notional + fee on a buy, notional − fee on a sell.
+  /// This is the number a receipt must lead with — it is what hit the wallet.
+  double get total;
+  @override
+
+  /// Commission in integer cents. 0 on pre-B41 receipts (no fee was charged).
+  int get feeCents;
   @override
 
   /// Net realized P&L in integer cents for SELL transactions.

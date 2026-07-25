@@ -18,6 +18,13 @@ class Transaction with _$Transaction {
     required double price,
     @JsonKey(name: 'total_before_fees') required double totalBeforeFees,
 
+    /// What actually moved: notional + fee on a buy, notional − fee on a sell.
+    /// This is the number a receipt must lead with — it is what hit the wallet.
+    @Default(0.0) double total,
+
+    /// Commission in integer cents. 0 on pre-B41 receipts (no fee was charged).
+    @Default(0) int feeCents,
+
     /// Net realized P&L in integer cents for SELL transactions.
     /// 0 means BUY, DEPOSIT, WITHDRAWAL, or pre-migration SELL (avg cost unknown).
     @Default(0) int realizedPnlCents,

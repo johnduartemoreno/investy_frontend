@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +10,7 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/asset_gradients.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../core/utils/quantity_input_formatter.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../features/portfolio/data/models/portfolio_response_model.dart';
 import '../../../../features/portfolio/presentation/providers/rest_portfolio_provider.dart';
@@ -15,6 +18,9 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../broker/presentation/widgets/broker_gate_banner.dart';
 import '../../../kyc/presentation/widgets/kyc_gate_banner.dart';
 import '../controllers/sell_asset_controller.dart';
+import '../controllers/trading_quote_controller.dart';
+import '../trading_error_localizer.dart';
+import '../widgets/order_cost_breakdown.dart';
 
 // ═══════════════════════════════════════════════════════════════════
 // SELL ASSET SCREEN — Full-screen vertical list of owned holdings
@@ -52,10 +58,16 @@ class SellAssetScreen extends ConsumerWidget {
                   ),
                 ),
                 data: (portfolio) {
-                  if (portfolio.holdings.isEmpty) {
+                  // B35: drop fully-liquidated positions. A holding at 0 shares is a
+                  // row you cannot sell — the Portfolio screen has filtered these since
+                  // S08.5 and this screen never caught up.
+                  final sellable = portfolio.holdings
+                      .where((h) => h.quantity > 0)
+                      .toList(growable: false);
+                  if (sellable.isEmpty) {
                     return _buildEmptyState(context, theme, colors);
                   }
-                  return _buildHoldingsList(context, portfolio.holdings);
+                  return _buildHoldingsList(context, sellable);
                 },
               ),
             ),
@@ -134,7 +146,8 @@ class SellAssetScreen extends ConsumerWidget {
       isScrollControlled: true,
       useSafeArea: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimens.radiusBottomSheet)),
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppDimens.radiusBottomSheet)),
       ),
       builder: (_) => _SellBottomSheet(holding: holding),
     );
@@ -182,7 +195,8 @@ class _HoldingListTile extends StatelessWidget {
     return Card(
       elevation: 0,
       color: colors.surfaceContainerLow,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppDimens.radiusCard),
@@ -255,10 +269,13 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
   final _quantityController = TextEditingController();
   final _priceController = TextEditingController();
   int? _activeChipIndex;
+  Timer? _quoteDebounce;
   double _quantity = 0.0;
   double _pricePerUnit = 0.0;
 
   PortfolioHoldingModel get _holding => widget.holding;
+
+  bool get _isCrypto => _holding.assetClass == 'crypto';
 
   @override
   void initState() {
@@ -271,6 +288,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
 
   @override
   void dispose() {
+    _quoteDebounce?.cancel();
     _priceController.removeListener(_onPriceChanged);
     _quantityController.dispose();
     _priceController.dispose();
@@ -281,9 +299,87 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
     final parsed =
         ThousandsSeparatorInputFormatter.parseFormatted(_priceController.text);
     setState(() => _pricePerUnit = parsed ?? 0.0);
+    _refreshQuote();
   }
 
   double get _estimatedValue => _quantity * _pricePerUnit;
+
+  /// Debounced so a quote is requested when the user pauses, not per keystroke.
+  void _refreshQuote() {
+    _quoteDebounce?.cancel();
+    if (_quantity <= 0 || _pricePerUnit <= 0) {
+      ref.read(tradingQuoteControllerProvider.notifier).clear();
+      return;
+    }
+    _quoteDebounce = Timer(const Duration(milliseconds: 350), () {
+      if (!mounted) return;
+      ref.read(tradingQuoteControllerProvider.notifier).fetch(
+            symbol: _holding.symbol,
+            side: 'sell',
+            quantity: _quantity,
+            priceCents: (_pricePerUnit * 100).round(),
+          );
+    });
+  }
+
+  /// Proceeds section. Until a quote lands we show the gross value labelled as such —
+  /// never a "you receive" number that quietly ignores the fees.
+  Widget _buildProceeds(ThemeData theme, ColorScheme colors) {
+    final l10n = AppLocalizations.of(context);
+    final quoteAsync = ref.watch(tradingQuoteControllerProvider);
+
+    return quoteAsync.when(
+      data: (quote) {
+        if (quote == null) return _grossOnlyRow(theme, colors, l10n);
+        return OrderCostBreakdown(quote: quote, isBuy: false);
+      },
+      loading: () => _grossOnlyRow(theme, colors, l10n, showSpinner: true),
+      error: (_, __) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _grossOnlyRow(theme, colors, l10n),
+          const SizedBox(height: AppDimens.spacingS),
+          Text(
+            l10n.tradingQuoteUnavailable,
+            style: theme.textTheme.bodySmall?.copyWith(color: colors.error),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _grossOnlyRow(
+      ThemeData theme, ColorScheme colors, AppLocalizations l10n,
+      {bool showSpinner = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          l10n.tradingSubtotal,
+          style: theme.textTheme.bodyLarge
+              ?.copyWith(color: colors.onSurfaceVariant),
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (showSpinner) ...[
+              const SizedBox(
+                width: 12,
+                height: 12,
+                child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+              ),
+              const SizedBox(width: AppDimens.spacingS),
+            ],
+            Text(
+              CurrencyFormatter.format(_estimatedValue),
+              style: theme.textTheme.titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
   void _onChipTapped(int index) {
     final percentages = [0.25, 0.50, 1.0];
@@ -298,6 +394,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
       _quantity = rounded;
       _quantityController.text = text;
     });
+    _refreshQuote();
   }
 
   void _submit() {
@@ -319,7 +416,12 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
       if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context).commonError),
+            // isSell matters: ERR_ORDER_TOO_SMALL on a sell is not "under the $1
+            // minimum" (sells have none) — it means the fees would swallow the
+            // proceeds, which is a different thing to tell the user.
+            content: Text(localizeTradingError(
+                AppLocalizations.of(context), next.error,
+                isSell: true)),
             backgroundColor: colors.error,
           ),
         );
@@ -410,17 +512,19 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                   ),
                   contentPadding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                inputFormatters: [ThousandsSeparatorInputFormatter()],
+                // A quantity is not money: 2 decimals is the wrong cap for an asset.
+                inputFormatters: [
+                  QuantityInputFormatter(isCrypto: _isCrypto),
+                ],
                 onChanged: (v) {
-                  final parsed =
-                      ThousandsSeparatorInputFormatter.parseFormatted(v);
+                  final parsed = QuantityInputFormatter.parseFormatted(v);
                   setState(() => _quantity = parsed ?? 0.0);
+                  _refreshQuote();
                 },
                 validator: (v) {
                   final l10n = AppLocalizations.of(context);
                   if (v == null || v.isEmpty) return l10n.sellEnterQuantity;
-                  final qty =
-                      ThousandsSeparatorInputFormatter.parseFormatted(v);
+                  final qty = QuantityInputFormatter.parseFormatted(v);
                   if (qty == null || qty <= 0) return l10n.sellQuantityPositive;
                   if (qty > _holding.quantity) {
                     return l10n
@@ -498,7 +602,9 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
               ),
               const SizedBox(height: AppDimens.spacingL),
 
-              // ── Estimated Value ──
+              // ── What you actually walk away with ──
+              // A sell's fees come OUT of the proceeds, so showing gross value alone
+              // overstates what lands in the wallet. The quote is authoritative.
               if (_quantity > 0 && _pricePerUnit > 0) ...[
                 Container(
                   padding: const EdgeInsets.all(AppDimens.spacingL),
@@ -506,22 +612,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                     color: colors.surfaceContainerLow,
                     borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context).sellEstimatedValue,
-                        style: theme.textTheme.bodyLarge
-                            ?.copyWith(color: colors.onSurfaceVariant),
-                      ),
-                      Text(
-                        CurrencyFormatter.format(_estimatedValue),
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: _buildProceeds(theme, colors),
                 ),
                 const SizedBox(height: AppDimens.spacingL),
               ],
