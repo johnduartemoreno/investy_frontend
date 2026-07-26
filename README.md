@@ -64,6 +64,7 @@ Base URL selected automatically:
 | Production | `https://api.investy.com` |
 
 Use `--dart-define=USE_STAGING=true` to force staging URL in debug builds.
+Add `--dart-define=GIT_SHA=$(git rev-parse --short HEAD)` to stamp the build SHA in the on-screen environment badge (B53); without it the badge shows the environment only.
 
 ### Provider → Endpoint map
 
