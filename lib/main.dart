@@ -32,8 +32,10 @@ void main() async {
   // Initialize Hive
   await Hive.initFlutter();
 
-  // Pre-load SharedPreferences so LocaleNotifier.build() can read it synchronously.
+  // Pre-load SharedPreferences so LocaleNotifier + ThemeModeNotifier can read
+  // their persisted values synchronously on the first frame.
   await initLocaleProvider();
+  await initThemeModeProvider();
 
   runApp(const ProviderScope(child: InvestyApp()));
 }
