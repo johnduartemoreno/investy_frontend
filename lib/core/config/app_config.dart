@@ -2,8 +2,13 @@ import 'package:flutter/foundation.dart';
 
 const _useStaging = bool.fromEnvironment('USE_STAGING');
 const _localIp = String.fromEnvironment('LOCAL_IP');
+const _gitSha = String.fromEnvironment('GIT_SHA');
 const _stagingUrl =
     'http://investy-backend-stg.eba-wqzwp2yc.us-east-1.elasticbeanstalk.com';
+
+/// Which backend the app is talking to. Drives the dev/QA environment badge
+/// (B53) so a stale build against the wrong backend is obvious at a glance.
+enum AppEnvironment { local, staging, prod }
 
 class AppConfig {
   /// Base URL for the Go REST backend.
@@ -25,6 +30,24 @@ class AppConfig {
     }
     return 'https://api.investy.com';
   }
+
+  /// The resolved environment, mirroring [apiBaseUrl]'s priority: staging wins
+  /// whenever `USE_STAGING` is set (even in a release build); a debug/profile
+  /// build is local dev; a release build without staging is production.
+  static AppEnvironment get environment {
+    if (_useStaging) return AppEnvironment.staging;
+    if (kDebugMode || kProfileMode) return AppEnvironment.local;
+    return AppEnvironment.prod;
+  }
+
+  /// Short git SHA injected at build time via `--dart-define=GIT_SHA=$(git
+  /// rev-parse --short HEAD)`. Empty when the build didn't provide it.
+  static String get gitSha => _gitSha;
+
+  /// Whether the dev/QA build badge should be shown. Shown for local and
+  /// staging (and any debug/profile build); hidden only in a real production
+  /// build so end users never see it.
+  static bool get showBuildBadge => environment != AppEnvironment.prod;
 
   static const String appName = 'Investy';
 }

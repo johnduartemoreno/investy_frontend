@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/intl.dart';
 import 'core/debug/firebase_smoke.dart';
+import 'core/presentation/widgets/environment_badge.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/router/app_router.dart';
 import 'core/services/notification_service.dart';
@@ -90,6 +91,9 @@ class InvestyApp extends ConsumerWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
       routerConfig: goRouter,
+      // Dev/QA environment + build badge on every screen (B53); no-op in prod.
+      builder: (context, child) =>
+          EnvironmentBadgeOverlay(child: child ?? const SizedBox.shrink()),
       locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [
