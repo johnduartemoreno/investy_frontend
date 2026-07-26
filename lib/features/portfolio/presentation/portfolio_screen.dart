@@ -266,7 +266,15 @@ class _HoldingCard extends StatelessWidget {
                     Text(holding.symbol,
                         style: theme.textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w700)),
-                    Text(_assetClassLabel(l10n),
+                    // Ticker (primary) + company name (subtitle) standard (B52).
+                    // Falls back to the asset-class label when the backend sends
+                    // no name — never a fabricated default.
+                    Text(
+                        holding.name.isNotEmpty
+                            ? holding.name
+                            : _assetClassLabel(l10n),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodySmall
                             ?.copyWith(color: cs.onSurfaceVariant)),
                   ],

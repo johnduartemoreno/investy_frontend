@@ -217,6 +217,17 @@ class _HoldingListTile extends StatelessWidget {
                       style: theme.textTheme.titleMedium
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
+                    // Ticker (primary) + company name (subtitle) standard (B52) —
+                    // "AAPL" alone is useless to someone who doesn't know the
+                    // symbol. Hidden when the backend sends no name.
+                    if (holding.name.isNotEmpty)
+                      Text(
+                        holding.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: colors.onSurfaceVariant),
+                      ),
                     const SizedBox(height: 2),
                     Text(
                       '${holding.quantity} ${AppLocalizations.of(context).portfolioShares} · Avg ${CurrencyFormatter.formatUsd(holding.avgCost)}',
