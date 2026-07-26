@@ -36,6 +36,10 @@ class SellAssetScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final portfolioAsync = ref.watch(restPortfolioProvider);
+    // Holding VALUES in the list follow the display currency, like the Portfolio
+    // screen (B50 decision B). The order amounts inside the sell sheet stay USD.
+    final displayCurrency = ref.watch(displayCurrencyProvider);
+    final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
 
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context).sellAssetTitle)),
@@ -69,7 +73,8 @@ class SellAssetScreen extends ConsumerWidget {
                   if (sellable.isEmpty) {
                     return _buildEmptyState(context, theme, colors);
                   }
-                  return _buildHoldingsList(context, sellable);
+                  return _buildHoldingsList(
+                      context, sellable, fxRate, displayCurrency);
                 },
               ),
             ),
@@ -127,6 +132,8 @@ class SellAssetScreen extends ConsumerWidget {
   Widget _buildHoldingsList(
     BuildContext context,
     List<PortfolioHoldingModel> holdings,
+    double fxRate,
+    String currency,
   ) {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -136,6 +143,8 @@ class SellAssetScreen extends ConsumerWidget {
         final holding = holdings[index];
         return _HoldingListTile(
           holding: holding,
+          fxRate: fxRate,
+          currency: currency,
           onTap: () => _showSellSheet(context, holding),
         );
       },
@@ -185,9 +194,16 @@ Widget _tickerBox(PortfolioHoldingModel holding) {
 
 class _HoldingListTile extends StatelessWidget {
   final PortfolioHoldingModel holding;
+  final double fxRate;
+  final String currency;
   final VoidCallback onTap;
 
-  const _HoldingListTile({required this.holding, required this.onTap});
+  const _HoldingListTile({
+    required this.holding,
+    required this.fxRate,
+    required this.currency,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +246,7 @@ class _HoldingListTile extends StatelessWidget {
                       ),
                     const SizedBox(height: 2),
                     Text(
-                      '${holding.quantity} ${AppLocalizations.of(context).portfolioShares} · Avg ${CurrencyFormatter.formatUsd(holding.avgCost)}',
+                      '${holding.quantity} ${AppLocalizations.of(context).portfolioShares} · Avg ${CurrencyFormatter.formatWithCurrency(holding.avgCost * fxRate, currency)}',
                       style: theme.textTheme.bodySmall
                           ?.copyWith(color: colors.onSurfaceVariant),
                     ),
@@ -241,7 +257,8 @@ class _HoldingListTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    CurrencyFormatter.formatUsd(holding.marketValue),
+                    CurrencyFormatter.formatWithCurrency(
+                        holding.marketValue * fxRate, currency),
                     style: theme.textTheme.titleMedium
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
