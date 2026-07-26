@@ -115,6 +115,18 @@ class LocaleNumberInput {
     return double.tryParse(canonical);
   }
 
+  /// Formats a numeric [value] into locale input text (grouping + locale decimal
+  /// separator, no trailing zeros), for **pre-filling** a field that an input
+  /// formatter will then maintain. Setting `controller.text` with a dot-decimal
+  /// string (e.g. `toStringAsFixed(2)`) breaks in comma-decimal locales, where a
+  /// re-parse would read the dot as a thousands separator.
+  static String forField(double value,
+      {required int maxDecimals, String? locale}) {
+    final pattern = '#,##0.${'#' * maxDecimals}';
+    return NumberFormat(pattern, locale ?? Intl.getCurrentLocale())
+        .format(value);
+  }
+
   static bool _isSeparator(String ch) => ch == '.' || ch == ',';
 
   static String _digitsOnly(String s) => s.replaceAll(RegExp(r'[^0-9]'), '');

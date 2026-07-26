@@ -111,7 +111,7 @@ class _AlertTile extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final price = CurrencyFormatter.format(alert.targetPrice);
+    final price = CurrencyFormatter.formatUsd(alert.targetPrice);
     final condition = alert.isAbove
         ? l10n.alertsConditionAbove(price)
         : l10n.alertsConditionBelow(price);
@@ -391,7 +391,7 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
                             subtitle: Text(a.name,
                                 maxLines: 1, overflow: TextOverflow.ellipsis),
                             trailing: Text(
-                                CurrencyFormatter.format(a.currentPrice),
+                                CurrencyFormatter.formatUsd(a.currentPrice),
                                 style: theme.textTheme.bodySmall),
                             onTap: () => _select(a),
                           );
@@ -407,7 +407,7 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
                             size: 14, color: cs.primary),
                         const SizedBox(width: 6),
                         Text(
-                          l10n.alertsCurrentPrice(CurrencyFormatter.format(
+                          l10n.alertsCurrentPrice(CurrencyFormatter.formatUsd(
                               _selected!.currentPrice)),
                           style: theme.textTheme.bodySmall?.copyWith(
                               color: cs.primary, fontWeight: FontWeight.w600),

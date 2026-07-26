@@ -10,6 +10,7 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/asset_gradients.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../core/utils/locale_number_input.dart';
 import '../../../../core/utils/quantity_input_formatter.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../features/portfolio/data/models/portfolio_response_model.dart';
@@ -21,6 +22,7 @@ import '../controllers/sell_asset_controller.dart';
 import '../controllers/trading_quote_controller.dart';
 import '../trading_error_localizer.dart';
 import '../widgets/order_cost_breakdown.dart';
+import 'dashboard_screen.dart';
 
 // ═══════════════════════════════════════════════════════════════════
 // SELL ASSET SCREEN — Full-screen vertical list of owned holdings
@@ -217,7 +219,7 @@ class _HoldingListTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${holding.quantity} ${AppLocalizations.of(context).portfolioShares} · Avg ${CurrencyFormatter.format(holding.avgCost)}',
+                      '${holding.quantity} ${AppLocalizations.of(context).portfolioShares} · Avg ${CurrencyFormatter.formatUsd(holding.avgCost)}',
                       style: theme.textTheme.bodySmall
                           ?.copyWith(color: colors.onSurfaceVariant),
                     ),
@@ -228,7 +230,7 @@ class _HoldingListTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    CurrencyFormatter.format(holding.marketValue),
+                    CurrencyFormatter.formatUsd(holding.marketValue),
                     style: theme.textTheme.titleMedium
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
@@ -280,9 +282,12 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
   @override
   void initState() {
     super.initState();
-    // Pre-fill with current market price
+    // Pre-fill with current market price. Locale-aware: a bare toStringAsFixed
+    // would write a dot-decimal that a comma-decimal locale then re-parses as a
+    // thousands separator (B51).
     _pricePerUnit = _holding.currentPrice;
-    _priceController.text = _holding.currentPrice.toStringAsFixed(2);
+    _priceController.text =
+        LocaleNumberInput.forField(_holding.currentPrice, maxDecimals: 2);
     _priceController.addListener(_onPriceChanged);
   }
 
@@ -328,10 +333,18 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
     final l10n = AppLocalizations.of(context);
     final quoteAsync = ref.watch(tradingQuoteControllerProvider);
 
+    final displayCurrency = ref.watch(displayCurrencyProvider);
+    final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
+
     return quoteAsync.when(
       data: (quote) {
         if (quote == null) return _grossOnlyRow(theme, colors, l10n);
-        return OrderCostBreakdown(quote: quote, isBuy: false);
+        return OrderCostBreakdown(
+          quote: quote,
+          isBuy: false,
+          fxRate: fxRate,
+          displayCurrency: displayCurrency,
+        );
       },
       loading: () => _grossOnlyRow(theme, colors, l10n, showSpinner: true),
       error: (_, __) => Column(
@@ -351,32 +364,54 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
   Widget _grossOnlyRow(
       ThemeData theme, ColorScheme colors, AppLocalizations l10n,
       {bool showSpinner = false}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final displayCurrency = ref.watch(displayCurrencyProvider);
+    final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
+    final equivalent = CurrencyFormatter.equivalentOf(
+        _estimatedValue, fxRate, displayCurrency);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          l10n.tradingSubtotal,
-          style: theme.textTheme.bodyLarge
-              ?.copyWith(color: colors.onSurfaceVariant),
-        ),
         Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (showSpinner) ...[
-              const SizedBox(
-                width: 12,
-                height: 12,
-                child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-              ),
-              const SizedBox(width: AppDimens.spacingS),
-            ],
             Text(
-              CurrencyFormatter.format(_estimatedValue),
-              style: theme.textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              l10n.tradingSubtotal,
+              style: theme.textTheme.bodyLarge
+                  ?.copyWith(color: colors.onSurfaceVariant),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (showSpinner) ...[
+                  const SizedBox(
+                    width: 12,
+                    height: 12,
+                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                  ),
+                  const SizedBox(width: AppDimens.spacingS),
+                ],
+                Text(
+                  CurrencyFormatter.formatUsd(_estimatedValue),
+                  style: theme.textTheme.titleLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
           ],
         ),
+        if (equivalent != null)
+          Padding(
+            padding: const EdgeInsets.only(top: AppDimens.spacingXS),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                equivalent,
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: colors.onSurfaceVariant),
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -385,9 +420,12 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
     final percentages = [0.25, 0.50, 1.0];
     final qty = _holding.quantity * percentages[index];
     final rounded = double.parse(qty.toStringAsFixed(6));
-    final text = rounded == rounded.roundToDouble()
-        ? rounded.toInt().toString()
-        : rounded.toString();
+    // Locale-aware field text so a comma-decimal locale doesn't re-parse the
+    // fractional quantity as thousands (B51).
+    final text = LocaleNumberInput.forField(rounded,
+        maxDecimals: _isCrypto
+            ? QuantityInputFormatter.cryptoDecimals
+            : QuantityInputFormatter.defaultDecimals);
 
     setState(() {
       _activeChipIndex = index;

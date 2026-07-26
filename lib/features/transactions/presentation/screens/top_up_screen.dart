@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../core/utils/locale_number_input.dart';
 import '../../../../core/utils/thousands_separator_input_formatter.dart';
 import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../dashboard/presentation/screens/dashboard_screen.dart';
@@ -36,8 +36,10 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
   void _setAmount(double value) {
     setState(() {
       _amount = value;
-      final formatter = NumberFormat('#,##0.##', 'en_US');
-      _amountController.text = formatter.format(value);
+      // Locale-aware field text (B51): a static en_US format would write a
+      // dot-decimal that a comma-decimal locale re-parses as thousands.
+      _amountController.text =
+          LocaleNumberInput.forField(value, maxDecimals: 2);
     });
   }
 

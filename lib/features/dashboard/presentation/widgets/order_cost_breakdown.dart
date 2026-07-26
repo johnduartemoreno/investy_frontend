@@ -16,12 +16,20 @@ class OrderCostBreakdown extends StatelessWidget {
     super.key,
     required this.quote,
     required this.isBuy,
+    this.fxRate = 1.0,
+    this.displayCurrency = 'USD',
   });
 
   final TradingQuoteModel quote;
 
   /// A buy ADDS its fees to what you pay; a sell SUBTRACTS them from what you get.
   final bool isBuy;
+
+  /// Display-currency reference (B50): the trade leg stays in USD, but the total
+  /// gets an "≈ <display currency>" line so a EUR/COP user has a bearing. USD by
+  /// default, meaning no equivalent line is shown.
+  final double fxRate;
+  final String displayCurrency;
 
   String _chargeLabel(AppLocalizations l10n, String chargeType) {
     switch (chargeType) {
@@ -41,10 +49,11 @@ class OrderCostBreakdown extends StatelessWidget {
     return chargeType;
   }
 
-  /// USD, like the rest of the buy/sell flow. Deliberate: the trade leg is priced in
-  /// the asset's settlement currency, and the user chose to keep it that way. No FX
-  /// is applied here — introducing it would silently change what these screens mean.
-  String _money(double usd) => CurrencyFormatter.format(usd);
+  /// USD with an explicit code (B50). The trade leg is priced in the asset's
+  /// settlement currency and the user chose to keep it that way — but a bare "$"
+  /// is indistinguishable from a EUR/COP display currency, so the code is shown.
+  /// The display-currency equivalent is offered once, on the total, not per-row.
+  String _money(double usd) => CurrencyFormatter.formatUsd(usd);
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +77,19 @@ class OrderCostBreakdown extends StatelessWidget {
           _money(quote.total),
           emphasized: true,
         ),
+        if (CurrencyFormatter.equivalentOf(quote.total, fxRate, displayCurrency)
+            case final equivalent?)
+          Padding(
+            padding: const EdgeInsets.only(top: AppDimens.spacingXS),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                equivalent,
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: cs.onSurfaceVariant),
+              ),
+            ),
+          ),
       ],
     );
   }

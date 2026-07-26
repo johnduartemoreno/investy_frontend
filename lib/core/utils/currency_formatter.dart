@@ -26,6 +26,20 @@ class CurrencyFormatter {
     return '$sign$symbol$number';
   }
 
+  /// A USD amount with its currency code made explicit, for broker/trade
+  /// contexts where the value settles in USD and must not be mistaken for the
+  /// user's display currency (B50) — e.g. "USD $1,234.56". The number itself is
+  /// still grouped in the current locale.
+  static String formatUsd(double value) => 'USD ${format(value)}';
+
+  /// The "≈ <display currency>" reference line for a USD [value], converted at
+  /// [fxRate] (ADR-03: convert at render time only). Returns null when the
+  /// display currency is USD, so callers can omit the line entirely.
+  static String? equivalentOf(double value, double fxRate, String displayCurrency) {
+    if (displayCurrency == 'USD') return null;
+    return '≈ ${formatWithCurrency(value * fxRate, displayCurrency)}';
+  }
+
   /// Returns the currency symbol for the given ISO 4217 [currencyCode] (e.g.
   /// "EUR" → "€").
   static String symbolFor(String currencyCode) {
