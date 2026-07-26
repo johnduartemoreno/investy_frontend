@@ -9,6 +9,8 @@ class UserModel extends User {
     required super.id,
     required super.email,
     required super.name,
+    // Transient client-only flag — excluded from (de)serialization (F5).
+    @JsonKey(includeFromJson: false, includeToJson: false) super.isNewUser,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

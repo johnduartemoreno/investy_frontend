@@ -127,6 +127,23 @@ class AuthNotifier extends _$AuthNotifier {
     );
   }
 
+  /// Sets the display currency for a brand-new Google user and clears the
+  /// `isNewUser` flag so the onboarding prompt doesn't re-trigger (F5). Throws on
+  /// failure so the calling sheet can surface an error and stay open.
+  Future<void> onboardGoogleCurrency(String currency) async {
+    final user = state.valueOrNull;
+    if (user == null) return;
+
+    final repository = ref.read(authRepositoryProvider);
+    final result = await repository.onboardCurrency(user.id, currency);
+    result.fold(
+      (failure) => throw Exception(failure.message),
+      (_) => state = AsyncValue.data(
+        User(id: user.id, email: user.email, name: user.name),
+      ),
+    );
+  }
+
   Future<void> deleteAccountEmail(String currentPassword) async {
     final repository = ref.read(authRepositoryProvider);
     final result = await repository.deleteAccountEmail(currentPassword);

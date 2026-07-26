@@ -1439,4 +1439,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tradingSellTooSmall =>
       'This sale doesn\'t cover its fees. Sell a bit more.';
+
+  @override
+  String get onboardCurrencyTitle => 'Choose your display currency';
+
+  @override
+  String get onboardCurrencyBody =>
+      'You\'ll see your balances and prices in this currency. It can\'t be changed later.';
 }

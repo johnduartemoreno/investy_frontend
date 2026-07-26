@@ -22,6 +22,7 @@ import '../controllers/buy_asset_controller.dart';
 import '../controllers/trading_quote_controller.dart';
 import '../trading_error_localizer.dart';
 import '../widgets/order_cost_breakdown.dart';
+import 'dashboard_screen.dart';
 import '../../../goals/presentation/providers/rest_goals_provider.dart';
 
 class BuyAssetScreen extends ConsumerStatefulWidget {
@@ -184,10 +185,18 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
       ThemeData theme, ColorScheme cs, AppLocalizations l10n) {
     final quoteAsync = ref.watch(tradingQuoteControllerProvider);
 
+    final displayCurrency = ref.watch(displayCurrencyProvider);
+    final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
+
     return quoteAsync.when(
       data: (quote) {
         if (quote == null) return _subtotalOnlyRow(theme, cs, l10n);
-        return OrderCostBreakdown(quote: quote, isBuy: true);
+        return OrderCostBreakdown(
+          quote: quote,
+          isBuy: true,
+          fxRate: fxRate,
+          displayCurrency: displayCurrency,
+        );
       },
       loading: () => _subtotalOnlyRow(theme, cs, l10n, showSpinner: true),
       error: (_, __) => Column(
@@ -207,33 +216,55 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
   Widget _subtotalOnlyRow(
       ThemeData theme, ColorScheme cs, AppLocalizations l10n,
       {bool showSpinner = false}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final displayCurrency = ref.watch(displayCurrencyProvider);
+    final fxRate = ref.watch(fxRateProvider).valueOrNull ?? 1.0;
+    final equivalent = CurrencyFormatter.equivalentOf(
+        _estimatedTotal, fxRate, displayCurrency);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          l10n.tradingSubtotal,
-          style:
-              theme.textTheme.bodyLarge?.copyWith(color: cs.onSurfaceVariant),
-        ),
         Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (showSpinner) ...[
-              const SizedBox(
-                width: 12,
-                height: 12,
-                child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-              ),
-              const SizedBox(width: AppDimens.spacingS),
-            ],
             Text(
-              CurrencyFormatter.format(_estimatedTotal),
-              style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: AppTheme.brandPurpleLight),
+              l10n.tradingSubtotal,
+              style: theme.textTheme.bodyLarge
+                  ?.copyWith(color: cs.onSurfaceVariant),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (showSpinner) ...[
+                  const SizedBox(
+                    width: 12,
+                    height: 12,
+                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                  ),
+                  const SizedBox(width: AppDimens.spacingS),
+                ],
+                Text(
+                  CurrencyFormatter.formatUsd(_estimatedTotal),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.brandPurpleLight),
+                ),
+              ],
             ),
           ],
         ),
+        if (equivalent != null)
+          Padding(
+            padding: const EdgeInsets.only(top: AppDimens.spacingXS),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                equivalent,
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: cs.onSurfaceVariant),
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -446,7 +477,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                                     subtitle: Text(a.name,
                                         style: theme.textTheme.bodySmall),
                                     trailing: Text(
-                                      CurrencyFormatter.format(a.currentPrice),
+                                      CurrencyFormatter.formatUsd(a.currentPrice),
                                       style: theme.textTheme.labelLarge
                                           ?.copyWith(color: cs.primary),
                                     ),
@@ -495,7 +526,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              CurrencyFormatter.format(
+                              CurrencyFormatter.formatUsd(
                                   _selectedAsset!.currentPrice),
                               style: theme.textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.w700,
@@ -596,7 +627,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                               (_estimatedTotal * 100).round() <
                                   (minDollars * 100).round()) {
                             return l10n.tradingOrderTooSmall(
-                                CurrencyFormatter.format(minDollars));
+                                CurrencyFormatter.formatUsd(minDollars));
                           }
                           return null;
                         },

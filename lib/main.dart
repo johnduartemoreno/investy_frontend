@@ -3,12 +3,15 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:intl/intl.dart';
 import 'core/debug/firebase_smoke.dart';
+import 'core/presentation/widgets/environment_badge.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/router/app_router.dart';
 import 'core/services/notification_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_mode_provider.dart';
+import 'features/auth/presentation/currency_onboarding_sheet.dart';
 import 'features/auth/presentation/providers/auth_provider.dart';
 import 'l10n/app_localizations.dart';
 
@@ -30,8 +33,10 @@ void main() async {
   // Initialize Hive
   await Hive.initFlutter();
 
-  // Pre-load SharedPreferences so LocaleNotifier.build() can read it synchronously.
+  // Pre-load SharedPreferences so LocaleNotifier + ThemeModeNotifier can read
+  // their persisted values synchronously on the first frame.
   await initLocaleProvider();
+  await initThemeModeProvider();
 
   runApp(const ProviderScope(child: InvestyApp()));
 }
@@ -45,11 +50,23 @@ class InvestyApp extends ConsumerWidget {
     final themeMode = ref.watch(themeModeNotifierProvider);
     final locale = ref.watch(localeNotifierProvider);
 
+    // Keep number/currency formatting in sync with the in-app language (B51).
+    // NumberFormat and the input formatters read Intl.getCurrentLocale(); this
+    // single point covers both startup and runtime language changes, since the
+    // app rebuilds when the locale provider changes.
+    Intl.defaultLocale = locale.languageCode;
+
     // Initialise FCM once the user is authenticated and email-verified.
     ref.listen(authNotifierProvider, (_, next) {
       final user = next.valueOrNull;
       if (user != null) {
         ref.read(notificationServiceProvider).init();
+        // Brand-new Google account → collect the display currency before the
+        // user settles on Home (F5). Post-frame so the root navigator is mounted.
+        if (user.isNewUser) {
+          WidgetsBinding.instance.addPostFrameCallback(
+              (_) => promptGoogleCurrencyOnboarding());
+        }
       }
     });
 
@@ -83,6 +100,9 @@ class InvestyApp extends ConsumerWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
       routerConfig: goRouter,
+      // Dev/QA environment + build badge on every screen (B53); no-op in prod.
+      builder: (context, child) =>
+          EnvironmentBadgeOverlay(child: child ?? const SizedBox.shrink()),
       locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [

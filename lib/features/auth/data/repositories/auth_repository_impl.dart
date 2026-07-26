@@ -86,6 +86,17 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, void>> onboardCurrency(
+      String uid, String currency) async {
+    try {
+      await remoteDataSource.onboardCurrency(uid, currency);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> deleteAccountEmail(
       String currentPassword) async {
     try {

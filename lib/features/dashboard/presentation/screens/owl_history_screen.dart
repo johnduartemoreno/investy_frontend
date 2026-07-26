@@ -139,9 +139,9 @@ class _SessionCard extends StatelessWidget {
             const SizedBox(height: AppDimens.spacingM),
             Text(
               l10n.owlHistoryContext(
-                CurrencyFormatter.format(
+                CurrencyFormatter.formatUsd(
                     session.contextSnapshot.portfolioValue),
-                CurrencyFormatter.format(session.contextSnapshot.cashBalance),
+                CurrencyFormatter.formatUsd(session.contextSnapshot.cashBalance),
               ),
               style: theme.textTheme.bodySmall
                   ?.copyWith(color: cs.onSurfaceVariant),
@@ -332,7 +332,7 @@ class _RecCard extends StatelessWidget {
               ),
               const SizedBox(width: AppDimens.spacingXS),
               Text(
-                CurrencyFormatter.format(rec.suggestedAmountCents / 100.0),
+                CurrencyFormatter.formatUsd(rec.suggestedAmountCents / 100.0),
                 style: theme.textTheme.titleSmall?.copyWith(
                   color: AppTheme.brandPurpleLight,
                   fontWeight: FontWeight.w700,

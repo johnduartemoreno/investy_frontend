@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:investy/core/utils/quantity_input_formatter.dart';
 
 /// Simulates typing [next] into a field currently holding [current].
@@ -92,6 +93,23 @@ void main() {
     test('crypto allows 8, everything else 6', () {
       expect(crypto.maxDecimals, 8);
       expect(stock.maxDecimals, 6);
+    });
+  });
+
+  group('es locale — comma decimal (B51)', () {
+    setUp(() => Intl.defaultLocale = 'es');
+    tearDown(() => Intl.defaultLocale = null);
+
+    test('0,001 BTC is typeable with a comma keyboard', () {
+      var t = type(crypto, '0', '0,');
+      t = type(crypto, t, '${t}0');
+      t = type(crypto, t, '${t}0');
+      t = type(crypto, t, '${t}1');
+      expect(t, '0,001');
+    });
+
+    test('parseFormatted reads a comma-decimal quantity', () {
+      expect(QuantityInputFormatter.parseFormatted('0,001'), 0.001);
     });
   });
 }

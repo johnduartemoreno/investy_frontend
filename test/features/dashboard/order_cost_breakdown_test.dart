@@ -44,10 +44,10 @@ void main() {
       const OrderCostBreakdown(quote: buyQuote, isBuy: true),
     ));
 
-    expect(find.text('\$100.00'), findsOneWidget); // subtotal
-    expect(find.text('\$0.25'),
+    expect(find.text('USD \$100.00'), findsOneWidget); // subtotal
+    expect(find.text('USD \$0.25'),
         findsOneWidget); // commission — visible, not hidden
-    expect(find.text('\$100.25'), findsOneWidget); // total to pay
+    expect(find.text('USD \$100.25'), findsOneWidget); // total to pay
     expect(find.text('Total to pay'), findsOneWidget);
   });
 
@@ -57,10 +57,10 @@ void main() {
       const OrderCostBreakdown(quote: sellQuote, isBuy: false),
     ));
 
-    expect(find.text('\$50.00'), findsOneWidget); // gross
-    expect(find.text('\$0.13'), findsOneWidget); // fee
+    expect(find.text('USD \$50.00'), findsOneWidget); // gross
+    expect(find.text('USD \$0.13'), findsOneWidget); // fee
     // The point of the whole exercise: proceeds are NET, not gross.
-    expect(find.text('\$49.87'), findsOneWidget);
+    expect(find.text('USD \$49.87'), findsOneWidget);
     expect(find.text('You receive'), findsOneWidget);
     expect(find.text('Total to pay'), findsNothing);
   });
@@ -106,7 +106,33 @@ void main() {
     // A fee the client has no label for must still appear — hiding it would
     // understate the cost.
     expect(find.text('some_future_levy'), findsOneWidget);
-    expect(find.text('\$0.05'), findsOneWidget);
+    expect(find.text('USD \$0.05'), findsOneWidget);
+  });
+
+  testWidgets('the trade leg stays USD but the total gets a display-currency '
+      'equivalent (B50)', (tester) async {
+    await tester.pumpWidget(wrap(
+      const OrderCostBreakdown(
+        quote: buyQuote,
+        isBuy: true,
+        fxRate: 0.9,
+        displayCurrency: 'EUR',
+      ),
+    ));
+
+    // The amounts remain USD-explicit...
+    expect(find.text('USD \$100.25'), findsOneWidget);
+    // ...and the total carries an approximate figure in the display currency.
+    expect(find.text('≈ €90.23'), findsOneWidget); // 100.25 * 0.9 = 90.225 → 90.23
+  });
+
+  testWidgets('no equivalent line when the display currency is USD',
+      (tester) async {
+    await tester.pumpWidget(wrap(
+      const OrderCostBreakdown(quote: buyQuote, isBuy: true),
+    ));
+
+    expect(find.textContaining('≈'), findsNothing);
   });
 
   testWidgets('labels are localized', (tester) async {

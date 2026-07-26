@@ -77,8 +77,8 @@ void main() {
 
       // Detail sheet shows the recommendation reason (read-only view)
       expect(find.text('Broad diversification.'), findsOneWidget);
-      // Suggested amount: 50000 cents = $500.00
-      expect(find.text('\$500.00'), findsOneWidget);
+      // Suggested amount: 50000 cents = $500.00, shown USD-explicit (B50)
+      expect(find.text('USD \$500.00'), findsOneWidget);
     });
 
     testWidgets('detail sheet close button dismisses the sheet',
