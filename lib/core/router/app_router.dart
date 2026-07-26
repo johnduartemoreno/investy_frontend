@@ -35,9 +35,13 @@ import 'go_router_refresh_stream.dart';
 
 part 'app_router.g.dart';
 
+/// Root navigator key — hoisted to top-level so overlays that must survive a
+/// route change (e.g. the Google onboarding currency sheet, F5) can be shown on
+/// the root navigator from outside the widget that triggered them.
+final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
+
 @riverpod
 GoRouter goRouter(Ref ref) {
-  final rootNavigatorKey = GlobalKey<NavigatorState>();
   final shellNavigatorHomeKey =
       GlobalKey<NavigatorState>(debugLabel: 'shellHome');
   final shellNavigatorGoalsKey =

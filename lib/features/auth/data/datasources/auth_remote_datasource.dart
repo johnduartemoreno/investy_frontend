@@ -19,6 +19,10 @@ abstract class AuthRemoteDataSource {
   Future<void> logout();
   Future<void> forgotPassword(String email);
   Future<UserModel> signInWithGoogle();
+
+  /// Sets the user's chosen display currency and completes onboarding (F5).
+  /// Used by both email signup and the Google Sign-In new-user flow.
+  Future<void> onboardCurrency(String uid, String displayCurrency);
   Future<void> deleteAccountEmail(String currentPassword);
   Future<void> deleteAccountGoogle();
 }
@@ -102,15 +106,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       debugPrint(
           '🔥 [AuthRemoteDataSource] Account created: ${firebaseUser.uid}');
 
-      // Register user in backend with chosen display currency (ADR-02 — immutable after registration).
-      // Non-fatal: if this fails, UpsertFromFirebase on first dashboard load creates the user with USD default.
+      // Register user in backend with chosen display currency. Non-fatal for
+      // signup: if this fails, the currency stays settable until onboarding
+      // completes (ADR-02 clarified), so it can be retried before it locks in.
       try {
-        await dio.post(
-          '/api/v1/users/${firebaseUser.uid}/onboard',
-          data: {'displayCurrency': displayCurrency},
-        );
-        debugPrint(
-            '🔥 [AuthRemoteDataSource] Backend user registered with currency $displayCurrency');
+        await onboardCurrency(firebaseUser.uid, displayCurrency);
       } catch (e) {
         debugPrint(
             '🔥 [AuthRemoteDataSource] onboard call failed (non-fatal): $e');
@@ -256,6 +256,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         email: firebaseUser.email ?? '',
         name:
             firebaseUser.displayName ?? firebaseUser.email?.split('@')[0] ?? '',
+        // New account → the UI must collect the display currency before Home (F5).
+        isNewUser: userCredential.additionalUserInfo?.isNewUser ?? false,
       );
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
@@ -272,6 +274,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       debugPrint('🔥 [AuthRemoteDataSource] Google Sign-In error: $e');
       throw const AuthException(AuthErrorCode.unexpected);
     }
+  }
+
+  @override
+  Future<void> onboardCurrency(String uid, String displayCurrency) async {
+    debugPrint(
+        '🔥 [AuthRemoteDataSource] Onboarding $uid with currency $displayCurrency...');
+    await dio.post(
+      '/api/v1/users/$uid/onboard',
+      data: {'displayCurrency': displayCurrency},
+    );
+    debugPrint('🔥 [AuthRemoteDataSource] Onboard complete for $uid');
   }
 
   @override

@@ -11,6 +11,7 @@ import 'core/router/app_router.dart';
 import 'core/services/notification_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_mode_provider.dart';
+import 'features/auth/presentation/currency_onboarding_sheet.dart';
 import 'features/auth/presentation/providers/auth_provider.dart';
 import 'l10n/app_localizations.dart';
 
@@ -60,6 +61,12 @@ class InvestyApp extends ConsumerWidget {
       final user = next.valueOrNull;
       if (user != null) {
         ref.read(notificationServiceProvider).init();
+        // Brand-new Google account → collect the display currency before the
+        // user settles on Home (F5). Post-frame so the root navigator is mounted.
+        if (user.isNewUser) {
+          WidgetsBinding.instance.addPostFrameCallback(
+              (_) => promptGoogleCurrencyOnboarding());
+        }
       }
     });
 

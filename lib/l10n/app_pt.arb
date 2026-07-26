@@ -530,5 +530,7 @@
       }
     }
   },
-  "tradingSellTooSmall": "Esta venda não cobre suas taxas. Venda um pouco mais."
+  "tradingSellTooSmall": "Esta venda não cobre suas taxas. Venda um pouco mais.",
+  "onboardCurrencyTitle": "Escolha sua moeda",
+  "onboardCurrencyBody": "Você verá seus saldos e preços nesta moeda. Não pode ser alterada depois."
 }

@@ -530,5 +530,7 @@
       }
     }
   },
-  "tradingSellTooSmall": "Esta venta no cubre sus comisiones. Vendé un poco más."
+  "tradingSellTooSmall": "Esta venta no cubre sus comisiones. Vendé un poco más.",
+  "onboardCurrencyTitle": "Elegí tu moneda",
+  "onboardCurrencyBody": "Vas a ver tus saldos y precios en esta moneda. No se puede cambiar después."
 }

@@ -607,5 +607,7 @@
       }
     }
   },
-  "tradingSellTooSmall": "This sale doesn't cover its fees. Sell a bit more."
+  "tradingSellTooSmall": "This sale doesn't cover its fees. Sell a bit more.",
+  "onboardCurrencyTitle": "Choose your display currency",
+  "onboardCurrencyBody": "You'll see your balances and prices in this currency. It can't be changed later."
 }

@@ -2745,6 +2745,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This sale doesn\'t cover its fees. Sell a bit more.'**
   String get tradingSellTooSmall;
+
+  /// No description provided for @onboardCurrencyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your display currency'**
+  String get onboardCurrencyTitle;
+
+  /// No description provided for @onboardCurrencyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll see your balances and prices in this currency. It can\'t be changed later.'**
+  String get onboardCurrencyBody;
 }
 
 class _AppLocalizationsDelegate

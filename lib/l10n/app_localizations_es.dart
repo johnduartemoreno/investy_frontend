@@ -1446,4 +1446,11 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get tradingSellTooSmall =>
       'Esta venta no cubre sus comisiones. Vendé un poco más.';
+
+  @override
+  String get onboardCurrencyTitle => 'Elegí tu moneda';
+
+  @override
+  String get onboardCurrencyBody =>
+      'Vas a ver tus saldos y precios en esta moneda. No se puede cambiar después.';
 }
