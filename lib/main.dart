@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:intl/intl.dart';
 import 'core/debug/firebase_smoke.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/router/app_router.dart';
@@ -44,6 +45,12 @@ class InvestyApp extends ConsumerWidget {
     final goRouter = ref.watch(goRouterProvider);
     final themeMode = ref.watch(themeModeNotifierProvider);
     final locale = ref.watch(localeNotifierProvider);
+
+    // Keep number/currency formatting in sync with the in-app language (B51).
+    // NumberFormat and the input formatters read Intl.getCurrentLocale(); this
+    // single point covers both startup and runtime language changes, since the
+    // app rebuilds when the locale provider changes.
+    Intl.defaultLocale = locale.languageCode;
 
     // Initialise FCM once the user is authenticated and email-verified.
     ref.listen(authNotifierProvider, (_, next) {
