@@ -645,7 +645,8 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
                   hintText: '0.00',
                   hintStyle: theme.textTheme.headlineMedium
                       ?.copyWith(color: colors.outline.withValues(alpha: 0.4)),
-                  prefixText: '\$ ',
+                  // Broker sell price is in USD — make it explicit (B50).
+                  prefixText: 'USD \$ ',
                   filled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppDimens.radiusInput),

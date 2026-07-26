@@ -458,7 +458,8 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
                         ?.copyWith(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
-                      prefixText: '\$ ',
+                      // Alert target price is a USD market price — make it explicit (B50).
+                      prefixText: 'USD \$ ',
                       prefixStyle: theme.textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: cs.onSurface,

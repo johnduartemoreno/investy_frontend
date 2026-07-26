@@ -13,8 +13,15 @@ import 'package:intl/intl.dart';
 class CurrencyFormatter {
   CurrencyFormatter._();
 
+  /// The broker's settlement currency. Everything the broker executes settles in
+  /// USD — ADR-01 (internal storage is USD cents; DriveWealth/Alpaca settle in
+  /// USD). This is an architectural invariant, NOT a per-user setting: if it ever
+  /// changed it would be an ADR-level change, not a config value. Kept as a single
+  /// named constant so "USD" isn't a magic string scattered across the app.
+  static const String brokerCurrency = 'USD';
+
   /// Formats [value] as USD in the current locale: "$1,234.56" / "$1.234,56".
-  static String format(double value) => formatWithCurrency(value, 'USD');
+  static String format(double value) => formatWithCurrency(value, brokerCurrency);
 
   /// Formats [value] with the given ISO 4217 [currencyCode] (e.g. "EUR" →
   /// "€1.234,56"). Falls back to USD if the currency code is unknown.
@@ -30,13 +37,13 @@ class CurrencyFormatter {
   /// contexts where the value settles in USD and must not be mistaken for the
   /// user's display currency (B50) — e.g. "USD $1,234.56". The number itself is
   /// still grouped in the current locale.
-  static String formatUsd(double value) => 'USD ${format(value)}';
+  static String formatUsd(double value) => '$brokerCurrency ${format(value)}';
 
   /// The "≈ <display currency>" reference line for a USD [value], converted at
   /// [fxRate] (ADR-03: convert at render time only). Returns null when the
   /// display currency is USD, so callers can omit the line entirely.
   static String? equivalentOf(double value, double fxRate, String displayCurrency) {
-    if (displayCurrency == 'USD') return null;
+    if (displayCurrency == brokerCurrency) return null;
     return '≈ ${formatWithCurrency(value * fxRate, displayCurrency)}';
   }
 
