@@ -7,6 +7,7 @@ import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/gradient_icon_box.dart';
 import '../../../../core/presentation/widgets/gradient_pill_button.dart';
 import '../../../../core/presentation/widgets/left_accent_box.dart';
+import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../core/presentation/widgets/signal_badge.dart';
 import '../../../../core/presentation/widgets/responsive_center.dart';
 import '../../../../core/utils/currency_formatter.dart';
@@ -31,18 +32,21 @@ class GoalsScreen extends ConsumerWidget {
         title: Text(AppLocalizations.of(context).goalsTitle),
       ),
       body: goalsAsync.when(
-        data: (goals) => ResponsiveCenter(
-          child: ListView.separated(
-            padding: const EdgeInsets.all(AppDimens.spacingL),
-            itemCount: goals.length,
-            separatorBuilder: (context, index) =>
-                const SizedBox(height: AppDimens.spacingM),
-            itemBuilder: (context, index) {
-              final goal = goals[index];
-              return _GoalCard(goal: goal, currency: currency, fxRate: fxRate);
-            },
-          ),
-        ),
+        data: (goals) => goals.isEmpty
+            ? _buildEmptyState(context)
+            : ResponsiveCenter(
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(AppDimens.spacingL),
+                  itemCount: goals.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: AppDimens.spacingM),
+                  itemBuilder: (context, index) {
+                    final goal = goals[index];
+                    return _GoalCard(
+                        goal: goal, currency: currency, fxRate: fxRate);
+                  },
+                ),
+              ),
         loading: () =>
             const Center(child: CircularProgressIndicator.adaptive()),
         error: (err, stack) =>
@@ -51,14 +55,56 @@ class GoalsScreen extends ConsumerWidget {
       floatingActionButton: GradientPillButton(
         label: AppLocalizations.of(context).goalsAddButton,
         leading: const Icon(Icons.add, color: Colors.white, size: 18),
-        onTap: () => showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-                top: Radius.circular(AppDimens.radiusBottomSheet)),
-          ),
-          builder: (_) => const CreateGoalSheet(),
+        onTap: () => _openCreateGoalSheet(context),
+      ),
+    );
+  }
+
+  void _openCreateGoalSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppDimens.radiusBottomSheet)),
+      ),
+      builder: (_) => const CreateGoalSheet(),
+    );
+  }
+
+  /// First-use state: with no goals the list rendered as a blank screen, which
+  /// gave a brand-new user nothing to act on (B54).
+  Widget _buildEmptyState(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.flag_outlined,
+                size: 64, color: theme.colorScheme.primary),
+            const SizedBox(height: AppDimens.spacingXL),
+            Text(
+              l10n.goalsEmptyTitle,
+              style: theme.textTheme.headlineSmall
+                  ?.copyWith(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppDimens.spacingS),
+            Text(
+              l10n.goalsEmptySubtitle,
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppDimens.spacingXL),
+            PrimaryButton(
+              text: l10n.goalsEmptyCta,
+              onPressed: () => _openCreateGoalSheet(context),
+            ),
+          ],
         ),
       ),
     );

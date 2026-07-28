@@ -676,11 +676,23 @@ abstract class AppLocalizations {
   /// **'Portfolio'**
   String get portfolioTitle;
 
-  /// No description provided for @portfolioNoHoldings.
+  /// No description provided for @portfolioEmptyTitle.
   ///
   /// In en, this message translates to:
-  /// **'No holdings yet.\nBuy your first asset to get started.'**
-  String get portfolioNoHoldings;
+  /// **'No holdings yet'**
+  String get portfolioEmptyTitle;
+
+  /// No description provided for @portfolioEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy your first asset to start building your portfolio.'**
+  String get portfolioEmptySubtitle;
+
+  /// No description provided for @portfolioEmptyCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy my first asset'**
+  String get portfolioEmptyCta;
 
   /// No description provided for @portfolioTotalInvested.
   ///
@@ -831,6 +843,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add Goal'**
   String get goalsAddButton;
+
+  /// No description provided for @goalsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No goals yet'**
+  String get goalsEmptyTitle;
+
+  /// No description provided for @goalsEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a goal and track how your investments get you there.'**
+  String get goalsEmptySubtitle;
+
+  /// No description provided for @goalsEmptyCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Create my first goal'**
+  String get goalsEmptyCta;
 
   /// No description provided for @goalProgress.
   ///

@@ -9,6 +9,7 @@ import '../../../../core/presentation/widgets/custom_card.dart';
 import '../../../../core/presentation/widgets/gradient_icon_box.dart';
 import '../../../../core/presentation/widgets/gradient_pill_button.dart';
 import '../../../../core/presentation/widgets/left_accent_box.dart';
+import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../core/presentation/widgets/signal_badge.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -83,23 +84,24 @@ class PortfolioScreen extends ConsumerWidget {
                 size: 64, color: theme.colorScheme.primary),
             const SizedBox(height: 24),
             Text(
-              l10n.portfolioNoHoldings,
+              l10n.portfolioEmptyTitle,
               style: theme.textTheme.headlineSmall
                   ?.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDimens.spacingS),
             Text(
-              l10n.portfolioNoHoldings,
+              l10n.portfolioEmptySubtitle,
               style: theme.textTheme.bodyMedium
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 32),
-            FilledButton.icon(
-              onPressed: () => context.go('/home'),
-              icon: const Icon(Icons.search),
-              label: Text(AppLocalizations.of(context).dashboardBuy),
+            const SizedBox(height: AppDimens.spacingXL),
+            // Goes straight to the buy flow — a button labelled "Buy" that only
+            // drops the user back on Home is the first-use dead end of B54.
+            PrimaryButton(
+              text: l10n.portfolioEmptyCta,
+              onPressed: () => context.go('/home/buy-asset'),
             ),
           ],
         ),
