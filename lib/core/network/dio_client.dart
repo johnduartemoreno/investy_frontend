@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -36,8 +37,13 @@ Dio dio(Ref ref) {
                 await user.getIdToken().timeout(const Duration(seconds: 5));
             options.headers['Authorization'] = 'Bearer $token';
           }
-        } catch (_) {
-          // Token fetch failed or timed out — proceed without auth header.
+        } catch (e) {
+          // Proceed without the header rather than hang: a request that 401s is
+          // recoverable, an infinite spinner is not. But say so — a silent
+          // catch here produces an unauthenticated request that looks, from
+          // every other vantage point, like the backend rejecting a valid
+          // token. That misdirection cost a UAT session.
+          debugPrint('[dio] no auth header — getIdToken failed: $e');
         }
         return handler.next(options);
       },

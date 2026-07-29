@@ -7,6 +7,7 @@ import '../../domain/usecases/google_signin_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/signup_usecase.dart';
+import '../../../../core/services/notification_service.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 
@@ -70,8 +71,21 @@ class AuthNotifier extends _$AuthNotifier {
     );
   }
 
+  /// Releases the FCM device token before the session ends (B55).
+  ///
+  /// Must run BEFORE `signOut()` / account deletion: the backend call is
+  /// authenticated with the current ID token. Otherwise the token stays bound
+  /// to this account and the next user on the same device would receive its
+  /// financial notifications. Failures are swallowed inside `deleteToken()` —
+  /// losing the device token must never block a logout.
+  Future<void> _releaseDeviceToken() async {
+    await ref.read(notificationServiceProvider).deleteToken();
+  }
+
   Future<void> logout() async {
     state = const AsyncValue.loading();
+
+    await _releaseDeviceToken();
 
     final repository = ref.read(authRepositoryProvider);
     final useCase = LogoutUseCase(repository);
@@ -145,6 +159,7 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   Future<void> deleteAccountEmail(String currentPassword) async {
+    await _releaseDeviceToken();
     final repository = ref.read(authRepositoryProvider);
     final result = await repository.deleteAccountEmail(currentPassword);
     result.fold(
@@ -154,6 +169,7 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   Future<void> deleteAccountGoogle() async {
+    await _releaseDeviceToken();
     final repository = ref.read(authRepositoryProvider);
     final result = await repository.deleteAccountGoogle();
     result.fold(
