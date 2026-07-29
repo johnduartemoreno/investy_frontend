@@ -313,8 +313,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get portfolioTitle => 'Portafolio';
 
   @override
-  String get portfolioNoHoldings =>
-      'Sin posiciones aún.\nCompra tu primer activo para empezar.';
+  String get portfolioEmptyTitle => 'Sin posiciones aún';
+
+  @override
+  String get portfolioEmptySubtitle =>
+      'Compra tu primer activo para empezar a armar tu portafolio.';
+
+  @override
+  String get portfolioEmptyCta => 'Comprar mi primer activo';
 
   @override
   String get portfolioTotalInvested => 'Total invertido';
@@ -391,6 +397,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get goalsAddButton => 'Agregar meta';
+
+  @override
+  String get goalsEmptyTitle => 'Sin metas aún';
+
+  @override
+  String get goalsEmptySubtitle =>
+      'Crea una meta y mira cómo tus inversiones te acercan a ella.';
+
+  @override
+  String get goalsEmptyCta => 'Crear mi primera meta';
 
   @override
   String goalProgress(int percent) {

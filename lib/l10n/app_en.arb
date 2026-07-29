@@ -131,7 +131,9 @@
   "activityDetailGain": "Gain",
   "activityDetailLoss": "Loss",
   "portfolioTitle": "Portfolio",
-  "portfolioNoHoldings": "No holdings yet.\nBuy your first asset to get started.",
+  "portfolioEmptyTitle": "No holdings yet",
+  "portfolioEmptySubtitle": "Buy your first asset to start building your portfolio.",
+  "portfolioEmptyCta": "Buy my first asset",
   "portfolioTotalInvested": "Total Invested",
   "portfolioTotalLabel": "Total",
   "portfolioReturn": "Return",
@@ -157,6 +159,9 @@
   "goalsTitle": "Goals",
   "goalsNoGoals": "No goals yet.\nCreate one to start saving.",
   "goalsAddButton": "Add Goal",
+  "goalsEmptyTitle": "No goals yet",
+  "goalsEmptySubtitle": "Set a goal and track how your investments get you there.",
+  "goalsEmptyCta": "Create my first goal",
   "goalProgress": "{percent}% funded",
   "@goalProgress": {
     "placeholders": {
