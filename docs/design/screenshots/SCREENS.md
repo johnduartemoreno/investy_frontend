@@ -43,6 +43,7 @@
 | 08 | Goals list | `/goals` | `goals/presentation/goals_screen.dart` | `light_mode/08_goals.png` | `dark_mode/08_goals.png` |
 | 09 | New Goal (sheet) | `/goals` → + button | `goals/presentation/widgets/create_goal_sheet.dart` | `light_mode/09_new_goal.png` | `dark_mode/09_new_goal.png` |
 | 08b | Goal Detail | `/goals/:goalId` | `goals/presentation/goal_detail_screen.dart` | `light_mode/08b_goal_detail.png` | `dark_mode/08b_goal_detail.png` |
+| 08c | Goals — empty state (first use) | `/goals` with no goals | `goals/presentation/goals_screen.dart` | `light_mode/08c_goals_empty.png` | `dark_mode/08c_goals_empty.png` |
 
 ---
 
@@ -51,6 +52,7 @@
 | ID | Screen | Route | Source file(s) | Light | Dark |
 |----|--------|-------|----------------|-------|------|
 | 10 | Portfolio | `/portfolio` | `portfolio/presentation/portfolio_screen.dart` | `light_mode/10_portfolio.png` | `dark_mode/10_portfolio.png` |
+| 10c | Portfolio — empty state (first use) | `/portfolio` with no holdings | `portfolio/presentation/portfolio_screen.dart` | `light_mode/10c_portfolio_empty.png` | `dark_mode/10c_portfolio_empty.png` |
 
 ---
 
