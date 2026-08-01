@@ -1,5 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Sumsub KYC liveness check: the WebSDK needs a live camera feed.
+         RECORD_AUDIO is deliberately NOT declared — Sumsub's liveness check is
+         facial only; the microphone appears solely in the SDK's generic
+         instructions text, not as a requirement of the check. -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <application
         android:label="invessty"
         android:name="${applicationName}"

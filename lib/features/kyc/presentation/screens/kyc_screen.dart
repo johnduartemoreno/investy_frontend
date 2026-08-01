@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart'
     // ignore: depend_on_referenced_packages
@@ -16,6 +17,7 @@ import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart'
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../kyc_webview_config.dart';
 import '../../data/datasources/kyc_remote_datasource.dart';
 import '../../data/models/kyc_status_model.dart';
 import '../providers/kyc_provider.dart';
@@ -36,14 +38,31 @@ class _KycScreenState extends ConsumerState<KycScreen> {
 
     setState(() => _launching = true);
     try {
+      // The liveness step needs a live camera feed. On Android the WebView's
+      // own permission callback cannot grant what the OS has not granted to
+      // the app first, so ask before launching the SDK.
+      if (!await _ensureCameraPermission()) {
+        if (mounted) setState(() => _launching = false);
+        return;
+      }
+
       final token =
           await ref.read(kycRemoteDataSourceProvider).initFlow(userId);
       if (!mounted) return;
       setState(() => _launching = false);
+
+      // Resolved here (not in the WebView's initState) so the SDK inherits the
+      // app's active locale and theme instead of hardcoded English on white.
+      final lang = KycWebViewConfig.sumsubLang(
+          Localizations.localeOf(context).languageCode);
+      final surface = Theme.of(context).colorScheme.surface;
+
       await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => _SumsubWebViewScreen(
             accessToken: token,
+            lang: lang,
+            backgroundColor: surface,
             onTokenRefresh: () =>
                 ref.read(kycRemoteDataSourceProvider).initFlow(userId),
             onCompleted: () {
@@ -63,6 +82,47 @@ class _KycScreenState extends ConsumerState<KycScreen> {
     } finally {
       if (mounted) setState(() => _launching = false);
     }
+  }
+
+  /// Requests the OS camera permission on Android. iOS is left untouched —
+  /// WKWebView drives its own prompt there and that flow already works.
+  /// Returns true when the SDK can be launched.
+  Future<bool> _ensureCameraPermission() async {
+    if (defaultTargetPlatform != TargetPlatform.android) return true;
+
+    var status = await Permission.camera.status;
+    if (status.isGranted) return true;
+    if (!status.isPermanentlyDenied) {
+      status = await Permission.camera.request();
+    }
+    if (status.isGranted) return true;
+
+    if (mounted) _showCameraDeniedDialog();
+    return false;
+  }
+
+  void _showCameraDeniedDialog() {
+    final l10n = AppLocalizations.of(context);
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.kycCameraPermissionTitle),
+        content: Text(l10n.kycCameraPermissionBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l10n.commonCancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              openAppSettings();
+            },
+            child: Text(l10n.kycOpenSettings),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -231,11 +291,15 @@ class _KycScreenState extends ConsumerState<KycScreen> {
 
 class _SumsubWebViewScreen extends StatefulWidget {
   final String accessToken;
+  final String lang;
+  final Color backgroundColor;
   final Future<String> Function() onTokenRefresh;
   final VoidCallback onCompleted;
 
   const _SumsubWebViewScreen({
     required this.accessToken,
+    required this.lang,
+    required this.backgroundColor,
     required this.onTokenRefresh,
     required this.onCompleted,
   });
@@ -256,6 +320,8 @@ class _SumsubWebViewScreenState extends State<_SumsubWebViewScreen> {
         allowsInlineMediaPlayback: true,
         mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
       );
+    } else if (defaultTargetPlatform == TargetPlatform.android) {
+      params = AndroidWebViewControllerCreationParams();
     } else {
       params = const PlatformWebViewControllerCreationParams();
     }
@@ -275,8 +341,30 @@ class _SumsubWebViewScreenState extends State<_SumsubWebViewScreen> {
           baseUrl: 'https://api.sumsub.com');
 
     if (defaultTargetPlatform == TargetPlatform.android) {
-      (_controller.platform as AndroidWebViewController)
-          .setOnShowFileSelector(_onShowFileSelector);
+      final android = _controller.platform as AndroidWebViewController;
+      // Document upload from the gallery. Kept alongside the camera grant
+      // below — the two are complementary: a document can come from a file,
+      // the liveness check cannot.
+      android.setOnShowFileSelector(_onShowFileSelector);
+      // Without this callback Android denies every web permission request by
+      // default, which is why the SDK reported "Allow access to your camera
+      // and try again" with no way to grant it.
+      android.setOnPlatformPermissionRequest(_onPermissionRequest);
+    }
+  }
+
+  void _onPermissionRequest(PlatformWebViewPermissionRequest request) {
+    // Logged so the Android UAT gives us evidence of what Sumsub actually
+    // asks for. The spec says liveness is facial only and we deliberately did
+    // not declare RECORD_AUDIO — if microphone shows up here in practice,
+    // that is the evidence needed to revisit the decision (B61).
+    debugPrint('[WebView] permission request: '
+        '${request.types.map((t) => t.name).join(', ')}');
+
+    if (request.types.contains(WebViewPermissionResourceType.camera)) {
+      request.grant();
+    } else {
+      request.deny();
     }
   }
 
@@ -319,7 +407,7 @@ class _SumsubWebViewScreenState extends State<_SumsubWebViewScreen> {
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <style>
-    body { margin: 0; padding: 0; background: #fff; }
+    body { margin: 0; padding: 0; background: ${KycWebViewConfig.cssColor(widget.backgroundColor)}; }
     #sumsub-websdk-container { height: 100vh; width: 100vw; }
     #sdk-error { padding: 24px; color: red; font-family: sans-serif; }
   </style>
@@ -334,7 +422,7 @@ class _SumsubWebViewScreenState extends State<_SumsubWebViewScreen> {
           token,
           function() { window.FlutterChannel.postMessage(JSON.stringify({event:"tokenExpired"})); }
         )
-        .withConf({ lang: "en" })
+        .withConf({ lang: "${widget.lang}" })
         .withOptions({ addViewportTag: false, adaptIframeHeight: true })
         .on("idCheck.onApplicantSubmitted", function() {
           window.FlutterChannel.postMessage(JSON.stringify({event:"submitted"}));
