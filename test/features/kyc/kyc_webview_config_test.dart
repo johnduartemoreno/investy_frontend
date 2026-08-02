@@ -16,6 +16,13 @@ void main() {
     });
   });
 
+  group('KycWebViewConfig.sumsubTheme (B61 UAT)', () {
+    test('maps app brightness to the Sumsub theme name', () {
+      expect(KycWebViewConfig.sumsubTheme(Brightness.dark), 'dark');
+      expect(KycWebViewConfig.sumsubTheme(Brightness.light), 'light');
+    });
+  });
+
   group('KycWebViewConfig.cssColor (B61)', () {
     test('renders a six-digit hex string without the alpha channel', () {
       expect(KycWebViewConfig.cssColor(const Color(0xFF0F0F13)), '#0f0f13');

@@ -53,15 +53,24 @@ class _KycScreenState extends ConsumerState<KycScreen> {
 
       // Resolved here (not in the WebView's initState) so the SDK inherits the
       // app's active locale and theme instead of hardcoded English on white.
+      //
+      // Both are fixed for the lifetime of the WebView, on purpose. KYC lives
+      // inside a StatefulShellRoute branch, so this screen stays alive if the
+      // user switches theme elsewhere — but applying the new theme means
+      // re-initializing the Sumsub SDK, which would restart the verification.
+      // A colour is never worth restarting a KYC flow; reopening picks it up.
       final lang = KycWebViewConfig.sumsubLang(
           Localizations.localeOf(context).languageCode);
-      final surface = Theme.of(context).colorScheme.surface;
+      final theme = Theme.of(context);
+      final surface = theme.colorScheme.surface;
+      final sdkTheme = KycWebViewConfig.sumsubTheme(theme.brightness);
 
       await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => _SumsubWebViewScreen(
             accessToken: token,
             lang: lang,
+            sdkTheme: sdkTheme,
             backgroundColor: surface,
             onTokenRefresh: () =>
                 ref.read(kycRemoteDataSourceProvider).initFlow(userId),
@@ -292,6 +301,7 @@ class _KycScreenState extends ConsumerState<KycScreen> {
 class _SumsubWebViewScreen extends StatefulWidget {
   final String accessToken;
   final String lang;
+  final String sdkTheme;
   final Color backgroundColor;
   final Future<String> Function() onTokenRefresh;
   final VoidCallback onCompleted;
@@ -299,6 +309,7 @@ class _SumsubWebViewScreen extends StatefulWidget {
   const _SumsubWebViewScreen({
     required this.accessToken,
     required this.lang,
+    required this.sdkTheme,
     required this.backgroundColor,
     required this.onTokenRefresh,
     required this.onCompleted,
@@ -422,7 +433,7 @@ class _SumsubWebViewScreenState extends State<_SumsubWebViewScreen> {
           token,
           function() { window.FlutterChannel.postMessage(JSON.stringify({event:"tokenExpired"})); }
         )
-        .withConf({ lang: "${widget.lang}" })
+        .withConf({ lang: "${widget.lang}", theme: "${widget.sdkTheme}" })
         .withOptions({ addViewportTag: false, adaptIframeHeight: true })
         .on("idCheck.onApplicantSubmitted", function() {
           window.FlutterChannel.postMessage(JSON.stringify({event:"submitted"}));
