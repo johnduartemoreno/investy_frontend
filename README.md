@@ -117,10 +117,19 @@ Three locales supported: **EN** (default), **ES**, **PT**.
 - Language persisted to `SharedPreferences` + synced to backend (`PUT /language`)
 - Claude API recommendation reasons returned in the user's current language
 - The Sumsub KYC WebSDK is initialized with the app's active locale (fallback
-  `en`) — it used to be hardcoded to English (B61)
+  `en`) and the app's active theme — both used to be hardcoded (English, white
+  background). The SDK card renders with **its own** theme, so setting only our
+  page background left a white card on a dark page; `withConf` gets `lang` and
+  `theme` together (B61). Both are frozen for the WebView's lifetime on purpose:
+  applying a new one means re-initializing the SDK, which restarts the
+  verification.
 - Push notification text is rendered by the **backend** from
   `users.preferred_language`; it arrives already translated and the app cannot
-  change it (B60)
+  change it (B60). The app therefore pushes its language to the backend **on
+  sign-in**, not only when the user changes it in Settings — otherwise a user
+  reading the app in Spanish keeps the `en` default the backend row is created
+  with, and every notification arrives in English. On sign-in the device wins:
+  it is the language the user is reading right now.
 - Add new keys to all three `.arb` files, then run `flutter gen-l10n`
 
 ## Android permissions
