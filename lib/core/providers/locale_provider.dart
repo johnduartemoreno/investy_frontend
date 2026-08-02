@@ -39,6 +39,20 @@ class LocaleNotifier extends _$LocaleNotifier {
     _syncToBackend(languageCode);
   }
 
+  /// Pushes the language the app is actually running in to the backend.
+  ///
+  /// Called on sign-in, because the language lives in this device's
+  /// SharedPreferences while the backend row is created by UpsertFromFirebase
+  /// with a default of "en". Without this, a user reading the app in Spanish
+  /// stayed "en" server-side forever, and every push notification — which is
+  /// rendered server-side from users.preferred_language — arrived in English
+  /// (B60 UAT). Syncing only inside setLanguage covered the user who changes
+  /// the language, never the user who simply signs in.
+  ///
+  /// The device wins on purpose: it is the language the user is reading right
+  /// now. Two devices in different languages will overwrite each other.
+  void syncCurrentLanguage() => _syncToBackend(state.languageCode);
+
   void _syncToBackend(String languageCode) async {
     try {
       final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -49,8 +63,11 @@ class LocaleNotifier extends _$LocaleNotifier {
         data: {'language': languageCode},
         options: Options(sendTimeout: const Duration(seconds: 5)),
       );
-    } catch (_) {
-      // Network failure is acceptable — language is already persisted locally.
+    } catch (e) {
+      // Not fatal — the language is already persisted locally. Logged because a
+      // silent failure here is invisible until a notification shows up in the
+      // wrong language, which is exactly what made B60 hard to see.
+      debugPrint('[locale] failed to sync language to backend: $e');
     }
   }
 }

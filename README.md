@@ -116,7 +116,34 @@ Three locales supported: **EN** (default), **ES**, **PT**.
 - All UI strings use ARB keys — never hardcoded English
 - Language persisted to `SharedPreferences` + synced to backend (`PUT /language`)
 - Claude API recommendation reasons returned in the user's current language
+- The Sumsub KYC WebSDK is initialized with the app's active locale (fallback
+  `en`) and the app's active theme — both used to be hardcoded (English, white
+  background). The SDK card renders with **its own** theme, so setting only our
+  page background left a white card on a dark page; `withConf` gets `lang` and
+  `theme` together (B61). Both are frozen for the WebView's lifetime on purpose:
+  applying a new one means re-initializing the SDK, which restarts the
+  verification.
+- Push notification text is rendered by the **backend** from
+  `users.preferred_language`; it arrives already translated and the app cannot
+  change it (B60). The app therefore pushes its language to the backend **on
+  sign-in**, not only when the user changes it in Settings — otherwise a user
+  reading the app in Spanish keeps the `en` default the backend row is created
+  with, and every notification arrives in English. On sign-in the device wins:
+  it is the language the user is reading right now.
 - Add new keys to all three `.arb` files, then run `flutter gen-l10n`
+
+## Android permissions
+
+Declared in `android/app/src/main/AndroidManifest.xml`:
+
+| Permission | Why |
+|---|---|
+| `INTERNET` | REST backend |
+| `CAMERA` | Sumsub KYC liveness check. Requested at runtime via `permission_handler` before launching the SDK, and granted to the WebView through `AndroidWebViewController.setOnPlatformPermissionRequest` — without that callback Android denies every web permission request by default (B61) |
+
+`RECORD_AUDIO` is deliberately **not** declared: Sumsub's liveness check is
+facial. The microphone only appears in the SDK's generic instructions text, not
+as a requirement — and an unnecessary permission is store-review risk.
 
 ## Core Shared Widgets
 
