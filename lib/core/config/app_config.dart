@@ -28,7 +28,7 @@ class AppConfig {
       }
       return 'http://localhost:8080';
     }
-    return 'https://api.investy.com';
+    return 'https://api.investyapp.com';
   }
 
   /// The resolved environment, mirroring [apiBaseUrl]'s priority: staging wins
