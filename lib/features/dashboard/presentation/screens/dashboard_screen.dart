@@ -296,27 +296,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ],
           ),
         ),
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              colors: [AppTheme.brandPurple, AppTheme.brandPurpleLight],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.brandPurple.withValues(alpha: 0.4),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: const Icon(Icons.notifications_outlined,
-              color: Colors.white, size: 20),
-        ),
+        // La campana vivía acá y no llevaba a ninguna parte (B69): un Container
+        // con un Icon, sin manejador de tap. Con círculo, gradiente de marca y
+        // sombra, prometía ser tocable en el mismo lenguaje visual que los
+        // accesos de Comprar/Vender/Depositar — un afordance falso en la
+        // pantalla principal. Se retira hasta que exista el destino correcto.
+        //
+        // Criterio acordado (2026-08-02): campana = "qué pasó" (historial de
+        // notificaciones), engranaje = "qué quiero que pase" (preferencias).
+        // Vuelve cuando exista el historial; NO se cablea a alertas de precio,
+        // que son reglas que el usuario define y ya viven en Ajustes.
       ],
     );
   }
