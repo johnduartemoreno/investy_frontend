@@ -61,6 +61,11 @@ class InvestyApp extends ConsumerWidget {
       final user = next.valueOrNull;
       if (user != null) {
         ref.read(notificationServiceProvider).init();
+        // Tell the backend which language this user reads the app in. Push
+        // notification text is rendered server-side from
+        // users.preferred_language, so without this a Spanish user keeps the
+        // "en" default from UpsertFromFirebase and gets English pushes (B60).
+        ref.read(localeNotifierProvider.notifier).syncCurrentLanguage();
         // Brand-new Google account → collect the display currency before the
         // user settles on Home (F5). Post-frame so the root navigator is mounted.
         if (user.isNewUser) {
