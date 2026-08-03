@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Screenshots dropped by `flutter run` (0-byte artifacts, never wanted in git)
+flutter_*.png
