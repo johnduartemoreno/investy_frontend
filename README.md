@@ -195,8 +195,11 @@ dart run build_runner build --delete-conflicting-outputs
 # Run on device (debug mode → local backend)
 flutter run
 
-# Run on device pointing to staging
-flutter run --dart-define=USE_STAGING=true
+# Run on device pointing to staging — GIT_SHA is part of the command, not
+# optional extra credit: without it the badge shows the environment but not
+# WHICH build is running, and a stale build pointing at staging has already
+# caused a full round of UAT confusion (2026-07-26, B53).
+flutter run --dart-define=USE_STAGING=true --dart-define=GIT_SHA=$(git rev-parse --short HEAD)
 
 # Analyze
 flutter analyze    # must be 0 errors before any merge
