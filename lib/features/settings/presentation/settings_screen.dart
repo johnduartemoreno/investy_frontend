@@ -154,9 +154,14 @@ class SettingsScreen extends ConsumerWidget {
             ? l10n.kycApprovedTitle
             : kycStatus.isSubmitted
                 ? l10n.kycPendingTitle
-                : kycStatus.isRejected
-                    ? l10n.kycRejectedTitle
-                    : '';
+                // Without this arm a user who needs to retry sees a blank
+                // status here — the one place in the app they would look to
+                // find out what happened.
+                : kycStatus.isRetry
+                    ? l10n.kycRetryTitle
+                    : kycStatus.isRejected
+                        ? l10n.kycRejectedTitle
+                        : '';
     final brokerAsync = ref.watch(brokerAccountProvider);
     final brokerStatus = brokerAsync.valueOrNull;
     final brokerTrailing = brokerStatus == null

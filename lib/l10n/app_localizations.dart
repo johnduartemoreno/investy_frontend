@@ -1825,14 +1825,98 @@ abstract class AppLocalizations {
   /// No description provided for @kycRejectedBody.
   ///
   /// In en, this message translates to:
-  /// **'We could not verify your identity. Please try again with a clear photo of your ID document.'**
+  /// **'We could not verify your identity, and this decision is final. If you believe this is a mistake, contact support.'**
   String get kycRejectedBody;
+
+  /// No description provided for @kycRetryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost There'**
+  String get kycRetryTitle;
+
+  /// No description provided for @kycRetryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not read your documents, but nothing is lost — you can submit them again.'**
+  String get kycRetryBody;
+
+  /// No description provided for @kycRejectReasonsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What to fix'**
+  String get kycRejectReasonsTitle;
+
+  /// No description provided for @kycRejectLabelBadPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'The photo was blurry or hard to read. Try again in good light.'**
+  String get kycRejectLabelBadPhoto;
+
+  /// No description provided for @kycRejectLabelScreenshot.
+  ///
+  /// In en, this message translates to:
+  /// **'Screenshots and photocopies are not accepted. Photograph the original document.'**
+  String get kycRejectLabelScreenshot;
+
+  /// No description provided for @kycRejectLabelSelfie.
+  ///
+  /// In en, this message translates to:
+  /// **'Your selfie could not be matched. Look straight at the camera, with your face uncovered.'**
+  String get kycRejectLabelSelfie;
+
+  /// No description provided for @kycRejectLabelDocumentMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'A page of the document was missing. Include the front and the back.'**
+  String get kycRejectLabelDocumentMissing;
+
+  /// No description provided for @kycRejectLabelExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'The document is expired. Use a valid one.'**
+  String get kycRejectLabelExpired;
+
+  /// No description provided for @kycRejectLabelDataMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The data on the document does not match what you entered.'**
+  String get kycRejectLabelDataMismatch;
+
+  /// No description provided for @kycRejectLabelEdited.
+  ///
+  /// In en, this message translates to:
+  /// **'The image looks edited or damaged. Send the original photo, unretouched.'**
+  String get kycRejectLabelEdited;
+
+  /// No description provided for @kycRejectLabelEnvironment.
+  ///
+  /// In en, this message translates to:
+  /// **'The surroundings made the check impossible. Try somewhere well lit, with a plain background.'**
+  String get kycRejectLabelEnvironment;
+
+  /// No description provided for @kycRejectLabelGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'There was a problem with the documents you sent.'**
+  String get kycRejectLabelGeneric;
+
+  /// No description provided for @kycDoneButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get kycDoneButton;
 
   /// No description provided for @kycBannerRequired.
   ///
   /// In en, this message translates to:
   /// **'Verify your identity to start trading. Tap here.'**
   String get kycBannerRequired;
+
+  /// No description provided for @kycBannerRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Your verification needs another try. Tap here.'**
+  String get kycBannerRetry;
 
   /// No description provided for @kycBannerPending.
   ///

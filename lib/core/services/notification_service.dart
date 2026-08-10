@@ -5,9 +5,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../features/kyc/presentation/providers/kyc_provider.dart';
 import '../config/app_config.dart';
 
 part 'notification_service.g.dart';
+
+/// Must match `appkyc.PushTypeKYCStatus` in the backend — the two halves of one
+/// contract, and nothing fails loudly if they drift.
+const _kycStatusPushType = 'kyc_status';
 
 /// Holds the last foreground FCM message for display as a SnackBar.
 final foregroundPushProvider =
@@ -52,6 +57,14 @@ class NotificationService {
     // Foreground messages — surface as in-app SnackBar via foregroundPushProvider.
     FirebaseMessaging.onMessage.listen((message) {
       debugPrint('[FCM] foreground message: ${message.notification?.title}');
+
+      // A KYC decision changes what the whole app lets the user do (ADR-05),
+      // so showing the text is not enough — the cached status has to go too,
+      // or the banners keep gating a user who was just approved (B80).
+      if (message.data['type'] == _kycStatusPushType) {
+        _ref.invalidate(kycStatusProvider);
+      }
+
       final title = message.notification?.title ?? '';
       final body = message.notification?.body ?? '';
       if (title.isNotEmpty) {

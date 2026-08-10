@@ -13,6 +13,7 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/theme_mode_provider.dart';
 import 'features/auth/presentation/currency_onboarding_sheet.dart';
 import 'features/auth/presentation/providers/auth_provider.dart';
+import 'features/kyc/presentation/widgets/kyc_status_refresher.dart';
 import 'l10n/app_localizations.dart';
 
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -106,8 +107,12 @@ class InvestyApp extends ConsumerWidget {
       themeMode: themeMode,
       routerConfig: goRouter,
       // Dev/QA environment + build badge on every screen (B53); no-op in prod.
-      builder: (context, child) =>
-          EnvironmentBadgeOverlay(child: child ?? const SizedBox.shrink()),
+      // KycStatusRefresher sits above the router so a KYC decision that lands
+      // while the app is backgrounded is picked up on return, on every screen
+      // that gates on it — not only the KYC screen (B80).
+      builder: (context, child) => KycStatusRefresher(
+        child: EnvironmentBadgeOverlay(child: child ?? const SizedBox.shrink()),
+      ),
       locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [

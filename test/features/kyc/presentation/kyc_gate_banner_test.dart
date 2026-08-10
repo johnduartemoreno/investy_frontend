@@ -54,4 +54,24 @@ void main() {
     await tester.pump();
     expect(find.byIcon(Icons.hourglass_top), findsOneWidget);
   });
+
+  // B77: retry is actionable. It must look like the "do something" banner, not
+  // the "wait" one — a tappable warning, not an inert hourglass.
+  testWidgets('KycGateBanner offers action when status is retry',
+      (tester) async {
+    await tester.pumpWidget(_wrap(
+      const KycGateBanner(),
+      kycStatusProvider.overrideWith(
+        (_) async => const KycStatusModel(
+            status: 'retry',
+            rejectType: 'RETRY',
+            rejectLabels: ['UNSATISFACTORY_PHOTOS']),
+      ),
+    ));
+    await tester.pump();
+    expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.hourglass_top), findsNothing);
+    // The chevron is what marks the banner as navigable.
+    expect(find.byIcon(Icons.arrow_forward_ios), findsOneWidget);
+  });
 }

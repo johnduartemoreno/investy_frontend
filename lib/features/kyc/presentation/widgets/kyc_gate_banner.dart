@@ -29,6 +29,10 @@ class KycGateBanner extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final isPending = status == 'submitted';
+    // "retry" is actionable: the user can fix it right now, so the banner has
+    // to take them there. Grouping it with "pending" would reproduce the
+    // dead end this sprint exists to remove (B77).
+    final isRetry = status == 'retry';
 
     return GestureDetector(
       onTap: isPending ? null : () => context.push('/settings/kyc'),
@@ -53,7 +57,11 @@ class KycGateBanner extends ConsumerWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                isPending ? l10n.kycBannerPending : l10n.kycBannerRequired,
+                isPending
+                    ? l10n.kycBannerPending
+                    : isRetry
+                        ? l10n.kycBannerRetry
+                        : l10n.kycBannerRequired,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: isPending
                       ? theme.colorScheme.onSecondaryContainer
