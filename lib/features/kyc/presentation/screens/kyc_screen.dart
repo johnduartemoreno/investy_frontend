@@ -54,9 +54,22 @@ class _KycScreenState extends ConsumerState<KycScreen> {
   /// a genuine "we'll take a while" case, and the foreground refresh picks it
   /// up later. An unbounded timer would keep an idle screen hitting the
   /// backend for as long as the app stays open.
+  ///
+  /// The bound counts ticks rather than wall-clock time. `DateTime.now()` would
+  /// tie the cutoff to a clock that can jump — the device sleeping, a timezone
+  /// change, an NTP correction — and stop the polling early or late for reasons
+  /// that have nothing to do with the review.
   static const _pollInterval = Duration(seconds: 5);
-  static const _pollTimeout = Duration(minutes: 3);
-  DateTime? _pollStartedAt;
+  static const _maxPolls = 36; // 36 × 5s = 3 minutes
+  int _pollCount = 0;
+
+  /// Set once the bound is reached, and the only thing that makes the bound
+  /// real. `_syncPolling` runs on every build, so cancelling the timer is not
+  /// enough on its own: with `_poll` back to null, the very next rebuild would
+  /// start a fresh timer with a fresh count, and the "bounded" poll would run
+  /// for as long as the screen stayed open. Cleared when the status leaves the
+  /// polling condition, or when the user launches the flow again.
+  bool _pollExhausted = false;
 
   @override
   void dispose() {
@@ -86,22 +99,21 @@ class _KycScreenState extends ConsumerState<KycScreen> {
     if (!shouldPoll) {
       _poll?.cancel();
       _poll = null;
-      _pollStartedAt = null;
+      _pollCount = 0;
+      _pollExhausted = false;
       return;
     }
-    if (_poll != null) return;
+    if (_poll != null || _pollExhausted) return;
 
-    _pollStartedAt = DateTime.now();
+    _pollCount = 0;
     _poll = Timer.periodic(_pollInterval, (timer) {
-      if (!mounted) {
-        timer.cancel();
-        return;
-      }
-      if (DateTime.now().difference(_pollStartedAt!) > _pollTimeout) {
+      if (!mounted || _pollCount >= _maxPolls) {
         timer.cancel();
         _poll = null;
+        _pollExhausted = true;
         return;
       }
+      _pollCount++;
       ref.invalidate(kycStatusProvider);
     });
   }
@@ -113,6 +125,8 @@ class _KycScreenState extends ConsumerState<KycScreen> {
     setState(() {
       _launching = true;
       _flowLaunched = true;
+      // Launching again is a fresh wait, so it earns a fresh budget.
+      _pollExhausted = false;
     });
     try {
       // The liveness step needs a live camera feed. On Android the WebView's
