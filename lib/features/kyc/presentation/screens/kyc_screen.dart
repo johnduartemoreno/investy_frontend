@@ -64,10 +64,26 @@ class _KycScreenState extends ConsumerState<KycScreen> {
     super.dispose();
   }
 
+  /// Set once the user has launched the SDK in this session.
+  ///
+  /// It widens the poll beyond `submitted` for exactly the window that needs
+  /// it. Right after the WebView closes the backend can still report
+  /// `not_started` — Sumsub's `applicantPending` may not have landed yet — and
+  /// keying the poll on `submitted` alone meant that case never started
+  /// polling at all, leaving the screen on "start your verification" until the
+  /// app was backgrounded. That is the same freeze B80 exists to remove.
+  ///
+  /// It also keeps us from polling for a user who merely opened the screen and
+  /// never started, which is what watching `isPendingDecision` unconditionally
+  /// would do.
+  bool _flowLaunched = false;
+
   /// Starts or stops polling to match the current status.
   /// Called from build() — it must stay idempotent.
   void _syncPolling(KycStatusModel kyc) {
-    if (!kyc.isSubmitted) {
+    final shouldPoll =
+        kyc.isSubmitted || (_flowLaunched && kyc.isPendingDecision);
+    if (!shouldPoll) {
       _poll?.cancel();
       _poll = null;
       _pollStartedAt = null;
@@ -94,7 +110,10 @@ class _KycScreenState extends ConsumerState<KycScreen> {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) return;
 
-    setState(() => _launching = true);
+    setState(() {
+      _launching = true;
+      _flowLaunched = true;
+    });
     try {
       // The liveness step needs a live camera feed. On Android the WebView's
       // own permission callback cannot grant what the OS has not granted to
