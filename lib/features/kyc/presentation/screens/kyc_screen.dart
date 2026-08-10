@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,8 +16,12 @@ import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart'
     if (dart.library.html) 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/presentation/widgets/custom_card.dart';
+import '../../../../core/presentation/widgets/left_accent_box.dart';
 import '../../../../core/presentation/widgets/primary_button.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../kyc_reject_labels.dart';
 import '../kyc_webview_config.dart';
 import '../../data/datasources/kyc_remote_datasource.dart';
 import '../../data/models/kyc_status_model.dart';
@@ -32,11 +37,125 @@ class KycScreen extends ConsumerStatefulWidget {
 class _KycScreenState extends ConsumerState<KycScreen> {
   bool _launching = false;
 
+  /// Polls the backend while a decision is outstanding.
+  ///
+  /// This exists because the decision can land seconds after the SDK closes:
+  /// in the S-FIX-1 UAT the webhook set "submitted" at 01:42:56, the app read
+  /// it at 01:42:57, and "approved" arrived at 01:43:00 — three seconds too
+  /// late, with nothing left to ask again (B80).
+  ///
+  /// Push does not cover this. iOS has no APNs configured (B37), so on an
+  /// iPhone — the device the bug was found on — no notification arrives at all.
+  /// A poll on the screen the user is actually staring at is the only fix that
+  /// works on both platforms today.
+  Timer? _poll;
+
+  /// The poll backs off, because the decision arrives on two very different
+  /// timescales and a single interval cannot serve both.
+  ///
+  /// Fast phase (5s for the first minute) is for the case that motivated B80:
+  /// the webhook set "submitted" and "approved" landed three seconds later.
+  ///
+  /// Slow phase (30s out to ~15 minutes) is for what actually happens. Measured
+  /// in the UAT of this sprint (2026-08-09, iPhone físico): Sumsub took **~14
+  /// minutes** end to end. An earlier version of this cut off hard at three
+  /// minutes and the screen stayed frozen on "En revisión" — the user had to
+  /// leave and re-enter, which is the exact bug this poll exists to remove. A
+  /// bound sized against the reported symptom instead of the real latency just
+  /// moves the freeze later.
+  ///
+  /// Beyond the bound, `KycStatusRefresher` still catches the decision when the
+  /// app returns to the foreground. The poll is the "user is watching this
+  /// screen right now" path, not the only path.
+  ///
+  /// Ticks are counted rather than wall-clock time. `DateTime.now()` would tie
+  /// the cutoff to a clock that can jump — the device sleeping, an NTP
+  /// correction — and stop early or late for reasons unrelated to the review.
+  static const _fastInterval = Duration(seconds: 5);
+  static const _slowInterval = Duration(seconds: 30);
+  static const _fastPolls = 12; // 12 × 5s = 1 minute
+  static const _maxPolls = 40; // then 28 × 30s → ~15 minutes total
+  int _pollCount = 0;
+
+  /// Set once the bound is reached, and the only thing that makes the bound
+  /// real. `_syncPolling` runs on every build, so cancelling the timer is not
+  /// enough on its own: with `_poll` back to null, the very next rebuild would
+  /// start a fresh timer with a fresh count, and the "bounded" poll would run
+  /// for as long as the screen stayed open. Cleared when the status leaves the
+  /// polling condition, or when the user launches the flow again.
+  bool _pollExhausted = false;
+
+  @override
+  void dispose() {
+    _poll?.cancel();
+    super.dispose();
+  }
+
+  /// Set once the user has launched the SDK in this session.
+  ///
+  /// It widens the poll beyond `submitted` for exactly the window that needs
+  /// it. Right after the WebView closes the backend can still report
+  /// `not_started` — Sumsub's `applicantPending` may not have landed yet — and
+  /// keying the poll on `submitted` alone meant that case never started
+  /// polling at all, leaving the screen on "start your verification" until the
+  /// app was backgrounded. That is the same freeze B80 exists to remove.
+  ///
+  /// It also keeps us from polling for a user who merely opened the screen and
+  /// never started, which is what watching `isPendingDecision` unconditionally
+  /// would do.
+  bool _flowLaunched = false;
+
+  /// Starts or stops polling to match the current status.
+  /// Called from build() — it must stay idempotent.
+  void _syncPolling(KycStatusModel kyc) {
+    final shouldPoll =
+        kyc.isSubmitted || (_flowLaunched && kyc.isPendingDecision);
+    if (!shouldPoll) {
+      _poll?.cancel();
+      _poll = null;
+      _pollCount = 0;
+      _pollExhausted = false;
+      return;
+    }
+    if (_poll != null || _pollExhausted) return;
+
+    _pollCount = 0;
+    _scheduleNextPoll();
+  }
+
+  /// Reschedules itself so the interval can widen as the wait goes on.
+  /// A single `Timer.periodic` cannot back off, and backing off is the whole
+  /// point — see the interval constants for why.
+  void _scheduleNextPoll() {
+    final interval = _pollCount < _fastPolls ? _fastInterval : _slowInterval;
+    _poll = Timer(interval, () {
+      if (!mounted) {
+        _poll = null;
+        return;
+      }
+      if (_pollCount >= _maxPolls) {
+        _poll = null;
+        _pollExhausted = true;
+        return;
+      }
+      _pollCount++;
+      ref.invalidate(kycStatusProvider);
+      // Reassigned before the invalidation can trigger a rebuild, so
+      // `_syncPolling` never sees a null `_poll` and never starts a second one.
+      _scheduleNextPoll();
+    });
+  }
+
   Future<void> _startFlow() async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) return;
 
-    setState(() => _launching = true);
+    setState(() {
+      _launching = true;
+      _flowLaunched = true;
+      // Launching again is a fresh wait, so it earns a fresh budget.
+      _pollExhausted = false;
+    });
     try {
       // The liveness step needs a live camera feed. On Android the WebView's
       // own permission callback cannot grant what the OS has not granted to
@@ -143,7 +262,10 @@ class _KycScreenState extends ConsumerState<KycScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.kycTitle)),
       body: kycAsync.when(
-        data: (kyc) => _buildContent(context, theme, l10n, kyc),
+        data: (kyc) {
+          _syncPolling(kyc);
+          return _buildContent(context, theme, l10n, kyc);
+        },
         loading: () =>
             const Center(child: CircularProgressIndicator.adaptive()),
         error: (_, __) => Center(child: Text(l10n.commonError)),
@@ -159,17 +281,28 @@ class _KycScreenState extends ConsumerState<KycScreen> {
   ) {
     if (kyc.isApproved) return _buildApprovedState(context, theme, l10n);
     if (kyc.isSubmitted) return _buildPendingState(context, theme, l10n);
-    if (kyc.isRejected) {
+    // Recoverable: the documents were unusable, not the identity unacceptable.
+    // This state gets a retry button and, crucially, the reasons — telling a
+    // user they failed without telling them what to redo is most of the way
+    // back to the bug (B77).
+    if (kyc.isRetry) {
       return _buildActionState(
         context,
         theme,
         l10n,
-        icon: Icons.error_outline,
-        iconColor: theme.colorScheme.error,
-        title: l10n.kycRejectedTitle,
-        body: l10n.kycRejectedBody,
+        icon: Icons.refresh_rounded,
+        iconColor: AppTheme.signalAmber,
+        title: l10n.kycRetryTitle,
+        body: l10n.kycRetryBody,
         buttonText: l10n.kycRetryButton,
+        reasons: KycRejectLabels.describe(kyc.rejectLabels, l10n),
       );
+    }
+    // Final. No retry button: offering one here would promise a way out that
+    // does not exist — the previous version of this screen did exactly that
+    // for every rejection, recoverable or not.
+    if (kyc.isRejected) {
+      return _buildTerminalRejectionState(context, theme, l10n, kyc);
     }
     return _buildActionState(
       context,
@@ -240,6 +373,7 @@ class _KycScreenState extends ConsumerState<KycScreen> {
     required String body,
     required String buttonText,
     bool showRequirements = false,
+    List<String> reasons = const [],
   }) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppDimens.spacingXL),
@@ -255,6 +389,10 @@ class _KycScreenState extends ConsumerState<KycScreen> {
           const SizedBox(height: AppDimens.spacingM),
           Text(body,
               textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
+          if (reasons.isNotEmpty) ...[
+            const SizedBox(height: AppDimens.spacingXL),
+            _buildReasonsCard(theme, l10n, reasons),
+          ],
           if (showRequirements) ...[
             const SizedBox(height: AppDimens.spacingXL),
             _buildRequirementsList(theme, l10n),
@@ -264,6 +402,62 @@ class _KycScreenState extends ConsumerState<KycScreen> {
             text: buttonText,
             isLoading: _launching,
             onPressed: _startFlow,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// The final-rejection screen. Deliberately has no action button — there is
+  /// no action. It still shows the reasons, so the user can tell support
+  /// something more useful than "it didn't work".
+  Widget _buildTerminalRejectionState(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+    KycStatusModel kyc,
+  ) {
+    final reasons = KycRejectLabels.describe(kyc.rejectLabels, l10n);
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(AppDimens.spacingXL),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Icon(Icons.error_outline, size: 80, color: theme.colorScheme.error),
+          const SizedBox(height: AppDimens.spacingL),
+          Text(l10n.kycRejectedTitle,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.headlineSmall
+                  ?.copyWith(fontWeight: FontWeight.bold)),
+          const SizedBox(height: AppDimens.spacingM),
+          Text(l10n.kycRejectedBody,
+              textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
+          if (reasons.isNotEmpty) ...[
+            const SizedBox(height: AppDimens.spacingXL),
+            _buildReasonsCard(theme, l10n, reasons),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReasonsCard(
+      ThemeData theme, AppLocalizations l10n, List<String> reasons) {
+    return CustomCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.kycRejectReasonsTitle,
+              style: theme.textTheme.titleSmall
+                  ?.copyWith(fontWeight: FontWeight.w600)),
+          const SizedBox(height: AppDimens.spacingM),
+          ...reasons.map(
+            (reason) => Padding(
+              padding: const EdgeInsets.only(bottom: AppDimens.spacingS),
+              child: LeftAccentBox(
+                child: Text(reason, style: theme.textTheme.bodySmall),
+              ),
+            ),
           ),
         ],
       ),
@@ -480,6 +674,15 @@ class _SumsubWebViewScreenState extends State<_SumsubWebViewScreen> {
           icon: const Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        // An explicit "Done" next to the close X: after finishing the flow the
+        // only way out was a control that reads as "cancel", which is a poor
+        // thing to offer someone who just succeeded (B80, minor).
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(AppLocalizations.of(context).kycDoneButton),
+          ),
+        ],
       ),
       body: WebViewWidget(controller: _controller),
     );

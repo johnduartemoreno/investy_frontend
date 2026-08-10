@@ -116,6 +116,10 @@ Three locales supported: **EN** (default), **ES**, **PT**.
 - All UI strings use ARB keys — never hardcoded English
 - Language persisted to `SharedPreferences` + synced to backend (`PUT /language`)
 - Claude API recommendation reasons returned in the user's current language
+- KYC rejection reasons are Sumsub `rejectLabels` — machine codes mapped to ARB
+  keys by `KycRejectLabels`, with a generic line for codes we do not know. The
+  raw code never reaches the user. The label set is Sumsub's and grows without
+  notice, so an unknown one must still say something (B77).
 - The Sumsub KYC WebSDK is initialized with the app's active locale (fallback
   `en`) and the app's active theme — both used to be hardcoded (English, white
   background). The SDK card renders with **its own** theme, so setting only our

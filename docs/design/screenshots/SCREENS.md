@@ -62,6 +62,8 @@
 |----|--------|-------|----------------|-------|------|
 | 11 | Settings main | `/settings` | `settings/presentation/settings_screen.dart` | `light_mode/11_settings.png` | `dark_mode/11_settings.png` |
 | 12 | Identity Verification (KYC) | `/settings/kyc` | `kyc/presentation/screens/kyc_screen.dart` | `light_mode/12_identity_verification.png` | `dark_mode/12_identity_verification.png` |
+| 12b | Identity Verification — Recoverable rejection (`retry`) | `/settings/kyc` | `kyc/presentation/screens/kyc_screen.dart` | `light_mode/12b_identity_verification_retry.png` | `dark_mode/12b_identity_verification_retry.png` |
+| 12c | Identity Verification — Final rejection | `/settings/kyc` | `kyc/presentation/screens/kyc_screen.dart` | `light_mode/12c_identity_verification_rejected.png` | `dark_mode/12c_identity_verification_rejected.png` |
 | 13 | Settings + broker banner | `/settings` (with SnackBar) | `settings/presentation/settings_screen.dart` | `light_mode/13_settings_banner.png` | `dark_mode/13_settings_banner.png` |
 | 14 | Risk Profile questionnaire | `/settings/risk-profile` | `risk_profile/presentation/screens/risk_questionnaire_screen.dart` | `light_mode/14_risk_profile.png` | `dark_mode/14_risk_profile.png` |
 | 15 | Notifications | `/settings/notifications` | `settings/presentation/notifications_screen.dart` | `light_mode/15_notifications.png` | `dark_mode/15_notifications.png` |

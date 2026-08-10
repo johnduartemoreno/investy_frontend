@@ -926,11 +926,63 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kycRejectedBody =>
-      'We could not verify your identity. Please try again with a clear photo of your ID document.';
+      'We could not verify your identity, and this decision is final. If you believe this is a mistake, contact support.';
+
+  @override
+  String get kycRetryTitle => 'Almost There';
+
+  @override
+  String get kycRetryBody =>
+      'We could not read your documents, but nothing is lost — you can submit them again.';
+
+  @override
+  String get kycRejectReasonsTitle => 'What to fix';
+
+  @override
+  String get kycRejectLabelBadPhoto =>
+      'The photo was blurry or hard to read. Try again in good light.';
+
+  @override
+  String get kycRejectLabelScreenshot =>
+      'Screenshots and photocopies are not accepted. Photograph the original document.';
+
+  @override
+  String get kycRejectLabelSelfie =>
+      'Your selfie could not be matched. Look straight at the camera, with your face uncovered.';
+
+  @override
+  String get kycRejectLabelDocumentMissing =>
+      'A page of the document was missing. Include the front and the back.';
+
+  @override
+  String get kycRejectLabelExpired =>
+      'The document is expired. Use a valid one.';
+
+  @override
+  String get kycRejectLabelDataMismatch =>
+      'The data on the document does not match what you entered.';
+
+  @override
+  String get kycRejectLabelEdited =>
+      'The image looks edited or damaged. Send the original photo, unretouched.';
+
+  @override
+  String get kycRejectLabelEnvironment =>
+      'The surroundings made the check impossible. Try somewhere well lit, with a plain background.';
+
+  @override
+  String get kycRejectLabelGeneric =>
+      'There was a problem with the documents you sent.';
+
+  @override
+  String get kycDoneButton => 'Done';
 
   @override
   String get kycBannerRequired =>
       'Verify your identity to start trading. Tap here.';
+
+  @override
+  String get kycBannerRetry => 'Your verification needs another try. Tap here.';
 
   @override
   String get kycBannerPending =>

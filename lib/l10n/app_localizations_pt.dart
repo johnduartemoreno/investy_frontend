@@ -931,11 +931,64 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get kycRejectedBody =>
-      'Não conseguimos verificar sua identidade. Por favor, tente novamente com uma foto clara do seu documento de identidade.';
+      'Não conseguimos verificar sua identidade, e esta decisão é definitiva. Se você acha que houve um erro, fale com o suporte.';
+
+  @override
+  String get kycRetryTitle => 'Quase lá';
+
+  @override
+  String get kycRetryBody =>
+      'Não conseguimos ler seus documentos, mas nada foi perdido — você pode enviá-los de novo.';
+
+  @override
+  String get kycRejectReasonsTitle => 'O que corrigir';
+
+  @override
+  String get kycRejectLabelBadPhoto =>
+      'A foto ficou borrada ou ilegível. Tente de novo com boa iluminação.';
+
+  @override
+  String get kycRejectLabelScreenshot =>
+      'Capturas de tela e fotocópias não são aceitas. Fotografe o documento original.';
+
+  @override
+  String get kycRejectLabelSelfie =>
+      'Não conseguimos comparar sua selfie. Olhe direto para a câmera, com o rosto descoberto.';
+
+  @override
+  String get kycRejectLabelDocumentMissing =>
+      'Faltou uma parte do documento. Inclua a frente e o verso.';
+
+  @override
+  String get kycRejectLabelExpired =>
+      'O documento está vencido. Use um válido.';
+
+  @override
+  String get kycRejectLabelDataMismatch =>
+      'Os dados do documento não coincidem com os que você informou.';
+
+  @override
+  String get kycRejectLabelEdited =>
+      'A imagem parece editada ou danificada. Envie a foto original, sem retoques.';
+
+  @override
+  String get kycRejectLabelEnvironment =>
+      'O ambiente impediu a verificação. Tente em um lugar bem iluminado e com fundo liso.';
+
+  @override
+  String get kycRejectLabelGeneric =>
+      'Houve um problema com os documentos que você enviou.';
+
+  @override
+  String get kycDoneButton => 'Pronto';
 
   @override
   String get kycBannerRequired =>
       'Verifique sua identidade para começar a negociar. Toque aqui.';
+
+  @override
+  String get kycBannerRetry =>
+      'Sua verificação precisa de outra tentativa. Toque aqui.';
 
   @override
   String get kycBannerPending =>
