@@ -129,29 +129,77 @@ void main() {
 
   // Unbounded polling would keep an idle screen hitting the backend for as
   // long as the app stays open.
+  // REGRESSION — this is the UAT failure of 2026-08-09, iPhone físico.
+  //
+  // The poll used to cut off hard at three minutes, a bound sized against the
+  // three-second race reported in S-FIX-1. Sumsub actually took ~14 minutes:
+  // the poll gave up, the screen stayed on "En revisión", and the user had to
+  // leave and re-enter — the exact freeze B80 exists to remove, just later.
+  testWidgets('still polling well past the old three-minute cutoff',
+      (tester) async {
+    var status = 'submitted';
+    await _pumpScreen(tester, () => status);
+
+    // Six minutes of waiting — double the old bound.
+    for (var i = 0; i < 12; i++) {
+      await tester.pump(const Duration(seconds: 30));
+    }
+    await tester.pumpAndSettle();
+
+    status = 'approved'; // the decision finally lands
+    for (var i = 0; i < 2; i++) {
+      await tester.pump(const Duration(seconds: 30));
+    }
+    await tester.pumpAndSettle();
+
+    expect(find.text('Verified'), findsOneWidget,
+        reason: 'a decision minutes later must still be picked up');
+
+    await _dispose(tester);
+  });
+
   testWidgets('gives up after the bound instead of polling forever',
       (tester) async {
     final reads = await _pumpScreen(tester, () => 'submitted');
     final before = reads();
 
-    // One tick per pump: the bound is 36 ticks, so 40 takes us past it.
-    for (var i = 0; i < 40; i++) {
+    // Past the ~15-minute bound: 1 min of fast ticks, then 30s steps.
+    for (var i = 0; i < 12; i++) {
       await tester.pump(const Duration(seconds: 5));
+    }
+    for (var i = 0; i < 40; i++) {
+      await tester.pump(const Duration(seconds: 30));
     }
     await tester.pumpAndSettle();
     final atBound = reads();
 
-    expect(atBound - before, lessThanOrEqualTo(36),
+    expect(atBound - before, lessThanOrEqualTo(40),
         reason: 'the poll must stop at its bound');
 
-    // Well past the bound, nothing more may happen.
+    // Well past it, nothing more may happen.
     for (var i = 0; i < 20; i++) {
-      await tester.pump(const Duration(seconds: 5));
+      await tester.pump(const Duration(seconds: 30));
     }
     await tester.pumpAndSettle();
 
     expect(reads(), atBound,
         reason: 'polling must stop at the bound, not run for the session');
+
+    await _dispose(tester);
+  });
+
+  // The fast phase is what closes the original three-second race; if the first
+  // interval ever widened, the reported bug would come back.
+  testWidgets('polls within seconds at first', (tester) async {
+    var status = 'submitted';
+    await _pumpScreen(tester, () => status);
+
+    status = 'approved';
+    await tester.pump(const Duration(seconds: 6));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Verified'), findsOneWidget,
+        reason: 'a decision seconds later must be picked up within seconds');
 
     await _dispose(tester);
   });

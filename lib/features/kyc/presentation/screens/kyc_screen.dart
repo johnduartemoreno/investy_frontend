@@ -50,17 +50,31 @@ class _KycScreenState extends ConsumerState<KycScreen> {
   /// works on both platforms today.
   Timer? _poll;
 
-  /// Bounded on purpose: a KYC review that has not settled in three minutes is
-  /// a genuine "we'll take a while" case, and the foreground refresh picks it
-  /// up later. An unbounded timer would keep an idle screen hitting the
-  /// backend for as long as the app stays open.
+  /// The poll backs off, because the decision arrives on two very different
+  /// timescales and a single interval cannot serve both.
   ///
-  /// The bound counts ticks rather than wall-clock time. `DateTime.now()` would
-  /// tie the cutoff to a clock that can jump — the device sleeping, a timezone
-  /// change, an NTP correction — and stop the polling early or late for reasons
-  /// that have nothing to do with the review.
-  static const _pollInterval = Duration(seconds: 5);
-  static const _maxPolls = 36; // 36 × 5s = 3 minutes
+  /// Fast phase (5s for the first minute) is for the case that motivated B80:
+  /// the webhook set "submitted" and "approved" landed three seconds later.
+  ///
+  /// Slow phase (30s out to ~15 minutes) is for what actually happens. Measured
+  /// in the UAT of this sprint (2026-08-09, iPhone físico): Sumsub took **~14
+  /// minutes** end to end. An earlier version of this cut off hard at three
+  /// minutes and the screen stayed frozen on "En revisión" — the user had to
+  /// leave and re-enter, which is the exact bug this poll exists to remove. A
+  /// bound sized against the reported symptom instead of the real latency just
+  /// moves the freeze later.
+  ///
+  /// Beyond the bound, `KycStatusRefresher` still catches the decision when the
+  /// app returns to the foreground. The poll is the "user is watching this
+  /// screen right now" path, not the only path.
+  ///
+  /// Ticks are counted rather than wall-clock time. `DateTime.now()` would tie
+  /// the cutoff to a clock that can jump — the device sleeping, an NTP
+  /// correction — and stop early or late for reasons unrelated to the review.
+  static const _fastInterval = Duration(seconds: 5);
+  static const _slowInterval = Duration(seconds: 30);
+  static const _fastPolls = 12; // 12 × 5s = 1 minute
+  static const _maxPolls = 40; // then 28 × 30s → ~15 minutes total
   int _pollCount = 0;
 
   /// Set once the bound is reached, and the only thing that makes the bound
@@ -106,15 +120,29 @@ class _KycScreenState extends ConsumerState<KycScreen> {
     if (_poll != null || _pollExhausted) return;
 
     _pollCount = 0;
-    _poll = Timer.periodic(_pollInterval, (timer) {
-      if (!mounted || _pollCount >= _maxPolls) {
-        timer.cancel();
+    _scheduleNextPoll();
+  }
+
+  /// Reschedules itself so the interval can widen as the wait goes on.
+  /// A single `Timer.periodic` cannot back off, and backing off is the whole
+  /// point — see the interval constants for why.
+  void _scheduleNextPoll() {
+    final interval = _pollCount < _fastPolls ? _fastInterval : _slowInterval;
+    _poll = Timer(interval, () {
+      if (!mounted) {
+        _poll = null;
+        return;
+      }
+      if (_pollCount >= _maxPolls) {
         _poll = null;
         _pollExhausted = true;
         return;
       }
       _pollCount++;
       ref.invalidate(kycStatusProvider);
+      // Reassigned before the invalidation can trigger a rebuild, so
+      // `_syncPolling` never sees a null `_poll` and never starts a second one.
+      _scheduleNextPoll();
     });
   }
 
