@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,6 +10,8 @@ import 'package:investy/features/assets/presentation/screens/asset_detail_screen
 import 'package:investy/features/dashboard/presentation/screens/dashboard_screen.dart'
     show displayCurrencyProvider, fxRateProvider;
 import 'package:investy/features/portfolio/data/models/portfolio_response_model.dart';
+import 'package:investy/features/dashboard/data/models/fit_score_model.dart';
+import 'package:investy/features/dashboard/presentation/controllers/fit_score_controller.dart';
 import 'package:investy/l10n/app_localizations.dart';
 
 const _holding = PortfolioHoldingModel(
@@ -36,6 +40,11 @@ Widget _subject() {
       displayCurrencyProvider.overrideWith((ref) => 'USD'),
       fxRateProvider.overrideWith((ref) async => 1.0),
       assetHistoryProvider('AAPL', '1M').overrideWith((ref) async => _history),
+      // The Fit Score section (S19-G7) reads FirebaseAuth for the user id, and
+      // Firebase is not initialised in widget tests. Overridden to stay idle:
+      // this file is about the chart and the position, and the fit card has its
+      // own test.
+      fitScoreControllerProvider.overrideWith(_IdleFitScoreController.new),
     ],
     child: const MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -76,6 +85,7 @@ void main() {
             fxRateProvider.overrideWith((ref) async => 1.0),
             assetHistoryProvider('AAPL', '1M')
                 .overrideWith((ref) async => throw Exception('boom')),
+            fitScoreControllerProvider.overrideWith(_IdleFitScoreController.new),
           ],
           child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -91,4 +101,19 @@ void main() {
       expect(find.text('Buy'), findsOneWidget);
     });
   });
+}
+
+/// Stays in the idle state and never calls out, so the detail screen can be
+/// tested without Firebase or the network.
+class _IdleFitScoreController extends FitScoreController {
+  @override
+  FutureOr<FitScoreModel?> build() => null;
+
+  @override
+  Future<void> fetch({
+    required String symbol,
+    required int amountCents,
+    String? goalId,
+    String language = 'en',
+  }) async {}
 }

@@ -18,7 +18,10 @@ import '../../../broker/presentation/widgets/broker_gate_banner.dart';
 import '../../../kyc/presentation/widgets/kyc_gate_banner.dart';
 import '../../data/models/asset_search_result_model.dart';
 import '../../data/models/buy_asset_args.dart';
+import '../../../../core/providers/locale_provider.dart';
 import '../controllers/buy_asset_controller.dart';
+import '../controllers/fit_score_controller.dart';
+import '../widgets/fit_score_card.dart';
 import '../controllers/trading_quote_controller.dart';
 import '../trading_error_localizer.dart';
 import '../widgets/order_cost_breakdown.dart';
@@ -41,6 +44,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
 
   AssetSearchResultModel? _selectedAsset;
   Timer? _quoteDebounce;
+  Timer? _fitDebounce;
   List<AssetSearchResultModel> _searchResults = [];
   bool _isSearching = false;
   double _quantity = 0.0;
@@ -84,6 +88,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
   @override
   void dispose() {
     _quoteDebounce?.cancel();
+    _fitDebounce?.cancel();
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     _quantityController.dispose();
@@ -131,6 +136,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
     FocusScope.of(context).unfocus();
     // The asset changed, so the fee may have too (rules can key off asset class).
     _refreshQuote();
+    _refreshFit();
   }
 
   void _submit() {
@@ -158,6 +164,41 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
     // Config not in yet: block nothing and let the server answer.
     if (minDollars == null) return true;
     return (_estimatedTotal * 100).round() >= (minDollars * 100).round();
+  }
+
+  /// The Fit Score for the order being composed (S19-G7).
+  ///
+  /// Debounced like the quote, and for the same reason: the amount changes on
+  /// every keystroke and each assessment is a handful of queries plus a model
+  /// call. Slightly slower than the quote because nothing on the screen blocks
+  /// on it — the card fills in when it is ready.
+  void _refreshFit() {
+    _fitDebounce?.cancel();
+    final asset = _selectedAsset;
+    if (asset == null || _quantity <= 0) {
+      ref.read(fitScoreControllerProvider.notifier).clear();
+      return;
+    }
+    _fitDebounce = Timer(const Duration(milliseconds: 600), () {
+      if (!mounted) return;
+      ref.read(fitScoreControllerProvider.notifier).fetch(
+            symbol: asset.symbol,
+            amountCents: (_estimatedTotal * 100).round(),
+            goalId: _selectedGoalId,
+            language: ref.read(localeNotifierProvider).languageCode,
+          );
+    });
+  }
+
+  /// The fit card. Absent while idle or in flight, and absent on error too: a
+  /// verdict about someone's money assembled from a failed request would be
+  /// worse than no verdict, and the purchase does not depend on it.
+  Widget _buildFitSection() {
+    final fitAsync = ref.watch(fitScoreControllerProvider);
+    return fitAsync.maybeWhen(
+      data: (fit) => fit == null ? const SizedBox.shrink() : FitScoreCard(fit: fit),
+      orElse: () => const SizedBox.shrink(),
+    );
   }
 
   /// Debounced so a quote is requested when the user pauses, not per keystroke.
@@ -310,13 +351,19 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                   ChoiceChip(
                     label: Text(l10n.buyNoGoalOption),
                     selected: _selectedGoalId == null,
-                    onSelected: (_) => setState(() => _selectedGoalId = null),
+                    onSelected: (_) {
+                      setState(() => _selectedGoalId = null);
+                      _refreshFit();
+                    },
                   ),
                   for (final g in goals)
                     ChoiceChip(
                       label: Text(g.name),
                       selected: _selectedGoalId == g.id,
-                      onSelected: (_) => setState(() => _selectedGoalId = g.id),
+                      onSelected: (_) {
+                        setState(() => _selectedGoalId = g.id);
+                        _refreshFit();
+                      },
                     ),
                 ],
               ),
@@ -599,6 +646,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                               QuantityInputFormatter.parseFormatted(v);
                           setState(() => _quantity = parsed ?? 0.0);
                           _refreshQuote();
+                          _refreshFit();
                         },
                         validator: (v) {
                           if (v == null || v.isEmpty) {
@@ -648,6 +696,16 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                 if (_selectedAsset != null) ...[
                   const SizedBox(height: AppDimens.spacingL),
                   _buildGoalSelector(theme, cs, l10n),
+                ],
+
+                // ── Fit Score (S19-G7) ───────────────────────────────────
+                // Below the goal selector on purpose: the horizon component is
+                // measured against the goal's deadline, so the card has to sit
+                // under the control that changes it. Above the buy button, so
+                // it is read before the decision rather than after it.
+                if (_selectedAsset != null && _quantity > 0) ...[
+                  const SizedBox(height: AppDimens.spacingL),
+                  _buildFitSection(),
                 ],
 
                 const SizedBox(height: AppDimens.spacingXL),

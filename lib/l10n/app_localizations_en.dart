@@ -1514,4 +1514,172 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onboardCurrencyBody =>
       'You\'ll see your balances and prices in this currency. It can\'t be changed later.';
+
+  @override
+  String get fitTitle => 'How well this fits you';
+
+  @override
+  String get fitWhy => 'See why';
+
+  @override
+  String get fitHide => 'Hide';
+
+  @override
+  String fitScoreOutOf(int score) {
+    return '$score out of 100';
+  }
+
+  @override
+  String fitConfidence(int pct) {
+    return 'Confidence: $pct%';
+  }
+
+  @override
+  String fitForGoal(String goal) {
+    return 'Assessed against your goal “$goal”';
+  }
+
+  @override
+  String get fitNoGoal => 'Not tied to any goal';
+
+  @override
+  String get fitCantAssessTitle => 'We can’t assess this yet';
+
+  @override
+  String get fitCantAssessBody =>
+      'A fit score is a claim about your situation, and we don’t know enough about it to make one.';
+
+  @override
+  String get fitAboutYouTitle => 'What would help';
+
+  @override
+  String get fitAboutOurDataTitle => 'On our side';
+
+  @override
+  String get fitDisclaimer =>
+      'This describes how a purchase relates to what you’ve told us. It is not financial advice.';
+
+  @override
+  String get fitLevelHigh => 'Good fit';
+
+  @override
+  String get fitLevelMedium => 'Partial fit';
+
+  @override
+  String get fitLevelLow => 'Poor fit';
+
+  @override
+  String get fitCappedConcentration =>
+      'Held down because this would be a large part of everything you own — this applies whatever your risk profile says.';
+
+  @override
+  String get fitCappedHorizon =>
+      'Held down because your deadline arrives sooner than this kind of asset usually needs — this applies whatever your risk profile says.';
+
+  @override
+  String get fitComponentProfile => 'Fits your profile';
+
+  @override
+  String get fitComponentHorizon => 'Time until your deadline';
+
+  @override
+  String get fitComponentDiversification => 'Effect on your mix';
+
+  @override
+  String get fitComponentConcentration => 'Share of your portfolio';
+
+  @override
+  String get fitComponentVolatility => 'How much it moved';
+
+  @override
+  String get fitUnmeasured => 'Not measured';
+
+  @override
+  String fitVolatilityObserved(String pct) {
+    return 'Moved $pct% a year';
+  }
+
+  @override
+  String get fitCaveatShortWindow =>
+      'Measured over a short window — we don’t have much price history yet.';
+
+  @override
+  String get fitReasonNoProfile =>
+      'You haven’t answered the risk questionnaire yet.';
+
+  @override
+  String get fitReasonClassNotInPlan =>
+      'Your profile doesn’t allocate anything to this kind of asset.';
+
+  @override
+  String get fitReasonClassCore =>
+      'This is the kind of asset your profile leans on most.';
+
+  @override
+  String get fitReasonClassSupporting =>
+      'This kind of asset has a place in your plan, with a smaller weight.';
+
+  @override
+  String get fitReasonNoGoal =>
+      'This purchase isn’t tied to a goal, so there’s no deadline to measure against.';
+
+  @override
+  String get fitReasonHorizonComfortable =>
+      'There’s plenty of time before your deadline.';
+
+  @override
+  String get fitReasonHorizonTight =>
+      'There’s enough time, but not much margin.';
+
+  @override
+  String get fitReasonHorizonTooShort =>
+      'Your deadline arrives before this kind of asset usually has time to recover.';
+
+  @override
+  String get fitReasonNoPortfolio =>
+      'You don’t hold anything yet, so there’s no mix to compare against.';
+
+  @override
+  String get fitReasonFillsGap =>
+      'This purchase moves you toward the mix you chose.';
+
+  @override
+  String get fitReasonNearTarget =>
+      'This lands a little above your target for this kind of asset.';
+
+  @override
+  String get fitReasonOverTarget =>
+      'This pushes you well past your target for this kind of asset.';
+
+  @override
+  String get fitReasonConcentrationLow =>
+      'This stays a small part of everything you own.';
+
+  @override
+  String get fitReasonConcentrationMid =>
+      'This position would be big enough to move your portfolio on its own.';
+
+  @override
+  String get fitReasonConcentrationHigh =>
+      'Much of what you own would ride on this one asset.';
+
+  @override
+  String get fitReasonNoHistory =>
+      'We don’t have enough price history to measure this yet.';
+
+  @override
+  String get fitReasonVolCalm =>
+      'It moved less than others of its kind usually do.';
+
+  @override
+  String get fitReasonVolTypical =>
+      'It moved about as much as others of its kind usually do.';
+
+  @override
+  String get fitReasonVolElevated =>
+      'It moved noticeably more than others of its kind.';
+
+  @override
+  String get fitReasonVolExtreme =>
+      'It moved so much that its category understates the risk.';
 }

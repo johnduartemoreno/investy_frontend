@@ -551,5 +551,78 @@
   },
   "tradingSellTooSmall": "Esta venta no cubre sus comisiones. Vendé un poco más.",
   "onboardCurrencyTitle": "Elegí tu moneda",
-  "onboardCurrencyBody": "Vas a ver tus saldos y precios en esta moneda. No se puede cambiar después."
+  "onboardCurrencyBody": "Vas a ver tus saldos y precios en esta moneda. No se puede cambiar después.",
+  "fitTitle": "Qué tan bien encaja con vos",
+  "fitWhy": "Ver por qué",
+  "fitHide": "Ocultar",
+  "fitScoreOutOf": "{score} de 100",
+  "@fitScoreOutOf": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "fitConfidence": "Confianza: {pct}%",
+  "@fitConfidence": {
+    "placeholders": {
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
+  "fitForGoal": "Evaluado contra tu meta «{goal}»",
+  "@fitForGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "fitNoGoal": "Sin meta asignada",
+  "fitCantAssessTitle": "Todavía no podemos evaluar esto",
+  "fitCantAssessBody": "Un puntaje de encaje es una afirmación sobre tu situación, y no sabemos lo suficiente de ella como para hacerla.",
+  "fitAboutYouTitle": "Qué ayudaría",
+  "fitAboutOurDataTitle": "De nuestro lado",
+  "fitDisclaimer": "Esto describe cómo se relaciona una compra con lo que nos contaste. No es asesoramiento financiero.",
+  "fitLevelHigh": "Buen encaje",
+  "fitLevelMedium": "Encaje parcial",
+  "fitLevelLow": "Encaje bajo",
+  "fitCappedConcentration": "Baja porque esto quedaría siendo una parte grande de todo lo que tenés — aplica sea cual sea tu perfil de riesgo.",
+  "fitCappedHorizon": "Baja porque tu plazo llega antes de lo que este tipo de activo suele necesitar — aplica sea cual sea tu perfil de riesgo.",
+  "fitComponentProfile": "Encaja con tu perfil",
+  "fitComponentHorizon": "Tiempo hasta tu plazo",
+  "fitComponentDiversification": "Efecto en tu mezcla",
+  "fitComponentConcentration": "Peso en tu cartera",
+  "fitComponentVolatility": "Cuánto se movió",
+  "fitUnmeasured": "Sin medir",
+  "fitVolatilityObserved": "Se movió {pct}% al año",
+  "@fitVolatilityObserved": {
+    "placeholders": {
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "fitCaveatShortWindow": "Medido sobre una ventana corta — todavía no tenemos mucho historial de precios.",
+  "fitReasonNoProfile": "Todavía no respondiste el cuestionario de riesgo.",
+  "fitReasonClassNotInPlan": "Tu perfil no asigna nada a este tipo de activo.",
+  "fitReasonClassCore": "Es el tipo de activo en el que más se apoya tu perfil.",
+  "fitReasonClassSupporting": "Este tipo de activo tiene lugar en tu plan, con menos peso.",
+  "fitReasonNoGoal": "Esta compra no está asignada a una meta, así que no hay plazo contra el cual medirla.",
+  "fitReasonHorizonComfortable": "Sobra tiempo antes de tu plazo.",
+  "fitReasonHorizonTight": "El tiempo alcanza, pero sin mucho margen.",
+  "fitReasonHorizonTooShort": "Tu plazo llega antes de que este tipo de activo suela tener tiempo de recuperarse.",
+  "fitReasonNoPortfolio": "Todavía no tenés nada, así que no hay mezcla contra la cual comparar.",
+  "fitReasonFillsGap": "Esta compra te acerca a la mezcla que elegiste.",
+  "fitReasonNearTarget": "Queda un poco por encima de tu objetivo para este tipo de activo.",
+  "fitReasonOverTarget": "Te deja bastante por encima de tu objetivo para este tipo de activo.",
+  "fitReasonConcentrationLow": "Sigue siendo una parte chica de todo lo que tenés.",
+  "fitReasonConcentrationMid": "Esta posición quedaría lo bastante grande como para mover tu cartera sola.",
+  "fitReasonConcentrationHigh": "Buena parte de lo que tenés dependería de este único activo.",
+  "fitReasonNoHistory": "Todavía no tenemos suficiente historial de precios para medir esto.",
+  "fitReasonVolCalm": "Se movió menos de lo que suelen moverse los de su tipo.",
+  "fitReasonVolTypical": "Se movió más o menos lo que suelen moverse los de su tipo.",
+  "fitReasonVolElevated": "Se movió bastante más que otros de su tipo.",
+  "fitReasonVolExtreme": "Se movió tanto que su categoría se queda corta describiendo el riesgo."
 }
