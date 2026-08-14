@@ -59,6 +59,40 @@ Widget _subject(FitScoreModel fit) => MaterialApp(
     );
 
 void main() {
+  // The gap this pair of widgets closes, found in UAT on 2026-08-13: changing
+  // the goal re-fetches, and the card used to render only on `data` — so it
+  // vanished for the length of the round trip and came back. Nothing was
+  // broken, but a block of the screen disappearing under your finger reads as a
+  // bug, and a user who thinks the screen broke stops trusting the number when
+  // it returns.
+  testWidgets('el estado de carga mantiene el marco, sin veredicto viejo',
+      (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: Locale('es'),
+      home: Scaffold(body: FitScoreCardLoading()),
+    ));
+
+    expect(find.text('Qué tan bien encaja con vos'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    // Ningún veredicto: el anterior se calculó para otra meta.
+    expect(find.text('Ver por qué'), findsNothing);
+    expect(find.text('Buen encaje'), findsNothing);
+  });
+
+  testWidgets('si falla lo dice en una línea, no deja un hueco',
+      (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: Locale('es'),
+      home: Scaffold(body: FitScoreCardUnavailable()),
+    ));
+
+    expect(find.text('No pudimos evaluar esta compra ahora.'), findsOneWidget);
+  });
+
   // The hybrid presentation decided on 2026-08-11: colour and sentences in
   // front, the number behind "ver por qué". If the score leaked to the front of
   // the card, the screen would be making the stronger claim the decision was

@@ -1682,4 +1682,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fitReasonVolExtreme =>
       'It moved so much that its category understates the risk.';
+
+  @override
+  String get fitUnavailable => 'We couldn’t assess this purchase right now.';
 }

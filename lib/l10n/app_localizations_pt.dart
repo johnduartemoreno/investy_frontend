@@ -1687,4 +1687,7 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get fitReasonVolExtreme =>
       'Oscilou tanto que a sua categoria subestima o risco.';
+
+  @override
+  String get fitUnavailable => 'Não conseguimos avaliar esta compra agora.';
 }

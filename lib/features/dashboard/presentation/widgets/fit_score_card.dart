@@ -405,3 +405,77 @@ class _FitScoreCardState extends State<FitScoreCard> {
     }
   }
 }
+
+
+/// The card's frame while a new assessment is in flight.
+///
+/// Exists because the card used to render only on `data`: changing the goal
+/// re-fetches, and for the length of that round trip the card **vanished** and
+/// then came back. Nothing was wrong, but a block of the screen disappearing
+/// while you use a control reads as a bug — and a user who thinks the screen
+/// broke stops trusting the number when it returns.
+///
+/// It deliberately does not keep the previous verdict on screen. That answer
+/// was computed for a different goal, and showing it as if it still applied
+/// would be worse than showing nothing: it would be a confident, wrong
+/// statement about the purchase being composed right now.
+class FitScoreCardLoading extends StatelessWidget {
+  const FitScoreCardLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
+
+    return CustomCard(
+      padding: const EdgeInsets.all(AppDimens.spacingL),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(l10n.fitTitle,
+                style: theme.textTheme.titleSmall
+                    ?.copyWith(color: cs.onSurfaceVariant)),
+          ),
+          const SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Shown when the assessment could not be produced at all.
+///
+/// Says so in one line rather than leaving a hole in the layout. The purchase
+/// does not depend on this card, so the message is quiet — but silence here
+/// would be indistinguishable from the bug this pair of widgets exists to fix.
+class FitScoreCardUnavailable extends StatelessWidget {
+  const FitScoreCardUnavailable({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
+
+    return CustomCard(
+      padding: const EdgeInsets.all(AppDimens.spacingL),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.info_outline_rounded, size: 15, color: cs.onSurfaceVariant),
+          const SizedBox(width: AppDimens.spacingS),
+          Expanded(
+            child: Text(l10n.fitUnavailable,
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: cs.onSurfaceVariant)),
+          ),
+        ],
+      ),
+    );
+  }
+}

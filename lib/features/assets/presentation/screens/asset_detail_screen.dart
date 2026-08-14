@@ -402,19 +402,23 @@ class _FitSectionState extends ConsumerState<_FitSection> {
 
   @override
   Widget build(BuildContext context) {
-    // Absent while idle, in flight, or on error: a verdict about someone\'s
-    // money assembled from a failed request is worse than no verdict, and
-    // nothing else on this screen depends on it.
-    return ref.watch(fitScoreControllerProvider).maybeWhen(
-          // Same guard as the buy screen: the controller is shared, so a stale
-          // answer for another symbol must not render here.
-          data: (fit) => fit == null || fit.symbol != widget.symbol
-              ? const SizedBox.shrink()
-              : Padding(
-                  padding: const EdgeInsets.only(bottom: AppDimens.spacingL),
-                  child: FitScoreCard(fit: fit),
-                ),
-          orElse: () => const SizedBox.shrink(),
-        );
+    // Same guard as the buy screen: the controller is shared, so a stale answer
+    // for another symbol must never render here — it shows the loading frame
+    // instead, which is true (a fresh assessment is on its way) and does not
+    // leave a hole in the layout.
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppDimens.spacingL),
+      child: ref.watch(fitScoreControllerProvider).when(
+            data: (fit) {
+              if (fit == null) return const SizedBox.shrink();
+              if (fit.symbol != widget.symbol) {
+                return const FitScoreCardLoading();
+              }
+              return FitScoreCard(fit: fit);
+            },
+            loading: () => const FitScoreCardLoading(),
+            error: (_, __) => const FitScoreCardUnavailable(),
+          ),
+    );
   }
 }

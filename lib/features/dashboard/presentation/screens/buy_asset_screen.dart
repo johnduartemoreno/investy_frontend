@@ -190,20 +190,27 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
     });
   }
 
-  /// The fit card. Absent while idle or in flight, and absent on error too: a
-  /// verdict about someone's money assembled from a failed request would be
-  /// worse than no verdict, and the purchase does not depend on it.
+  /// The fit card, in its four states.
+  ///
+  /// Every state renders *something* once an asset and amount are chosen. The
+  /// first version rendered only on `data`, so changing the goal made the card
+  /// disappear for the length of the round trip and come back — nothing was
+  /// broken, but a block of the screen vanishing under your finger reads as a
+  /// bug (found in UAT, 2026-08-13).
   Widget _buildFitSection() {
     final expected = _selectedAsset?.symbol;
-    return ref.watch(fitScoreControllerProvider).maybeWhen(
-          // The controller is a single instance shared with the asset detail
-          // screen, so it can still be holding the previous symbol's answer.
-          // A verdict about the wrong asset, above a buy button, is not a
-          // cosmetic flicker. Found by the S19 audit, 2026-08-12.
-          data: (fit) => fit == null || fit.symbol != expected
-              ? const SizedBox.shrink()
-              : FitScoreCard(fit: fit),
-          orElse: () => const SizedBox.shrink(),
+    return ref.watch(fitScoreControllerProvider).when(
+          data: (fit) {
+            // The controller is a single instance shared with the asset detail
+            // screen, so it can still hold the previous symbol's answer. A
+            // verdict about the wrong asset, above a buy button, is not a
+            // cosmetic flicker. Found by the S19 audit, 2026-08-12.
+            if (fit == null) return const SizedBox.shrink();
+            if (fit.symbol != expected) return const FitScoreCardLoading();
+            return FitScoreCard(fit: fit);
+          },
+          loading: () => const FitScoreCardLoading(),
+          error: (_, __) => const FitScoreCardUnavailable(),
         );
   }
 

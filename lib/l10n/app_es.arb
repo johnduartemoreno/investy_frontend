@@ -624,5 +624,6 @@
   "fitReasonVolCalm": "Se movió menos de lo que suelen moverse los de su tipo.",
   "fitReasonVolTypical": "Se movió más o menos lo que suelen moverse los de su tipo.",
   "fitReasonVolElevated": "Se movió bastante más que otros de su tipo.",
-  "fitReasonVolExtreme": "Se movió tanto que su categoría se queda corta describiendo el riesgo."
+  "fitReasonVolExtreme": "Se movió tanto que su categoría se queda corta describiendo el riesgo.",
+  "fitUnavailable": "No pudimos evaluar esta compra ahora."
 }

@@ -624,5 +624,6 @@
   "fitReasonVolCalm": "Oscilou menos do que os do seu tipo costumam oscilar.",
   "fitReasonVolTypical": "Oscilou mais ou menos o que os do seu tipo costumam oscilar.",
   "fitReasonVolElevated": "Oscilou bem mais que outros do seu tipo.",
-  "fitReasonVolExtreme": "Oscilou tanto que a sua categoria subestima o risco."
+  "fitReasonVolExtreme": "Oscilou tanto que a sua categoria subestima o risco.",
+  "fitUnavailable": "Não conseguimos avaliar esta compra agora."
 }

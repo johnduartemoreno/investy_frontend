@@ -3141,6 +3141,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'It moved so much that its category understates the risk.'**
   String get fitReasonVolExtreme;
+
+  /// No description provided for @fitUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t assess this purchase right now.'**
+  String get fitUnavailable;
 }
 
 class _AppLocalizationsDelegate
