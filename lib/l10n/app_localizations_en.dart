@@ -1685,4 +1685,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fitUnavailable => 'We couldn’t assess this purchase right now.';
+
+  @override
+  String get fitCappedClassNotInPlan =>
+      'Held down because your profile allocates nothing to this kind of asset. Changing your risk profile is what changes this.';
 }

@@ -324,6 +324,8 @@ class _FitScoreCardState extends State<FitScoreCard> {
         return l10n.fitCappedConcentration;
       case 'horizon':
         return l10n.fitCappedHorizon;
+      case 'class_not_in_plan':
+        return l10n.fitCappedClassNotInPlan;
       default:
         return '';
     }

@@ -1692,4 +1692,8 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get fitUnavailable => 'No pudimos evaluar esta compra ahora.';
+
+  @override
+  String get fitCappedClassNotInPlan =>
+      'Baja porque tu perfil no destina nada a este tipo de activo. Lo que cambia esto es cambiar tu perfil de riesgo.';
 }

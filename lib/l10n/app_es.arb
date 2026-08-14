@@ -625,5 +625,6 @@
   "fitReasonVolTypical": "Se movió más o menos lo que suelen moverse los de su tipo.",
   "fitReasonVolElevated": "Se movió bastante más que otros de su tipo.",
   "fitReasonVolExtreme": "Se movió tanto que su categoría se queda corta describiendo el riesgo.",
-  "fitUnavailable": "No pudimos evaluar esta compra ahora."
+  "fitUnavailable": "No pudimos evaluar esta compra ahora.",
+  "fitCappedClassNotInPlan": "Baja porque tu perfil no destina nada a este tipo de activo. Lo que cambia esto es cambiar tu perfil de riesgo."
 }

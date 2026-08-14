@@ -3147,6 +3147,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We couldn’t assess this purchase right now.'**
   String get fitUnavailable;
+
+  /// No description provided for @fitCappedClassNotInPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Held down because your profile allocates nothing to this kind of asset. Changing your risk profile is what changes this.'**
+  String get fitCappedClassNotInPlan;
 }
 
 class _AppLocalizationsDelegate

@@ -702,5 +702,6 @@
   "fitReasonVolTypical": "It moved about as much as others of its kind usually do.",
   "fitReasonVolElevated": "It moved noticeably more than others of its kind.",
   "fitReasonVolExtreme": "It moved so much that its category understates the risk.",
-  "fitUnavailable": "We couldn’t assess this purchase right now."
+  "fitUnavailable": "We couldn’t assess this purchase right now.",
+  "fitCappedClassNotInPlan": "Held down because your profile allocates nothing to this kind of asset. Changing your risk profile is what changes this."
 }
