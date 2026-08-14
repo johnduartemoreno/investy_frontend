@@ -406,7 +406,9 @@ class _FitSectionState extends ConsumerState<_FitSection> {
     // money assembled from a failed request is worse than no verdict, and
     // nothing else on this screen depends on it.
     return ref.watch(fitScoreControllerProvider).maybeWhen(
-          data: (fit) => fit == null
+          // Same guard as the buy screen: the controller is shared, so a stale
+          // answer for another symbol must not render here.
+          data: (fit) => fit == null || fit.symbol != widget.symbol
               ? const SizedBox.shrink()
               : Padding(
                   padding: const EdgeInsets.only(bottom: AppDimens.spacingL),

@@ -41,10 +41,9 @@ Widget _subject() {
       fxRateProvider.overrideWith((ref) async => 1.0),
       assetHistoryProvider('AAPL', '1M').overrideWith((ref) async => _history),
       // The Fit Score section (S19-G7) reads FirebaseAuth for the user id, and
-      // Firebase is not initialised in widget tests. Overridden to stay idle:
-      // this file is about the chart and the position, and the fit card has its
-      // own test.
-      fitScoreControllerProvider.overrideWith(_IdleFitScoreController.new),
+      // Firebase is not initialised in widget tests. The double records the
+      // call rather than swallowing it — see the class comment.
+      fitScoreControllerProvider.overrideWith(_RecordingFitScoreController.new),
     ],
     child: const MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -56,6 +55,24 @@ Widget _subject() {
 
 void main() {
   group('AssetDetailScreen', () {
+    // The asset detail screen has no purchase in progress, so it asks about the
+    // position as it stands — amount zero. Nothing asserted this before, which
+    // is half of why the S19 audit's finding went unnoticed: the real controller
+    // rejected zero and the card silently never appeared.
+    testWidgets('pide el fit de la posición actual, con monto cero',
+        (tester) async {
+      _RecordingFitScoreController.lastAmountCents = null;
+      _RecordingFitScoreController.lastSymbol = null;
+
+      await tester.pumpWidget(_subject());
+      await tester.pumpAndSettle();
+
+      expect(_RecordingFitScoreController.lastSymbol, 'AAPL');
+      expect(_RecordingFitScoreController.lastAmountCents, 0,
+          reason: 'un monto inventado produciría un veredicto sobre una compra '
+              'que nadie está haciendo');
+    });
+
     testWidgets('renders header, position card and Buy/Sell actions',
         (tester) async {
       await tester.pumpWidget(_subject());
@@ -85,7 +102,7 @@ void main() {
             fxRateProvider.overrideWith((ref) async => 1.0),
             assetHistoryProvider('AAPL', '1M')
                 .overrideWith((ref) async => throw Exception('boom')),
-            fitScoreControllerProvider.overrideWith(_IdleFitScoreController.new),
+            fitScoreControllerProvider.overrideWith(_RecordingFitScoreController.new),
           ],
           child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -103,9 +120,18 @@ void main() {
   });
 }
 
-/// Stays in the idle state and never calls out, so the detail screen can be
-/// tested without Firebase or the network.
-class _IdleFitScoreController extends FitScoreController {
+/// Records what the screen asked for instead of calling out, so the detail
+/// screen can be tested without Firebase or the network.
+///
+/// It records rather than no-ops on purpose. The S19 audit found that the real
+/// controller refused `amountCents: 0` and the card therefore never rendered —
+/// and the earlier version of this double, whose `fetch` was an empty `async {}`,
+/// would have passed identically with or without that defect. A double that
+/// swallows the call cannot notice the call being wrong.
+class _RecordingFitScoreController extends FitScoreController {
+  static int? lastAmountCents;
+  static String? lastSymbol;
+
   @override
   FutureOr<FitScoreModel?> build() => null;
 
@@ -115,5 +141,8 @@ class _IdleFitScoreController extends FitScoreController {
     required int amountCents,
     String? goalId,
     String language = 'en',
-  }) async {}
+  }) async {
+    lastSymbol = symbol;
+    lastAmountCents = amountCents;
+  }
 }

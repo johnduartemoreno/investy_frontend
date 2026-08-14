@@ -97,6 +97,12 @@ class _FitScoreCardState extends State<FitScoreCard> {
       const SizedBox(height: AppDimens.spacingM),
       _toggle(theme, l10n),
       if (_expanded) ..._breakdown(theme, cs, l10n, fit),
+      // The disclaimer lives here, outside the collapsed section. It used to sit
+      // inside the breakdown, which meant the one case where it matters — a
+      // verdict about a purchase, right above the buy button — was the only
+      // case where it was hidden. Found by the S19 audit, 2026-08-12.
+      const SizedBox(height: AppDimens.spacingM),
+      _disclaimer(theme, cs, l10n),
     ];
   }
 
@@ -106,7 +112,12 @@ class _FitScoreCardState extends State<FitScoreCard> {
       AppLocalizations l10n, FitScoreModel fit) {
     final scored = fit.components.all.where((c) => c.scored).toList()
       ..sort((a, b) => (a.score! - 50).abs().compareTo((b.score! - 50).abs()));
-    final headline = scored.reversed.take(2);
+    // A reason the app does not know yet renders as nothing, so it must be
+    // dropped here rather than laid out — an empty Text still takes its padding,
+    // which is a visible gap where the sentence should have been.
+    final headline = scored.reversed
+        .where((c) => _reasonText(l10n, c.reason).isNotEmpty)
+        .take(2);
 
     return [
       for (final c in headline)
@@ -211,8 +222,6 @@ class _FitScoreCardState extends State<FitScoreCard> {
       Text(l10n.fitConfidence(fit.confidence.pct),
           style: theme.textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
       ..._ourDataNote(theme, cs, l10n, fit),
-      const SizedBox(height: AppDimens.spacingM),
-      _disclaimer(theme, cs, l10n),
     ];
   }
 

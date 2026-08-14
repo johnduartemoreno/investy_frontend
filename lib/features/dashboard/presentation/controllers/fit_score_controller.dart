@@ -35,8 +35,13 @@ class FitScoreController extends _$FitScoreController {
     String? goalId,
     String language = 'en',
   }) async {
+    // Zero is a legitimate amount and a different question — "how does what I
+    // already hold fit me?", which is what the asset detail screen asks. This
+    // guard read `<= 0` and silently returned to idle, so that card never
+    // rendered at all: the backend accepted zero, the client refused to ask.
+    // Found by the S19 audit, 2026-08-12.
     final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId == null || symbol.isEmpty || amountCents <= 0) {
+    if (userId == null || symbol.isEmpty || amountCents < 0) {
       state = const AsyncData(null);
       return;
     }

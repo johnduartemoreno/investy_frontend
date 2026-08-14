@@ -147,20 +147,63 @@ void main() {
     expect(find.text(prose), findsOneWidget);
   });
 
-  // Present on both branches of the card: the framing this sprint settled on is
-  // that Investy describes a relationship, never what to do about it.
-  testWidgets('el descargo legal aparece con y sin puntaje', (tester) async {
+  // Present on both branches, and — the part the original test got wrong —
+  // visible WITHOUT expanding. The disclaimer used to live inside the breakdown,
+  // so the one case where it matters (a verdict about a purchase, right above
+  // the buy button) was the only case where it was hidden. The old test tapped
+  // "Ver por qué" before asserting, so it promised more than it checked.
+  // Found by the S19 audit, 2026-08-12.
+  testWidgets('el descargo legal se ve sin abrir "ver por qué"',
+      (tester) async {
     const disclaimer =
         'Esto describe cómo se relaciona una compra con lo que nos contaste. No es asesoramiento financiero.';
 
-    await tester.pumpWidget(_subject(_fit(score: null, showScore: false,
-        confidencePct: 30, aboutYou: const ['no_profile'])));
+    // Con puntaje, vista por defecto: sin tocar nada.
+    await tester.pumpWidget(_subject(_fit()));
     expect(find.text(disclaimer), findsOneWidget);
 
-    await tester.pumpWidget(_subject(_fit()));
+    // Y al abrir el desglose sigue habiendo exactamente uno, no dos.
     await tester.tap(find.text('Ver por qué'));
     await tester.pumpAndSettle();
     expect(find.text(disclaimer), findsOneWidget);
+
+    // Sin puntaje también.
+    await tester.pumpWidget(_subject(_fit(
+        score: null,
+        showScore: false,
+        confidencePct: 30,
+        aboutYou: const ['no_profile'])));
+    expect(find.text(disclaimer), findsOneWidget);
+  });
+
+  // A reason key the app does not know yet renders as nothing — but an empty
+  // Text still takes its padding, which is a visible gap where a sentence
+  // should have been.
+  testWidgets('una reason key desconocida no deja un hueco', (tester) async {
+    await tester.pumpWidget(_subject(FitScoreModel.fromJson({
+      'symbol': 'AAPL',
+      'assetName': 'Apple Inc.',
+      'assetClass': 'stock',
+      'score': 70,
+      'showScore': true,
+      'components': {
+        'profile': _component(70, 'reason_del_futuro'),
+        'horizon': _component(70, 'reason_del_futuro'),
+        'diversification': _component(70, 'reason_del_futuro'),
+        'concentration': _component(70, 'reason_del_futuro'),
+        'volatility': _component(70, 'reason_del_futuro'),
+      },
+      'confidence': {
+        'pct': 100,
+        'level': 'confidence_high',
+        'aboutYou': const [],
+        'aboutOurData': const [],
+      },
+    })));
+
+    // Ni la key cruda en pantalla, ni un LeftAccentBox vacío ocupando lugar.
+    expect(find.text('reason_del_futuro'), findsNothing);
+    expect(find.text(''), findsNothing);
   });
 
   // The observed figure means more than its score: "moved 45% a year, we expect

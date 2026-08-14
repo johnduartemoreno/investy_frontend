@@ -194,11 +194,17 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
   /// verdict about someone's money assembled from a failed request would be
   /// worse than no verdict, and the purchase does not depend on it.
   Widget _buildFitSection() {
-    final fitAsync = ref.watch(fitScoreControllerProvider);
-    return fitAsync.maybeWhen(
-      data: (fit) => fit == null ? const SizedBox.shrink() : FitScoreCard(fit: fit),
-      orElse: () => const SizedBox.shrink(),
-    );
+    final expected = _selectedAsset?.symbol;
+    return ref.watch(fitScoreControllerProvider).maybeWhen(
+          // The controller is a single instance shared with the asset detail
+          // screen, so it can still be holding the previous symbol's answer.
+          // A verdict about the wrong asset, above a buy button, is not a
+          // cosmetic flicker. Found by the S19 audit, 2026-08-12.
+          data: (fit) => fit == null || fit.symbol != expected
+              ? const SizedBox.shrink()
+              : FitScoreCard(fit: fit),
+          orElse: () => const SizedBox.shrink(),
+        );
   }
 
   /// Debounced so a quote is requested when the user pauses, not per keystroke.
