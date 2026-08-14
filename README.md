@@ -81,8 +81,34 @@ Add `--dart-define=GIT_SHA=$(git rev-parse --short HEAD)` to stamp the build SHA
 | `owlHistoryProvider` | `GET /recommendations/history` | Persisted Owl AI sessions (B29) |
 | `alertsProvider` | `GET /price-alerts` | User's price alerts list (B12) |
 | `AlertFormController` | `POST` / `DELETE /price-alerts` | Create / delete a price alert (B12) |
+| `FitScoreController` | `GET /assets/{symbol}/fit` | Fit Score of a purchase (S19) — imperative, debounced |
 | `BuyAssetController` | `POST /transactions` | BUY order |
 | `SellAssetController` | `POST /transactions` | SELL order |
+
+## Fit Score card (S19)
+
+`FitScoreCard` (`lib/features/dashboard/presentation/widgets/fit_score_card.dart`)
+shows how well a purchase suits **this** user. It appears on the buy screen —
+below the goal selector, above the confirm button — and on asset detail, where it
+assesses the position already held (`amountCents: 0`).
+
+**The card computes nothing.** Every score, threshold and caveat arrives decided
+from the backend; the widget maps `reason` keys to translated sentences. A key the
+app does not know yet renders as nothing, never as the raw key.
+
+Three rules it exists to enforce, each with a widget test:
+
+- **Colour and sentences in front, the number behind "ver por qué"** (decision of
+  2026-08-11). A score presiding over the screen claims a precision five
+  components over a few weeks of data do not have, and reads as advice.
+- **A component with no data reads "sin medir", never `0`.** A zero says the fit
+  is bad. This is the last layer where that distinction can be lost.
+- **The disclaimer is visible without expanding anything**, on both branches of
+  the card — including the one where a verdict sits above a buy button.
+
+Below the confidence threshold the backend does not send a score at all, and the
+card shows what is missing instead: the user's gaps under *"Qué ayudaría"* and
+ours under *"De nuestro lado"*, never run together.
 
 ## Owl AI Advisor
 
