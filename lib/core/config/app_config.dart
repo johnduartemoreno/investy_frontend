@@ -50,4 +50,11 @@ class AppConfig {
   static bool get showBuildBadge => environment != AppEnvironment.prod;
 
   static const String appName = 'Investy';
+
+  /// Support mailbox shown in Help and About. Lives here, not inline in the
+  /// screens, because the address it replaced (`support@investy.app`) was a
+  /// domain we do not own — the same mistake H07 fixed in [apiBaseUrl], which
+  /// survived in the two screens that actually show it to the user because
+  /// each held its own copy.
+  static const String supportEmail = 'support@investyapp.com';
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/config/app_config.dart';
 import '../../../core/presentation/widgets/custom_card.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../l10n/app_localizations.dart';
@@ -59,7 +60,7 @@ class HelpScreen extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: Icon(Icons.email_outlined, color: colorScheme.primary),
-            title: const Text('support@investy.app'),
+            title: const Text(AppConfig.supportEmail),
             subtitle: Text(l10n.helpReplyTime,
                 style: textTheme.bodySmall
                     ?.copyWith(color: colorScheme.onSurfaceVariant)),

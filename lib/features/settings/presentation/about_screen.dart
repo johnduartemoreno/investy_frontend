@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -59,7 +60,7 @@ class AboutScreen extends StatelessWidget {
             const Divider(height: 1),
             _AboutTile(
               icon: Icons.email_outlined,
-              label: 'support@investy.app',
+              label: AppConfig.supportEmail,
               onTap: () {},
             ),
           ],
