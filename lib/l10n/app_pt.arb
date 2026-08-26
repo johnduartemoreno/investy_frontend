@@ -615,6 +615,7 @@
   "fitReasonHorizonTight": "O tempo dá, mas sem muita margem.",
   "fitReasonHorizonTooShort": "Seu prazo chega antes de esse tipo de ativo costumar ter tempo de se recuperar.",
   "fitReasonNoPortfolio": "Você ainda não tem nada, então não há composição para comparar.",
+  "fitReasonNoPortfolioWeight": "Você ainda não tem nada, então não há um total sobre o qual pesar esta posição.",
   "fitReasonFillsGap": "Esta compra aproxima você da composição que escolheu.",
   "fitReasonNearTarget": "Fica um pouco acima do seu alvo para esse tipo de ativo.",
   "fitReasonOverTarget": "Deixa você bem acima do seu alvo para esse tipo de ativo.",

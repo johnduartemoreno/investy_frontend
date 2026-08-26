@@ -1644,6 +1644,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'You don’t hold anything yet, so there’s no mix to compare against.';
 
   @override
+  String get fitReasonNoPortfolioWeight =>
+      'You don’t hold anything yet, so there’s no total for this position to weigh against.';
+
+  @override
   String get fitReasonFillsGap =>
       'This purchase moves you toward the mix you chose.';
 

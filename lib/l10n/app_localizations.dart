@@ -3082,6 +3082,12 @@ abstract class AppLocalizations {
   /// **'You don’t hold anything yet, so there’s no mix to compare against.'**
   String get fitReasonNoPortfolio;
 
+  /// No description provided for @fitReasonNoPortfolioWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'You don’t hold anything yet, so there’s no total for this position to weigh against.'**
+  String get fitReasonNoPortfolioWeight;
+
   /// No description provided for @fitReasonFillsGap.
   ///
   /// In en, this message translates to:

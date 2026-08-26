@@ -391,7 +391,14 @@ class _FitScoreCardState extends State<FitScoreCard> {
       case 'horizon_too_short':
         return l10n.fitReasonHorizonTooShort;
       case 'no_portfolio':
-        return l10n.fitReasonNoPortfolio;
+        // Same shape as class_not_in_plan above: diversification and
+        // concentration both report it, and one sentence cannot serve both.
+        // "no mix to compare against" is right under "effect on your mix" and
+        // plainly wrong under "weight in your portfolio", which does not
+        // measure the mix at all.
+        return kind == FitComponentKind.concentration
+            ? l10n.fitReasonNoPortfolioWeight
+            : l10n.fitReasonNoPortfolio;
       case 'fills_gap':
         return l10n.fitReasonFillsGap;
       case 'near_target':
