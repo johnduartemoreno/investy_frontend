@@ -1612,6 +1612,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your profile doesn’t allocate anything to this kind of asset.';
 
   @override
+  String get fitReasonClassNotInPlanMix =>
+      'It moves you away from the mix you chose: your plan allocates nothing to this kind of asset.';
+
+  @override
   String get fitReasonClassCore =>
       'This is the kind of asset your profile leans on most.';
 

@@ -3034,6 +3034,12 @@ abstract class AppLocalizations {
   /// **'Your profile doesn’t allocate anything to this kind of asset.'**
   String get fitReasonClassNotInPlan;
 
+  /// No description provided for @fitReasonClassNotInPlanMix.
+  ///
+  /// In en, this message translates to:
+  /// **'It moves you away from the mix you chose: your plan allocates nothing to this kind of asset.'**
+  String get fitReasonClassNotInPlanMix;
+
   /// No description provided for @fitReasonClassCore.
   ///
   /// In en, this message translates to:

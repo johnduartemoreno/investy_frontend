@@ -116,7 +116,7 @@ class _FitScoreCardState extends State<FitScoreCard> {
     // dropped here rather than laid out — an empty Text still takes its padding,
     // which is a visible gap where the sentence should have been.
     final headline = scored.reversed
-        .where((c) => _reasonText(l10n, c.reason).isNotEmpty)
+        .where((c) => _reasonText(l10n, c.reason, kind: c.kind).isNotEmpty)
         .take(2);
 
     return [
@@ -124,7 +124,7 @@ class _FitScoreCardState extends State<FitScoreCard> {
         Padding(
           padding: const EdgeInsets.only(bottom: AppDimens.spacingS),
           child: LeftAccentBox(
-            child: Text(_reasonText(l10n, c.reason),
+            child: Text(_reasonText(l10n, c.reason, kind: c.kind),
                 style: theme.textTheme.bodySmall
                     ?.copyWith(color: cs.onSurface, height: 1.4)),
           ),
@@ -257,7 +257,7 @@ class _FitScoreCardState extends State<FitScoreCard> {
             ],
           ),
           const SizedBox(height: AppDimens.spacingXS),
-          Text(_reasonText(l10n, c.reason),
+          Text(_reasonText(l10n, c.reason, kind: c.kind),
               style: theme.textTheme.bodySmall
                   ?.copyWith(color: cs.onSurfaceVariant, height: 1.35)),
           if (showVolatility)
@@ -360,12 +360,24 @@ class _FitScoreCardState extends State<FitScoreCard> {
   /// An unknown key renders as nothing rather than as the raw key. A new reason
   /// shipped by the server before the app knows it would otherwise print
   /// `class_not_in_plan` at someone, which is worse than a shorter card.
-  String _reasonText(AppLocalizations l10n, String reason) {
+  ///
+  /// [kind] disambiguates a reason key that two components legitimately share.
+  /// `class_not_in_plan` is returned for both profile and diversification —
+  /// deliberately, per `entity.go:142-147`: "does it belong?" and "how far does
+  /// it push you off?" are different questions that happen to have the same
+  /// answer. That comment says G1 states it "in its own words", and until now it
+  /// did not: both rows rendered the same sentence, so the breakdown showed one
+  /// line twice and read like a rendering fault. Callers without a component —
+  /// the confidence lists — pass nothing and get the profile wording.
+  String _reasonText(AppLocalizations l10n, String reason,
+      {FitComponentKind? kind}) {
     switch (reason) {
       case 'no_profile':
         return l10n.fitReasonNoProfile;
       case 'class_not_in_plan':
-        return l10n.fitReasonClassNotInPlan;
+        return kind == FitComponentKind.diversification
+            ? l10n.fitReasonClassNotInPlanMix
+            : l10n.fitReasonClassNotInPlan;
       case 'class_core':
         return l10n.fitReasonClassCore;
       case 'class_supporting':

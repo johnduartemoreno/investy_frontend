@@ -684,6 +684,7 @@
   "fitCaveatShortWindow": "Measured over a short window — we don’t have much price history yet.",
   "fitReasonNoProfile": "You haven’t answered the risk questionnaire yet.",
   "fitReasonClassNotInPlan": "Your profile doesn’t allocate anything to this kind of asset.",
+  "fitReasonClassNotInPlanMix": "It moves you away from the mix you chose: your plan allocates nothing to this kind of asset.",
   "fitReasonClassCore": "This is the kind of asset your profile leans on most.",
   "fitReasonClassSupporting": "This kind of asset has a place in your plan, with a smaller weight.",
   "fitReasonNoGoal": "This purchase isn’t tied to a goal, so there’s no deadline to measure against.",

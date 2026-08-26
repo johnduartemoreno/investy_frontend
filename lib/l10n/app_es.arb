@@ -607,6 +607,7 @@
   "fitCaveatShortWindow": "Medido sobre una ventana corta — todavía no tenemos mucho historial de precios.",
   "fitReasonNoProfile": "Todavía no respondiste el cuestionario de riesgo.",
   "fitReasonClassNotInPlan": "Tu perfil no asigna nada a este tipo de activo.",
+  "fitReasonClassNotInPlanMix": "Te aleja de la mezcla que elegiste: tu plan no destina nada a este tipo de activo.",
   "fitReasonClassCore": "Es el tipo de activo en el que más se apoya tu perfil.",
   "fitReasonClassSupporting": "Este tipo de activo tiene lugar en tu plan, con menos peso.",
   "fitReasonNoGoal": "Esta compra no está asignada a una meta, así que no hay plazo contra el cual medirla.",

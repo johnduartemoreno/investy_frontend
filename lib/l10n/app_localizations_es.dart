@@ -1620,6 +1620,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Tu perfil no asigna nada a este tipo de activo.';
 
   @override
+  String get fitReasonClassNotInPlanMix =>
+      'Te aleja de la mezcla que elegiste: tu plan no destina nada a este tipo de activo.';
+
+  @override
   String get fitReasonClassCore =>
       'Es el tipo de activo en el que más se apoya tu perfil.';
 

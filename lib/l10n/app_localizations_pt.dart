@@ -1619,6 +1619,10 @@ class AppLocalizationsPt extends AppLocalizations {
       'Seu perfil não destina nada a esse tipo de ativo.';
 
   @override
+  String get fitReasonClassNotInPlanMix =>
+      'Afasta você da mistura que escolheu: o seu plano não destina nada a esse tipo de ativo.';
+
+  @override
   String get fitReasonClassCore =>
       'É o tipo de ativo em que o seu perfil mais se apoia.';
 
