@@ -20,6 +20,9 @@ FitScoreModel _fit({
   int confidencePct = 100,
   List<String> aboutYou = const [],
   List<String> aboutOurData = const [],
+  Map<String, dynamic>? profile,
+  Map<String, dynamic>? diversification,
+  Map<String, dynamic>? concentration,
 }) {
   return FitScoreModel.fromJson({
     'symbol': 'AAPL',
@@ -32,10 +35,10 @@ FitScoreModel _fit({
     'explanation': explanation,
     'volatilityPct': volatilityPct,
     'components': {
-      'profile': _component(90, 'class_core'),
+      'profile': profile ?? _component(90, 'class_core'),
       'horizon': _component(80, 'horizon_comfortable'),
-      'diversification': _component(75, 'fills_gap'),
-      'concentration': _component(85, 'concentration_low'),
+      'diversification': diversification ?? _component(75, 'fills_gap'),
+      'concentration': concentration ?? _component(85, 'concentration_low'),
       'volatility': volatility ?? _component(70, 'vol_typical'),
     },
     'confidence': {
@@ -51,10 +54,10 @@ FitScoreModel _fit({
   });
 }
 
-Widget _subject(FitScoreModel fit) => MaterialApp(
+Widget _subject(FitScoreModel fit, {String lang = 'es'}) => MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('es'),
+      locale: Locale(lang),
       home: Scaffold(body: SingleChildScrollView(child: FitScoreCard(fit: fit))),
     );
 
@@ -263,5 +266,97 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('ventana corta'), findsOneWidget);
+  });
+
+  // Both defects below were found in the S19 UAT on 2026-08-25, one after the
+  // other: the second only came to light because the first had already been
+  // fixed. A reason key that more than one component can emit needs one sentence
+  // per component, and there are two such keys. These tests exist so the next
+  // shared key is not shipped sharing a sentence.
+  group('una clave de razón compartida no puede compartir la oración', () {
+    Future<List<String>> reasonsOf(WidgetTester tester, FitScoreModel fit,
+        List<String> labels) async {
+      await tester.pumpWidget(_subject(fit));
+      await tester.pumpAndSettle();
+      await tester.tap(find.textContaining('Ver por qué'));
+      await tester.pumpAndSettle();
+
+      // Row order in _componentRow is label, then score (or "sin medir"), then
+      // the sentence — so the reason is two Texts after the label, not one.
+      final texts = find
+          .byType(Text)
+          .evaluate()
+          .map((e) => (e.widget as Text).data ?? '')
+          .toList();
+      return labels.map((label) {
+        final i = texts.indexWhere((t) => t.contains(label));
+        expect(i, isNot(-1), reason: 'no se encontró la fila "$label"');
+        return texts[i + 2];
+      }).toList();
+    }
+
+    testWidgets('class_not_in_plan: perfil y mezcla lo dicen distinto',
+        (tester) async {
+      final fit = _fit(
+        profile: _component(0, 'class_not_in_plan'),
+        diversification: _component(0, 'class_not_in_plan'),
+      );
+      final r = await reasonsOf(tester, fit, ['Encaja con tu perfil', 'Efecto en tu mezcla']);
+
+      expect(r[0], isNotEmpty);
+      expect(r[1], isNotEmpty);
+      expect(r[0], isNot(equals(r[1])),
+          reason: 'las dos filas mostraban la misma oración (UAT 2026-08-25)');
+      // The mix row must answer the mix question, not repeat the profile one.
+      expect(r[1].toLowerCase(), contains('mezcla'));
+    });
+
+    testWidgets('no_portfolio: mezcla y peso lo dicen distinto', (tester) async {
+      final fit = _fit(
+        diversification: _component(null, 'no_portfolio'),
+        concentration: _component(null, 'no_portfolio'),
+      );
+      final r = await reasonsOf(tester, fit, ['Efecto en tu mezcla', 'Peso en tu cartera']);
+
+      expect(r[0], isNot(equals(r[1])),
+          reason: 'las dos filas mostraban la misma oración (UAT 2026-08-25)');
+      // "no mix to compare against" under "weight in your portfolio" is not just
+      // repetitive, it is wrong: concentration does not measure the mix.
+      expect(r[1].toLowerCase(), isNot(contains('mezcla')));
+    });
+  });
+
+  // The physical-device pass is what would normally catch a translation that
+  // overflows its row, and it is the pass this sprint has not had. These run the
+  // card in all three languages at a narrow width so a long string fails here
+  // instead of on someone's phone.
+  group('el card se dibuja entero en los tres idiomas', () {
+    for (final lang in ['es', 'en', 'pt']) {
+      testWidgets('$lang: sin desbordes con el desglose abierto',
+          (tester) async {
+        tester.view.physicalSize = const Size(320 * 3, 900 * 3);
+        tester.view.devicePixelRatio = 3.0;
+        addTearDown(tester.view.reset);
+
+        final fit = _fit(
+          cappedBy: 'class_not_in_plan',
+          profile: _component(0, 'class_not_in_plan'),
+          diversification: _component(0, 'class_not_in_plan'),
+          concentration: _component(null, 'no_portfolio'),
+          volatilityPct: 41.2,
+          volatility: _component(100, 'vol_calm', caveat: 'short_window'),
+          aboutOurData: const ['no_history'],
+        );
+
+        await tester.pumpWidget(_subject(fit, lang: lang));
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+
+        await tester.tap(find.byType(GestureDetector).first);
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull,
+            reason: 'desborde de layout en "$lang" con el desglose abierto');
+      });
+    }
   });
 }
