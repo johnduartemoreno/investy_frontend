@@ -627,5 +627,5 @@
   "fitReasonVolElevated": "Oscilou bem mais que outros do seu tipo.",
   "fitReasonVolExtreme": "Oscilou tanto que a sua categoria subestima o risco.",
   "fitUnavailable": "Não conseguimos avaliar esta compra agora.",
-  "fitCappedClassNotInPlan": "Limitada porque o seu perfil não destina nada a esse tipo de ativo — é a mistura que você escolheu."
+  "fitCappedClassNotInPlan": "Limitada porque o seu perfil não destina nada a esse tipo de ativo — foi assim que você o definiu."
 }

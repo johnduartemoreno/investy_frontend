@@ -1697,5 +1697,5 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get fitCappedClassNotInPlan =>
-      'Limitada porque o seu perfil não destina nada a esse tipo de ativo — é a mistura que você escolheu.';
+      'Limitada porque o seu perfil não destina nada a esse tipo de ativo — foi assim que você o definiu.';
 }

@@ -704,5 +704,5 @@
   "fitReasonVolElevated": "It moved noticeably more than others of its kind.",
   "fitReasonVolExtreme": "It moved so much that its category understates the risk.",
   "fitUnavailable": "We couldn’t assess this purchase right now.",
-  "fitCappedClassNotInPlan": "Held down because your profile allocates nothing to this kind of asset — it is the mix you chose."
+  "fitCappedClassNotInPlan": "Held down because your profile allocates nothing to this kind of asset — that is how you set it."
 }
