@@ -96,6 +96,21 @@ assesses the position already held (`amountCents: 0`).
 from the backend; the widget maps `reason` keys to translated sentences. A key the
 app does not know yet renders as nothing, never as the raw key.
 
+**Two reason keys are emitted by more than one component, and each needs its own
+wording.** `_reasonText` therefore takes the `FitComponentKind` and picks:
+
+| key | emitted by | why one sentence cannot serve both |
+|-----|-----------|-----------------------------------|
+| `class_not_in_plan` | profile + diversification | "does it belong?" and "how far does it push you off?" are different questions. `entity.go:142-147` says G1 states it "in its own words" — that only became true once the key was split. |
+| `no_portfolio` | diversification + concentration | "no mix to compare against" is right under *effect on your mix* and **wrong** under *weight in your portfolio*, which does not measure the mix. |
+
+`no_profile` is also shared (profile + diversification) and is deliberately **not**
+split: it names what is missing without misdescribing either component.
+
+Both splits came out of the S19 UAT, one after the other — the second was found
+only because the first had already been fixed. **When splitting a shared reason
+key, sweep the whole family rather than the instance you happened to see.**
+
 Three rules it exists to enforce, each with a widget test:
 
 - **Colour and sentences in front, the number behind "ver por qué"** (decision of
