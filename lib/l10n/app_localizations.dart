@@ -3151,7 +3151,7 @@ abstract class AppLocalizations {
   /// No description provided for @fitCappedClassNotInPlan.
   ///
   /// In en, this message translates to:
-  /// **'Held down because your profile allocates nothing to this kind of asset. Changing your risk profile is what changes this.'**
+  /// **'Held down because your profile allocates nothing to this kind of asset — it is the mix you chose.'**
   String get fitCappedClassNotInPlan;
 }
 

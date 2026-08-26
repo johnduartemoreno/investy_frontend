@@ -1688,5 +1688,5 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fitCappedClassNotInPlan =>
-      'Held down because your profile allocates nothing to this kind of asset. Changing your risk profile is what changes this.';
+      'Held down because your profile allocates nothing to this kind of asset — it is the mix you chose.';
 }
