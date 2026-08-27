@@ -42,6 +42,7 @@ FitScoreModel _fit(String symbol, int score) => FitScoreModel.fromJson({
 class _ScriptedDataSource implements DashboardRemoteDataSource {
   final List<Completer<FitScoreModel>> pending = [];
   final List<int> amountsAsked = [];
+  final List<String> languagesAsked = [];
 
   @override
   Future<FitScoreModel> getFitScore(
@@ -52,13 +53,14 @@ class _ScriptedDataSource implements DashboardRemoteDataSource {
     String language = 'en',
   }) {
     amountsAsked.add(amountCents);
+    languagesAsked.add(language);
     final c = Completer<FitScoreModel>();
     pending.add(c);
     return c.future;
   }
 
   @override
-  noSuchMethod(Invocation invocation) =>
+  dynamic noSuchMethod(Invocation invocation) =>
       throw UnimplementedError('${invocation.memberName} not used by this test');
 }
 
@@ -139,5 +141,26 @@ void main() {
 
     // A purchase that was cleared must not repaint a verdict afterwards.
     expect(container.read(fitScoreControllerProvider('buy')).value, isNull);
+  });
+
+  // Found in UAT on a physical device, 2026-08-27: the whole screen turned
+  // Portuguese and the owl's paragraph stayed in Spanish, word for word. Every
+  // other string on the card is a compiled translation that rebuilds for free;
+  // the prose is written by the backend in the language we asked for, so it
+  // only changes if we ask again. The screens now listen for the transition —
+  // this pins the half of that contract the controller owns: the language it is
+  // handed is the language it asks for.
+  test('el idioma pedido es el que viaja al backend', () async {
+    final ctrl = container.read(fitScoreControllerProvider('detail').notifier);
+
+    unawaited(ctrl.fetch(symbol: 'BTC', amountCents: 0, language: 'es'));
+    remote.pending[0].complete(_fit('BTC', 25));
+    await settle();
+
+    unawaited(ctrl.fetch(symbol: 'BTC', amountCents: 0, language: 'pt'));
+    remote.pending[1].complete(_fit('BTC', 25));
+    await settle();
+
+    expect(remote.languagesAsked, ['es', 'pt']);
   });
 }

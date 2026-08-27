@@ -392,16 +392,34 @@ class _FitSectionState extends ConsumerState<_FitSection> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ref.read(fitScoreControllerProvider('detail').notifier).fetch(
-            symbol: widget.symbol,
-            amountCents: 0, // assess the holding as it stands, not a purchase
-            language: ref.read(localeNotifierProvider).languageCode,
-          );
+      _fetch();
     });
+  }
+
+  void _fetch() {
+    ref.read(fitScoreControllerProvider('detail').notifier).fetch(
+          symbol: widget.symbol,
+          amountCents: 0, // assess the holding as it stands, not a purchase
+          language: ref.read(localeNotifierProvider).languageCode,
+        );
   }
 
   @override
   Widget build(BuildContext context) {
+    // The owl's prose is written by the backend in the language we asked for,
+    // so unlike every other string on this screen it does not follow a locale
+    // change on its own: the rest of the card is compiled translations that
+    // rebuild for free, and the explanation just sits there in the previous
+    // language. Found in UAT on a physical device, 2026-08-27 — the whole
+    // screen turned Portuguese and the paragraph stayed in Spanish, word for
+    // word.
+    //
+    // `listen`, not `watch`: this must fire on the transition, not on every
+    // rebuild. Changing language is rare, so the extra request is too.
+    ref.listen(localeNotifierProvider, (prev, next) {
+      if (prev?.languageCode != next.languageCode) _fetch();
+    });
+
     // Same guard as the buy screen: the controller is shared, so a stale answer
     // for another symbol must never render here — it shows the loading frame
     // instead, which is true (a fresh assessment is on its way) and does not

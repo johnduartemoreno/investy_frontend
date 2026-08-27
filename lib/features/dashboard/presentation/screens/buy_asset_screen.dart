@@ -390,6 +390,19 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // The owl's prose comes from the backend in the language we asked for, so
+    // it does not follow a locale change the way the compiled strings around it
+    // do — without this the paragraph stays in the previous language while the
+    // rest of the screen switches. Same fix as the asset detail screen; found
+    // in UAT on a physical device, 2026-08-27.
+    //
+    // `listen`, not `watch`: it must fire on the transition, not on every
+    // rebuild. It reuses the debounced path so it obeys the same rules as any
+    // other input change.
+    ref.listen(localeNotifierProvider, (prev, next) {
+      if (prev?.languageCode != next.languageCode) _refreshFit();
+    });
+
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
