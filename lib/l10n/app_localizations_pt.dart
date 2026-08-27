@@ -1635,6 +1635,10 @@ class AppLocalizationsPt extends AppLocalizations {
       'Esta compra não está associada a uma meta, então não há prazo para comparar.';
 
   @override
+  String get fitReasonNoGoalHolding =>
+      'Esta posição não está associada a nenhuma meta, então não há prazo para comparar.';
+
+  @override
   String get fitReasonHorizonComfortable =>
       'Há bastante tempo antes do seu prazo.';
 
@@ -1656,6 +1660,10 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get fitReasonFillsGap =>
       'Esta compra aproxima você da composição que escolheu.';
+
+  @override
+  String get fitReasonFillsGapHolding =>
+      'Esta posição está dentro da composição que você escolheu.';
 
   @override
   String get fitReasonNearTarget =>
@@ -1697,7 +1705,7 @@ class AppLocalizationsPt extends AppLocalizations {
       'Oscilou tanto que a sua categoria subestima o risco.';
 
   @override
-  String get fitUnavailable => 'Não conseguimos avaliar esta compra agora.';
+  String get fitUnavailable => 'Não conseguimos avaliar isso agora.';
 
   @override
   String get fitCappedClassNotInPlan =>

@@ -432,7 +432,9 @@ class _FitSectionState extends ConsumerState<_FitSection> {
               if (fit.symbol != widget.symbol) {
                 return const FitScoreCardLoading();
               }
-              return FitScoreCard(fit: fit);
+              // This screen assesses the position already held, not a
+              // purchase — several reason strings read wrong otherwise.
+              return FitScoreCard(fit: fit, isHolding: true);
             },
             loading: () => const FitScoreCardLoading(),
             error: (_, __) => const FitScoreCardUnavailable(),

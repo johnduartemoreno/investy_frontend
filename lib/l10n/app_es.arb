@@ -611,12 +611,14 @@
   "fitReasonClassCore": "Es el tipo de activo en el que más se apoya tu perfil.",
   "fitReasonClassSupporting": "Este tipo de activo tiene lugar en tu plan, con menos peso.",
   "fitReasonNoGoal": "Esta compra no está asignada a una meta, así que no hay plazo contra el cual medirla.",
+  "fitReasonNoGoalHolding": "Esta posición no está asociada a ninguna meta, así que no hay plazo contra el cual medirla.",
   "fitReasonHorizonComfortable": "Sobra tiempo antes de tu plazo.",
   "fitReasonHorizonTight": "El tiempo alcanza, pero sin mucho margen.",
   "fitReasonHorizonTooShort": "Tu plazo llega antes de que este tipo de activo suela tener tiempo de recuperarse.",
   "fitReasonNoPortfolio": "Todavía no tenés nada, así que no hay mezcla contra la cual comparar.",
   "fitReasonNoPortfolioWeight": "Todavía no tenés nada, así que no hay un total sobre el cual pesar esta posición.",
   "fitReasonFillsGap": "Esta compra te acerca a la mezcla que elegiste.",
+  "fitReasonFillsGapHolding": "Esta posición está dentro de la mezcla que elegiste.",
   "fitReasonNearTarget": "Queda un poco por encima de tu objetivo para este tipo de activo.",
   "fitReasonOverTarget": "Te deja bastante por encima de tu objetivo para este tipo de activo.",
   "fitReasonConcentrationLow": "Sigue siendo una parte chica de todo lo que tenés.",
@@ -627,6 +629,6 @@
   "fitReasonVolTypical": "Se movió más o menos lo que suelen moverse los de su tipo.",
   "fitReasonVolElevated": "Se movió bastante más que otros de su tipo.",
   "fitReasonVolExtreme": "Se movió tanto que su categoría se queda corta describiendo el riesgo.",
-  "fitUnavailable": "No pudimos evaluar esta compra ahora.",
+  "fitUnavailable": "No pudimos evaluar esto ahora.",
   "fitCappedClassNotInPlan": "Baja porque tu perfil no destina nada a este tipo de activo — así lo definiste vos."
 }

@@ -3058,6 +3058,12 @@ abstract class AppLocalizations {
   /// **'This purchase isn’t tied to a goal, so there’s no deadline to measure against.'**
   String get fitReasonNoGoal;
 
+  /// No description provided for @fitReasonNoGoalHolding.
+  ///
+  /// In en, this message translates to:
+  /// **'This position isn’t tied to any goal, so there’s no deadline to measure against.'**
+  String get fitReasonNoGoalHolding;
+
   /// No description provided for @fitReasonHorizonComfortable.
   ///
   /// In en, this message translates to:
@@ -3093,6 +3099,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This purchase moves you toward the mix you chose.'**
   String get fitReasonFillsGap;
+
+  /// No description provided for @fitReasonFillsGapHolding.
+  ///
+  /// In en, this message translates to:
+  /// **'This position sits within the mix you chose.'**
+  String get fitReasonFillsGapHolding;
 
   /// No description provided for @fitReasonNearTarget.
   ///
@@ -3157,7 +3169,7 @@ abstract class AppLocalizations {
   /// No description provided for @fitUnavailable.
   ///
   /// In en, this message translates to:
-  /// **'We couldn’t assess this purchase right now.'**
+  /// **'We couldn’t assess this right now.'**
   String get fitUnavailable;
 
   /// No description provided for @fitCappedClassNotInPlan.

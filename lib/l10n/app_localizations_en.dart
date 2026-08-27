@@ -1628,6 +1628,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'This purchase isn’t tied to a goal, so there’s no deadline to measure against.';
 
   @override
+  String get fitReasonNoGoalHolding =>
+      'This position isn’t tied to any goal, so there’s no deadline to measure against.';
+
+  @override
   String get fitReasonHorizonComfortable =>
       'There’s plenty of time before your deadline.';
 
@@ -1650,6 +1654,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fitReasonFillsGap =>
       'This purchase moves you toward the mix you chose.';
+
+  @override
+  String get fitReasonFillsGapHolding =>
+      'This position sits within the mix you chose.';
 
   @override
   String get fitReasonNearTarget =>
@@ -1692,7 +1700,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'It moved so much that its category understates the risk.';
 
   @override
-  String get fitUnavailable => 'We couldn’t assess this purchase right now.';
+  String get fitUnavailable => 'We couldn’t assess this right now.';
 
   @override
   String get fitCappedClassNotInPlan =>

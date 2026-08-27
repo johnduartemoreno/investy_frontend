@@ -93,7 +93,9 @@ void main() {
       home: Scaffold(body: FitScoreCardUnavailable()),
     ));
 
-    expect(find.text('No pudimos evaluar esta compra ahora.'), findsOneWidget);
+    // Neutral: this same widget renders on asset detail, where there is no
+    // purchase to assess — only the position already held.
+    expect(find.text('No pudimos evaluar esto ahora.'), findsOneWidget);
   });
 
   // The hybrid presentation decided on 2026-08-11: colour and sentences in
@@ -362,5 +364,59 @@ void main() {
             reason: 'desborde de layout en "$lang" con el desglose abierto');
       });
     }
+  });
+
+  // Third pass over the same defect, and the one that finally swept the family:
+  // the owl's prose and the disclaimer had already stopped calling a holding a
+  // purchase, and these two reason strings were missed both times. Found by the
+  // user on a physical device, 2026-08-27.
+  //
+  // `no_goal` is the sharper of the two: on a holding it is wrong twice, because
+  // there is no purchase AND a goal cannot be attached to a position at all —
+  // `goal_id` lives on `transactions` (B123).
+  testWidgets('en tenencia, las razones no hablan de una compra', (tester) async {
+    final fit = _fit(
+      diversification: _component(100, 'fills_gap'),
+      cappedBy: '',
+    );
+
+    await tester.pumpWidget(_subject(fit));
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('Ver por qué'));
+    await tester.pumpAndSettle();
+
+    final asPurchase = find
+        .byType(Text)
+        .evaluate()
+        .map((e) => (e.widget as Text).data ?? '')
+        .where((t) => t.toLowerCase().contains('esta compra'))
+        .toList();
+    expect(asPurchase, isNotEmpty,
+        reason: 'en la pantalla de compra sí debe decir "esta compra"');
+
+    // Y en detalle de activo, ninguna.
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpWidget(MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('es'),
+      home: Scaffold(
+        body: SingleChildScrollView(
+          child: FitScoreCard(fit: fit, isHolding: true),
+        ),
+      ),
+    ));
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('Ver por qué'));
+    await tester.pumpAndSettle();
+
+    final leaked = find
+        .byType(Text)
+        .evaluate()
+        .map((e) => (e.widget as Text).data ?? '')
+        .where((t) => t.toLowerCase().contains('esta compra'))
+        .toList();
+    expect(leaked, isEmpty,
+        reason: 'una tenencia no es una compra: $leaked');
   });
 }

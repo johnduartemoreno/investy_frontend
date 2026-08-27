@@ -21,9 +21,21 @@ import '../../data/models/fit_score_model.dart';
 /// decided from the backend; this widget maps reason keys to sentences and lays
 /// them out.
 class FitScoreCard extends StatefulWidget {
-  const FitScoreCard({super.key, required this.fit});
+  const FitScoreCard({super.key, required this.fit, this.isHolding = false});
 
   final FitScoreModel fit;
+
+  /// True on asset detail, where the card assesses the position already held
+  /// rather than a purchase being composed (`amountCents: 0`).
+  ///
+  /// Several reason strings only make sense as one or the other. Saying "this
+  /// purchase isn't tied to a goal" over something the user already owns is
+  /// wrong twice: there is no purchase, and a goal cannot be attached to a
+  /// holding at all — `goal_id` lives on `transactions`, so it is chosen when
+  /// buying and never after (see B123). Found in UAT on a physical device,
+  /// 2026-08-27, on the third pass over the same defect: the owl's prose and
+  /// the disclaimer had already been fixed and these were missed both times.
+  final bool isHolding;
 
   @override
   State<FitScoreCard> createState() => _FitScoreCardState();
@@ -383,7 +395,9 @@ class _FitScoreCardState extends State<FitScoreCard> {
       case 'class_supporting':
         return l10n.fitReasonClassSupporting;
       case 'no_goal':
-        return l10n.fitReasonNoGoal;
+        return widget.isHolding
+            ? l10n.fitReasonNoGoalHolding
+            : l10n.fitReasonNoGoal;
       case 'horizon_comfortable':
         return l10n.fitReasonHorizonComfortable;
       case 'horizon_tight':
@@ -400,7 +414,9 @@ class _FitScoreCardState extends State<FitScoreCard> {
             ? l10n.fitReasonNoPortfolioWeight
             : l10n.fitReasonNoPortfolio;
       case 'fills_gap':
-        return l10n.fitReasonFillsGap;
+        return widget.isHolding
+            ? l10n.fitReasonFillsGapHolding
+            : l10n.fitReasonFillsGap;
       case 'near_target':
         return l10n.fitReasonNearTarget;
       case 'over_target':

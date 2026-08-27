@@ -688,12 +688,14 @@
   "fitReasonClassCore": "This is the kind of asset your profile leans on most.",
   "fitReasonClassSupporting": "This kind of asset has a place in your plan, with a smaller weight.",
   "fitReasonNoGoal": "This purchase isn’t tied to a goal, so there’s no deadline to measure against.",
+  "fitReasonNoGoalHolding": "This position isn’t tied to any goal, so there’s no deadline to measure against.",
   "fitReasonHorizonComfortable": "There’s plenty of time before your deadline.",
   "fitReasonHorizonTight": "There’s enough time, but not much margin.",
   "fitReasonHorizonTooShort": "Your deadline arrives before this kind of asset usually has time to recover.",
   "fitReasonNoPortfolio": "You don’t hold anything yet, so there’s no mix to compare against.",
   "fitReasonNoPortfolioWeight": "You don’t hold anything yet, so there’s no total for this position to weigh against.",
   "fitReasonFillsGap": "This purchase moves you toward the mix you chose.",
+  "fitReasonFillsGapHolding": "This position sits within the mix you chose.",
   "fitReasonNearTarget": "This lands a little above your target for this kind of asset.",
   "fitReasonOverTarget": "This pushes you well past your target for this kind of asset.",
   "fitReasonConcentrationLow": "This stays a small part of everything you own.",
@@ -704,6 +706,6 @@
   "fitReasonVolTypical": "It moved about as much as others of its kind usually do.",
   "fitReasonVolElevated": "It moved noticeably more than others of its kind.",
   "fitReasonVolExtreme": "It moved so much that its category understates the risk.",
-  "fitUnavailable": "We couldn’t assess this purchase right now.",
+  "fitUnavailable": "We couldn’t assess this right now.",
   "fitCappedClassNotInPlan": "Held down because your profile allocates nothing to this kind of asset — that is how you set it."
 }
