@@ -661,7 +661,7 @@
   "fitCantAssessBody": "A fit score is a claim about your situation, and we don’t know enough about it to make one.",
   "fitAboutYouTitle": "What would help",
   "fitAboutOurDataTitle": "On our side",
-  "fitDisclaimer": "This describes how a purchase relates to what you’ve told us. It is not financial advice.",
+  "fitDisclaimer": "This describes how this relates to what you’ve told us. It is not financial advice.",
   "fitLevelHigh": "Good fit",
   "fitLevelMedium": "Partial fit",
   "fitLevelLow": "Poor fit",

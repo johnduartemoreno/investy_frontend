@@ -192,8 +192,12 @@ void main() {
   // Found by the S19 audit, 2026-08-12.
   testWidgets('el descargo legal se ve sin abrir "ver por qué"',
       (tester) async {
+    // Neutral on purpose: the same card renders on the buy screen and on asset
+    // detail, where there is no purchase at all — it is the position you already
+    // hold. Calling that "una compra" was the last text on the card still doing
+    // it, after the owl's prose had been fixed (UAT, 2026-08-27).
     const disclaimer =
-        'Esto describe cómo se relaciona una compra con lo que nos contaste. No es asesoramiento financiero.';
+        'Esto describe cómo se relaciona con lo que nos contaste. No es asesoramiento financiero.';
 
     // Con puntaje, vista por defecto: sin tocar nada.
     await tester.pumpWidget(_subject(_fit()));

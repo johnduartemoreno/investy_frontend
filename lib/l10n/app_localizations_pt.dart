@@ -1564,7 +1564,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get fitDisclaimer =>
-      'Isto descreve como uma compra se relaciona com o que você nos contou. Não é aconselhamento financeiro.';
+      'Isto descreve como isso se relaciona com o que você nos contou. Não é aconselhamento financeiro.';
 
   @override
   String get fitLevelHigh => 'Bom encaixe';

@@ -2941,7 +2941,7 @@ abstract class AppLocalizations {
   /// No description provided for @fitDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'This describes how a purchase relates to what you’ve told us. It is not financial advice.'**
+  /// **'This describes how this relates to what you’ve told us. It is not financial advice.'**
   String get fitDisclaimer;
 
   /// No description provided for @fitLevelHigh.
