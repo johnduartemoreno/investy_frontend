@@ -81,8 +81,49 @@ Add `--dart-define=GIT_SHA=$(git rev-parse --short HEAD)` to stamp the build SHA
 | `owlHistoryProvider` | `GET /recommendations/history` | Persisted Owl AI sessions (B29) |
 | `alertsProvider` | `GET /price-alerts` | User's price alerts list (B12) |
 | `AlertFormController` | `POST` / `DELETE /price-alerts` | Create / delete a price alert (B12) |
+| `FitScoreController` | `GET /assets/{symbol}/fit` | Fit Score of a purchase (S19) — imperative, debounced |
 | `BuyAssetController` | `POST /transactions` | BUY order |
 | `SellAssetController` | `POST /transactions` | SELL order |
+
+## Fit Score card (S19)
+
+`FitScoreCard` (`lib/features/dashboard/presentation/widgets/fit_score_card.dart`)
+shows how well a purchase suits **this** user. It appears on the buy screen —
+below the goal selector, above the confirm button — and on asset detail, where it
+assesses the position already held (`amountCents: 0`).
+
+**The card computes nothing.** Every score, threshold and caveat arrives decided
+from the backend; the widget maps `reason` keys to translated sentences. A key the
+app does not know yet renders as nothing, never as the raw key.
+
+**Two reason keys are emitted by more than one component, and each needs its own
+wording.** `_reasonText` therefore takes the `FitComponentKind` and picks:
+
+| key | emitted by | why one sentence cannot serve both |
+|-----|-----------|-----------------------------------|
+| `class_not_in_plan` | profile + diversification | "does it belong?" and "how far does it push you off?" are different questions. `entity.go:142-147` says G1 states it "in its own words" — that only became true once the key was split. |
+| `no_portfolio` | diversification + concentration | "no mix to compare against" is right under *effect on your mix* and **wrong** under *weight in your portfolio*, which does not measure the mix. |
+
+`no_profile` is also shared (profile + diversification) and is deliberately **not**
+split: it names what is missing without misdescribing either component.
+
+Both splits came out of the S19 UAT, one after the other — the second was found
+only because the first had already been fixed. **When splitting a shared reason
+key, sweep the whole family rather than the instance you happened to see.**
+
+Three rules it exists to enforce, each with a widget test:
+
+- **Colour and sentences in front, the number behind "ver por qué"** (decision of
+  2026-08-11). A score presiding over the screen claims a precision five
+  components over a few weeks of data do not have, and reads as advice.
+- **A component with no data reads "sin medir", never `0`.** A zero says the fit
+  is bad. This is the last layer where that distinction can be lost.
+- **The disclaimer is visible without expanding anything**, on both branches of
+  the card — including the one where a verdict sits above a buy button.
+
+Below the confidence threshold the backend does not send a score at all, and the
+card shows what is missing instead: the user's gaps under *"Qué ayudaría"* and
+ours under *"De nuestro lado"*, never run together.
 
 ## Owl AI Advisor
 
@@ -196,18 +237,46 @@ flutter pub get
 # Generate Riverpod + Freezed code
 dart run build_runner build --delete-conflicting-outputs
 
-# Run on device (debug mode → local backend)
-flutter run
-
-# Run on device pointing to staging — GIT_SHA is part of the command, not
-# optional extra credit: without it the badge shows the environment but not
-# WHICH build is running, and a stale build pointing at staging has already
-# caused a full round of UAT confusion (2026-07-26, B53).
-flutter run --dart-define=USE_STAGING=true --dart-define=GIT_SHA=$(git rev-parse --short HEAD)
-
 # Analyze
 flutter analyze    # must be 0 errors before any merge
 ```
+
+### Running for UAT (physical device)
+
+UAT runs on a physical device, never the simulator. Two flags below are not
+optional extras:
+
+- **`-d <device-id>`** — with four devices paired, a bare `flutter run` opens a
+  picker and waits there forever.
+- **`GIT_SHA`** — without it the badge shows the environment but not *which*
+  build is running, and a stale build pointing at staging already cost a full
+  round of UAT confusion (2026-07-26, B53).
+
+```bash
+# Against the LOCAL backend. `localhost` is unreachable from a physical iPhone —
+# it is the phone itself — so the Mac's LAN IP is passed in. Read it at run time:
+# it changes between sessions, and a stale IP fails against a host that does not
+# exist.
+flutter run -d <device-id> \
+  --dart-define=LOCAL_IP=$(ipconfig getifaddr en0) \
+  --dart-define=GIT_SHA=$(git rev-parse --short HEAD)
+
+# Against STAGING.
+flutter run -d <device-id> \
+  --dart-define=USE_STAGING=true \
+  --dart-define=GIT_SHA=$(git rev-parse --short HEAD)
+```
+
+`flutter devices` lists the ids. On a physical iPhone the profile build takes
+~100s at "Installing and launching" — it is not stuck. **Keep the phone
+unlocked** or the launch never completes and you get a white screen.
+
+An `OS Error: Address already in use, errno = 48` in `MDnsClient.start` after
+"Installing and launching" is **not an app failure**: the app is already
+installed and running with its `--dart-define`s compiled in. What broke is VM
+service discovery over mDNS, usually because a VPN puts the default route on a
+`utun` interface. You lose hot reload, DevTools and device logs — nothing of the
+app's behaviour.
 
 ## Settings Screens
 

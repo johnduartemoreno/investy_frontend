@@ -628,5 +628,84 @@
   },
   "tradingSellTooSmall": "This sale doesn't cover its fees. Sell a bit more.",
   "onboardCurrencyTitle": "Choose your display currency",
-  "onboardCurrencyBody": "You'll see your balances and prices in this currency. It can't be changed later."
+  "onboardCurrencyBody": "You'll see your balances and prices in this currency. It can't be changed later.",
+  "fitTitle": "How well this fits you",
+  "fitWhy": "See why",
+  "fitHide": "Hide",
+  "fitScoreOutOf": "{score} out of 100",
+  "@fitScoreOutOf": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "fitConfidence": "Confidence: {pct}%",
+  "@fitConfidence": {
+    "placeholders": {
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
+  "fitForGoal": "Assessed against your goal “{goal}”",
+  "@fitForGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "fitNoGoal": "Not tied to any goal",
+  "fitCantAssessTitle": "We can’t assess this yet",
+  "fitCantAssessBody": "A fit score is a claim about your situation, and we don’t know enough about it to make one.",
+  "fitAboutYouTitle": "What would help",
+  "fitAboutOurDataTitle": "On our side",
+  "fitDisclaimer": "This describes how this relates to what you’ve told us. It is not financial advice.",
+  "fitLevelHigh": "Good fit",
+  "fitLevelMedium": "Partial fit",
+  "fitLevelLow": "Poor fit",
+  "fitCappedConcentration": "Held down because this would be a large part of everything you own — this applies whatever your risk profile says.",
+  "fitCappedHorizon": "Held down because your deadline arrives sooner than this kind of asset usually needs — this applies whatever your risk profile says.",
+  "fitComponentProfile": "Fits your profile",
+  "fitComponentHorizon": "Time until your deadline",
+  "fitComponentDiversification": "Effect on your mix",
+  "fitComponentConcentration": "Share of your portfolio",
+  "fitComponentVolatility": "How much it moved",
+  "fitUnmeasured": "Not measured",
+  "fitVolatilityObserved": "Moved {pct}% a year",
+  "@fitVolatilityObserved": {
+    "placeholders": {
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "fitCaveatShortWindow": "Measured over a short window — we don’t have much price history yet.",
+  "fitReasonNoProfile": "You haven’t answered the risk questionnaire yet.",
+  "fitReasonClassNotInPlan": "Your profile doesn’t allocate anything to this kind of asset.",
+  "fitReasonClassNotInPlanMix": "It moves you away from the mix you chose: your plan allocates nothing to this kind of asset.",
+  "fitReasonClassCore": "This is the kind of asset your profile leans on most.",
+  "fitReasonClassSupporting": "This kind of asset has a place in your plan, with a smaller weight.",
+  "fitReasonNoGoal": "This purchase isn’t tied to a goal, so there’s no deadline to measure against.",
+  "fitReasonNoGoalHolding": "This position isn’t tied to any goal, so there’s no deadline to measure against.",
+  "fitReasonHorizonComfortable": "There’s plenty of time before your deadline.",
+  "fitReasonHorizonTight": "There’s enough time, but not much margin.",
+  "fitReasonHorizonTooShort": "Your deadline arrives before this kind of asset usually has time to recover.",
+  "fitReasonNoPortfolio": "You don’t hold anything yet, so there’s no mix to compare against.",
+  "fitReasonNoPortfolioWeight": "You don’t hold anything yet, so there’s no total for this position to weigh against.",
+  "fitReasonFillsGap": "This purchase moves you toward the mix you chose.",
+  "fitReasonFillsGapHolding": "This position sits within the mix you chose.",
+  "fitReasonNearTarget": "This lands a little above your target for this kind of asset.",
+  "fitReasonOverTarget": "This pushes you well past your target for this kind of asset.",
+  "fitReasonConcentrationLow": "This stays a small part of everything you own.",
+  "fitReasonConcentrationMid": "This position would be big enough to move your portfolio on its own.",
+  "fitReasonConcentrationHigh": "Much of what you own would ride on this one asset.",
+  "fitReasonNoHistory": "We don’t have enough price history to measure this yet.",
+  "fitReasonVolCalm": "It moved less than others of its kind usually do.",
+  "fitReasonVolTypical": "It moved about as much as others of its kind usually do.",
+  "fitReasonVolElevated": "It moved noticeably more than others of its kind.",
+  "fitReasonVolExtreme": "It moved so much that its category understates the risk.",
+  "fitUnavailable": "We couldn’t assess this right now.",
+  "fitCappedClassNotInPlan": "Held down because your profile allocates nothing to this kind of asset — that is how you set it."
 }

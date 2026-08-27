@@ -2871,6 +2871,312 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You\'ll see your balances and prices in this currency. It can\'t be changed later.'**
   String get onboardCurrencyBody;
+
+  /// No description provided for @fitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How well this fits you'**
+  String get fitTitle;
+
+  /// No description provided for @fitWhy.
+  ///
+  /// In en, this message translates to:
+  /// **'See why'**
+  String get fitWhy;
+
+  /// No description provided for @fitHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get fitHide;
+
+  /// No description provided for @fitScoreOutOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} out of 100'**
+  String fitScoreOutOf(int score);
+
+  /// No description provided for @fitConfidence.
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence: {pct}%'**
+  String fitConfidence(int pct);
+
+  /// No description provided for @fitForGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Assessed against your goal “{goal}”'**
+  String fitForGoal(String goal);
+
+  /// No description provided for @fitNoGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Not tied to any goal'**
+  String get fitNoGoal;
+
+  /// No description provided for @fitCantAssessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We can’t assess this yet'**
+  String get fitCantAssessTitle;
+
+  /// No description provided for @fitCantAssessBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A fit score is a claim about your situation, and we don’t know enough about it to make one.'**
+  String get fitCantAssessBody;
+
+  /// No description provided for @fitAboutYouTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What would help'**
+  String get fitAboutYouTitle;
+
+  /// No description provided for @fitAboutOurDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'On our side'**
+  String get fitAboutOurDataTitle;
+
+  /// No description provided for @fitDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'This describes how this relates to what you’ve told us. It is not financial advice.'**
+  String get fitDisclaimer;
+
+  /// No description provided for @fitLevelHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Good fit'**
+  String get fitLevelHigh;
+
+  /// No description provided for @fitLevelMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Partial fit'**
+  String get fitLevelMedium;
+
+  /// No description provided for @fitLevelLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Poor fit'**
+  String get fitLevelLow;
+
+  /// No description provided for @fitCappedConcentration.
+  ///
+  /// In en, this message translates to:
+  /// **'Held down because this would be a large part of everything you own — this applies whatever your risk profile says.'**
+  String get fitCappedConcentration;
+
+  /// No description provided for @fitCappedHorizon.
+  ///
+  /// In en, this message translates to:
+  /// **'Held down because your deadline arrives sooner than this kind of asset usually needs — this applies whatever your risk profile says.'**
+  String get fitCappedHorizon;
+
+  /// No description provided for @fitComponentProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Fits your profile'**
+  String get fitComponentProfile;
+
+  /// No description provided for @fitComponentHorizon.
+  ///
+  /// In en, this message translates to:
+  /// **'Time until your deadline'**
+  String get fitComponentHorizon;
+
+  /// No description provided for @fitComponentDiversification.
+  ///
+  /// In en, this message translates to:
+  /// **'Effect on your mix'**
+  String get fitComponentDiversification;
+
+  /// No description provided for @fitComponentConcentration.
+  ///
+  /// In en, this message translates to:
+  /// **'Share of your portfolio'**
+  String get fitComponentConcentration;
+
+  /// No description provided for @fitComponentVolatility.
+  ///
+  /// In en, this message translates to:
+  /// **'How much it moved'**
+  String get fitComponentVolatility;
+
+  /// No description provided for @fitUnmeasured.
+  ///
+  /// In en, this message translates to:
+  /// **'Not measured'**
+  String get fitUnmeasured;
+
+  /// No description provided for @fitVolatilityObserved.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved {pct}% a year'**
+  String fitVolatilityObserved(String pct);
+
+  /// No description provided for @fitCaveatShortWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Measured over a short window — we don’t have much price history yet.'**
+  String get fitCaveatShortWindow;
+
+  /// No description provided for @fitReasonNoProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven’t answered the risk questionnaire yet.'**
+  String get fitReasonNoProfile;
+
+  /// No description provided for @fitReasonClassNotInPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile doesn’t allocate anything to this kind of asset.'**
+  String get fitReasonClassNotInPlan;
+
+  /// No description provided for @fitReasonClassNotInPlanMix.
+  ///
+  /// In en, this message translates to:
+  /// **'It moves you away from the mix you chose: your plan allocates nothing to this kind of asset.'**
+  String get fitReasonClassNotInPlanMix;
+
+  /// No description provided for @fitReasonClassCore.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the kind of asset your profile leans on most.'**
+  String get fitReasonClassCore;
+
+  /// No description provided for @fitReasonClassSupporting.
+  ///
+  /// In en, this message translates to:
+  /// **'This kind of asset has a place in your plan, with a smaller weight.'**
+  String get fitReasonClassSupporting;
+
+  /// No description provided for @fitReasonNoGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'This purchase isn’t tied to a goal, so there’s no deadline to measure against.'**
+  String get fitReasonNoGoal;
+
+  /// No description provided for @fitReasonNoGoalHolding.
+  ///
+  /// In en, this message translates to:
+  /// **'This position isn’t tied to any goal, so there’s no deadline to measure against.'**
+  String get fitReasonNoGoalHolding;
+
+  /// No description provided for @fitReasonHorizonComfortable.
+  ///
+  /// In en, this message translates to:
+  /// **'There’s plenty of time before your deadline.'**
+  String get fitReasonHorizonComfortable;
+
+  /// No description provided for @fitReasonHorizonTight.
+  ///
+  /// In en, this message translates to:
+  /// **'There’s enough time, but not much margin.'**
+  String get fitReasonHorizonTight;
+
+  /// No description provided for @fitReasonHorizonTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Your deadline arrives before this kind of asset usually has time to recover.'**
+  String get fitReasonHorizonTooShort;
+
+  /// No description provided for @fitReasonNoPortfolio.
+  ///
+  /// In en, this message translates to:
+  /// **'You don’t hold anything yet, so there’s no mix to compare against.'**
+  String get fitReasonNoPortfolio;
+
+  /// No description provided for @fitReasonNoPortfolioWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'You don’t hold anything yet, so there’s no total for this position to weigh against.'**
+  String get fitReasonNoPortfolioWeight;
+
+  /// No description provided for @fitReasonFillsGap.
+  ///
+  /// In en, this message translates to:
+  /// **'This purchase moves you toward the mix you chose.'**
+  String get fitReasonFillsGap;
+
+  /// No description provided for @fitReasonFillsGapHolding.
+  ///
+  /// In en, this message translates to:
+  /// **'This position sits within the mix you chose.'**
+  String get fitReasonFillsGapHolding;
+
+  /// No description provided for @fitReasonNearTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'This lands a little above your target for this kind of asset.'**
+  String get fitReasonNearTarget;
+
+  /// No description provided for @fitReasonOverTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'This pushes you well past your target for this kind of asset.'**
+  String get fitReasonOverTarget;
+
+  /// No description provided for @fitReasonConcentrationLow.
+  ///
+  /// In en, this message translates to:
+  /// **'This stays a small part of everything you own.'**
+  String get fitReasonConcentrationLow;
+
+  /// No description provided for @fitReasonConcentrationMid.
+  ///
+  /// In en, this message translates to:
+  /// **'This position would be big enough to move your portfolio on its own.'**
+  String get fitReasonConcentrationMid;
+
+  /// No description provided for @fitReasonConcentrationHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Much of what you own would ride on this one asset.'**
+  String get fitReasonConcentrationHigh;
+
+  /// No description provided for @fitReasonNoHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'We don’t have enough price history to measure this yet.'**
+  String get fitReasonNoHistory;
+
+  /// No description provided for @fitReasonVolCalm.
+  ///
+  /// In en, this message translates to:
+  /// **'It moved less than others of its kind usually do.'**
+  String get fitReasonVolCalm;
+
+  /// No description provided for @fitReasonVolTypical.
+  ///
+  /// In en, this message translates to:
+  /// **'It moved about as much as others of its kind usually do.'**
+  String get fitReasonVolTypical;
+
+  /// No description provided for @fitReasonVolElevated.
+  ///
+  /// In en, this message translates to:
+  /// **'It moved noticeably more than others of its kind.'**
+  String get fitReasonVolElevated;
+
+  /// No description provided for @fitReasonVolExtreme.
+  ///
+  /// In en, this message translates to:
+  /// **'It moved so much that its category understates the risk.'**
+  String get fitReasonVolExtreme;
+
+  /// No description provided for @fitUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t assess this right now.'**
+  String get fitUnavailable;
+
+  /// No description provided for @fitCappedClassNotInPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Held down because your profile allocates nothing to this kind of asset — that is how you set it.'**
+  String get fitCappedClassNotInPlan;
 }
 
 class _AppLocalizationsDelegate

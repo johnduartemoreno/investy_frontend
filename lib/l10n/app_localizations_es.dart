@@ -1522,4 +1522,194 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get onboardCurrencyBody =>
       'Vas a ver tus saldos y precios en esta moneda. No se puede cambiar después.';
+
+  @override
+  String get fitTitle => 'Qué tan bien encaja con vos';
+
+  @override
+  String get fitWhy => 'Ver por qué';
+
+  @override
+  String get fitHide => 'Ocultar';
+
+  @override
+  String fitScoreOutOf(int score) {
+    return '$score de 100';
+  }
+
+  @override
+  String fitConfidence(int pct) {
+    return 'Confianza: $pct%';
+  }
+
+  @override
+  String fitForGoal(String goal) {
+    return 'Evaluado contra tu meta «$goal»';
+  }
+
+  @override
+  String get fitNoGoal => 'Sin meta asignada';
+
+  @override
+  String get fitCantAssessTitle => 'Todavía no podemos evaluar esto';
+
+  @override
+  String get fitCantAssessBody =>
+      'Un puntaje de encaje es una afirmación sobre tu situación, y no sabemos lo suficiente de ella como para hacerla.';
+
+  @override
+  String get fitAboutYouTitle => 'Qué ayudaría';
+
+  @override
+  String get fitAboutOurDataTitle => 'De nuestro lado';
+
+  @override
+  String get fitDisclaimer =>
+      'Esto describe cómo se relaciona con lo que nos contaste. No es asesoramiento financiero.';
+
+  @override
+  String get fitLevelHigh => 'Buen encaje';
+
+  @override
+  String get fitLevelMedium => 'Encaje parcial';
+
+  @override
+  String get fitLevelLow => 'Encaje bajo';
+
+  @override
+  String get fitCappedConcentration =>
+      'Baja porque esto quedaría siendo una parte grande de todo lo que tenés — aplica sea cual sea tu perfil de riesgo.';
+
+  @override
+  String get fitCappedHorizon =>
+      'Baja porque tu plazo llega antes de lo que este tipo de activo suele necesitar — aplica sea cual sea tu perfil de riesgo.';
+
+  @override
+  String get fitComponentProfile => 'Encaja con tu perfil';
+
+  @override
+  String get fitComponentHorizon => 'Tiempo hasta tu plazo';
+
+  @override
+  String get fitComponentDiversification => 'Efecto en tu mezcla';
+
+  @override
+  String get fitComponentConcentration => 'Peso en tu cartera';
+
+  @override
+  String get fitComponentVolatility => 'Cuánto se movió';
+
+  @override
+  String get fitUnmeasured => 'Sin medir';
+
+  @override
+  String fitVolatilityObserved(String pct) {
+    return 'Se movió $pct% al año';
+  }
+
+  @override
+  String get fitCaveatShortWindow =>
+      'Medido sobre una ventana corta — todavía no tenemos mucho historial de precios.';
+
+  @override
+  String get fitReasonNoProfile =>
+      'Todavía no respondiste el cuestionario de riesgo.';
+
+  @override
+  String get fitReasonClassNotInPlan =>
+      'Tu perfil no asigna nada a este tipo de activo.';
+
+  @override
+  String get fitReasonClassNotInPlanMix =>
+      'Te aleja de la mezcla que elegiste: tu plan no destina nada a este tipo de activo.';
+
+  @override
+  String get fitReasonClassCore =>
+      'Es el tipo de activo en el que más se apoya tu perfil.';
+
+  @override
+  String get fitReasonClassSupporting =>
+      'Este tipo de activo tiene lugar en tu plan, con menos peso.';
+
+  @override
+  String get fitReasonNoGoal =>
+      'Esta compra no está asignada a una meta, así que no hay plazo contra el cual medirla.';
+
+  @override
+  String get fitReasonNoGoalHolding =>
+      'Esta posición no está asociada a ninguna meta, así que no hay plazo contra el cual medirla.';
+
+  @override
+  String get fitReasonHorizonComfortable => 'Sobra tiempo antes de tu plazo.';
+
+  @override
+  String get fitReasonHorizonTight =>
+      'El tiempo alcanza, pero sin mucho margen.';
+
+  @override
+  String get fitReasonHorizonTooShort =>
+      'Tu plazo llega antes de que este tipo de activo suela tener tiempo de recuperarse.';
+
+  @override
+  String get fitReasonNoPortfolio =>
+      'Todavía no tenés nada, así que no hay mezcla contra la cual comparar.';
+
+  @override
+  String get fitReasonNoPortfolioWeight =>
+      'Todavía no tenés nada, así que no hay un total sobre el cual pesar esta posición.';
+
+  @override
+  String get fitReasonFillsGap =>
+      'Esta compra te acerca a la mezcla que elegiste.';
+
+  @override
+  String get fitReasonFillsGapHolding =>
+      'Esta posición está dentro de la mezcla que elegiste.';
+
+  @override
+  String get fitReasonNearTarget =>
+      'Queda un poco por encima de tu objetivo para este tipo de activo.';
+
+  @override
+  String get fitReasonOverTarget =>
+      'Te deja bastante por encima de tu objetivo para este tipo de activo.';
+
+  @override
+  String get fitReasonConcentrationLow =>
+      'Sigue siendo una parte chica de todo lo que tenés.';
+
+  @override
+  String get fitReasonConcentrationMid =>
+      'Esta posición quedaría lo bastante grande como para mover tu cartera sola.';
+
+  @override
+  String get fitReasonConcentrationHigh =>
+      'Buena parte de lo que tenés dependería de este único activo.';
+
+  @override
+  String get fitReasonNoHistory =>
+      'Todavía no tenemos suficiente historial de precios para medir esto.';
+
+  @override
+  String get fitReasonVolCalm =>
+      'Se movió menos de lo que suelen moverse los de su tipo.';
+
+  @override
+  String get fitReasonVolTypical =>
+      'Se movió más o menos lo que suelen moverse los de su tipo.';
+
+  @override
+  String get fitReasonVolElevated =>
+      'Se movió bastante más que otros de su tipo.';
+
+  @override
+  String get fitReasonVolExtreme =>
+      'Se movió tanto que su categoría se queda corta describiendo el riesgo.';
+
+  @override
+  String get fitUnavailable => 'No pudimos evaluar esto ahora.';
+
+  @override
+  String get fitCappedClassNotInPlan =>
+      'Baja porque tu perfil no destina nada a este tipo de activo — así lo definiste vos.';
 }

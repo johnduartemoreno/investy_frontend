@@ -6,6 +6,7 @@ import '../../../../core/network/dio_client.dart';
 import '../models/asset_search_result_model.dart';
 import '../models/create_goal_request_model.dart';
 import '../models/dashboard_response_model.dart';
+import '../models/fit_score_model.dart';
 import '../models/goal_response_model.dart';
 import '../models/owl_session_model.dart';
 import '../models/recommendation_model.dart';
@@ -61,6 +62,19 @@ abstract class DashboardRemoteDataSource {
 
   /// Static trading rules (order floor). Changes on the order of regulatory events.
   Future<TradingConfigModel> getTradingConfig();
+
+  /// How well a purchase of [amountCents] in [symbol] fits this user (S19).
+  ///
+  /// [goalId] is optional: a purchase not tied to a goal is a legitimate state,
+  /// and the horizon component reports it as unmeasured rather than assuming it
+  /// is fine. [language] selects the language of the owl's explanation.
+  Future<FitScoreModel> getFitScore(
+    String userId, {
+    required String symbol,
+    required int amountCents,
+    String? goalId,
+    String language = 'en',
+  });
 
   /// Fetches AI-generated investment recommendations for [userId].
   /// [language] sets the language of AI-generated reasons (en/es/pt).
@@ -171,6 +185,25 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
       },
     );
     return TradingQuoteModel.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<FitScoreModel> getFitScore(
+    String userId, {
+    required String symbol,
+    required int amountCents,
+    String? goalId,
+    String language = 'en',
+  }) async {
+    final response = await _dio.get(
+      '/api/v1/users/$userId/assets/$symbol/fit',
+      queryParameters: {
+        'amountCents': amountCents,
+        if (goalId != null && goalId.isNotEmpty) 'goalId': goalId,
+      },
+      options: Options(headers: {'Accept-Language': language}),
+    );
+    return FitScoreModel.fromJson(response.data as Map<String, dynamic>);
   }
 
   @override

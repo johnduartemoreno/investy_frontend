@@ -15,6 +15,9 @@ import '../../../dashboard/data/models/buy_asset_args.dart';
 import '../../../dashboard/presentation/screens/dashboard_screen.dart'
     show displayCurrencyProvider, fxRateProvider;
 import '../../../portfolio/data/models/portfolio_response_model.dart';
+import '../../../dashboard/presentation/controllers/fit_score_controller.dart';
+import '../../../dashboard/presentation/widgets/fit_score_card.dart';
+import '../../../../core/providers/locale_provider.dart';
 import '../providers/asset_history_provider.dart';
 
 /// Asset detail: price chart (range selector) + your position + Buy/Sell/Alert.
@@ -268,6 +271,13 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
               ),
               const SizedBox(height: AppDimens.spacingL),
 
+              // ── Fit Score of what you already hold (S19-G7, absorbs B47) ──
+              // The buy screen asks "how would this purchase fit"; here the
+              // question is "how does what I already own fit", so the amount
+              // sent is zero. That is a real question with a real answer, not a
+              // hypothetical purchase invented to have something to score.
+              _FitSection(symbol: holding.symbol),
+
               const SizedBox(height: AppDimens.spacingM),
             ],
           ),
@@ -358,6 +368,77 @@ class _RangeChip extends StatelessWidget {
                 fontWeight: FontWeight.w700,
                 color: active ? cs.onPrimary : cs.primary)),
       ),
+    );
+  }
+}
+
+/// Fit Score for a position the user already holds.
+///
+/// A widget of its own so the fetch fires once when the section mounts rather
+/// than on every rebuild of the detail screen — the chart's range selector
+/// rebuilds it constantly, and each assessment costs a model call.
+class _FitSection extends ConsumerStatefulWidget {
+  const _FitSection({required this.symbol});
+
+  final String symbol;
+
+  @override
+  ConsumerState<_FitSection> createState() => _FitSectionState();
+}
+
+class _FitSectionState extends ConsumerState<_FitSection> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _fetch();
+    });
+  }
+
+  void _fetch() {
+    ref.read(fitScoreControllerProvider('detail').notifier).fetch(
+          symbol: widget.symbol,
+          amountCents: 0, // assess the holding as it stands, not a purchase
+          language: ref.read(localeNotifierProvider).languageCode,
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // The owl's prose is written by the backend in the language we asked for,
+    // so unlike every other string on this screen it does not follow a locale
+    // change on its own: the rest of the card is compiled translations that
+    // rebuild for free, and the explanation just sits there in the previous
+    // language. Found in UAT on a physical device, 2026-08-27 — the whole
+    // screen turned Portuguese and the paragraph stayed in Spanish, word for
+    // word.
+    //
+    // `listen`, not `watch`: this must fire on the transition, not on every
+    // rebuild. Changing language is rare, so the extra request is too.
+    ref.listen(localeNotifierProvider, (prev, next) {
+      if (prev?.languageCode != next.languageCode) _fetch();
+    });
+
+    // Same guard as the buy screen: the controller is shared, so a stale answer
+    // for another symbol must never render here — it shows the loading frame
+    // instead, which is true (a fresh assessment is on its way) and does not
+    // leave a hole in the layout.
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppDimens.spacingL),
+      child: ref.watch(fitScoreControllerProvider('detail')).when(
+            data: (fit) {
+              if (fit == null) return const SizedBox.shrink();
+              if (fit.symbol != widget.symbol) {
+                return const FitScoreCardLoading();
+              }
+              // This screen assesses the position already held, not a
+              // purchase — several reason strings read wrong otherwise.
+              return FitScoreCard(fit: fit, isHolding: true);
+            },
+            loading: () => const FitScoreCardLoading(),
+            error: (_, __) => const FitScoreCardUnavailable(),
+          ),
     );
   }
 }
