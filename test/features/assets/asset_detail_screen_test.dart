@@ -43,7 +43,8 @@ Widget _subject() {
       // The Fit Score section (S19-G7) reads FirebaseAuth for the user id, and
       // Firebase is not initialised in widget tests. The double records the
       // call rather than swallowing it — see the class comment.
-      fitScoreControllerProvider.overrideWith(_RecordingFitScoreController.new),
+      fitScoreControllerProvider('detail')
+                .overrideWith(_RecordingFitScoreController.new),
     ],
     child: const MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -102,7 +103,8 @@ void main() {
             fxRateProvider.overrideWith((ref) async => 1.0),
             assetHistoryProvider('AAPL', '1M')
                 .overrideWith((ref) async => throw Exception('boom')),
-            fitScoreControllerProvider.overrideWith(_RecordingFitScoreController.new),
+            fitScoreControllerProvider('detail')
+                .overrideWith(_RecordingFitScoreController.new),
           ],
           child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -133,7 +135,7 @@ class _RecordingFitScoreController extends FitScoreController {
   static String? lastSymbol;
 
   @override
-  FutureOr<FitScoreModel?> build() => null;
+  FutureOr<FitScoreModel?> build(String scope) => null;
 
   @override
   Future<void> fetch({

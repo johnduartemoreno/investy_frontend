@@ -176,12 +176,12 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
     _fitDebounce?.cancel();
     final asset = _selectedAsset;
     if (asset == null || _quantity <= 0) {
-      ref.read(fitScoreControllerProvider.notifier).clear();
+      ref.read(fitScoreControllerProvider('buy').notifier).clear();
       return;
     }
     _fitDebounce = Timer(const Duration(milliseconds: 600), () {
       if (!mounted) return;
-      ref.read(fitScoreControllerProvider.notifier).fetch(
+      ref.read(fitScoreControllerProvider('buy').notifier).fetch(
             symbol: asset.symbol,
             amountCents: (_estimatedTotal * 100).round(),
             goalId: _selectedGoalId,
@@ -199,7 +199,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
   /// bug (found in UAT, 2026-08-13).
   Widget _buildFitSection() {
     final expected = _selectedAsset?.symbol;
-    return ref.watch(fitScoreControllerProvider).when(
+    return ref.watch(fitScoreControllerProvider('buy')).when(
           data: (fit) {
             // The controller is a single instance shared with the asset detail
             // screen, so it can still hold the previous symbol's answer. A

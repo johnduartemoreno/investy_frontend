@@ -392,7 +392,7 @@ class _FitSectionState extends ConsumerState<_FitSection> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ref.read(fitScoreControllerProvider.notifier).fetch(
+      ref.read(fitScoreControllerProvider('detail').notifier).fetch(
             symbol: widget.symbol,
             amountCents: 0, // assess the holding as it stands, not a purchase
             language: ref.read(localeNotifierProvider).languageCode,
@@ -408,7 +408,7 @@ class _FitSectionState extends ConsumerState<_FitSection> {
     // leave a hole in the layout.
     return Padding(
       padding: const EdgeInsets.only(bottom: AppDimens.spacingL),
-      child: ref.watch(fitScoreControllerProvider).when(
+      child: ref.watch(fitScoreControllerProvider('detail')).when(
             data: (fit) {
               if (fit == null) return const SizedBox.shrink();
               if (fit.symbol != widget.symbol) {
