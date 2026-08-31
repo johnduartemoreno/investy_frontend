@@ -117,6 +117,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
             top: Radius.circular(AppDimens.radiusBottomSheet)),
       ),
       child: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         padding: EdgeInsets.only(
           top: AppDimens.spacingXL,
           left: AppDimens.spacingXL,
@@ -171,6 +172,7 @@ class _WithdrawBottomSheetState extends ConsumerState<WithdrawBottomSheet> {
             Form(
               key: _formKey,
               child: TextFormField(
+                onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 controller: _amountController,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),

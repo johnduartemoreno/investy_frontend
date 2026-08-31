@@ -514,6 +514,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
         child: Form(
           key: _formKey,
@@ -561,6 +562,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
 
               // ── Quantity Input ──
               TextFormField(
+                onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 controller: _quantityController,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
@@ -635,6 +637,7 @@ class _SellBottomSheetState extends ConsumerState<_SellBottomSheet> {
 
               // ── Sell Price Input ──
               TextFormField(
+                onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 controller: _priceController,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),

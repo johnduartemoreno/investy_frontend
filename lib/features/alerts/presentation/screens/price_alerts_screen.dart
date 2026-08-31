@@ -339,6 +339,7 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
           // Scrollable fields
           Expanded(
             child: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               padding: EdgeInsets.only(
                 left: 24,
                 right: 24,
@@ -355,6 +356,7 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
                           ?.copyWith(color: cs.onSurfaceVariant)),
                   const SizedBox(height: 8),
                   TextFormField(
+                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
                     controller: _searchController,
                     onChanged: _search,
                     decoration: InputDecoration(
@@ -451,6 +453,7 @@ class _CreateAlertSheetState extends ConsumerState<_CreateAlertSheet> {
                           ?.copyWith(color: cs.onSurfaceVariant)),
                   const SizedBox(height: 8),
                   TextFormField(
+                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
                     controller: _priceController,
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),

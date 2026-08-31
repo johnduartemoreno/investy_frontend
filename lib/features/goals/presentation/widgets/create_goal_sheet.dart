@@ -146,6 +146,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
     final l10n = AppLocalizations.of(context);
 
     return SingleChildScrollView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       // Ensures the sheet scrolls when keyboard appears
       padding: EdgeInsets.only(
         left: 24,
@@ -178,6 +179,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
 
             // Goal name — hintText keeps label inside the field cleanly
             TextFormField(
+              onTapOutside: (_) => FocusScope.of(context).unfocus(),
               controller: _nameController,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
@@ -207,6 +209,7 @@ class _CreateGoalSheetState extends ConsumerState<CreateGoalSheet> {
 
             // Large centered $ input with thousands separator
             TextFormField(
+              onTapOutside: (_) => FocusScope.of(context).unfocus(),
               controller: _amountController,
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
