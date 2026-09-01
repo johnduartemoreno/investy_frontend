@@ -471,6 +471,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           padding: const EdgeInsets.all(AppDimens.spacingL),
           child: Form(
             key: _formKey,
@@ -483,6 +484,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
 
                 // ── Search field ──────────────────────────────────────────
                 TextFormField(
+                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
                   controller: _searchController,
                   textCapitalization: TextCapitalization.characters,
                   decoration: InputDecoration(
@@ -642,6 +644,7 @@ class _BuyAssetScreenState extends ConsumerState<BuyAssetScreen> {
                       ),
                       const SizedBox(height: AppDimens.spacingS),
                       TextFormField(
+                        onTapOutside: (_) => FocusScope.of(context).unfocus(),
                         controller: _quantityController,
                         enabled: _selectedAsset != null,
                         keyboardType: const TextInputType.numberWithOptions(

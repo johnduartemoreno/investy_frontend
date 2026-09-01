@@ -108,6 +108,7 @@ class _TopUpScreenState extends ConsumerState<TopUpScreen> {
 
                 // ── Large Currency Input ──
                 TextFormField(
+                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
                   controller: _amountController,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
