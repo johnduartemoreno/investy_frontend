@@ -261,7 +261,7 @@ class _FitScoreCardState extends State<FitScoreCard> {
               c.scored
                   ? Text('${c.score}',
                       style: theme.textTheme.bodySmall?.copyWith(
-                          color: _levelColor(c.score!),
+                          color: _componentColor(c),
                           fontWeight: FontWeight.w700))
                   : Text(l10n.fitUnmeasured,
                       style: theme.textTheme.labelSmall
@@ -322,6 +322,33 @@ class _FitScoreCardState extends State<FitScoreCard> {
     if (score >= 75) return l10n.fitLevelHigh;
     if (score >= 45) return l10n.fitLevelMedium;
     return l10n.fitLevelLow;
+  }
+
+  /// Colour for a component's number in the breakdown (B118).
+  ///
+  /// Concentration does not use the generic 75/45 scale, because it does not
+  /// mean the same thing. Its bands are prudence decisions written in the
+  /// backend (`fit/entity.go`: 10% / 25% / 40%), and the linear score between
+  /// them lands the green→amber boundary at 17.5% of the portfolio. That left
+  /// 10–17.5% painting the number green while the sentence right underneath
+  /// warned the position was "big enough to move your portfolio on its own" —
+  /// in the band a user is most likely to be in, and the sentence was the half
+  /// that was right. A 15% single position is not a small part of anything.
+  ///
+  /// So this component's colour comes from the same classification as its
+  /// words. One source, so the two cannot disagree: the reason IS the colour.
+  /// Every other component keeps the numeric scale — this is the one whose
+  /// meaning is defined by thresholds rather than by the number itself.
+  Color _componentColor(FitComponentModel c) {
+    switch (c.reason) {
+      case 'concentration_low':
+        return AppTheme.signalGreen;
+      case 'concentration_mid':
+        return AppTheme.signalAmber;
+      case 'concentration_high':
+        return AppTheme.signalRed;
+    }
+    return _levelColor(c.score!);
   }
 
   Color _levelColor(int score) {

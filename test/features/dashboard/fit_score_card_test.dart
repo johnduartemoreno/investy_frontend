@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:investy/core/theme/app_theme.dart';
 import 'package:investy/features/dashboard/data/models/fit_score_model.dart';
 import 'package:investy/features/dashboard/presentation/widgets/fit_score_card.dart';
 import 'package:investy/l10n/app_localizations.dart';
@@ -418,5 +419,73 @@ void main() {
         .toList();
     expect(leaked, isEmpty,
         reason: 'una tenencia no es una compra: $leaked');
+  });
+
+  // B118 — the number was painted green while the sentence under it warned.
+  //
+  // Concentration degrades linearly from 10% to 40% of the portfolio, so the
+  // generic 75/45 colour scale put its green→amber boundary at 17.5% — while
+  // the wording switches to "big enough to move your portfolio on its own" at
+  // 10%. Between those two lies the band a user is most likely to be in: a 14%
+  // position scored 86, printed in green, above a sentence warning about it.
+  //
+  // The sentence was the half that was right, so the colour now comes from the
+  // same classification the words come from. These tests pin the pairing, not
+  // the numbers: a score of 86 reading amber looks wrong until you know that
+  // what is being coloured is "mid", not "86".
+  group('B118 — concentration colour follows its own classification', () {
+    Future<Color> colourOfConcentration(WidgetTester tester,
+        {required int score, required String reason}) async {
+      await tester.pumpWidget(
+          _subject(_fit(concentration: _component(score, reason))));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Ver por qué'));
+      await tester.pumpAndSettle();
+
+      final text = tester.widget<Text>(find.text('$score'));
+      return text.style!.color!;
+    }
+
+    testWidgets('a mid concentration is amber even at a high score',
+        (tester) async {
+      // 86 = a position at ~14.2% of the portfolio: the exact case from UAT.
+      final colour = await colourOfConcentration(tester,
+          score: 86, reason: 'concentration_mid');
+
+      expect(colour, AppTheme.signalAmber,
+          reason: 'B118: 86 used to print green under a warning sentence');
+    });
+
+    testWidgets('a low concentration stays green', (tester) async {
+      final colour = await colourOfConcentration(tester,
+          score: 100, reason: 'concentration_low');
+      expect(colour, AppTheme.signalGreen);
+    });
+
+    testWidgets('a high concentration is red even above the amber cutoff',
+        (tester) async {
+      // 48 sits above the generic 45 amber threshold, but the wording at that
+      // weight (>25% of the portfolio) is already "high" — the mirror of the
+      // green case, and the band the original ficha counted as coherent.
+      final colour = await colourOfConcentration(tester,
+          score: 48, reason: 'concentration_high');
+      expect(colour, AppTheme.signalRed,
+          reason: 'B118: the 25–26.5% band had the same defect');
+    });
+
+    testWidgets('other components keep the numeric scale', (tester) async {
+      await tester.pumpWidget(_subject(_fit(
+          diversification: _component(75, 'fills_gap'),
+          concentration: _component(100, 'concentration_low'))));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Ver por qué'));
+      await tester.pumpAndSettle();
+
+      // 75 is the generic green cutoff and fills_gap has no colour of its own:
+      // the fallback must still apply, or this fix would have quietly changed
+      // every other row too.
+      expect(tester.widget<Text>(find.text('75')).style!.color,
+          AppTheme.signalGreen);
+    });
   });
 }
