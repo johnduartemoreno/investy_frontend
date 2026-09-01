@@ -257,18 +257,26 @@ optional extras:
 # it is the phone itself — so the Mac's LAN IP is passed in. Read it at run time:
 # it changes between sessions, and a stale IP fails against a host that does not
 # exist.
-flutter run -d <device-id> \
+flutter run --profile -d <device-id> \
   --dart-define=LOCAL_IP=$(ipconfig getifaddr en0) \
   --dart-define=GIT_SHA=$(git rev-parse --short HEAD)
 
 # Against STAGING.
-flutter run -d <device-id> \
+flutter run --profile -d <device-id> \
   --dart-define=USE_STAGING=true \
   --dart-define=GIT_SHA=$(git rev-parse --short HEAD)
 ```
 
-`flutter devices` lists the ids. On a physical iPhone the profile build takes
-~100s at "Installing and launching" — it is not stuck. **Keep the phone
+**`--profile` is not optional on a physical iPhone.** A debug build is JIT, and
+iOS kills a JIT process that has no debugger attached — so a debug build dies
+within seconds of being opened from the home screen, and survives only for as
+long as `flutter run` stays connected. That connection is exactly what the VPN
+breaks (see the mDNS note below), so in debug the two failures compound and look
+like one: the console hangs at "Installing and launching", and the app on the
+phone crashes on open. Both disappear in profile mode, which is self-contained.
+
+`flutter devices` lists the ids. The profile build takes ~100s at
+"Installing and launching" — it is not stuck. **Keep the phone
 unlocked** or the launch never completes and you get a white screen.
 
 An `OS Error: Address already in use, errno = 48` in `MDnsClient.start` after
