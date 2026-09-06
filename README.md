@@ -59,9 +59,9 @@ Base URL selected automatically:
 | Environment | URL |
 |-------------|-----|
 | Android emulator | `http://10.0.2.2:8080` |
-| iOS device / debug | `http://192.168.1.8:8080` (Mac LAN IP — update in `app_config.dart`) |
+| iOS device / debug | `http://<Mac LAN IP>:8080` — passed in with `--dart-define=LOCAL_IP=$(ipconfig getifaddr en0)`, read at run time. Not stored in `app_config.dart`: the IP changes between sessions and a stale one fails against a host that does not exist |
 | Staging | `http://investy-backend-stg.eba-wqzwp2yc.us-east-1.elasticbeanstalk.com` |
-| Production | `https://api.investy.com` |
+| Production | `https://api.investyapp.com` |
 
 Use `--dart-define=USE_STAGING=true` to force staging URL in debug builds.
 Add `--dart-define=GIT_SHA=$(git rev-parse --short HEAD)` to stamp the build SHA in the on-screen environment badge (B53); without it the badge shows the environment only.
