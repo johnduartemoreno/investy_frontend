@@ -627,6 +627,7 @@
   "fitReasonConcentrationMid": "Esta posición quedaría lo bastante grande como para mover tu cartera sola.",
   "fitReasonConcentrationHigh": "Buena parte de lo que tenés dependería de este único activo.",
   "fitReasonNoHistory": "Todavía no tenemos suficiente historial de precios para medir esto.",
+  "fitReasonGoalUnavailable": "No pudimos leer tus metas en este momento, así que el plazo quedó sin medir.",
   "fitReasonVolCalm": "Se movió menos de lo que suelen moverse los de su tipo.",
   "fitReasonVolTypical": "Se movió más o menos lo que suelen moverse los de su tipo.",
   "fitReasonVolElevated": "Se movió bastante más que otros de su tipo.",

@@ -704,6 +704,7 @@
   "fitReasonConcentrationMid": "This position would be big enough to move your portfolio on its own.",
   "fitReasonConcentrationHigh": "Much of what you own would ride on this one asset.",
   "fitReasonNoHistory": "We don’t have enough price history to measure this yet.",
+  "fitReasonGoalUnavailable": "We couldn’t read your goals just now, so the deadline wasn’t measured.",
   "fitReasonVolCalm": "It moved less than others of its kind usually do.",
   "fitReasonVolTypical": "It moved about as much as others of its kind usually do.",
   "fitReasonVolElevated": "It moved noticeably more than others of its kind.",

@@ -187,6 +187,25 @@ void main() {
     expect(find.textContaining('no está asociada a ninguna meta'), findsNothing);
   });
 
+  // Audit of H18, finding 2: a failed read of the user's goals is our gap. It
+  // must read as ours — never "not tied to any goal" about a position that may
+  // well have one.
+  testWidgets('si no pudimos leer las metas lo dice como error nuestro',
+      (tester) async {
+    await tester.pumpWidget(_holding(_fit(
+      horizon: _component(null, 'goal_unavailable'),
+      confidencePct: 80,
+      aboutOurData: const ['goal_unavailable'],
+    )));
+
+    await tester.tap(find.text('Ver por qué'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sin medir'), findsOneWidget);
+    expect(find.textContaining('No pudimos leer tus metas'), findsWidgets);
+    expect(find.textContaining('no está asociada a ninguna meta'), findsNothing);
+  });
+
   // Below the confidence threshold the backend withholds the number entirely.
   // The card must then ask for what is missing instead of showing a hedged
   // score — and must not phrase our own data gap as the user's homework.

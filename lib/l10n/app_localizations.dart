@@ -3154,6 +3154,12 @@ abstract class AppLocalizations {
   /// **'We don’t have enough price history to measure this yet.'**
   String get fitReasonNoHistory;
 
+  /// No description provided for @fitReasonGoalUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t read your goals just now, so the deadline wasn’t measured.'**
+  String get fitReasonGoalUnavailable;
+
   /// No description provided for @fitReasonVolCalm.
   ///
   /// In en, this message translates to:

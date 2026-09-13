@@ -1691,6 +1691,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'We don’t have enough price history to measure this yet.';
 
   @override
+  String get fitReasonGoalUnavailable =>
+      'We couldn’t read your goals just now, so the deadline wasn’t measured.';
+
+  @override
   String get fitReasonVolCalm =>
       'It moved less than others of its kind usually do.';
 

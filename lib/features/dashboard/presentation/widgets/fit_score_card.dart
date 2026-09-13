@@ -463,6 +463,8 @@ class _FitScoreCardState extends State<FitScoreCard> {
         return l10n.fitReasonConcentrationHigh;
       case 'no_history':
         return l10n.fitReasonNoHistory;
+      case 'goal_unavailable':
+        return l10n.fitReasonGoalUnavailable;
       case 'vol_calm':
         return l10n.fitReasonVolCalm;
       case 'vol_typical':
