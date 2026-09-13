@@ -596,6 +596,7 @@
   "fitComponentConcentration": "Peso na sua carteira",
   "fitComponentVolatility": "O quanto oscilou",
   "fitUnmeasured": "Não medido",
+  "fitNotApplicable": "Não se aplica",
   "fitVolatilityObserved": "Oscilou {pct}% ao ano",
   "@fitVolatilityObserved": {
     "placeholders": {
@@ -612,6 +613,7 @@
   "fitReasonClassSupporting": "Esse tipo de ativo tem lugar no seu plano, com peso menor.",
   "fitReasonNoGoal": "Esta compra não está associada a uma meta, então não há prazo para comparar.",
   "fitReasonNoGoalHolding": "Esta posição não está associada a nenhuma meta, então não há prazo para comparar.",
+  "fitReasonGoalsPast": "As metas para as quais você comprou esta posição já venceram, então não há prazo para comparar.",
   "fitReasonHorizonComfortable": "Há bastante tempo antes do seu prazo.",
   "fitReasonHorizonTight": "O tempo dá, mas sem muita margem.",
   "fitReasonHorizonTooShort": "Seu prazo chega antes de esse tipo de ativo costumar ter tempo de se recuperar.",

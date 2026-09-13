@@ -22,11 +22,11 @@ FitScoreModel _fit(String symbol, int score) => FitScoreModel.fromJson({
       'explanation': '',
       'volatilityPct': null,
       'components': {
-        'profile': {'score': score, 'reason': 'class_core'},
-        'horizon': {'score': null, 'reason': 'no_goal'},
-        'diversification': {'score': null, 'reason': 'no_portfolio'},
-        'concentration': {'score': null, 'reason': 'no_portfolio'},
-        'volatility': {'score': null, 'reason': 'no_history'},
+        'profile': {'score': score, 'reason': 'class_core', 'notApplicable': false},
+        'horizon': {'score': null, 'reason': 'no_goal', 'notApplicable': false},
+        'diversification': {'score': null, 'reason': 'no_portfolio', 'notApplicable': false},
+        'concentration': {'score': null, 'reason': 'no_portfolio', 'notApplicable': false},
+        'volatility': {'score': null, 'reason': 'no_history', 'notApplicable': false},
       },
       'confidence': {
         'pct': 100,

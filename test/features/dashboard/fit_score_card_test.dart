@@ -7,8 +7,13 @@ import 'package:investy/features/dashboard/presentation/widgets/fit_score_card.d
 import 'package:investy/l10n/app_localizations.dart';
 
 Map<String, dynamic> _component(int? score, String reason,
-        {String caveat = ''}) =>
-    {'score': score, 'reason': reason, if (caveat.isNotEmpty) 'caveat': caveat};
+        {String caveat = '', bool notApplicable = false}) =>
+    {
+      'score': score,
+      'reason': reason,
+      if (caveat.isNotEmpty) 'caveat': caveat,
+      'notApplicable': notApplicable,
+    };
 
 FitScoreModel _fit({
   int? score = 82,
@@ -24,6 +29,7 @@ FitScoreModel _fit({
   Map<String, dynamic>? profile,
   Map<String, dynamic>? diversification,
   Map<String, dynamic>? concentration,
+  Map<String, dynamic>? horizon,
 }) {
   return FitScoreModel.fromJson({
     'symbol': 'AAPL',
@@ -37,7 +43,7 @@ FitScoreModel _fit({
     'volatilityPct': volatilityPct,
     'components': {
       'profile': profile ?? _component(90, 'class_core'),
-      'horizon': _component(80, 'horizon_comfortable'),
+      'horizon': horizon ?? _component(80, 'horizon_comfortable'),
       'diversification': diversification ?? _component(75, 'fills_gap'),
       'concentration': concentration ?? _component(85, 'concentration_low'),
       'volatility': volatility ?? _component(70, 'vol_typical'),
@@ -60,6 +66,15 @@ Widget _subject(FitScoreModel fit, {String lang = 'es'}) => MaterialApp(
       supportedLocales: AppLocalizations.supportedLocales,
       locale: Locale(lang),
       home: Scaffold(body: SingleChildScrollView(child: FitScoreCard(fit: fit))),
+    );
+
+Widget _holding(FitScoreModel fit) => MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('es'),
+      home: Scaffold(
+          body: SingleChildScrollView(
+              child: FitScoreCard(fit: fit, isHolding: true))),
     );
 
 void main() {
@@ -136,6 +151,40 @@ void main() {
     expect(
         find.text('Todavía no tenemos suficiente historial de precios para medir esto.'),
         findsWidgets);
+  });
+
+  // B123 — a null score is two different statements. "Sin medir" is a gap we
+  // could close; "No aplica" is a question that has no answer here, and
+  // labelling it "sin medir" would promise a number that cannot exist.
+  testWidgets('un plazo que no aplica dice "No aplica", no "Sin medir"',
+      (tester) async {
+    await tester.pumpWidget(_holding(
+        _fit(horizon: _component(null, 'no_goal', notApplicable: true))));
+
+    await tester.tap(find.text('Ver por qué'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('No aplica'), findsOneWidget);
+    expect(find.text('Sin medir'), findsNothing);
+    expect(
+        find.text('Esta posición no está asociada a ninguna meta, así que no '
+            'hay plazo contra el cual medirla.'),
+        findsOneWidget);
+  });
+
+  // Only past goals: also not applicable, and the sentence must not claim the
+  // position was never tied to a goal — it was.
+  testWidgets('con metas vencidas lo dice, sin afirmar que no tuvo meta',
+      (tester) async {
+    await tester.pumpWidget(_holding(
+        _fit(horizon: _component(null, 'goals_past', notApplicable: true))));
+
+    await tester.tap(find.text('Ver por qué'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('No aplica'), findsOneWidget);
+    expect(find.textContaining('ya vencieron'), findsOneWidget);
+    expect(find.textContaining('no está asociada a ninguna meta'), findsNothing);
   });
 
   // Below the confidence threshold the backend withholds the number entirely.

@@ -1603,6 +1603,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get fitUnmeasured => 'Sin medir';
 
   @override
+  String get fitNotApplicable => 'No aplica';
+
+  @override
   String fitVolatilityObserved(String pct) {
     return 'Se movió $pct% al año';
   }
@@ -1638,6 +1641,10 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get fitReasonNoGoalHolding =>
       'Esta posición no está asociada a ninguna meta, así que no hay plazo contra el cual medirla.';
+
+  @override
+  String get fitReasonGoalsPast =>
+      'Las metas para las que compraste esta posición ya vencieron, así que no hay plazo contra el cual medirla.';
 
   @override
   String get fitReasonHorizonComfortable => 'Sobra tiempo antes de tu plazo.';

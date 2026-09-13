@@ -673,6 +673,7 @@
   "fitComponentConcentration": "Share of your portfolio",
   "fitComponentVolatility": "How much it moved",
   "fitUnmeasured": "Not measured",
+  "fitNotApplicable": "Doesn’t apply",
   "fitVolatilityObserved": "Moved {pct}% a year",
   "@fitVolatilityObserved": {
     "placeholders": {
@@ -689,6 +690,7 @@
   "fitReasonClassSupporting": "This kind of asset has a place in your plan, with a smaller weight.",
   "fitReasonNoGoal": "This purchase isn’t tied to a goal, so there’s no deadline to measure against.",
   "fitReasonNoGoalHolding": "This position isn’t tied to any goal, so there’s no deadline to measure against.",
+  "fitReasonGoalsPast": "The goals you bought this position for are past their deadline, so there’s no deadline left to measure against.",
   "fitReasonHorizonComfortable": "There’s plenty of time before your deadline.",
   "fitReasonHorizonTight": "There’s enough time, but not much margin.",
   "fitReasonHorizonTooShort": "Your deadline arrives before this kind of asset usually has time to recover.",

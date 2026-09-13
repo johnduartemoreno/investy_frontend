@@ -258,12 +258,17 @@ class _FitScoreCardState extends State<FitScoreCard> {
               // An unmeasured component reads "not measured", never "0". A zero
               // says the fit is bad; the two are different statements and the
               // whole design depends on not blurring them (§Data Governance).
+              // A question that does not apply is not a gap either (B123):
+              // "not measured" would promise a number that could exist.
               c.scored
                   ? Text('${c.score}',
                       style: theme.textTheme.bodySmall?.copyWith(
                           color: _componentColor(c),
                           fontWeight: FontWeight.w700))
-                  : Text(l10n.fitUnmeasured,
+                  : Text(
+                      c.notApplicable
+                          ? l10n.fitNotApplicable
+                          : l10n.fitUnmeasured,
                       style: theme.textTheme.labelSmall
                           ?.copyWith(color: cs.onSurfaceVariant)),
             ],
@@ -425,6 +430,8 @@ class _FitScoreCardState extends State<FitScoreCard> {
         return widget.isHolding
             ? l10n.fitReasonNoGoalHolding
             : l10n.fitReasonNoGoal;
+      case 'goals_past':
+        return l10n.fitReasonGoalsPast;
       case 'horizon_comfortable':
         return l10n.fitReasonHorizonComfortable;
       case 'horizon_tight':
