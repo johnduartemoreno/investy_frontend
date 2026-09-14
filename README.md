@@ -117,7 +117,17 @@ Three rules it exists to enforce, each with a widget test:
   2026-08-11). A score presiding over the screen claims a precision five
   components over a few weeks of data do not have, and reads as advice.
 - **A component with no data reads "sin medir", never `0`.** A zero says the fit
-  is bad. This is the last layer where that distinction can be lost.
+  is bad. This is the last layer where that distinction can be lost. **And a
+  question that does not apply reads "no aplica", not "sin medir"** (B123): the
+  backend sends `notApplicable` on every component — parsed as required, never
+  defaulted — for the horizon of a position whose buys had no goal (`no_goal`)
+  or only goals past their deadline (`goals_past`). "Sin medir" would promise a
+  number that cannot exist. **A failed read of the user's goals is not the same
+  as "no goal" either** (`goal_unavailable`, B123 audit finding 2): the backend
+  used to answer `no_goal` when it simply could not read the goals table, so the
+  card told the user a holding "isn't tied to any goal" when it might well be.
+  `goal_unavailable` reads as our gap, not theirs — the card says the goals
+  couldn't be read right now, in es/en/pt.
 - **The disclaimer is visible without expanding anything**, on both branches of
   the card — including the one where a verdict sits above a buy button.
 

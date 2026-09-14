@@ -3010,6 +3010,12 @@ abstract class AppLocalizations {
   /// **'Not measured'**
   String get fitUnmeasured;
 
+  /// No description provided for @fitNotApplicable.
+  ///
+  /// In en, this message translates to:
+  /// **'Doesn’t apply'**
+  String get fitNotApplicable;
+
   /// No description provided for @fitVolatilityObserved.
   ///
   /// In en, this message translates to:
@@ -3063,6 +3069,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This position isn’t tied to any goal, so there’s no deadline to measure against.'**
   String get fitReasonNoGoalHolding;
+
+  /// No description provided for @fitReasonGoalsPast.
+  ///
+  /// In en, this message translates to:
+  /// **'The goals you bought this position for are past their deadline, so there’s no deadline left to measure against.'**
+  String get fitReasonGoalsPast;
 
   /// No description provided for @fitReasonHorizonComfortable.
   ///
@@ -3141,6 +3153,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We don’t have enough price history to measure this yet.'**
   String get fitReasonNoHistory;
+
+  /// No description provided for @fitReasonGoalUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t read your goals just now, so the deadline wasn’t measured.'**
+  String get fitReasonGoalUnavailable;
 
   /// No description provided for @fitReasonVolCalm.
   ///

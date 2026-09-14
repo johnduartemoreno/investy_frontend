@@ -119,6 +119,7 @@ class FitComponentModel {
     required this.score,
     required this.reason,
     required this.caveat,
+    required this.notApplicable,
   });
 
   final FitComponentKind kind;
@@ -135,6 +136,13 @@ class FitComponentModel {
   /// A weakness the component declared about its own data, empty when none.
   final String caveat;
 
+  /// True when the null score means "this question does not apply here" rather
+  /// than "we could not measure it" (B123) — e.g. the horizon of a position none
+  /// of whose buys was tied to a goal still ahead. Not a gap, so the row must not
+  /// read "not measured". Required, never defaulted: a missing flag cannot be
+  /// read as either answer.
+  final bool notApplicable;
+
   bool get scored => score != null;
 
   factory FitComponentModel.fromJson(
@@ -144,6 +152,7 @@ class FitComponentModel {
         score: json['score'] as int?,
         reason: json['reason'] as String? ?? '',
         caveat: json['caveat'] as String? ?? '',
+        notApplicable: json['notApplicable'] as bool,
       );
 }
 
