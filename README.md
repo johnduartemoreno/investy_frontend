@@ -285,6 +285,33 @@ breaks (see the mDNS note below), so in debug the two failures compound and look
 like one: the console hangs at "Installing and launching", and the app on the
 phone crashes on open. Both disappear in profile mode, which is self-contained.
 
+**On iOS 27 / Xcode 27, `flutter run` does not work on a physical device
+(B164).** It aborts before compiling with *"enable Developer Mode in Settings →
+Privacy & Security"* even when Developer Mode is on: `xcdevice list` no longer
+reports the `developerModeStatus` key for the device, and Flutter 3.41.9 reads
+its absence as disabled. Check the device itself with
+`xcrun devicectl device info details --device <id>` — it prints
+`Developer Mode Status: Enabled (1)` — and then build and install by hand:
+
+```bash
+flutter build ios --profile \
+  --dart-define=USE_STAGING=true \
+  --dart-define=GIT_SHA=$(git rev-parse --short HEAD)
+
+xcrun devicectl device install app --device <device-id> \
+  build/ios/iphoneos/Runner.app
+```
+
+Then open the app **from the home screen icon**: `devicectl device process
+launch` does not cold-start this app. The `--dart-define`s are compiled into the
+bundle, so the build still points where you told it to. What you lose is hot
+reload, DevTools and device logs — for a UAT whose subject lives on the server
+(rows in `events`, webhooks, KYC state), the logs that matter are CloudWatch's.
+
+**Minimum iOS version is 15.0** (H23). Xcode 27 refuses to build anything below
+it, and the project carried 13.0 in `Runner.xcodeproj` and 14.0 in the `Podfile`.
+No device is excluded by hardware — iOS 15 runs on everything iOS 14 ran on.
+
 `flutter devices` lists the ids. The profile build takes ~100s at
 "Installing and launching" — it is not stuck. **Keep the phone
 unlocked** or the launch never completes and you get a white screen.
