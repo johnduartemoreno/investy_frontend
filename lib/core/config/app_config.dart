@@ -3,8 +3,9 @@ import 'package:flutter/foundation.dart';
 const _useStaging = bool.fromEnvironment('USE_STAGING');
 const _localIp = String.fromEnvironment('LOCAL_IP');
 const _gitSha = String.fromEnvironment('GIT_SHA');
-const _stagingUrl =
-    'http://investy-backend-stg.eba-wqzwp2yc.us-east-1.elasticbeanstalk.com';
+// S-INFRA-7 F7: staging moved from Elastic Beanstalk to Lightsail, and is
+// served over HTTPS on its own domain (Caddy holds the certificate).
+const _stagingUrl = 'https://api-stg.investyapp.com';
 
 /// Which backend the app is talking to. Drives the dev/QA environment badge
 /// (B53) so a stale build against the wrong backend is obvious at a glance.
