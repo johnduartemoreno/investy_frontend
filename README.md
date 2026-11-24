@@ -60,7 +60,7 @@ Base URL selected automatically:
 |-------------|-----|
 | Android emulator | `http://10.0.2.2:8080` |
 | iOS device / debug | `http://<Mac LAN IP>:8080` — passed in with `--dart-define=LOCAL_IP=$(ipconfig getifaddr en0)`, read at run time. Not stored in `app_config.dart`: the IP changes between sessions and a stale one fails against a host that does not exist |
-| Staging | `http://investy-backend-stg.eba-wqzwp2yc.us-east-1.elasticbeanstalk.com` |
+| Staging | `https://api-stg.investyapp.com` (Lightsail, desde S-INFRA-7) |
 | Production | `https://api.investyapp.com` |
 
 Use `--dart-define=USE_STAGING=true` to force staging URL in debug builds.
